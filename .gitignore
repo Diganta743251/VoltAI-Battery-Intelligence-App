@@ -1,0 +1,104 @@
+# Built application files
+*.apk
+*.ap_ 
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+
+# Gradle files
+.gradle/
+build/
+*/build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log files
+*.log
+
+# Android Studio
+.idea/
+*.iml
+.navigation/
+captures/
+.externalNativeBuild/
+.cxx/
+*.keystore
+
+# Kotlin/Java build cache
+**/kotlin/**/caches/
+
+# NDK
+.obj/
+
+# Misc
+.DS_Store
+node_modules/
+
+# Compose
+**/compose-snapshots/
+
+# Hilt / KAPT generated
+**/build/generated/
+**/kapt/**
+**/ksp/**
+
+# Gradle wrapper (keep properties & jar tracked if needed)
+# gradle/wrapper/gradle-wrapper.jar
+# gradle/wrapper/gradle-wrapper.properties
+
+# Screenshots & large assets (optional)
+screenshot/
+
+# Lint/intermediate
+**/intermediates/
+**/outputs/
+**/.transforms/
+**/tmp/
+**/reports/
+
+# Android App Bundle intermediates
+**/bundle*/
+
+# IntelliJ
+.idea/caches/
+.idea/libraries/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
+.idea/modules.xml
+.idea/.name
+.idea/compiler.xml
+.idea/misc.xml
+.idea/modules
+.idea/scopes/scope_settings.xml
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+.idea/markdown-navigator.xml
+.idea/markdown-navigator/
+
+# macOS
+*.zip
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
