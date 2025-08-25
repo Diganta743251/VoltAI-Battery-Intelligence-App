@@ -1,0 +1,4 @@
+rootProject.name = "VoltAI-SmartBatteryGuardian"
+
+include(':app', ':core', ':data', ':domain', ':features', ':ui', ':service', ':backup', ':widget')
+// include(':wear')

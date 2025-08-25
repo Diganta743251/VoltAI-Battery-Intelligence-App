@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VoltAI Brand Colors -->
+    <color name="voltai_primary">#0066CC</color>
+    <color name="voltai_secondary">#6200EE</color>
+    <color name="voltai_accent">#4CAF50</color>
+    
+    <!-- Light Theme Colors -->
+    <color name="voltai_light_background">#F8F9FA</color>
+    <color name="voltai_light_surface">#FFFFFF</color>
+    <color name="voltai_light_on_surface">#1C1B1F</color>
+    
+    <!-- Dark Theme Colors -->
+    <color name="voltai_dark_background">#121212</color>
+    <color name="voltai_dark_surface">#1E1E1E</color>
+    <color name="voltai_dark_on_surface">#E0E0E0</color>
+    
+    <!-- Status Colors -->
+    <color name="battery_excellent">#4CAF50</color>
+    <color name="battery_good">#8BC34A</color>
+    <color name="battery_fair">#FF9800</color>
+    <color name="battery_poor">#FF5722</color>
+    <color name="battery_critical">#F44336</color>
+    
+    <!-- Charging Colors -->
+    <color name="charging_green">#4CAF50</color>
+    <color name="charging_glow">#FFEB3B</color>
+    
+    <!-- System Colors -->
+    <color name="transparent">#00000000</color>
+    <color name="semi_transparent">#80000000</color>
+</resources>
