@@ -2,6 +2,7 @@ package com.voltai.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.voltai.data.local.BatteryLogDao
 import com.voltai.data.local.VoltAIDatabase
 import com.voltai.data.local.dao.CurrentSampleDao
 import dagger.Module
@@ -24,4 +25,7 @@ object RoomModule {
 
     @Provides
     fun provideCurrentSampleDao(db: VoltAIDatabase): CurrentSampleDao = db.currentSampleDao()
+
+    @Provides
+    fun provideBatteryLogDao(db: VoltAIDatabase): BatteryLogDao = db.batteryLogDao()
 }

@@ -5,13 +5,14 @@ import android.content.Context
 import android.content.pm.PackageManager
 import com.voltai.domain.model.AppUsage
 import com.voltai.domain.repository.AppUsageRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.Calendar
 import javax.inject.Inject
 
 class AppUsageRepositoryImpl @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
     private val usageStatsManager: UsageStatsManager
 ) : AppUsageRepository {
 

@@ -1,8 +1,8 @@
 package com.voltai.core.ai
 
 import android.util.Log
-import com.voltai.data.local.BatteryLogEntity
-import com.voltai.data.preferences.DataStoreManager
+import com.voltai.domain.model.BatteryLog
+import com.voltai.domain.repository.AISettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -13,15 +13,15 @@ import javax.inject.Singleton
 
 @Singleton
 class AIBatteryAnalyzer @Inject constructor(
-    private val dataStoreManager: DataStoreManager,
+    private val aiSettings: AISettings,
     private val ruleBasedCoach: RuleBasedCoach,
     private val tensorFlowLiteHelper: TensorFlowLiteHelper
 ) {
 
-    suspend fun analyzeBatteryData(batteryLogs: List<BatteryLogEntity>): AIAnalysisResult {
+    suspend fun analyzeBatteryData(batteryLogs: List<BatteryLog>): AIAnalysisResult {
         return withContext(Dispatchers.IO) {
-            val isAIEnabled = dataStoreManager.isAIEnabled()
-            val provider = dataStoreManager.getAIProvider()
+            val isAIEnabled = aiSettings.isAIEnabled()
+            val provider = aiSettings.getAIProvider()
             
             // Try TensorFlow Lite first for offline AI
             if (isAIEnabled && provider == "tensorflow_lite") {
@@ -35,7 +35,7 @@ class AIBatteryAnalyzer @Inject constructor(
                 return@withContext getRuleBasedAnalysis(batteryLogs)
             }
             
-            val apiKey = dataStoreManager.getAPIKey(provider)
+            val apiKey = aiSettings.getAPIKey(provider)
             if (apiKey.isNullOrEmpty()) {
                 return@withContext getRuleBasedAnalysis(batteryLogs)
             }
@@ -55,7 +55,7 @@ class AIBatteryAnalyzer @Inject constructor(
         }
     }
 
-    private fun getRuleBasedAnalysis(batteryLogs: List<BatteryLogEntity>): AIAnalysisResult {
+    private fun getRuleBasedAnalysis(batteryLogs: List<BatteryLog>): AIAnalysisResult {
         val tips = RuleBasedCoach.getBatteryTips(batteryLogs)
         val healthScore = calculateHealthScore(batteryLogs)
         
@@ -72,26 +72,26 @@ class AIBatteryAnalyzer @Inject constructor(
         )
     }
 
-    private suspend fun getOpenAIAnalysis(batteryLogs: List<BatteryLogEntity>, apiKey: String): AIAnalysisResult {
+    private suspend fun getOpenAIAnalysis(batteryLogs: List<BatteryLog>, apiKey: String): AIAnalysisResult {
         val prompt = createBatteryAnalysisPrompt(batteryLogs)
         val response = callOpenAI(prompt, apiKey)
         return parseAIResponse(response)
     }
 
-    private suspend fun getGeminiAnalysis(batteryLogs: List<BatteryLogEntity>, apiKey: String): AIAnalysisResult {
+    private suspend fun getGeminiAnalysis(batteryLogs: List<BatteryLog>, apiKey: String): AIAnalysisResult {
         val prompt = createBatteryAnalysisPrompt(batteryLogs)
         val response = callGemini(prompt, apiKey)
         return parseAIResponse(response)
     }
 
-    private suspend fun getClaudeAnalysis(batteryLogs: List<BatteryLogEntity>, apiKey: String): AIAnalysisResult {
+    private suspend fun getClaudeAnalysis(batteryLogs: List<BatteryLog>, apiKey: String): AIAnalysisResult {
         val prompt = createBatteryAnalysisPrompt(batteryLogs)
         val response = callClaude(prompt, apiKey)
         return parseAIResponse(response)
     }
 
-    private suspend fun getCustomAPIAnalysis(batteryLogs: List<BatteryLogEntity>, apiKey: String): AIAnalysisResult {
-        val customUrl = dataStoreManager.getCustomAPIUrl()
+    private suspend fun getCustomAPIAnalysis(batteryLogs: List<BatteryLog>, apiKey: String): AIAnalysisResult {
+        val customUrl = aiSettings.getCustomAPIUrl()
         if (customUrl.isNullOrEmpty()) {
             return getRuleBasedAnalysis(batteryLogs)
         }
@@ -101,10 +101,10 @@ class AIBatteryAnalyzer @Inject constructor(
         return parseAIResponse(response)
     }
 
-    private fun createBatteryAnalysisPrompt(batteryLogs: List<BatteryLogEntity>): String {
+    private fun createBatteryAnalysisPrompt(batteryLogs: List<BatteryLog>): String {
         val recentLogs = batteryLogs.take(10)
         val batteryData = recentLogs.joinToString("\n") { log ->
-            "Time: ${log.timestamp}, Battery: ${log.batteryPercentage}%, Temp: ${log.temperature}°C, Status: ${log.status}"
+            "Time: ${'$'}{log.timestamp}, Battery: ${'$'}{log.batteryLevel}%, Temp: ${'$'}{log.temperature}°C, Current: ${'$'}{log.current}mA"
         }
         
         return """
@@ -246,7 +246,7 @@ class AIBatteryAnalyzer @Inject constructor(
         }
     }
 
-    private fun calculateHealthScore(batteryLogs: List<BatteryLogEntity>): Int {
+    private fun calculateHealthScore(batteryLogs: List<BatteryLog>): Int {
         if (batteryLogs.isEmpty()) return 75
         
         val recentLogs = batteryLogs.take(5)
@@ -262,7 +262,7 @@ class AIBatteryAnalyzer @Inject constructor(
             val firstLog = recentLogs.last()
             val lastLog = recentLogs.first()
             val timeDiffHours = (lastLog.timestamp - firstLog.timestamp) / (1000.0 * 60 * 60)
-            val batteryDrop = firstLog.batteryPercentage - lastLog.batteryPercentage
+            val batteryDrop = firstLog.batteryLevel - lastLog.batteryLevel
             
             if (timeDiffHours > 0 && batteryDrop / timeDiffHours > 15) {
                 score -= 15
@@ -272,7 +272,7 @@ class AIBatteryAnalyzer @Inject constructor(
         return maxOf(0, minOf(100, score))
     }
 
-    private fun getPredictedBatteryLife(batteryLogs: List<BatteryLogEntity>): String {
+    private fun getPredictedBatteryLife(batteryLogs: List<BatteryLog>): String {
         val healthScore = calculateHealthScore(batteryLogs)
         return when {
             healthScore >= 90 -> "3+ years"
@@ -282,7 +282,7 @@ class AIBatteryAnalyzer @Inject constructor(
         }
     }
 
-    private fun getOptimizationTips(batteryLogs: List<BatteryLogEntity>): List<String> {
+    private fun getOptimizationTips(batteryLogs: List<BatteryLog>): List<String> {
         return listOf(
             "Avoid charging to 100% regularly",
             "Keep device temperature below 35°C",
@@ -291,7 +291,7 @@ class AIBatteryAnalyzer @Inject constructor(
         )
     }
 
-    private fun getRiskFactors(batteryLogs: List<BatteryLogEntity>): List<String> {
+    private fun getRiskFactors(batteryLogs: List<BatteryLog>): List<String> {
         val risks = mutableListOf<String>()
         
         if (batteryLogs.isNotEmpty()) {
@@ -304,7 +304,7 @@ class AIBatteryAnalyzer @Inject constructor(
         return risks
     }
 
-    private fun getTensorFlowLiteAnalysis(batteryLogs: List<BatteryLogEntity>): AIAnalysisResult? {
+    private fun getTensorFlowLiteAnalysis(batteryLogs: List<BatteryLog>): AIAnalysisResult? {
         return try {
             if (!tensorFlowLiteHelper.isModelLoaded()) {
                 // Try to load the model
@@ -322,12 +322,12 @@ class AIBatteryAnalyzer @Inject constructor(
             // Prepare data for TensorFlow Lite inference
             val recentLog = batteryLogs.first()
             val batteryData = floatArrayOf(
-                recentLog.batteryPercentage.toFloat(),
-                recentLog.voltage.toFloat(),
-                recentLog.temperature.toFloat(),
-                recentLog.currentNow.toFloat(),
+                recentLog.batteryLevel.toFloat(),
+                recentLog.voltage,
+                recentLog.temperature,
+                recentLog.current,
                 (System.currentTimeMillis() - recentLog.timestamp).toFloat() / (1000 * 60 * 60), // hours since last reading
-                if (recentLog.status == android.os.BatteryManager.BATTERY_STATUS_CHARGING) 1f else 0f
+                if (recentLog.current < 0f) 1f else 0f
             )
 
             // Run battery prediction
@@ -340,12 +340,12 @@ class AIBatteryAnalyzer @Inject constructor(
                 // Prepare historical data for health analysis
                 val historicalData = batteryLogs.take(10).map { log ->
                     floatArrayOf(
-                        log.batteryPercentage.toFloat(),
-                        log.voltage.toFloat(),
-                        log.temperature.toFloat(),
-                        log.currentNow.toFloat(),
+                        log.batteryLevel.toFloat(),
+                        log.voltage,
+                        log.temperature,
+                        log.current,
                         (System.currentTimeMillis() - log.timestamp).toFloat() / (1000 * 60 * 60),
-                        if (log.status == android.os.BatteryManager.BATTERY_STATUS_CHARGING) 1f else 0f
+                        if (log.current < 0f) 1f else 0f
                     )
                 }.toTypedArray()
 

@@ -1,0 +1,21 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+# Allow longer lines in UI/Compose folders
+[ui/**.kt]
+max_line_length = 180
+[screens/**.kt]
+max_line_length = 180
+[**/compose/**.kt]
+max_line_length = 180
+
+[*.kt]
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_imports_layout = *,java.**,javax.**,kotlin.**,^

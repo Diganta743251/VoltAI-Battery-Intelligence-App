@@ -19,7 +19,7 @@ import javax.inject.Singleton
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 @Singleton
-class DataStoreManager @Inject constructor(@ApplicationContext private val context: Context) {
+class DataStoreManager @Inject constructor(@ApplicationContext private val context: Context) : com.voltai.domain.repository.AISettings {
 
     private object PreferencesKeys {
         val BRIGHTNESS = intPreferencesKey("brightness")
@@ -98,7 +98,7 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
         }
     }
     
-    suspend fun isAIEnabled(): Boolean {
+    override suspend fun isAIEnabled(): Boolean {
         return context.dataStore.data.map { preferences ->
             preferences[PreferencesKeys.AI_ENABLED] ?: false
         }.first()
@@ -110,7 +110,7 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
         }
     }
     
-    suspend fun getAIProvider(): String {
+    override suspend fun getAIProvider(): String {
         return context.dataStore.data.map { preferences ->
             preferences[PreferencesKeys.AI_PROVIDER] ?: "tensorflow_lite"
         }.first()
@@ -127,7 +127,7 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
         }
     }
     
-    suspend fun getAPIKey(provider: String): String? {
+    override suspend fun getAPIKey(provider: String): String? {
         return context.dataStore.data.map { preferences ->
             when (provider) {
                 "openai" -> preferences[PreferencesKeys.OPENAI_API_KEY]
@@ -145,7 +145,7 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
         }
     }
     
-    suspend fun getCustomAPIUrl(): String? {
+    override suspend fun getCustomAPIUrl(): String? {
         return context.dataStore.data.map { preferences ->
             preferences[PreferencesKeys.CUSTOM_API_URL]
         }.first()

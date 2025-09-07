@@ -49,7 +49,7 @@ class BatteryRepositoryImpl @Inject constructor(
     
     private fun BatteryLog.toEntity(): BatteryLogEntity {
         return BatteryLogEntity(
-            id = id.toInt(),
+            id = id, // Long
             timestamp = timestamp,
             batteryPercentage = batteryLevel,
             voltage = voltage.toInt(),
@@ -63,7 +63,7 @@ class BatteryRepositoryImpl @Inject constructor(
     
     private fun BatteryLogEntity.toDomain(): BatteryLog {
         return BatteryLog(
-            id = id.toLong(),
+            id = id,
             timestamp = timestamp,
             batteryLevel = batteryPercentage,
             voltage = voltage.toFloat(),

@@ -6,10 +6,11 @@ import com.voltai.data.local.dao.CurrentSampleDao
 import com.voltai.data.local.entity.CurrentSample
 
 @Database(
-    entities = [CurrentSample::class],
-    version = 1,
+    entities = [CurrentSample::class, BatteryLogEntity::class],
+    version = 2,
     exportSchema = true
 )
 abstract class VoltAIDatabase : RoomDatabase() {
     abstract fun currentSampleDao(): CurrentSampleDao
+    abstract fun batteryLogDao(): BatteryLogDao
 }

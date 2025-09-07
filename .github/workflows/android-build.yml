@@ -1,38 +1,10 @@
-name: Android CI
+name: Android CI (deprecated)
 
 on:
-  push:
-    branches: [ master, main ]
-  pull_request:
-    branches: [ master, main ]
+  workflow_dispatch:
 
 jobs:
-  build:
+  noop:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Cache Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-home-cache-includes: |
-            caches
-            notifications
-            wrapper
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build (assembleDebug)
-        run: ./gradlew assembleDebug --stacktrace
-
-      - name: Run unit tests
-        run: ./gradlew test --stacktrace
+      - run: echo "This workflow is deprecated. Use ci.yml (PR/branches) and release.yml (main)."

@@ -1,0 +1,46 @@
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+
+config:
+  validation: true
+
+processors:
+  active: true
+
+console-reports:
+  active: true
+  exclude:
+    - 'ProjectStatisticsReport'
+    - 'ComplexityReport'
+    - 'NotificationReport'
+
+style:
+  MagicNumber:
+    active: false
+  WildcardImport:
+    active: false
+  MaxLineLength:
+    active: true
+    maxLineLength: 120
+    excludes: ['**/ui/**', '**/screens/**', '**/compose/**']
+  UnusedPrivateMember:
+    active: true
+
+complexity:
+  LongMethod:
+    active: true
+    ignoreAnnotated: ['Composable', 'Preview']
+    threshold: 120
+  LongParameterList:
+    active: true
+    ignoreAnnotated: ['Composable', 'Preview']
+    functionThreshold: 10
+  TooManyFunctions:
+    active: true
+    thresholdInClasses: 30
+    thresholdInObjects: 30
+
+performance:
+  SpreadOperator:
+    active: false

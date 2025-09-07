@@ -2,6 +2,8 @@ package com.voltai.core.di
 
 import android.content.Context
 import com.voltai.core.utils.BatteryMonitor
+import com.voltai.core.utils.IBatteryMonitorAdapter
+import com.voltai.domain.repository.IBatteryMonitor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,4 +22,10 @@ object CoreModule {
     ): BatteryMonitor {
         return BatteryMonitor(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideIBatteryMonitor(
+        batteryMonitor: BatteryMonitor
+    ): IBatteryMonitor = IBatteryMonitorAdapter(batteryMonitor)
 }

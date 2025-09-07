@@ -220,9 +220,9 @@ private fun DrawScope.drawGrid(width: Float, height: Float, padding: Float) {
 
 private fun getGraphColor(isCharging: Boolean): Color {
     return if (isCharging) {
-        Color(0xFF4CAF50) // Green for charging
+        Color(0xFF2196F3) // Blue for charging (negative current)
     } else {
-        Color(0xFF2196F3) // Blue for discharging
+        Color(0xFF4CAF50) // Green for discharging (positive current)
     }
 }
 

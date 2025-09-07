@@ -153,11 +153,13 @@ fun LiveCurrentCard(
                     )
                 }
                 
+                val valueColor = if (isCharging) Color(0xFF2196F3) else Color(0xFF4CAF50)
+                val prefix = if (currentValue >= 0) "+" else ""
                 Text(
-                    text = "${if (currentValue >= 0) "+" else ""}${currentValue}mA",
+                    text = prefix + "$currentValue mA",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = if (isCharging) Color(0xFF4CAF50) else Color(0xFF2196F3)
+                    color = valueColor
                 )
             }
             
@@ -181,17 +183,23 @@ fun LiveCurrentCard(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    val minColor = if ((minV) < 0f) Color(0xFF2196F3) else Color(0xFF4CAF50)
+                    val avgColor = if ((avgV) < 0f) Color(0xFF2196F3) else Color(0xFF4CAF50)
+                    val maxColor = if ((maxV) < 0f) Color(0xFF2196F3) else Color(0xFF4CAF50)
                     Text(
-                        text = "Min: ${minV.toInt()} mA",
-                        style = MaterialTheme.typography.bodySmall
+                        text = "Min: ${'$'}{minV.toInt()} mA",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = minColor
                     )
                     Text(
-                        text = "Avg: ${avgV.toInt()} mA",
-                        style = MaterialTheme.typography.bodySmall
+                        text = "Avg: ${'$'}{avgV.toInt()} mA",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = avgColor
                     )
                     Text(
-                        text = "Max: ${maxV.toInt()} mA",
-                        style = MaterialTheme.typography.bodySmall
+                        text = "Max: ${'$'}{maxV.toInt()} mA",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = maxColor
                     )
                 }
             }
