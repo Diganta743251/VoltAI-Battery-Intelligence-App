@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/widget_background_medium"
+    android:padding="12dp">
+
+    <!-- Header Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/battery_percentage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="85%"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/widget_text_primary" />
+
+        <TextView
+            android:id="@+id/temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="32°C"
+            android:textSize="14sp"
+            android:textColor="@color/widget_text_secondary"
+            android:drawableLeft="@drawable/ic_thermometer"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical" />
+
+    </LinearLayout>
+
+    <!-- Status Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/battery_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Charging"
+            android:textSize="14sp"
+            android:textColor="@color/widget_text_secondary" />
+
+        <TextView
+            android:id="@+id/time_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2h 15m"
+            android:textSize="14sp"
+            android:textColor="@color/widget_text_secondary" />
+
+    </LinearLayout>
+
+    <!-- Battery Progress Bar -->
+    <ImageView
+        android:id="@+id/battery_progress"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginBottom="12dp"
+        android:contentDescription="@string/battery_level_progress" />
+
+    <!-- Quick Actions -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/battery_saver_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/widget_button_background"
+            android:src="@drawable/ic_battery_saver"
+            android:contentDescription="@string/toggle_battery_saver"
+            android:scaleType="centerInside" />
+
+        <ImageButton
+            android:id="@+id/optimization_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/widget_button_background"
+            android:src="@drawable/ic_optimization"
+            android:contentDescription="@string/toggle_optimization"
+            android:scaleType="centerInside" />
+
+        <ImageButton
+            android:id="@+id/refresh_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/widget_button_background"
+            android:src="@drawable/ic_refresh"
+            android:contentDescription="@string/refresh_widget"
+            android:scaleType="centerInside" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/widget_background_small"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/battery_circle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="4dp"
+        android:contentDescription="@string/battery_status" />
+
+    <TextView
+        android:id="@+id/battery_percentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="85%"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/widget_text_primary" />
+
+    <TextView
+        android:id="@+id/battery_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Charging"
+        android:textSize="10sp"
+        android:textColor="@color/widget_text_secondary"
+        android:maxLines="1" />
+
+</LinearLayout>
