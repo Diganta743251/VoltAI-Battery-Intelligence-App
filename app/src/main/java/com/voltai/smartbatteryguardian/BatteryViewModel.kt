@@ -34,6 +34,9 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
     private val _batteryUsed = MutableLiveData("0%")
     val batteryUsed: LiveData<String> = _batteryUsed
 
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
+
     private var batteryReceiver: BroadcastReceiver? = null
 
     init {
@@ -59,6 +62,7 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
 
     private fun handleBatteryChanged(intent: Intent) {
         viewModelScope.launch {
+            _isLoading.value = true
             val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
             val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
             val batteryPercentage =
@@ -84,15 +88,18 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
                 )
 
             _batteryInfo.value = batteryInfo
+            _isLoading.value = false
         }
     }
 
     private fun updateMockData() {
         viewModelScope.launch {
+            _isLoading.value = true
             // Simulate screen time data
             _screenOnTime.value = "4h 32m"
             _screenOffTime.value = "12h 15m"
             _batteryUsed.value = "45%"
+            _isLoading.value = false
         }
     }
 

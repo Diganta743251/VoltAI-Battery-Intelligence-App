@@ -344,7 +344,7 @@ class PerformanceManager @Inject constructor(
             oldestKey?.let { dataCache.remove(it) }
         }
         
-        dataCache[key] = CacheEntry(data, System.currentTimeMillis())
+        dataCache[key] = CacheEntry<Any>(data as Any, System.currentTimeMillis())
     }
     
     @Suppress("UNCHECKED_CAST")

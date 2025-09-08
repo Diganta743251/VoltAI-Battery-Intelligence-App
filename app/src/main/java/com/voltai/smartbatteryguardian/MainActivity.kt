@@ -12,8 +12,8 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         
-        // Launch the premium main activity
-        startActivity(Intent(this, PremiumMainActivity::class.java))
+        // Launch the professional main activity (comprehensive version)
+        startActivity(Intent(this, ProfessionalMainActivity::class.java))
         finish()
     }
 }

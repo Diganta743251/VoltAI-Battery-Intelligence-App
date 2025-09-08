@@ -7,7 +7,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Build
 import android.os.PowerManager
-import android.os.Thermal
+// import android.os.Thermal  // Not available on all API levels
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -491,40 +491,7 @@ class ThermalManager @Inject constructor(
     }
 }
 
-// Data classes and enums for thermal management
-data class ThermalState(
-    val temperature: Float = 25.0f,
-    val ambientTemperature: Float = 25.0f,
-    val humidity: Float = 50.0f,
-    val status: ThermalStatus = ThermalStatus.NORMAL,
-    val recommendations: List<CoolingRecommendation> = emptyList(),
-    val isThrottling: Boolean = false,
-    val coolingActive: Boolean = false,
-    val lastUpdate: LocalDateTime = LocalDateTime.now(),
-    val isError: Boolean = false,
-    val errorMessage: String? = null
-)
-
-data class ThermalReading(
-    val timestamp: Long,
-    val deviceTemperature: Float,
-    val ambientTemperature: Float,
-    val humidity: Float,
-    val thermalStatus: ThermalStatus,
-    val cpuUsage: Float,
-    val batteryTemperature: Float
-)
-
-data class ThermalAlert(
-    val type: ThermalAlertType,
-    val title: String,
-    val message: String,
-    val severity: AlertSeverity,
-    val temperature: Float,
-    val timestamp: LocalDateTime,
-    val recommendations: List<CoolingRecommendation>
-)
-
+// Additional classes specific to thermal management
 data class CoolingRecommendation(
     val type: CoolingType,
     val title: String,
@@ -532,26 +499,12 @@ data class CoolingRecommendation(
     val priority: RecommendationPriority
 )
 
-enum class ThermalStatus {
-    NORMAL,
-    WARNING,
-    CRITICAL,
-    EMERGENCY
-}
-
 enum class ThermalAlertType {
     HIGH_TEMPERATURE,
     CRITICAL_TEMPERATURE,
     EMERGENCY_SHUTDOWN,
     THERMAL_THROTTLING,
     COOLING_ACTIVATED
-}
-
-enum class AlertSeverity {
-    INFO,
-    WARNING,
-    CRITICAL,
-    EMERGENCY
 }
 
 enum class CoolingType {

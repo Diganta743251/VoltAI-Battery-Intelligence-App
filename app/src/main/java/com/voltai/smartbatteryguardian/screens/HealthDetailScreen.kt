@@ -22,6 +22,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.voltai.smartbatteryguardian.rememberBatteryData
+import com.voltai.smartbatteryguardian.utils.getHealthStatus
+import com.voltai.smartbatteryguardian.utils.getHealthColor
+import com.voltai.smartbatteryguardian.utils.getHealthCardColor
+import com.voltai.smartbatteryguardian.utils.getHealthDescription
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,7 +94,7 @@ fun HealthDetailScreen(onBackClick: () -> Unit = {}) {
                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 )
                                 Text(
-                                    text = batteryData.health,
+                                    text = getHealthStatus(batteryData.healthPercentage),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 )
@@ -234,7 +238,7 @@ fun HealthDetailScreen(onBackClick: () -> Unit = {}) {
                         HealthAnalysisRow(
                             icon = Icons.Default.Favorite,
                             label = "Overall Health",
-                            value = "${batteryData.healthPercentage}% (${batteryData.health})",
+                            value = "${batteryData.healthPercentage}% (${getHealthStatus(batteryData.healthPercentage)})",
                             iconColor = getHealthColor(batteryData.healthPercentage),
                         )
 

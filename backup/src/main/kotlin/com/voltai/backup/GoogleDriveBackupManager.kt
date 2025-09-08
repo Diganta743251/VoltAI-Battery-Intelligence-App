@@ -27,6 +27,15 @@ import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
+import javax.crypto.spec.SecretKeySpec
+import javax.crypto.spec.IvParameterSpec
+import java.security.SecureRandom
+import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 
 @Singleton
 class GoogleDriveBackupManager @Inject constructor(private val context: Context) {
@@ -37,11 +46,15 @@ class GoogleDriveBackupManager @Inject constructor(private val context: Context)
         private const val BACKUP_FILE_PREFIX = "voltai_backup_"
         private const val MIME_TYPE_JSON = "application/json"
         private const val MIME_TYPE_FOLDER = "application/vnd.google-apps.folder"
+        private const val ENCRYPTION_KEY_ALIAS = "voltai_backup_key"
+        private const val ENCRYPTION_TRANSFORMATION = "AES/CBC/PKCS7Padding"
+        private const val KEY_LENGTH = 256
     }
 
     private val googleSignInClient: GoogleSignInClient
     private var driveService: Drive? = null
     private var backupFolderId: String? = null
+    private val encryptedPrefs: SharedPreferences
     
     private val _backupState = MutableStateFlow(BackupState.IDLE)
     val backupState: StateFlow<BackupState> = _backupState.asStateFlow()
@@ -52,6 +65,17 @@ class GoogleDriveBackupManager @Inject constructor(private val context: Context)
             .requestScopes(Scope(DriveScopes.DRIVE_FILE), Scope(DriveScopes.DRIVE_APPDATA))
             .build()
         googleSignInClient = GoogleSignIn.getClient(context, signInOptions)
+        
+        // Initialize encrypted shared preferences
+        encryptedPrefs = EncryptedSharedPreferences.create(
+            "secure_backup_prefs",
+            MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build(),
+            context,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
         
         // Check if already signed in
         val account = GoogleSignIn.getLastSignedInAccount(context)
@@ -278,15 +302,81 @@ class GoogleDriveBackupManager @Inject constructor(private val context: Context)
         }
     }
     
-    // Simple encryption/decryption (you should use proper encryption in production)
+    /**
+     * Encrypts data using AES-CBC encryption with a securely stored key
+     */
     private fun encryptData(data: String): String {
-        // TODO: Implement proper AES encryption
-        return android.util.Base64.encodeToString(data.toByteArray(), android.util.Base64.DEFAULT)
+        try {
+            val secretKey = getOrGenerateSecretKey()
+            val cipher = Cipher.getInstance(ENCRYPTION_TRANSFORMATION)
+            
+            // Generate random IV
+            val iv = ByteArray(16)
+            SecureRandom().nextBytes(iv)
+            val ivSpec = IvParameterSpec(iv)
+            
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec)
+            val encryptedBytes = cipher.doFinal(data.toByteArray(Charsets.UTF_8))
+            
+            // Combine IV and encrypted data
+            val combined = iv + encryptedBytes
+            
+            return android.util.Base64.encodeToString(combined, android.util.Base64.NO_WRAP)
+        } catch (e: Exception) {
+            Log.e(TAG, "Encryption failed", e)
+            throw SecurityException("Failed to encrypt data", e)
+        }
     }
     
+    /**
+     * Decrypts data that was encrypted using AES-CBC
+     */
     private fun decryptData(data: String): String {
-        // TODO: Implement proper AES decryption
-        return String(android.util.Base64.decode(data, android.util.Base64.DEFAULT))
+        try {
+            val secretKey = getOrGenerateSecretKey()
+            val cipher = Cipher.getInstance(ENCRYPTION_TRANSFORMATION)
+            
+            // Decode from Base64
+            val combined = android.util.Base64.decode(data, android.util.Base64.NO_WRAP)
+            
+            // Extract IV and encrypted data
+            val iv = combined.sliceArray(0..15)
+            val encryptedBytes = combined.sliceArray(16 until combined.size)
+            
+            val ivSpec = IvParameterSpec(iv)
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec)
+            
+            val decryptedBytes = cipher.doFinal(encryptedBytes)
+            return String(decryptedBytes, Charsets.UTF_8)
+        } catch (e: Exception) {
+            Log.e(TAG, "Decryption failed", e)
+            throw SecurityException("Failed to decrypt data", e)
+        }
+    }
+    
+    /**
+     * Gets the existing secret key from encrypted preferences or generates a new one
+     */
+    private fun getOrGenerateSecretKey(): SecretKey {
+        val keyString = encryptedPrefs.getString(ENCRYPTION_KEY_ALIAS, null)
+        
+        return if (keyString != null) {
+            // Restore existing key
+            val keyBytes = android.util.Base64.decode(keyString, android.util.Base64.NO_WRAP)
+            SecretKeySpec(keyBytes, "AES")
+        } else {
+            // Generate new key
+            val keyGenerator = KeyGenerator.getInstance("AES")
+            keyGenerator.init(KEY_LENGTH)
+            val secretKey = keyGenerator.generateKey()
+            
+            // Store the key securely
+            val keyBytes = secretKey.encoded
+            val keyString = android.util.Base64.encodeToString(keyBytes, android.util.Base64.NO_WRAP)
+            encryptedPrefs.edit().putString(ENCRYPTION_KEY_ALIAS, keyString).apply()
+            
+            secretKey
+        }
     }
     
     enum class BackupState {

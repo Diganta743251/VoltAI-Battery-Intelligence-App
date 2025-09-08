@@ -18,6 +18,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
+import com.voltai.core.health.BatteryHealthAnalyzer
+import com.voltai.core.health.BatteryHealthData
+import com.voltai.core.thermal.ThermalManager
+import com.voltai.core.thermal.ThermalState
 
 @Singleton
 class SmartChargingScheduler @Inject constructor(
@@ -63,7 +67,7 @@ class SmartChargingScheduler @Inject constructor(
             try {
                 val currentBatteryInfo = getCurrentBatteryInfo()
                 val userPreferences = chargingPreferences.getPreferences()
-                val healthData = batteryHealthAnalyzer.getCurrentHealthData()
+                val healthData = batteryHealthAnalyzer.analyzeBatteryHealth()
                 val thermalData = thermalManager.getCurrentThermalState()
                 
                 // Analyze current charging conditions
@@ -442,11 +446,13 @@ class SmartChargingScheduler @Inject constructor(
             voltage = voltage,
             isCharging = isCharging,
             isPluggedIn = isPluggedIn,
-            chargingType = when (plugged) {
-                BatteryManager.BATTERY_PLUGGED_AC -> ChargingType.AC
-                BatteryManager.BATTERY_PLUGGED_USB -> ChargingType.USB
-                BatteryManager.BATTERY_PLUGGED_WIRELESS -> ChargingType.WIRELESS
-                else -> ChargingType.NONE
+            health = 100, // Default to good health
+            status = when (status) {
+                BatteryManager.BATTERY_STATUS_CHARGING -> "Charging"
+                BatteryManager.BATTERY_STATUS_DISCHARGING -> "Discharging"
+                BatteryManager.BATTERY_STATUS_FULL -> "Full"
+                BatteryManager.BATTERY_STATUS_NOT_CHARGING -> "Not Charging"
+                else -> "Unknown"
             }
         )
     }
@@ -464,95 +470,8 @@ class SmartChargingScheduler @Inject constructor(
     }
 }
 
-// Data classes for charging scheduler
-data class ChargingSchedulerState(
-    val isActive: Boolean = false,
-    val currentStrategy: ChargingStrategy = ChargingStrategy.BALANCED,
-    val schedule: ChargingSchedule = ChargingSchedule(),
-    val shouldCharge: Boolean = false,
-    val shouldPause: Boolean = false,
-    val nextScheduledTime: LocalDateTime? = null,
-    val batteryLevel: Int = 0,
-    val temperature: Float = 0f,
-    val isPluggedIn: Boolean = false,
-    val estimatedChargingTime: Long = 0L,
-    val lastUpdate: LocalDateTime = LocalDateTime.now(),
-    val isError: Boolean = false,
-    val errorMessage: String? = null
-)
-
-data class ChargingAnalysis(
-    val schedulerState: ChargingSchedulerState,
-    val recommendations: List<ChargingRecommendation>
-)
-
-data class BatteryInfo(
-    val level: Int,
-    val temperature: Float,
-    val voltage: Float,
-    val isCharging: Boolean,
-    val isPluggedIn: Boolean,
-    val chargingType: ChargingType
-)
-
-data class ChargingSchedule(
-    val windows: List<ChargingWindow> = emptyList(),
-    val nextChargingWindow: ChargingWindow? = null,
-    val strategy: ChargingStrategy = ChargingStrategy.BALANCED,
-    val createdAt: LocalDateTime = LocalDateTime.now()
-)
-
-data class ChargingWindow(
-    val startTime: LocalDateTime,
-    val endTime: LocalDateTime,
-    val targetLevel: Int,
-    val estimatedDuration: Long,
-    val priority: Int = 0
-)
-
-data class ChargingRecommendation(
-    val type: RecommendationType,
-    val title: String,
-    val description: String,
-    val priority: RecommendationPriority,
-    val actionText: String? = null,
-    val createdAt: LocalDateTime
-)
-
-enum class ChargingStrategy {
-    BALANCED,
-    PERFORMANCE,
-    LONGEVITY,
-    HEALTH_PRESERVATION,
-    EMERGENCY,
-    ADAPTIVE_FAST,
-    THERMAL_PROTECTION,
-    CUSTOM
-}
-
-enum class ChargingType {
-    NONE,
-    AC,
-    USB,
-    WIRELESS
-}
-
 enum class ChargingDecision {
     START_CHARGING,
     PAUSE_CHARGING,
     MAINTAIN_CURRENT
-}
-
-enum class RecommendationType {
-    THERMAL_WARNING,
-    HEALTH_OPTIMIZATION,
-    CHARGING_PATTERN,
-    FEATURE_SUGGESTION
-}
-
-enum class RecommendationPriority {
-    LOW,
-    MEDIUM,
-    HIGH,
-    CRITICAL
 }

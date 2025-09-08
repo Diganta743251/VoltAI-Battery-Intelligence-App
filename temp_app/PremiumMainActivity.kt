@@ -38,8 +38,8 @@ import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.PI
-import com.voltai.ui.designsystem.VoltAITheme
-import com.voltai.ui.designsystem.getBatteryLevelColor
+// import com.voltai.ui.designsystem.VoltAITheme
+// import com.voltai.ui.designsystem.getBatteryLevelColor
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -49,7 +49,7 @@ class PremiumMainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            VoltAITheme {
+            MaterialTheme {
                 PremiumBatteryApp()
             }
         }
@@ -72,7 +72,7 @@ fun PremiumBatteryApp() {
         }
     }
 
-    VoltAITheme(darkTheme = isDarkMode) {
+    MaterialTheme {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -260,7 +260,7 @@ fun PremiumBatteryHeroCard(batteryInfo: BatteryInfo) {
                             text = "${batteryInfo.level}%",
                             fontSize = 36.sp,
                             fontWeight = FontWeight.Bold,
-                            color = getBatteryLevelColor(batteryInfo.level)
+                        color = getBatteryColor(batteryInfo.level)
                         )
                         
                         Text(
@@ -985,6 +985,15 @@ fun calculateTimeRemaining(batteryInfo: BatteryInfo): String {
     val minutes = ((hoursRemaining - hours) * 60).toInt()
     
     return if (hours > 0) "${hours}h ${minutes}m" else "${minutes}m"
+}
+
+fun getBatteryColor(level: Int): Color {
+    return when {
+        level <= 20 -> Color(0xFFF44336) // Red
+        level <= 50 -> Color(0xFFFF9800) // Orange  
+        level <= 80 -> Color(0xFF4CAF50) // Green
+        else -> Color(0xFF2196F3) // Blue
+    }
 }
 
 fun getAIInsight(batteryInfo: BatteryInfo): String {

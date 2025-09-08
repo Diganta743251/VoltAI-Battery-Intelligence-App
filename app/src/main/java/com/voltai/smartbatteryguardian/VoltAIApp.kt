@@ -126,7 +126,7 @@ fun VoltAIMainScreen() {
                     text = "${batteryInfo.level}%",
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,
-                    color = getBatteryColor(batteryInfo.level),
+                    color = getBatteryColorVoltAI(batteryInfo.level),
                 )
 
                 Row(
@@ -255,7 +255,7 @@ fun AnimatedBatteryRing(
             // Battery level arc
             val sweepAngle = 360f * (animatedLevel / 100f)
             drawArc(
-                color = getBatteryColor(batteryLevel.toInt()),
+                    color = getBatteryColorVoltAI(batteryLevel.toInt()),
                 startAngle = -90f,
                 sweepAngle = sweepAngle,
                 useCenter = false,
@@ -283,7 +283,7 @@ fun AnimatedBatteryRing(
                 text = "$batteryLevel%",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = getBatteryColor(batteryLevel),
+                color = getBatteryColorVoltAI(batteryLevel),
             )
             if (isCharging) {
                 Text(
@@ -335,7 +335,7 @@ fun QuickStatCard(
     }
 }
 
-fun getBatteryColor(level: Int): Color {
+fun getBatteryColorVoltAI(level: Int): Color {
     return when {
         level > 80 -> Color(0xFF4CAF50) // Green
         level > 50 -> Color(0xFF2196F3) // Blue

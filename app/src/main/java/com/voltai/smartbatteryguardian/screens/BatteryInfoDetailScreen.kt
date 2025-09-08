@@ -15,15 +15,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 import com.voltai.smartbatteryguardian.rememberBatteryData
+import com.voltai.smartbatteryguardian.utils.getHealthStatus
+import com.voltai.smartbatteryguardian.utils.getHealthColor
+import com.voltai.smartbatteryguardian.utils.getBatteryColor
+import com.voltai.smartbatteryguardian.utils.getTemperatureColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BatteryInfoDetailScreen(onBackClick: () -> Unit = {}) {
+fun BatteryInfoDetailScreen(onBackClick: () -> Unit) {
     val context = LocalContext.current
     val batteryData by rememberBatteryData(context)
 
@@ -176,7 +184,7 @@ fun BatteryInfoDetailScreen(onBackClick: () -> Unit = {}) {
                         BatteryDetailRow(
                             icon = Icons.Default.Warning,
                             label = "Health",
-                            value = "${batteryData.health} (${batteryData.healthPercentage}%)",
+                            value = "${getHealthStatus(batteryData.healthPercentage)} (${batteryData.healthPercentage}%)",
                             iconColor = getHealthColor(batteryData.healthPercentage),
                         )
 
@@ -341,7 +349,7 @@ private fun DrawScope.drawBatteryHistoryBars(currentLevel: Int) {
         val barHeight = (hourlyLevel / 100f) * maxBarHeight
         val y = maxBarHeight - barHeight
 
-        val barColor = getBatteryColor(hourlyLevel)
+        val barColor = com.voltai.smartbatteryguardian.utils.getBatteryColor(hourlyLevel)
 
         drawRect(
             color = barColor,
@@ -351,28 +359,3 @@ private fun DrawScope.drawBatteryHistoryBars(currentLevel: Int) {
     }
 }
 
-private fun getBatteryColor(level: Int): Color {
-    return when {
-        level > 80 -> Color(0xFF4CAF50) // Green
-        level > 50 -> Color(0xFF2196F3) // Blue
-        level > 20 -> Color(0xFFFF9800) // Orange
-        else -> Color(0xFFF44336) // Red
-    }
-}
-
-private fun getHealthColor(healthPercentage: Int): Color {
-    return when {
-        healthPercentage > 80 -> Color(0xFF4CAF50) // Green
-        healthPercentage > 60 -> Color(0xFFFF9800) // Orange
-        else -> Color(0xFFF44336) // Red
-    }
-}
-
-private fun getTemperatureColor(temperature: Float): Color {
-    return when {
-        temperature < 25 -> Color(0xFF2196F3) // Blue (cool)
-        temperature < 35 -> Color(0xFF4CAF50) // Green (normal)
-        temperature < 45 -> Color(0xFFFF9800) // Orange (warm)
-        else -> Color(0xFFF44336) // Red (hot)
-    }
-}

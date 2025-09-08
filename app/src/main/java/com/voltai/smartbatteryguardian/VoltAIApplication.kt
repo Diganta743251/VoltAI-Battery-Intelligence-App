@@ -4,67 +4,51 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
-import androidx.core.content.getSystemService
-import com.voltai.ui.components.HapticFeedback
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class VoltAIApplication : Application() {
+    
     companion object {
-        const val BATTERY_CHANNEL_ID = "battery_monitoring"
-        const val ALERTS_CHANNEL_ID = "battery_alerts"
-        const val OPTIMIZATION_CHANNEL_ID = "battery_optimization"
+        const val NOTIFICATION_CHANNEL_ID = "voltai_monitoring"
+        const val VERSION_NAME = "1.0.0"
+        const val BUILD_TYPE = "Professional"
     }
-
+    
     override fun onCreate() {
         super.onCreate()
-
-        // Initialize haptic feedback
-        HapticFeedback.init(this)
-
-        // Create notification channels
+        
+        // Initialize notification channels
         createNotificationChannels()
+        
+        // Initialize AI services (placeholder)
+        initializeAIServices()
     }
-
+    
     private fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationManager = getSystemService<NotificationManager>()
-
-            // Battery monitoring channel
-            val batteryChannel =
-                NotificationChannel(
-                    BATTERY_CHANNEL_ID,
-                    "Battery Monitoring",
-                    NotificationManager.IMPORTANCE_LOW,
-                ).apply {
-                    description = "Ongoing battery monitoring notifications"
-                    setShowBadge(false)
-                }
-
-            // Battery alerts channel
-            val alertsChannel =
-                NotificationChannel(
-                    ALERTS_CHANNEL_ID,
-                    "Battery Alerts",
-                    NotificationManager.IMPORTANCE_DEFAULT,
-                ).apply {
-                    description = "Important battery status alerts"
-                }
-
-            // Optimization tips channel
-            val optimizationChannel =
-                NotificationChannel(
-                    OPTIMIZATION_CHANNEL_ID,
-                    "Battery Optimization",
-                    NotificationManager.IMPORTANCE_LOW,
-                ).apply {
-                    description = "Battery optimization tips and suggestions"
-                    setShowBadge(false)
-                }
-
-            notificationManager?.createNotificationChannels(
-                listOf(batteryChannel, alertsChannel, optimizationChannel),
-            )
+            val channel = NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                getString(R.string.notification_channel_name),
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = getString(R.string.notification_channel_description)
+                enableVibration(true)
+                setShowBadge(true)
+            }
+            
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(channel)
         }
+    }
+    
+    private fun initializeAIServices() {
+        // Initialize AI battery optimization engine
+        // This would normally connect to ML models and start background services
+        // For now, this is a placeholder for future implementation
+    }
+    
+    fun getVersionInfo(): String {
+        return "$VERSION_NAME ($BUILD_TYPE)"
     }
 }

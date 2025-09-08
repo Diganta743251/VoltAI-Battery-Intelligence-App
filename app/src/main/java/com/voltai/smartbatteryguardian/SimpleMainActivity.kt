@@ -25,7 +25,7 @@ class SimpleMainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            com.voltai.ui.theme.VoltAITheme {
+            com.voltai.smartbatteryguardian.ui.theme.VoltAITheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,

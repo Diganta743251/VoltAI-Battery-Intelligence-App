@@ -1,5 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">VoltAI-SmartBatteryGuardian</string>
-    <string name="accessibility_service_description">Ultra Battery Saver Service</string>
+    <string name="app_name">VoltAI - Smart Battery Guardian</string>
+    <string name="app_subtitle">AI-Powered Battery Optimization</string>
+    <string name="app_description">The ultimate battery management app powered by artificial intelligence. Get intelligent insights, advanced analytics, and professional-grade battery optimization for maximum device performance.</string>
+    
+    <!-- Main Screen Titles -->
+    <string name="home_title">VoltAI Pro</string>
+    <string name="battery_health">Battery Health</string>
+    <string name="power_management">AI Power Management</string>
+    <string name="battery_stats">Battery Analytics</string>
+    <string name="settings">Settings</string>
+    
+    <!-- Feature Descriptions -->
+    <string name="ai_optimization">AI Optimization</string>
+    <string name="smart_charging">Smart Charging Patterns</string>
+    <string name="thermal_management">Thermal Management</string>
+    <string name="predictive_analytics">Predictive Analytics</string>
+    <string name="professional_insights">Professional Insights</string>
+    
+    <!-- Status Messages -->
+    <string name="charging">Charging</string>
+    <string name="discharging">Discharging</string>
+    <string name="full">Full</string>
+    <string name="not_charging">Not Charging</string>
+    <string name="unknown">Unknown</string>
+    
+    <!-- Battery Health Status -->
+    <string name="excellent">Excellent</string>
+    <string name="very_good">Very Good</string>
+    <string name="good">Good</string>
+    <string name="fair">Fair</string>
+    <string name="poor">Poor</string>
+    <string name="critical">Critical</string>
+    
+    <!-- Temperature Status -->
+    <string name="cool">Cool</string>
+    <string name="optimal">Optimal</string>
+    <string name="normal">Normal</string>
+    <string name="warm">Warm</string>
+    <string name="hot">Hot</string>
+    
+    <!-- Permissions -->
+    <string name="permission_battery_stats">Battery Statistics</string>
+    <string name="permission_usage_stats">Usage Statistics</string>
+    <string name="permission_notifications">Notifications</string>
+    
+    <!-- Notifications -->
+    <string name="notification_channel_name">VoltAI Monitoring</string>
+    <string name="notification_channel_description">Battery monitoring and optimization alerts</string>
+    
+    <!-- Error Messages -->
+    <string name="error_battery_data">Unable to retrieve battery data</string>
+    <string name="error_permission_required">Permission required for full functionality</string>
+    
+    <!-- Pro Features -->
+    <string name="pro_feature_ai_insights">Advanced AI Insights</string>
+    <string name="pro_feature_detailed_analytics">Detailed Analytics</string>
+    <string name="pro_feature_predictive_modeling">Predictive Battery Modeling</string>
+    <string name="pro_feature_professional_reports">Professional Reports</string>
+    
+    <!-- Services -->
+    <string name="accessibility_service_description">Ultra Battery Saver Service - AI-powered battery optimization and monitoring service</string>
 </resources>

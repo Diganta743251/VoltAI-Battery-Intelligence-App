@@ -1,4 +1,5 @@
 rootProject.name = "VoltAI-SmartBatteryGuardian"
 
-include(':app', ':core', ':data', ':domain', ':features', ':ui', ':widget', ':backup', ':service')
+include(':app')
+// Temporarily disabled: ':core', ':data', ':domain', ':features', ':ui', ':widget', ':backup', ':service'
 // include(':wear')
