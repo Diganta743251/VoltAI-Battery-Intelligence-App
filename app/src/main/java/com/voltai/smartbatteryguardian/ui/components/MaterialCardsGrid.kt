@@ -3,6 +3,7 @@ package com.voltai.smartbatteryguardian.ui.components
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.foundation.shape.CircleShape
@@ -12,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
@@ -25,7 +27,7 @@ import com.voltai.smartbatteryguardian.ui.home.*
  * Removes excessive animations while maintaining essential interaction feedback.
  * Uses standard Material components and follows accessibility guidelines.
  */
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MaterialCardsGrid(
     cards: List<HomeCard>,
@@ -87,7 +89,7 @@ fun MaterialCardsGrid(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 private fun MaterialCard(
     card: HomeCard,
@@ -119,7 +121,7 @@ private fun MaterialCard(
             containerColor = if (isSelected && isEditMode) {
                 MaterialTheme.colorScheme.primaryContainer
             } else {
-                MaterialTheme.colorScheme.surfaceContainerLow
+                MaterialTheme.colorScheme.surface
             }
         ),
         elevation = CardDefaults.cardElevation(
@@ -134,9 +136,10 @@ private fun MaterialCard(
                 .fillMaxSize()
                 .combinedClickable(
                     onClick = onCardClick,
-                    onLongClick = onCardLongPress
+                    onLongClick = onCardLongPress,
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
                 )
-                .indication(null, null) // Remove ripple since Card already handles it
         ) {
             // Card Content
             MaterialCardContent(
@@ -199,6 +202,7 @@ private fun EditModeOverlay(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AddCardPlaceholder(
     onClick: () -> Unit,
@@ -211,7 +215,7 @@ private fun AddCardPlaceholder(
             .height(120.dp),
         shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         border = BorderStroke(
             width = 1.dp,
