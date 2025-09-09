@@ -45,27 +45,27 @@ fun OverlaysScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    
+
     // State for overlay settings
     val batteryOverlayEnabled by context.overlayDataStore.data
         .map { it[BATTERY_OVERLAY_KEY] ?: false }
         .collectAsState(initial = false)
-    
+
     val currentOverlayEnabled by context.overlayDataStore.data
         .map { it[CURRENT_OVERLAY_KEY] ?: false }
         .collectAsState(initial = false)
-    
+
     val temperatureOverlayEnabled by context.overlayDataStore.data
         .map { it[TEMPERATURE_OVERLAY_KEY] ?: false }
         .collectAsState(initial = false)
-    
+
     val overlayOpacity by context.overlayDataStore.data
         .map { it[OVERLAY_OPACITY_KEY] ?: 0.8f }
         .collectAsState(initial = 0.8f)
-    
+
     // Permission dialog state
     var showPermissionDialog by remember { mutableStateOf(false) }
-    
+
     // Check if overlay permission is granted
     val hasOverlayPermission = remember {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -107,9 +107,9 @@ fun OverlaysScreen(
                                 tint = Color(0xFF2196F3),
                                 modifier = Modifier.size(32.dp)
                             )
-                            
+
                             Spacer(modifier = Modifier.width(12.dp))
-                            
+
                             Text(
                                 text = "Advanced overlays",
                                 fontSize = 20.sp,
@@ -117,19 +117,19 @@ fun OverlaysScreen(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
-                        
+
                         Spacer(modifier = Modifier.height(12.dp))
-                        
+
                         Text(
                             text = "Display real-time battery information on your screen. Overlays will appear over other apps to keep you informed about your battery status.",
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             lineHeight = 20.sp
                         )
-                        
+
                         if (!hasOverlayPermission) {
                             Spacer(modifier = Modifier.height(16.dp))
-                            
+
                             Card(
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color(0xFFFF9800).copy(alpha = 0.1f)
@@ -145,9 +145,9 @@ fun OverlaysScreen(
                                         tint = Color(0xFFFF9800),
                                         modifier = Modifier.size(20.dp)
                                     )
-                                    
+
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    
+
                                     Text(
                                         text = "Permission required for overlays to work",
                                         fontSize = 14.sp,
@@ -160,7 +160,7 @@ fun OverlaysScreen(
                     }
                 }
             }
-            
+
             // All-in-One Overlay Section
             item {
                 Text(
@@ -171,7 +171,7 @@ fun OverlaysScreen(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
-            
+
             item {
                 OverlayOptionCard(
                     title = "All in one overlay",
@@ -191,7 +191,7 @@ fun OverlaysScreen(
                     }
                 )
             }
-            
+
             // Simple Overlays Section
             item {
                 Text(
@@ -202,7 +202,7 @@ fun OverlaysScreen(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
-            
+
             item {
                 OverlayOptionCard(
                     title = "Electric current",
@@ -221,7 +221,7 @@ fun OverlaysScreen(
                     }
                 )
             }
-            
+
             item {
                 OverlayOptionCard(
                     title = "Battery temperature",
@@ -240,7 +240,7 @@ fun OverlaysScreen(
                     }
                 )
             }
-            
+
             // Overlay Customization
             item {
                 Card(
@@ -259,17 +259,17 @@ fun OverlaysScreen(
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        
+
                         Spacer(modifier = Modifier.height(8.dp))
-                        
+
                         Text(
                             text = "Adjust transparency of overlay elements",
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        
+
                         Spacer(modifier = Modifier.height(16.dp))
-                        
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
@@ -279,7 +279,7 @@ fun OverlaysScreen(
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            
+
                             Slider(
                                 value = overlayOpacity,
                                 onValueChange = { newValue ->
@@ -298,16 +298,16 @@ fun OverlaysScreen(
                                     activeTrackColor = Color(0xFF2196F3)
                                 )
                             )
-                            
+
                             Text(
                                 text = "100%",
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        
+
                         Spacer(modifier = Modifier.height(8.dp))
-                        
+
                         Text(
                             text = "Current: ${(overlayOpacity * 100).toInt()}%",
                             fontSize = 14.sp,
@@ -319,7 +319,7 @@ fun OverlaysScreen(
                     }
                 }
             }
-            
+
             // Additional settings card
             item {
                 Card(
@@ -338,9 +338,9 @@ fun OverlaysScreen(
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        
+
                         Spacer(modifier = Modifier.height(12.dp))
-                        
+
                         OverlayTipItem("Tap overlays to expand and see more details")
                         OverlayTipItem("Long press to move overlays around your screen")
                         OverlayTipItem("Overlays work on top of all other apps")
@@ -348,14 +348,14 @@ fun OverlaysScreen(
                     }
                 }
             }
-            
+
             // Bottom spacing
             item {
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
-    
+
     // Permission Request Dialog
     if (showPermissionDialog) {
         OverlayPermissionDialog(
@@ -408,19 +408,19 @@ fun OverlayOptionCard(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Spacer(modifier = Modifier.height(4.dp))
-                    
+
                     Text(
                         text = description,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 20.sp
                     )
-                    
+
                     if (additionalInfo.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(8.dp))
-                        
+
                         Text(
                             text = additionalInfo,
                             fontSize = 12.sp,
@@ -429,9 +429,9 @@ fun OverlayOptionCard(
                         )
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Switch(
                     checked = enabled,
                     onCheckedChange = onToggle,
@@ -459,9 +459,9 @@ fun OverlayTipItem(tip: String) {
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(top = 2.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(8.dp))
-        
+
         Text(
             text = tip,
             fontSize = 14.sp,
@@ -494,9 +494,9 @@ fun OverlayPermissionDialog(
                     tint = Color(0xFF2196F3),
                     modifier = Modifier.size(48.dp)
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Text(
                     text = "Overlay Permission Required",
                     fontSize = 18.sp,
@@ -504,9 +504,9 @@ fun OverlayPermissionDialog(
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
-                
+
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 Text(
                     text = "To display battery information on top of other apps, VoltAI needs permission to draw overlays. This permission is required for the overlay feature to work.",
                     fontSize = 14.sp,
@@ -514,9 +514,9 @@ fun OverlayPermissionDialog(
                     textAlign = TextAlign.Center,
                     lineHeight = 20.sp
                 )
-                
+
                 Spacer(modifier = Modifier.height(20.dp))
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -527,7 +527,7 @@ fun OverlayPermissionDialog(
                     ) {
                         Text("Cancel")
                     }
-                    
+
                     Button(
                         onClick = onRequestPermission,
                         modifier = Modifier.weight(1f),

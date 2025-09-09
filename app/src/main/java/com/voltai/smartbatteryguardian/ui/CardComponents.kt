@@ -48,7 +48,7 @@ fun BatteryInfoCardContent(batteryData: BatteryData) {
                 color = getBatteryLevelColor(batteryData.batteryLevel),
                 letterSpacing = (-1).sp
             )
-            
+
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = if (batteryData.isCharging) Color(0xFF4CAF50) else Color(0xFFF0F0F0)
@@ -62,10 +62,10 @@ fun BatteryInfoCardContent(batteryData: BatteryData) {
                 )
             }
         }
-        
+
         // Animated progress bar
         AnimatedBatteryBar(batteryData.batteryLevel)
-        
+
         Text(
             text = batteryData.remainingTime,
             fontSize = 12.sp,
@@ -84,7 +84,7 @@ fun AnimatedBatteryBar(batteryLevel: Int) {
             stiffness = Spring.StiffnessMedium
         )
     )
-    
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,7 +123,7 @@ fun ElectricCurrentCardContent(batteryData: BatteryData) {
             color = Color(0xFF666666),
             fontWeight = FontWeight.Medium
         )
-        
+
         Column {
             Text(
                 text = "${batteryData.current} mA",
@@ -137,7 +137,7 @@ fun ElectricCurrentCardContent(batteryData: BatteryData) {
                 color = Color(0xFF666666)
             )
         }
-        
+
         AnimatedWaveGraph()
     }
 }
@@ -154,7 +154,7 @@ fun OngoingCardContent(batteryData: BatteryData) {
             color = Color(0xFF666666),
             fontWeight = FontWeight.Medium
         )
-        
+
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             OngoingItem(
                 icon = "📱",
@@ -212,7 +212,7 @@ fun TemperatureCardContent(batteryData: BatteryData) {
             color = Color(0xFF666666),
             fontWeight = FontWeight.Medium
         )
-        
+
         Column {
             Text(
                 text = "${batteryData.temperature.toInt()}°C",
@@ -234,7 +234,7 @@ fun TemperatureCardContent(batteryData: BatteryData) {
                 }
             )
         }
-        
+
         AnimatedTemperatureGraph(batteryData.temperature)
     }
 }
@@ -251,7 +251,7 @@ fun HealthCardContent(batteryData: BatteryData) {
             color = Color(0xFF666666),
             fontWeight = FontWeight.Medium
         )
-        
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -263,7 +263,7 @@ fun HealthCardContent(batteryData: BatteryData) {
                     stiffness = Spring.StiffnessMedium
                 )
             )
-            
+
             CircularProgressIndicator(
                 progress = animatedProgress,
                 modifier = Modifier.size(32.dp),
@@ -271,7 +271,7 @@ fun HealthCardContent(batteryData: BatteryData) {
                 color = Color(0xFF4CAF50),
                 trackColor = Color(0xFFE8F5E8)
             )
-            
+
             Column {
                 Text(
                     text = "${batteryData.healthPercentage}%",
@@ -301,7 +301,7 @@ fun AverageUsageCardContent() {
             color = Color(0xFF666666),
             fontWeight = FontWeight.Medium
         )
-        
+
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             OngoingItem(
                 icon = "☀️",
@@ -329,7 +329,7 @@ fun ChargeEstimationCardContent(batteryData: BatteryData) {
             color = Color(0xFF666666),
             fontWeight = FontWeight.Medium
         )
-        
+
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             OngoingItem(
                 icon = "⚡",
@@ -357,10 +357,10 @@ fun HistoryCardContent() {
             color = Color(0xFF666666),
             fontWeight = FontWeight.Medium
         )
-        
+
         // Mini bar chart
         AnimatedBarChart()
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -461,14 +461,14 @@ fun AIInsightsCardContent() {
                 fontWeight = FontWeight.Medium
             )
         }
-        
+
         Text(
             text = "Battery optimization active. 23% improvement detected.",
             fontSize = 12.sp,
             color = Color.Black,
             lineHeight = 16.sp
         )
-        
+
         Surface(
             shape = RoundedCornerShape(8.dp),
             color = Color(0xFF9C27B0).copy(alpha = 0.1f)
@@ -496,7 +496,7 @@ fun QuickActionsCardContent() {
             color = Color(0xFF666666),
             fontWeight = FontWeight.Medium
         )
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -535,7 +535,7 @@ fun PowerModesCardContent() {
             color = Color(0xFF666666),
             fontWeight = FontWeight.Medium
         )
-        
+
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
             PowerModeItem("⚡", "Performance", true)
             PowerModeItem("🔋", "Battery Saver", false)
@@ -577,18 +577,18 @@ fun AnimatedWaveGraph() {
     ) {
         val path = Path()
         val points = listOf(0.2f, 0.4f, 0.8f, 0.5f, 0.9f, 0.3f, 0.7f)
-        
+
         points.forEachIndexed { index, point ->
             val x = (index * size.width) / (points.size - 1)
             val y = size.height - (point * size.height)
-            
+
             if (index == 0) {
                 path.moveTo(x, y)
             } else {
                 path.lineTo(x, y)
             }
         }
-        
+
         drawPath(
             path = path,
             color = Color(0xFF2196F3),
@@ -604,7 +604,7 @@ fun AnimatedTemperatureGraph(temperature: Float) {
         temperature > 35f -> Color(0xFFFFB74D)
         else -> Color(0xFF81C784)
     }
-    
+
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
@@ -612,18 +612,18 @@ fun AnimatedTemperatureGraph(temperature: Float) {
     ) {
         val points = listOf(0.4f, 0.3f, 0.5f, 0.4f, 0.6f, 0.7f, 0.5f)
         val path = Path()
-        
+
         points.forEachIndexed { index, point ->
             val x = (index * size.width) / (points.size - 1)
             val y = size.height - (point * size.height)
-            
+
             if (index == 0) {
                 path.moveTo(x, y)
             } else {
                 path.lineTo(x, y)
             }
         }
-        
+
         drawPath(
             path = path,
             color = tempColor,
@@ -653,22 +653,45 @@ fun CardContent(
         com.voltai.smartbatteryguardian.ui.home.CardType.PERFORMANCE_CHART -> HistoryCardContent()
         com.voltai.smartbatteryguardian.ui.home.CardType.THERMAL_STATUS -> TemperatureCardContent(batteryData)
         com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_TIPS -> AIInsightsCardContent()
-        com.voltai.smartbatteryguardian.ui.home.CardType.HISTORY -> com.voltai.smartbatteryguardian.ui.home.HistoryCardContent(batteryData, isEditMode)
-        com.voltai.smartbatteryguardian.ui.home.CardType.OVERLAYS -> com.voltai.smartbatteryguardian.ui.home.OverlaysCardContent(batteryData, isEditMode)
-        
+        com.voltai.smartbatteryguardian.ui.home.CardType.HISTORY -> com.voltai.smartbatteryguardian.ui.home.HistoryCardContent(
+            batteryData,
+            isEditMode
+        )
+        com.voltai.smartbatteryguardian.ui.home.CardType.OVERLAYS -> com.voltai.smartbatteryguardian.ui.home.OverlaysCardContent(
+            batteryData,
+            isEditMode
+        )
+
         // Premium Advanced Cards
         com.voltai.smartbatteryguardian.ui.home.CardType.CHARGING_ANALYTICS -> ChargingAnalyticsCardContent(batteryData)
         com.voltai.smartbatteryguardian.ui.home.CardType.CHEMISTRY_LAB -> ChemistryLabCardContent(batteryData)
-        com.voltai.smartbatteryguardian.ui.home.CardType.SYSTEM_OPTIMIZATION -> SystemOptimizationCardContent(batteryData)
-        com.voltai.smartbatteryguardian.ui.home.CardType.PERFORMANCE_BENCHMARKS -> PerformanceBenchmarksCardContent(batteryData)
-        com.voltai.smartbatteryguardian.ui.home.CardType.DATA_EXPORT_IMPORT -> com.voltai.smartbatteryguardian.ui.home.DataExportImportCardContent(batteryData, isEditMode)
-        
+        com.voltai.smartbatteryguardian.ui.home.CardType.SYSTEM_OPTIMIZATION -> SystemOptimizationCardContent(
+            batteryData
+        )
+        com.voltai.smartbatteryguardian.ui.home.CardType.PERFORMANCE_BENCHMARKS -> PerformanceBenchmarksCardContent(
+            batteryData
+        )
+        com.voltai.smartbatteryguardian.ui.home.CardType.DATA_EXPORT_IMPORT -> com.voltai.smartbatteryguardian.ui.home.DataExportImportCardContent(
+            batteryData,
+            isEditMode
+        )
+
         // New Premium Analytics Cards
-        com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_HEALTH_ANALYTICS -> com.voltai.smartbatteryguardian.ui.home.EnhancedBatteryHealthAnalyticsCard(batteryData)
-        com.voltai.smartbatteryguardian.ui.home.CardType.SMART_CHARGING -> com.voltai.smartbatteryguardian.ui.home.EnhancedSmartChargingCard(batteryData)
-        com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_DIAGNOSTICS -> BatteryDiagnosticsCardContent(batteryData)
-        com.voltai.smartbatteryguardian.ui.home.CardType.REAL_TIME_MONITORING -> com.voltai.smartbatteryguardian.ui.home.EnhancedRealTimeMonitoringCard(batteryData)
-        com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_OPTIMIZATION -> BatteryOptimizationCardContent(batteryData)
+        com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_HEALTH_ANALYTICS -> com.voltai.smartbatteryguardian.ui.home.EnhancedBatteryHealthAnalyticsCard(
+            batteryData
+        )
+        com.voltai.smartbatteryguardian.ui.home.CardType.SMART_CHARGING -> com.voltai.smartbatteryguardian.ui.home.EnhancedSmartChargingCard(
+            batteryData
+        )
+        com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_DIAGNOSTICS -> BatteryDiagnosticsCardContent(
+            batteryData
+        )
+        com.voltai.smartbatteryguardian.ui.home.CardType.REAL_TIME_MONITORING -> com.voltai.smartbatteryguardian.ui.home.EnhancedRealTimeMonitoringCard(
+            batteryData
+        )
+        com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_OPTIMIZATION -> BatteryOptimizationCardContent(
+            batteryData
+        )
     }
 }
 
@@ -682,7 +705,7 @@ fun AnimatedBarChart() {
         verticalAlignment = Alignment.Bottom
     ) {
         val data = listOf(0.3f, 0.6f, 0.4f, 0.8f, 0.5f, 0.9f, 0.7f)
-        
+
         data.forEach { height ->
             val animatedHeight by animateFloatAsState(
                 targetValue = height,
@@ -691,7 +714,7 @@ fun AnimatedBarChart() {
                     stiffness = Spring.StiffnessMedium
                 )
             )
-            
+
             Box(
                 modifier = Modifier
                     .weight(1f)

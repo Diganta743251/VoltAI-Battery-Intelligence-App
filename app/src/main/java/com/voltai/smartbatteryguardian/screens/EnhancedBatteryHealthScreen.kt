@@ -3,6 +3,7 @@ package com.voltai.smartbatteryguardian.screens
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
@@ -13,7 +14,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -24,9 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.Canvas
 import com.voltai.smartbatteryguardian.rememberBatteryData
-import kotlinx.coroutines.delay
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -91,12 +89,12 @@ fun EnhancedBatteryHealthScreen() {
     val batteryData by rememberBatteryData(context)
     var selectedTab by remember { mutableStateOf(0) }
     var isAnalyzing by remember { mutableStateOf(false) }
-    
+
     val healthData = remember { generateHealthData() }
     val recommendations = remember { generateRecommendations(healthData) }
-    
+
     val tabs = listOf("🏥 Overview", "🔬 Chemistry", "📊 Analytics", "🔮 Predictions", "🛠 Tools")
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -133,9 +131,9 @@ fun EnhancedBatteryHealthScreen() {
                     ) {
                         AnimatedHealthIcon(healthData.overallHealth)
                     }
-                    
+
                     Spacer(modifier = Modifier.width(20.dp))
-                    
+
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
@@ -151,7 +149,7 @@ fun EnhancedBatteryHealthScreen() {
                             color = Color.White.copy(alpha = 0.9f)
                         )
                     }
-                    
+
                     // Real-time Health Score
                     Surface(
                         shape = RoundedCornerShape(12.dp),
@@ -175,9 +173,9 @@ fun EnhancedBatteryHealthScreen() {
                         }
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Quick Health Metrics
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -186,11 +184,15 @@ fun EnhancedBatteryHealthScreen() {
                     QuickHealthMetric("Cycles", "${healthData.cycles}", "🔄")
                     QuickHealthMetric("Capacity", "${healthData.capacity}mAh", "⚡")
                     QuickHealthMetric("Wear", "${String.format("%.1f", healthData.wear)}%", "📉")
-                    QuickHealthMetric("Efficiency", "${String.format("%.0f", healthData.chargingEfficiency * 100)}%", "🎯")
+                    QuickHealthMetric(
+                        "Efficiency",
+                        "${String.format("%.0f", healthData.chargingEfficiency * 100)}%",
+                        "🎯"
+                    )
                 }
             }
         }
-        
+
         // Tab Row
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -213,7 +215,7 @@ fun EnhancedBatteryHealthScreen() {
                 }
             }
         }
-        
+
         // Content with advanced animations
         AnimatedContent(
             targetState = selectedTab,
@@ -249,7 +251,7 @@ fun AnimatedHealthIcon(healthPercentage: Int) {
             repeatMode = RepeatMode.Restart
         )
     )
-    
+
     Box(
         modifier = Modifier
             .size(48.dp)
@@ -333,16 +335,16 @@ fun HealthOverviewTab(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(24.dp))
-                    
+
                     // Multi-ring health display
                     Box(
                         modifier = Modifier.size(200.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         AdvancedHealthRings(healthData)
-                        
+
                         // Center content
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
@@ -360,9 +362,9 @@ fun HealthOverviewTab(
                             )
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(24.dp))
-                    
+
                     // Health metrics grid
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -375,7 +377,7 @@ fun HealthOverviewTab(
                 }
             }
         }
-        
+
         // Critical Recommendations
         item {
             Text(
@@ -385,11 +387,11 @@ fun HealthOverviewTab(
                 modifier = Modifier.padding(horizontal = 4.dp)
             )
         }
-        
+
         items(recommendations.filter { it.priority <= RecommendationPriority.HIGH }) { recommendation ->
             RecommendationCard(recommendation)
         }
-        
+
         // Health Trend Chart
         item {
             Card(
@@ -405,14 +407,14 @@ fun HealthOverviewTab(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     HealthTrendChart(healthData.healthTrend)
                 }
             }
         }
-        
+
         // Detailed Metrics
         item {
             Card(
@@ -428,13 +430,29 @@ fun HealthOverviewTab(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
-                    DetailedMetricRow("Temperature", "${batteryData.temperature}°C", getTemperatureStatus(batteryData.temperature.toDouble()))
-                    DetailedMetricRow("Voltage", "${batteryData.voltage}V", getVoltageStatus(batteryData.voltage.toDouble()))
-                    DetailedMetricRow("Current", "${String.format("%.0f", healthData.current)}mA", getCurrentStatus(healthData.current))
-                    DetailedMetricRow("Charging Efficiency", "${String.format("%.1f", healthData.chargingEfficiency * 100)}%", getEfficiencyStatus(healthData.chargingEfficiency))
+
+                    DetailedMetricRow(
+                        "Temperature",
+                        "${batteryData.temperature}°C",
+                        getTemperatureStatus(batteryData.temperature.toDouble())
+                    )
+                    DetailedMetricRow(
+                        "Voltage",
+                        "${batteryData.voltage}V",
+                        getVoltageStatus(batteryData.voltage.toDouble())
+                    )
+                    DetailedMetricRow(
+                        "Current",
+                        "${String.format("%.0f", healthData.current)}mA",
+                        getCurrentStatus(healthData.current)
+                    )
+                    DetailedMetricRow(
+                        "Charging Efficiency",
+                        "${String.format("%.1f", healthData.chargingEfficiency * 100)}%",
+                        getEfficiencyStatus(healthData.chargingEfficiency)
+                    )
                 }
             }
         }
@@ -484,9 +502,9 @@ fun BatteryChemistryTab(chemistry: BatteryChemistry, batteryData: com.voltai.sma
                             )
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(20.dp))
-                    
+
                     // Chemistry components
                     ChemistryComponent("Cathode Material", chemistry.cathode, "⚫")
                     Spacer(modifier = Modifier.height(12.dp))
@@ -496,7 +514,7 @@ fun BatteryChemistryTab(chemistry: BatteryChemistry, batteryData: com.voltai.sma
                 }
             }
         }
-        
+
         // Voltage Characteristics
         item {
             Card(
@@ -512,13 +530,13 @@ fun BatteryChemistryTab(chemistry: BatteryChemistry, batteryData: com.voltai.sma
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     VoltageCharacteristicsChart(chemistry, batteryData.voltage.toDouble())
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
@@ -530,7 +548,7 @@ fun BatteryChemistryTab(chemistry: BatteryChemistry, batteryData: com.voltai.sma
                 }
             }
         }
-        
+
         // Chemistry Analysis
         item {
             Card(
@@ -546,23 +564,23 @@ fun BatteryChemistryTab(chemistry: BatteryChemistry, batteryData: com.voltai.sma
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     ChemicalAnalysisItem(
                         title = "Ion Mobility",
                         description = "Excellent lithium ion conductivity detected",
                         status = "Optimal",
                         color = Color(0xFF4CAF50)
                     )
-                    
+
                     ChemicalAnalysisItem(
                         title = "Electrode Integrity",
                         description = "Minor degradation in cathode structure",
                         status = "Good",
                         color = Color(0xFFFF9800)
                     )
-                    
+
                     ChemicalAnalysisItem(
                         title = "Electrolyte Quality",
                         description = "No significant decomposition products",
@@ -572,7 +590,7 @@ fun BatteryChemistryTab(chemistry: BatteryChemistry, batteryData: com.voltai.sma
                 }
             }
         }
-        
+
         // Safety Information
         item {
             Card(
@@ -590,12 +608,15 @@ fun BatteryChemistryTab(chemistry: BatteryChemistry, batteryData: com.voltai.sma
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     SafetyInfoItem("Operating Temperature", "0°C to 45°C", batteryData.temperature < 45)
-                    SafetyInfoItem("Voltage Range", "${chemistry.cutoffVoltage}V - ${chemistry.maxVoltage}V", 
-                        batteryData.voltage.toDouble() in chemistry.cutoffVoltage..chemistry.maxVoltage)
+                    SafetyInfoItem(
+                        "Voltage Range",
+                        "${chemistry.cutoffVoltage}V - ${chemistry.maxVoltage}V",
+                        batteryData.voltage.toDouble() in chemistry.cutoffVoltage..chemistry.maxVoltage
+                    )
                     SafetyInfoItem("Overcharge Protection", "Active", true)
                     SafetyInfoItem("Thermal Protection", "Active", batteryData.temperature < 40)
                 }
@@ -627,14 +648,14 @@ fun HealthAnalyticsTab(healthData: BatteryHealthData) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     PerformanceAnalyticsChart(healthData)
                 }
             }
         }
-        
+
         // Degradation Analysis
         item {
             Card(
@@ -650,17 +671,21 @@ fun HealthAnalyticsTab(healthData: BatteryHealthData) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
-                    DegradationFactorItem("Cycle Aging", (healthData.cycles.toDouble() / healthData.maxCycles * 100).toInt(), Color(0xFFFF5722))
+
+                    DegradationFactorItem(
+                        "Cycle Aging",
+                        (healthData.cycles.toDouble() / healthData.maxCycles * 100).toInt(),
+                        Color(0xFFFF5722)
+                    )
                     DegradationFactorItem("Calendar Aging", 15, Color(0xFFFF9800))
                     DegradationFactorItem("Temperature Stress", 8, Color(0xFF4CAF50))
                     DegradationFactorItem("Voltage Stress", 12, Color(0xFFFF9800))
                 }
             }
         }
-        
+
         // Comparative Analysis
         item {
             Card(
@@ -676,9 +701,9 @@ fun HealthAnalyticsTab(healthData: BatteryHealthData) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     ComparisonChart(healthData)
                 }
             }
@@ -732,7 +757,7 @@ fun PredictionsTab(predictions: HealthPredictions) {
                 }
             }
         }
-        
+
         // Remaining Life Prediction
         item {
             Card(
@@ -748,13 +773,13 @@ fun PredictionsTab(predictions: HealthPredictions) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     RemainingLifeVisualization(predictions.remainingLifeMonths)
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Text(
                         text = "Estimated ${predictions.remainingLifeMonths} months of optimal performance remaining",
                         fontSize = 14.sp,
@@ -765,7 +790,7 @@ fun PredictionsTab(predictions: HealthPredictions) {
                 }
             }
         }
-        
+
         // Capacity Predictions
         item {
             Card(
@@ -781,13 +806,13 @@ fun PredictionsTab(predictions: HealthPredictions) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     CapacityForecastChart(predictions)
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
@@ -798,7 +823,7 @@ fun PredictionsTab(predictions: HealthPredictions) {
                 }
             }
         }
-        
+
         // Maintenance Predictions
         item {
             Card(
@@ -814,15 +839,15 @@ fun PredictionsTab(predictions: HealthPredictions) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     MaintenanceScheduleItem("Battery Calibration", "${predictions.nextCalibrationDays} days", "🔋")
                     MaintenanceScheduleItem("Deep Cycle", "14 days", "🔄")
                     MaintenanceScheduleItem("Health Check", "30 days", "🏥")
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     if (predictions.replacementRecommendation.isNotEmpty()) {
                         Card(
                             colors = CardDefaults.cardColors(
@@ -874,17 +899,17 @@ fun HealthToolsTab(onAnalyze: () -> Unit) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Text(
                         text = "Improve battery accuracy by calibrating the fuel gauge",
                         fontSize = 14.sp,
                         color = Color(0xFF666666)
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Button(
                         onClick = { /* Start calibration */ },
                         modifier = Modifier.fillMaxWidth(),
@@ -897,7 +922,7 @@ fun HealthToolsTab(onAnalyze: () -> Unit) {
                 }
             }
         }
-        
+
         // Deep Analysis Tool
         item {
             Card(
@@ -913,17 +938,17 @@ fun HealthToolsTab(onAnalyze: () -> Unit) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Text(
                         text = "Comprehensive battery health diagnostic using AI algorithms",
                         fontSize = 14.sp,
                         color = Color(0xFF666666)
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Button(
                         onClick = onAnalyze,
                         modifier = Modifier.fillMaxWidth(),
@@ -936,7 +961,7 @@ fun HealthToolsTab(onAnalyze: () -> Unit) {
                 }
             }
         }
-        
+
         // Export Health Report
         item {
             Card(
@@ -952,17 +977,17 @@ fun HealthToolsTab(onAnalyze: () -> Unit) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Text(
                         text = "Generate detailed PDF report with all health data",
                         fontSize = 14.sp,
                         color = Color(0xFF666666)
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
@@ -997,7 +1022,7 @@ fun AdvancedHealthRings(healthData: BatteryHealthData) {
         val center = center
         val strokeWidth = 12.dp.toPx()
         val gap = 8.dp.toPx()
-        
+
         // Outer ring - Overall Health
         val outerRadius = size.minDimension / 2 - strokeWidth / 2
         drawArc(
@@ -1024,7 +1049,7 @@ fun AdvancedHealthRings(healthData: BatteryHealthData) {
                 center.y - outerRadius
             )
         )
-        
+
         // Middle ring - Capacity
         val middleRadius = outerRadius - strokeWidth - gap
         val capacityPercentage = (healthData.capacity.toFloat() / healthData.designCapacity * 100).toInt()
@@ -1052,7 +1077,7 @@ fun AdvancedHealthRings(healthData: BatteryHealthData) {
                 center.y - middleRadius
             )
         )
-        
+
         // Inner ring - Cycles
         val innerRadius = middleRadius - strokeWidth - gap
         val cyclePercentage = (healthData.cycles.toFloat() / healthData.maxCycles * 100).toInt()
@@ -1115,7 +1140,8 @@ fun RecommendationCard(recommendation: HealthRecommendation) {
             }
         ),
         border = BorderStroke(
-            1.dp, when (recommendation.priority) {
+            1.dp,
+            when (recommendation.priority) {
                 RecommendationPriority.CRITICAL -> Color(0xFFFF5722)
                 RecommendationPriority.HIGH -> Color(0xFFFF9800)
                 RecommendationPriority.MEDIUM -> Color(0xFF9C27B0)
@@ -1131,9 +1157,9 @@ fun RecommendationCard(recommendation: HealthRecommendation) {
                 text = recommendation.icon,
                 fontSize = 24.sp
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -1170,18 +1196,18 @@ fun HealthTrendChart(healthTrend: List<HealthPoint>) {
             .height(120.dp)
     ) {
         if (healthTrend.isEmpty()) return@Canvas
-        
+
         val stepX = size.width / (healthTrend.size - 1).coerceAtLeast(1)
         val maxHealth = 100f
         val minHealth = healthTrend.minOfOrNull { it.healthPercentage }?.toFloat() ?: 0f
-        
+
         val points = healthTrend.mapIndexed { index, point ->
             androidx.compose.ui.geometry.Offset(
                 x = index * stepX,
                 y = size.height - ((point.healthPercentage - minHealth) / (maxHealth - minHealth)) * size.height
             )
         }
-        
+
         // Draw gradient area
         val path = androidx.compose.ui.graphics.Path().apply {
             if (points.isNotEmpty()) {
@@ -1193,7 +1219,7 @@ fun HealthTrendChart(healthTrend: List<HealthPoint>) {
                 close()
             }
         }
-        
+
         drawPath(
             path = path,
             brush = Brush.verticalGradient(
@@ -1203,7 +1229,7 @@ fun HealthTrendChart(healthTrend: List<HealthPoint>) {
                 )
             )
         )
-        
+
         // Draw line
         for (i in 0 until points.size - 1) {
             drawLine(
@@ -1214,7 +1240,7 @@ fun HealthTrendChart(healthTrend: List<HealthPoint>) {
                 cap = StrokeCap.Round
             )
         }
-        
+
         // Draw points
         points.forEach { point ->
             drawCircle(
@@ -1281,7 +1307,7 @@ fun generateHealthTrend(): List<HealthPoint> {
 
 fun generateRecommendations(healthData: BatteryHealthData): List<HealthRecommendation> {
     val recommendations = mutableListOf<HealthRecommendation>()
-    
+
     if (healthData.cycles > healthData.maxCycles * 0.8) {
         recommendations.add(
             HealthRecommendation(
@@ -1293,7 +1319,7 @@ fun generateRecommendations(healthData: BatteryHealthData): List<HealthRecommend
             )
         )
     }
-    
+
     if (healthData.temperature > 35.0) {
         recommendations.add(
             HealthRecommendation(
@@ -1305,7 +1331,7 @@ fun generateRecommendations(healthData: BatteryHealthData): List<HealthRecommend
             )
         )
     }
-    
+
     if (healthData.chargingEfficiency < 0.9) {
         recommendations.add(
             HealthRecommendation(
@@ -1317,7 +1343,7 @@ fun generateRecommendations(healthData: BatteryHealthData): List<HealthRecommend
             )
         )
     }
-    
+
     return recommendations
 }
 
@@ -1410,17 +1436,17 @@ fun VoltageCharacteristicsChart(chemistry: BatteryChemistry, currentVoltage: Dou
     ) {
         val barWidth = size.width / 3
         val maxVoltage = chemistry.maxVoltage.toFloat()
-        
+
         // Draw voltage bars
         val voltages = listOf(chemistry.cutoffVoltage, chemistry.nominalVoltage, chemistry.maxVoltage)
         val colors = listOf(Color(0xFFFF5722), Color(0xFF4CAF50), Color(0xFFFF9800))
         val labels = listOf("Cutoff", "Nominal", "Maximum")
-        
+
         voltages.forEachIndexed { index, voltage ->
             val barHeight = (voltage.toFloat() / maxVoltage) * size.height * 0.8f
             val x = index * barWidth + barWidth * 0.25f
             val y = size.height - barHeight
-            
+
             drawRoundRect(
                 color = colors[index].copy(alpha = 0.7f),
                 topLeft = androidx.compose.ui.geometry.Offset(x, y),
@@ -1428,7 +1454,7 @@ fun VoltageCharacteristicsChart(chemistry: BatteryChemistry, currentVoltage: Dou
                 cornerRadius = androidx.compose.ui.geometry.CornerRadius(4.dp.toPx())
             )
         }
-        
+
         // Draw current voltage indicator
         val currentX = size.width / 2
         val currentY = size.height - (currentVoltage.toFloat() / maxVoltage) * size.height * 0.8f
@@ -1642,7 +1668,7 @@ fun RemainingLifeVisualization(months: Int) {
         val progress = months / totalMonths
         val barHeight = 20.dp.toPx()
         val barY = (size.height - barHeight) / 2
-        
+
         // Background bar
         drawRoundRect(
             color = Color.Gray.copy(alpha = 0.2f),
@@ -1650,7 +1676,7 @@ fun RemainingLifeVisualization(months: Int) {
             size = androidx.compose.ui.geometry.Size(size.width, barHeight),
             cornerRadius = androidx.compose.ui.geometry.CornerRadius(10.dp.toPx())
         )
-        
+
         // Progress bar
         drawRoundRect(
             color = Color(0xFF4CAF50),

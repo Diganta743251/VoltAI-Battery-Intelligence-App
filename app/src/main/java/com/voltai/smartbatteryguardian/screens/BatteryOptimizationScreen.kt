@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,12 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.math.*
-import kotlin.random.Random
-import java.text.SimpleDateFormat
-import java.util.*
 import com.voltai.smartbatteryguardian.models.OptimizationCategory
 import com.voltai.smartbatteryguardian.models.OptimizationImpact
+import java.util.*
+import kotlin.math.*
+import kotlin.random.Random
 
 // Local data models for Battery Optimization
 data class OptimizationSuggestion(
@@ -86,20 +84,20 @@ data class OptimizationScore(
 @Composable
 fun BatteryOptimizationScreen() {
     val context = LocalContext.current
-    
+
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("💡 Suggestions", "📱 Apps", "⚙️ System", "📊 Analysis", "🎯 Score")
-    
+
     // Generate sample data
     val optimizationSuggestions = remember { generateOptimizationSuggestions() }
     val appUsageData = remember { generateAppUsageData() }
     val systemOptimizations = remember { generateSystemOptimizations() }
     val optimizationScore = remember { calculateOptimizationScore(optimizationSuggestions) }
-    
-    var implementedSuggestions by remember { 
+
+    var implementedSuggestions by remember {
         mutableStateOf(optimizationSuggestions.filter { it.isImplemented }.map { it.id }.toSet())
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -127,9 +125,9 @@ fun BatteryOptimizationScreen() {
                 ) {
                     // Optimization Brain Animation
                     OptimizationBrainIcon()
-                    
+
                     Spacer(modifier = Modifier.width(16.dp))
-                    
+
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Battery Optimization",
@@ -143,46 +141,46 @@ fun BatteryOptimizationScreen() {
                             color = Color.White.copy(alpha = 0.85f)
                         )
                     }
-                    
+
                     // Optimization Score Circle
                     OptimizationScoreIndicator(score = optimizationScore.overallScore)
                 }
-                
+
                 Spacer(modifier = Modifier.height(20.dp))
-                
+
                 // Quick optimization stats
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     OptimizationStatCard(
-                        "${optimizationScore.overallScore}%", 
-                        "Score", 
-                        "🎯", 
+                        "${optimizationScore.overallScore}%",
+                        "Score",
+                        "🎯",
                         getScoreColor(optimizationScore.overallScore)
                     )
                     OptimizationStatCard(
-                        "${optimizationSuggestions.count { it.priority == OptimizationPriority.HIGH }}", 
-                        "High Priority", 
-                        "🔥", 
+                        "${optimizationSuggestions.count { it.priority == OptimizationPriority.HIGH }}",
+                        "High Priority",
+                        "🔥",
                         Color(0xFFFF5722)
                     )
                     OptimizationStatCard(
-                        optimizationScore.estimatedBatteryGain, 
-                        "Est. Gain", 
-                        "⚡", 
+                        optimizationScore.estimatedBatteryGain,
+                        "Est. Gain",
+                        "⚡",
                         Color(0xFF4CAF50)
                     )
                     OptimizationStatCard(
-                        "${optimizationScore.implementedOptimizations}/${optimizationScore.totalOptimizations}", 
-                        "Applied", 
-                        "✅", 
+                        "${optimizationScore.implementedOptimizations}/${optimizationScore.totalOptimizations}",
+                        "Applied",
+                        "✅",
                         Color(0xFF2196F3)
                     )
                 }
             }
         }
-        
+
         // Tab Row
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -204,7 +202,7 @@ fun BatteryOptimizationScreen() {
                 }
             }
         }
-        
+
         // Content
         LazyColumn(
             modifier = Modifier
@@ -259,7 +257,7 @@ fun OptimizationBrainIcon() {
             repeatMode = RepeatMode.Restart
         )
     )
-    
+
     val pulseScale by animateFloatAsState(
         targetValue = 1.1f,
         animationSpec = infiniteRepeatable(
@@ -267,7 +265,7 @@ fun OptimizationBrainIcon() {
             repeatMode = RepeatMode.Reverse
         )
     )
-    
+
     Box(
         modifier = Modifier
             .size(64.dp)
@@ -288,7 +286,7 @@ fun OptimizationBrainIcon() {
         contentAlignment = Alignment.Center
     ) {
         Text(text = "💡", fontSize = 32.sp)
-        
+
         // Optimization rings
         repeat(2) { index ->
             val ringScale by animateFloatAsState(
@@ -298,7 +296,7 @@ fun OptimizationBrainIcon() {
                     repeatMode = RepeatMode.Restart
                 )
             )
-            
+
             Box(
                 modifier = Modifier
                     .size((50 + index * 10).dp)
@@ -323,7 +321,7 @@ fun OptimizationScoreIndicator(score: Int) {
         targetValue = score / 100f,
         animationSpec = tween(durationMillis = 1500, easing = EaseOutCubic)
     )
-    
+
     Box(
         modifier = Modifier.size(80.dp),
         contentAlignment = Alignment.Center
@@ -336,12 +334,12 @@ fun OptimizationScoreIndicator(score: Int) {
             color = Color.White.copy(alpha = 0.9f),
             trackColor = Color.White.copy(alpha = 0.3f)
         )
-        
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "${score}%",
+                text = "$score%",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -399,9 +397,9 @@ fun OptimizationOverviewCard(score: OptimizationScore) {
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1976D2)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -420,7 +418,7 @@ fun OptimizationOverviewCard(score: OptimizationScore) {
                         fontWeight = FontWeight.Bold
                     )
                 }
-                
+
                 Text(
                     text = "${score.overallScore}%",
                     fontSize = 32.sp,
@@ -428,9 +426,9 @@ fun OptimizationOverviewCard(score: OptimizationScore) {
                     color = getScoreColor(score.overallScore)
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             LinearProgressIndicator(
                 progress = score.overallScore / 100f,
                 modifier = Modifier
@@ -440,9 +438,9 @@ fun OptimizationOverviewCard(score: OptimizationScore) {
                 color = getScoreColor(score.overallScore),
                 trackColor = getScoreColor(score.overallScore).copy(alpha = 0.2f)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = "Potential battery life extension: ${score.estimatedBatteryGain}",
                 fontSize = 14.sp,
@@ -464,7 +462,7 @@ fun OptimizationSuggestionCard(
         OptimizationPriority.MEDIUM -> Color(0xFFFF9800)
         OptimizationPriority.LOW -> Color(0xFF4CAF50)
     }
-    
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -479,9 +477,9 @@ fun OptimizationSuggestionCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = suggestion.icon, fontSize = 24.sp)
-                
+
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -491,9 +489,9 @@ fun OptimizationSuggestionCard(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        
+
                         Spacer(modifier = Modifier.width(8.dp))
-                        
+
                         Surface(
                             shape = RoundedCornerShape(6.dp),
                             color = priorityColor.copy(alpha = 0.1f)
@@ -507,7 +505,7 @@ fun OptimizationSuggestionCard(
                             )
                         }
                     }
-                    
+
                     Text(
                         text = suggestion.description,
                         fontSize = 12.sp,
@@ -515,7 +513,7 @@ fun OptimizationSuggestionCard(
                         lineHeight = 16.sp
                     )
                 }
-                
+
                 if (suggestion.isImplemented) {
                     Surface(
                         shape = CircleShape,
@@ -528,9 +526,9 @@ fun OptimizationSuggestionCard(
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Impact details
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -540,10 +538,10 @@ fun OptimizationSuggestionCard(
                 ImpactItem("Time", suggestion.timeToImplement, "⏱️")
                 ImpactItem("Difficulty", suggestion.difficulty.name, "🎯")
             }
-            
+
             if (!suggestion.isImplemented) {
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
@@ -554,7 +552,7 @@ fun OptimizationSuggestionCard(
                     ) {
                         Text("How to", fontSize = 12.sp)
                     }
-                    
+
                     Button(
                         onClick = { onImplement(suggestion.id) },
                         colors = ButtonDefaults.buttonColors(
@@ -604,12 +602,12 @@ fun AppOptimizationOverviewCard(apps: List<AppUsageData>) {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             val topConsumers = apps.sortedByDescending { it.batteryUsage }.take(3)
             val optimizableApps = apps.count { it.isOptimizable }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
@@ -655,22 +653,22 @@ fun AppOptimizationCard(app: AppUsageData) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = app.icon, fontSize = 24.sp)
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = app.appName,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Text(
                     text = "Battery: ${String.format("%.1f", app.batteryUsage)}% • Screen: ${app.screenTime}min",
                     fontSize = 11.sp,
                     color = Color(0xFF666666)
                 )
-                
+
                 if (app.wakeups > 0) {
                     Text(
                         text = "${app.wakeups} wake-ups • Background: ${app.backgroundTime}min",
@@ -679,7 +677,7 @@ fun AppOptimizationCard(app: AppUsageData) {
                     )
                 }
             }
-            
+
             Column(
                 horizontalAlignment = Alignment.End
             ) {
@@ -689,7 +687,7 @@ fun AppOptimizationCard(app: AppUsageData) {
                     fontWeight = FontWeight.Bold,
                     color = getBatteryUsageColor(app.batteryUsage)
                 )
-                
+
                 if (app.isOptimizable) {
                     Surface(
                         shape = RoundedCornerShape(4.dp),
@@ -725,9 +723,9 @@ fun SystemOptimizationCard(optimization: SystemOptimization) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = optimization.icon, fontSize = 20.sp)
-                
+
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = optimization.category,
@@ -740,7 +738,7 @@ fun SystemOptimizationCard(optimization: SystemOptimization) {
                         color = Color(0xFF666666)
                     )
                 }
-                
+
                 if (optimization.isSystemSetting) {
                     Text(
                         text = "⚙️",
@@ -748,9 +746,9 @@ fun SystemOptimizationCard(optimization: SystemOptimization) {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -769,7 +767,7 @@ fun SystemOptimizationCard(optimization: SystemOptimization) {
                         fontWeight = FontWeight.Medium
                     )
                 }
-                
+
                 Text(
                     text = "💚 ${optimization.savingsPotential}",
                     fontSize = 12.sp,
@@ -797,26 +795,28 @@ fun OptimizationAnalysisCard(score: OptimizationScore) {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
-                text = "Your device's optimization score is ${score.overallScore}%, which is ${getScoreLevel(score.overallScore).lowercase()}. You have implemented ${score.implementedOptimizations} out of ${score.totalOptimizations} recommended optimizations.",
+                text = "Your device's optimization score is ${score.overallScore}%, which is ${getScoreLevel(
+                    score.overallScore
+                ).lowercase()}. You have implemented ${score.implementedOptimizations} out of ${score.totalOptimizations} recommended optimizations.",
                 fontSize = 14.sp,
                 color = Color(0xFF333333),
                 lineHeight = 20.sp
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = "Key Insights:",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             val insights = generateOptimizationInsights(score)
             insights.forEach { insight ->
                 Row(
@@ -846,9 +846,9 @@ fun CategoryBreakdownCard(categoryScores: Map<OptimizationCategory, Int>) {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             categoryScores.forEach { (category, score) ->
                 CategoryScoreItem(category, score)
                 if (category != categoryScores.keys.last()) {
@@ -867,22 +867,22 @@ fun CategoryScoreItem(category: OptimizationCategory, score: Int) {
         OptimizationCategory.MEMORY -> "💾"
         OptimizationCategory.NETWORK -> "📶"
     }
-    
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = categoryIcon, fontSize = 16.sp)
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = category.name.lowercase().replaceFirstChar { it.uppercase() },
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             )
-            
+
             LinearProgressIndicator(
                 progress = score / 100f,
                 modifier = Modifier
@@ -893,11 +893,11 @@ fun CategoryScoreItem(category: OptimizationCategory, score: Int) {
                 trackColor = getScoreColor(score).copy(alpha = 0.2f)
             )
         }
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Text(
-            text = "${score}%",
+            text = "$score%",
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             color = getScoreColor(score)
@@ -1060,11 +1060,11 @@ private fun generateOptimizationSuggestions(): List<OptimizationSuggestion> {
 
 private fun generateAppUsageData(): List<AppUsageData> {
     val apps = listOf(
-        "Chrome" to "🌐", "Instagram" to "📸", "YouTube" to "📹", 
+        "Chrome" to "🌐", "Instagram" to "📸", "YouTube" to "📹",
         "WhatsApp" to "💬", "Spotify" to "🎵", "Maps" to "🗺️",
         "Camera" to "📷", "Gmail" to "📧", "Photos" to "🖼️", "Games" to "🎮"
     )
-    
+
     return apps.map { (name, icon) ->
         AppUsageData(
             appName = name,
@@ -1116,15 +1116,17 @@ private fun calculateOptimizationScore(suggestions: List<OptimizationSuggestion>
     val implementedCount = suggestions.count { it.isImplemented }
     val totalCount = suggestions.size
     val overallScore = if (totalCount > 0) (implementedCount * 100) / totalCount else 100
-    
+
     val categoryScores = OptimizationCategory.values().associateWith { category ->
         val categorySuggestions = suggestions.filter { it.category == category }
         val implementedInCategory = categorySuggestions.count { it.isImplemented }
-        if (categorySuggestions.isNotEmpty()) 
-            (implementedInCategory * 100) / categorySuggestions.size 
-        else 100
+        if (categorySuggestions.isNotEmpty()) {
+            (implementedInCategory * 100) / categorySuggestions.size
+        } else {
+            100
+        }
     }
-    
+
     return OptimizationScore(
         overallScore = overallScore,
         categoryScores = categoryScores,
@@ -1136,24 +1138,26 @@ private fun calculateOptimizationScore(suggestions: List<OptimizationSuggestion>
 
 private fun generateOptimizationInsights(score: OptimizationScore): List<String> {
     val insights = mutableListOf<String>()
-    
+
     if (score.overallScore < 50) {
         insights.add("Your optimization score is below average. Focus on high-priority recommendations first.")
     }
-    
+
     val lowestCategory = score.categoryScores.minByOrNull { it.value }
     lowestCategory?.let { (category, categoryScore) ->
         if (categoryScore < 60) {
-            insights.add("${category.name.lowercase().replaceFirstChar { it.uppercase() }} optimizations need attention (${categoryScore}%).")
+            insights.add(
+                "${category.name.lowercase().replaceFirstChar { it.uppercase() }} optimizations need attention ($categoryScore%)."
+            )
         }
     }
-    
+
     if (score.implementedOptimizations < 3) {
         insights.add("Implementing just 3 more optimizations could improve your battery life significantly.")
     }
-    
+
     insights.add("Your current settings could extend battery life by up to ${score.estimatedBatteryGain}.")
-    
+
     return insights
 }
 
@@ -1178,7 +1182,7 @@ private fun getScoreLevel(score: Int): String {
 private fun getBatteryUsageColor(usage: Float): Color {
     return when {
         usage >= 10f -> Color(0xFFF44336) // Red for high usage
-        usage >= 5f -> Color(0xFFFF9800)  // Orange for medium usage
-        else -> Color(0xFF4CAF50)          // Green for low usage
+        usage >= 5f -> Color(0xFFFF9800) // Orange for medium usage
+        else -> Color(0xFF4CAF50) // Green for low usage
     }
 }

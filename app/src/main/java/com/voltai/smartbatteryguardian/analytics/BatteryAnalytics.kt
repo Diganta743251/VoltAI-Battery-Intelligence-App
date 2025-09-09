@@ -2,7 +2,6 @@ package com.voltai.smartbatteryguardian.analytics
 
 import android.content.Context
 import androidx.compose.runtime.*
-import kotlinx.coroutines.delay
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -58,12 +57,12 @@ enum class InsightSeverity {
 }
 
 class BatteryAnalyticsEngine(private val context: Context) {
-    
+
     private val historyData = mutableListOf<BatteryHistoryPoint>()
-    
+
     fun generateDailyStats(days: Int = 7): List<DailyBatteryStats> {
         val stats = mutableListOf<DailyBatteryStats>()
-        
+
         repeat(days) { dayIndex ->
             val date = "Day ${dayIndex + 1}"
             stats.add(
@@ -78,10 +77,10 @@ class BatteryAnalyticsEngine(private val context: Context) {
                 )
             )
         }
-        
+
         return stats
     }
-    
+
     fun generateWeeklyAnalysis(): List<WeeklyAnalysis> {
         return listOf(
             WeeklyAnalysis(
@@ -114,10 +113,10 @@ class BatteryAnalyticsEngine(private val context: Context) {
             )
         )
     }
-    
+
     fun generateBatteryInsights(): List<BatteryInsight> {
         val insights = mutableListOf<BatteryInsight>()
-        
+
         // Usage Pattern Insights
         insights.add(
             BatteryInsight(
@@ -129,7 +128,7 @@ class BatteryAnalyticsEngine(private val context: Context) {
                 confidence = 0.89f
             )
         )
-        
+
         // Charging Behavior Insights
         insights.add(
             BatteryInsight(
@@ -141,7 +140,7 @@ class BatteryAnalyticsEngine(private val context: Context) {
                 confidence = 0.95f
             )
         )
-        
+
         // Temperature Management
         if (Random.nextFloat() > 0.4f) {
             insights.add(
@@ -155,7 +154,7 @@ class BatteryAnalyticsEngine(private val context: Context) {
                 )
             )
         }
-        
+
         // Health Degradation
         insights.add(
             BatteryInsight(
@@ -167,7 +166,7 @@ class BatteryAnalyticsEngine(private val context: Context) {
                 confidence = 0.78f
             )
         )
-        
+
         // Performance Optimization
         insights.add(
             BatteryInsight(
@@ -179,10 +178,10 @@ class BatteryAnalyticsEngine(private val context: Context) {
                 confidence = 0.83f
             )
         )
-        
+
         return insights
     }
-    
+
     fun getChargingPatternAnalysis(): ChargingAnalysis {
         return ChargingAnalysis(
             averageChargingSpeed = Random.nextInt(15, 35), // watts
@@ -192,7 +191,7 @@ class BatteryAnalyticsEngine(private val context: Context) {
             recommendedChargingLimit = Random.nextInt(80, 90)
         )
     }
-    
+
     fun getPowerConsumptionBreakdown(): List<PowerConsumption> {
         return listOf(
             PowerConsumption("Display", Random.nextFloat() * 15f + 25f, "Screen brightness, refresh rate"),
@@ -205,35 +204,35 @@ class BatteryAnalyticsEngine(private val context: Context) {
             PowerConsumption("Other", Random.nextFloat() * 5f + 3f, "System services, misc hardware")
         )
     }
-    
+
     fun getOptimizationRecommendations(): List<OptimizationTip> {
         return listOf(
             OptimizationTip(
-                "Adaptive Brightness", 
+                "Adaptive Brightness",
                 "Enable adaptive brightness to save 10-15% battery",
                 "High",
                 "15%"
             ),
             OptimizationTip(
-                "Background App Refresh", 
+                "Background App Refresh",
                 "Disable for unused apps to save 8-12% daily",
                 "Medium",
                 "10%"
             ),
             OptimizationTip(
-                "Screen Timeout", 
+                "Screen Timeout",
                 "Reduce screen timeout to 30 seconds",
                 "Medium",
                 "5%"
             ),
             OptimizationTip(
-                "Location Accuracy", 
+                "Location Accuracy",
                 "Use battery-optimized location mode",
                 "High",
                 "12%"
             ),
             OptimizationTip(
-                "Push Notifications", 
+                "Push Notifications",
                 "Reduce unnecessary notification syncing",
                 "Low",
                 "3%"

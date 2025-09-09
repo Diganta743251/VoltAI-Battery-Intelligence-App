@@ -4,11 +4,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.ImageBitmap
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlin.coroutines.CoroutineContext
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 /**
  * Performance optimization utilities for premium app experience
@@ -16,22 +15,22 @@ import kotlin.time.Duration.Companion.seconds
  */
 
 object PerformanceOptimizer {
-    
+
     // Memory cache with automatic cleanup
     private val imageCache = ConcurrentHashMap<String, CachedImage>()
     private val dataCache = ConcurrentHashMap<String, CachedData<*>>()
-    
+
     // Configuration
     private const val MAX_CACHE_SIZE = 50
     private val DEFAULT_CACHE_DURATION = 5.minutes
     private val CLEANUP_INTERVAL = 1.minutes
-    
+
     private var cleanupJob: Job? = null
-    
+
     init {
         startPeriodicCleanup()
     }
-    
+
     /**
      * Cached data wrapper with expiration
      */
@@ -43,13 +42,13 @@ object PerformanceOptimizer {
         val isExpired: Boolean
             get() = System.currentTimeMillis() - timestamp > duration.inWholeMilliseconds
     }
-    
+
     data class CachedImage(
         val bitmap: ImageBitmap,
         val timestamp: Long,
         val size: Long = 0L
     )
-    
+
     /**
      * Lazy data loader with caching
      */
@@ -67,7 +66,7 @@ object PerformanceOptimizer {
                 value = AsyncData.Success(cached.data as T)
                 return@produceState
             }
-            
+
             try {
                 val result = loader()
                 dataCache[key] = CachedData(result, System.currentTimeMillis(), cacheDuration)
@@ -77,7 +76,7 @@ object PerformanceOptimizer {
             }
         }
     }
-    
+
     /**
      * Async data state for loading operations
      */
@@ -85,14 +84,14 @@ object PerformanceOptimizer {
         object Loading : AsyncData<Nothing>()
         data class Success<T>(val data: T) : AsyncData<T>()
         data class Error(val exception: Throwable) : AsyncData<Nothing>()
-        
+
         val isLoading: Boolean get() = this is Loading
         val isSuccess: Boolean get() = this is Success
         val isError: Boolean get() = this is Error
-        
+
         fun getOrNull(): T? = if (this is Success) data else null
     }
-    
+
     /**
      * Debounced state for search and input fields
      */
@@ -103,12 +102,12 @@ object PerformanceOptimizer {
     ): DebouncedState {
         var value by remember { mutableStateOf(initialValue) }
         var debouncedValue by remember { mutableStateOf(initialValue) }
-        
+
         LaunchedEffect(value) {
             delay(delayMillis)
             debouncedValue = value
         }
-        
+
         return remember {
             DebouncedState(
                 value = value,
@@ -117,13 +116,13 @@ object PerformanceOptimizer {
             )
         }
     }
-    
+
     data class DebouncedState(
         val value: String,
         val debouncedValue: String,
         val onValueChange: (String) -> Unit
     )
-    
+
     /**
      * Lazy column optimization for large lists
      */
@@ -139,30 +138,30 @@ object PerformanceOptimizer {
             )
         }
     }
-    
+
     data class LazyListState<T>(
         val items: List<T>,
         val pageSize: Int
     ) {
         private var loadedPages = mutableSetOf<Int>()
-        
+
         fun getVisibleItems(firstVisibleIndex: Int, lastVisibleIndex: Int): List<T> {
             val startPage = firstVisibleIndex / pageSize
             val endPage = lastVisibleIndex / pageSize
-            
+
             // Load required pages
             for (page in startPage..endPage) {
                 loadedPages.add(page)
             }
-            
+
             // Return items for loaded pages
             val startIndex = startPage * pageSize
             val endIndex = minOf((endPage + 1) * pageSize, items.size)
-            
+
             return items.subList(startIndex, endIndex)
         }
     }
-    
+
     /**
      * Memory-efficient bitmap caching
      */
@@ -174,10 +173,10 @@ object PerformanceOptimizer {
                 imageCache.remove(it.key)
             }
         }
-        
+
         imageCache[key] = CachedImage(bitmap, System.currentTimeMillis(), sizeBytes)
     }
-    
+
     fun getCachedImage(key: String): ImageBitmap? {
         val cached = imageCache[key]
         return if (cached != null && !isImageExpired(cached)) {
@@ -187,11 +186,11 @@ object PerformanceOptimizer {
             null
         }
     }
-    
+
     private fun isImageExpired(cached: CachedImage): Boolean {
         return System.currentTimeMillis() - cached.timestamp > DEFAULT_CACHE_DURATION.inWholeMilliseconds
     }
-    
+
     /**
      * Background cleanup of expired cache entries
      */
@@ -204,21 +203,21 @@ object PerformanceOptimizer {
             }
         }
     }
-    
+
     private fun cleanupExpiredEntries() {
         // Clean data cache
         val expiredDataKeys = dataCache.entries
             .filter { it.value.isExpired }
             .map { it.key }
         expiredDataKeys.forEach { dataCache.remove(it) }
-        
+
         // Clean image cache
         val expiredImageKeys = imageCache.entries
             .filter { isImageExpired(it.value) }
             .map { it.key }
         expiredImageKeys.forEach { imageCache.remove(it) }
     }
-    
+
     /**
      * Manual cache cleanup
      */
@@ -226,11 +225,11 @@ object PerformanceOptimizer {
         dataCache.clear()
         imageCache.clear()
     }
-    
+
     fun clearExpiredCache() {
         cleanupExpiredEntries()
     }
-    
+
     /**
      * Memory usage monitoring
      */
@@ -238,7 +237,7 @@ object PerformanceOptimizer {
         val dataSize = dataCache.size
         val imageSize = imageCache.size
         val imageSizeBytes = imageCache.values.sumOf { it.size }
-        
+
         return CacheStats(
             dataEntries = dataSize,
             imageEntries = imageSize,
@@ -246,14 +245,14 @@ object PerformanceOptimizer {
             totalEntries = dataSize + imageSize
         )
     }
-    
+
     data class CacheStats(
         val dataEntries: Int,
         val imageEntries: Int,
         val imageSizeBytes: Long,
         val totalEntries: Int
     )
-    
+
     /**
      * Cleanup on app termination
      */
@@ -282,7 +281,7 @@ class LazyInitializer<T>(
 ) {
     private var _value: T? = null
     private var initialized = false
-    
+
     val value: T
         get() {
             if (!initialized) {
@@ -292,7 +291,7 @@ class LazyInitializer<T>(
             @Suppress("UNCHECKED_CAST")
             return _value as T
         }
-    
+
     fun reset() {
         _value = null
         initialized = false

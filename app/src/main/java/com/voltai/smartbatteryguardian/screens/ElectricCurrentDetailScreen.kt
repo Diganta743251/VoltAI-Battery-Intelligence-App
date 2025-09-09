@@ -48,16 +48,16 @@ fun ElectricCurrentDetailScreen(onBackClick: () -> Unit = {}) {
                 }
             },
             colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                ),
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         )
 
         LazyColumn(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Current Status Card
@@ -66,14 +66,14 @@ fun ElectricCurrentDetailScreen(onBackClick: () -> Unit = {}) {
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor =
-                                if (batteryData.current > 0) {
-                                    MaterialTheme.colorScheme.primaryContainer
-                                } else {
-                                    MaterialTheme.colorScheme.errorContainer
-                                },
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor =
+                        if (batteryData.current > 0) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.errorContainer
+                        },
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(24.dp),
@@ -132,9 +132,9 @@ fun ElectricCurrentDetailScreen(onBackClick: () -> Unit = {}) {
                         // Enhanced waveform
                         Canvas(
                             modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(120.dp),
+                            Modifier
+                                .fillMaxWidth()
+                                .height(120.dp),
                         ) {
                             drawCurrentWaveform(batteryData.current)
                         }
@@ -186,9 +186,9 @@ fun ElectricCurrentDetailScreen(onBackClick: () -> Unit = {}) {
 
                         Canvas(
                             modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(100.dp),
+                            Modifier
+                                .fillMaxWidth()
+                                .height(100.dp),
                         ) {
                             drawCurrentHistory(batteryData.current)
                         }
@@ -305,9 +305,9 @@ fun CurrentAnalysisRow(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(

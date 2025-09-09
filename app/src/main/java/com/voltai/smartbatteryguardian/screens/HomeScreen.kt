@@ -1,10 +1,8 @@
 package com.voltai.smartbatteryguardian.screens
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -13,8 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.text.font.FontWeight
@@ -23,7 +20,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.voltai.smartbatteryguardian.rememberBatteryData
 import com.voltai.smartbatteryguardian.ui.home.*
-import com.voltai.smartbatteryguardian.ui.animation.*
+import com.voltai.smartbatteryguardian.ui.components.MaterialCardsGrid
+import com.voltai.smartbatteryguardian.ui.components.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,9 +34,10 @@ fun HomeScreen(
     val context = LocalContext.current
     val batteryData by rememberBatteryData(context)
     val uiState by viewModel.uiState.collectAsState()
+    val userHasPremium by viewModel.isPremium.collectAsState()
     val haptic = LocalHapticFeedback.current
     val snackbarHostState = remember { SnackbarHostState() }
-    
+
     // Handle side effects
     LaunchedEffect(viewModel) {
         viewModel.effects.collect { effect ->
@@ -62,60 +61,100 @@ fun HomeScreen(
             }
         }
     }
-    
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFF8F9FA),
-                        Color(0xFFE3F2FD),
-                        Color(0xFFF0F4FF)
+
+    // Material Design 3 compliant scaffold
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            if (!uiState.isEditMode) {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = "VoltAI Guardian",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = "Smart Battery Management",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = onNavigateToSettings) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = "Settings",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface
                     )
                 )
-            )
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // Modern Customizable Top Bar
-            CustomizableTopBar(
-                isEditMode = uiState.isEditMode,
-                onEditModeToggle = {
-                    if (uiState.isEditMode) {
+            }
+        },
+        floatingActionButton = {
+            if (uiState.isEditMode) {
+                ExtendedFloatingActionButton(
+                    onClick = {
                         viewModel.onEvent(HomeScreenEvent.ExitEditMode)
-                    } else {
+                    },
+                    text = { Text("Done") },
+                    icon = { Icon(Icons.Default.Check, contentDescription = "Done") },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
+                FloatingActionButton(
+                    onClick = {
                         viewModel.onEvent(HomeScreenEvent.EnterEditMode)
-                    }
-                },
-                onAddCardClick = {
-                    viewModel.onEvent(HomeScreenEvent.ShowAddCardSheet)
-                },
-                onResetClick = {
-                    viewModel.onEvent(HomeScreenEvent.ResetToDefaults())
-                },
-                onSettingsClick = onNavigateToSettings
-            )
-            
-            // Customizable Cards Grid with Staggered Layout
-            CustomizableCardsGrid(
+                    },
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit Cards"
+                    )
+                }
+            }
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
+            ) { snackbarData ->
+                Snackbar(
+                    snackbarData = snackbarData,
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                    shape = MaterialTheme.shapes.medium
+                )
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.surface
+    ) { paddingValues ->
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            MaterialCardsGrid(
                 cards = uiState.config.cards,
                 batteryData = batteryData,
                 isEditMode = uiState.isEditMode,
-                isDragActive = uiState.isDragActive,
                 selectedCard = uiState.selectedCard,
                 onCardClick = { card ->
                     if (!uiState.isEditMode) {
-                        // Check if it's a premium card and user is not premium
                         val isPremiumCard = card.cardType.isPremium
-                        val userHasPremium = false // TODO: Connect to actual premium state
-                        
+
                         if (isPremiumCard && !userHasPremium) {
-                            // Show premium onboarding for premium cards
                             onNavigateToPremiumOnboarding()
                         } else {
-                            // Navigate to card detail based on card type
                             when (card.cardType) {
                                 CardType.HISTORY -> onNavigateToCard("history")
                                 CardType.OVERLAYS -> onNavigateToCard("overlays")
@@ -127,7 +166,6 @@ fun HomeScreen(
                                 CardType.SYSTEM_OPTIMIZATION -> onNavigateToCard("system_optimization")
                                 CardType.PERFORMANCE_BENCHMARKS -> onNavigateToCard("performance_benchmarks")
                                 CardType.DATA_EXPORT_IMPORT -> onNavigateToCard("data_export_import")
-                                // New Premium Analytics Cards
                                 CardType.BATTERY_HEALTH_ANALYTICS -> onNavigateToCard("battery_health_analytics")
                                 CardType.SMART_CHARGING -> onNavigateToCard("smart_charging")
                                 CardType.BATTERY_DIAGNOSTICS -> onNavigateToCard("battery_diagnostics")
@@ -149,75 +187,15 @@ fun HomeScreen(
                 onCardRemove = { cardId ->
                     viewModel.onEvent(HomeScreenEvent.RemoveCard(cardId))
                 },
-                onCardMove = { cardId, dragOffset ->
-                    viewModel.moveCardWithDrag(cardId, dragOffset)
-                },
-                onCardResize = { cardId, newSize ->
-                    viewModel.onEvent(HomeScreenEvent.ResizeCard(cardId, newSize))
-                },
-                onDragStart = { cardId ->
-                    viewModel.onDragStart(cardId)
-                },
-                onDragEnd = {
-                    viewModel.onDragEnd()
-                },
                 onAddCardClick = {
                     viewModel.onEvent(HomeScreenEvent.ShowAddCardSheet)
                 },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp)
+                modifier = Modifier.fillMaxSize()
             )
         }
-        
-        // Floating Action Button for Edit Mode
-        AnimatedVisibility(
-            visible = !uiState.isEditMode,
-            enter = AnimationSpecs.scaleInAnimation,
-            exit = AnimationSpecs.scaleOutAnimation,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-        ) {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.onEvent(HomeScreenEvent.EnterEditMode)
-                },
-                containerColor = Color(0xFF2196F3),
-                modifier = Modifier
-                    .size(56.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Customize Layout",
-                    tint = Color.White
-                )
-            }
+
         }
-        
-        // Edit Mode Controls
-        AnimatedVisibility(
-            visible = uiState.isEditMode,
-            enter = AnimationSpecs.slideInFromBottom,
-            exit = AnimationSpecs.slideOutToBottom,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-        ) {
-            EditModeControls(
-                onDone = {
-                    viewModel.onEvent(HomeScreenEvent.ExitEditMode)
-                },
-                onAddCard = {
-                    viewModel.onEvent(HomeScreenEvent.ShowAddCardSheet)
-                },
-                onReset = {
-                    viewModel.onEvent(HomeScreenEvent.ResetToDefaults())
-                }
-            )
-        }
-    }
-    
+
     // Add Card Bottom Sheet
     if (uiState.showAddCardSheet) {
         AddCardBottomSheet(
@@ -235,20 +213,7 @@ fun HomeScreen(
             }
         )
     }
-    
-    // Snackbar Host for error messages
-    SnackbarHost(
-        hostState = snackbarHostState,
-        modifier = Modifier.padding(16.dp)
-    ) { data ->
-        Snackbar(
-            snackbarData = data,
-            containerColor = Color(0xFFFF5252),
-            contentColor = Color.White,
-            shape = RoundedCornerShape(12.dp)
-        )
-    }
-    
+
     // Loading State
     if (uiState.isLoading) {
         Box(
@@ -257,7 +222,7 @@ fun HomeScreen(
         ) {
             CircularProgressIndicator(
                 modifier = Modifier.size(48.dp),
-                color = Color(0xFF2196F3)
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -295,7 +260,7 @@ fun ModernTopBar() {
                     fontWeight = FontWeight.Medium
                 )
             }
-            
+
             IconButton(
                 onClick = { /* Settings */ },
                 modifier = Modifier
@@ -359,7 +324,7 @@ fun ModernBatteryCard(
                         color = Color(0xFF1A1A1A)
                     )
                 }
-                
+
                 Icon(
                     imageVector = if (isCharging) Icons.Filled.Phone else Icons.Filled.Star,
                     contentDescription = "Battery",
@@ -367,7 +332,7 @@ fun ModernBatteryCard(
                     tint = if (batteryLevel > 50) Color(0xFF4CAF50) else Color(0xFFFF9800)
                 )
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -386,7 +351,7 @@ fun ModernBatteryCard(
                         fontWeight = FontWeight.SemiBold
                     )
                 }
-                
+
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = "Time Remaining",
@@ -434,14 +399,14 @@ fun ModernInfoCard(
                 fontWeight = FontWeight.Medium,
                 color = Color(0xFF666666)
             )
-            
+
             Text(
                 text = value,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1A1A1A)
             )
-            
+
             Text(
                 text = subtitle,
                 fontSize = 11.sp,

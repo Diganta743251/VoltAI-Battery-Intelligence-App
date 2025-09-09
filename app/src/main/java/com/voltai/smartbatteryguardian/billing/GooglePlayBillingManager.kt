@@ -12,7 +12,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 /**
  * Comprehensive Google Play Billing implementation for VoltAI premium features
@@ -25,12 +24,12 @@ class GooglePlayBillingManager @Inject constructor(
 
     companion object {
         private const val TAG = "GooglePlayBillingManager"
-        
+
         // Product IDs (must match Google Play Console)
         const val PREMIUM_MONTHLY_SKU = "premium_monthly"
         const val PREMIUM_YEARLY_SKU = "premium_yearly"
         const val PREMIUM_LIFETIME_SKU = "premium_lifetime"
-        
+
         // Additional feature SKUs
         const val ADVANCED_ANALYTICS_SKU = "advanced_analytics"
         const val CLOUD_BACKUP_SKU = "cloud_backup"
@@ -82,7 +81,7 @@ class GooglePlayBillingManager @Inject constructor(
      */
     private fun startConnection() {
         if (billingClient.isReady) return
-        
+
         _billingState.value = BillingConnectionState.CONNECTING
         billingClient.startConnection(this)
     }
@@ -224,21 +223,21 @@ class GooglePlayBillingManager @Inject constructor(
      */
     private fun processPurchases(purchases: List<Purchase>) {
         val ownedProducts = mutableSetOf<String>()
-        
+
         for (purchase in purchases) {
             if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
                 // Acknowledge purchase if not acknowledged
                 if (!purchase.isAcknowledged) {
                     acknowledgePurchase(purchase)
                 }
-                
+
                 // Add to owned products
                 ownedProducts.addAll(purchase.products)
-                
+
                 Log.d(TAG, "Processed purchase: ${purchase.products}")
             }
         }
-        
+
         _purchasedProducts.value = ownedProducts
     }
 
@@ -268,7 +267,7 @@ class GooglePlayBillingManager @Inject constructor(
         callback: (PurchaseResult) -> Unit
     ) {
         purchaseCallback = callback
-        
+
         val offerDetails = productDetails.subscriptionOfferDetails?.firstOrNull()
         if (offerDetails == null) {
             callback(PurchaseResult.ERROR)
@@ -332,9 +331,9 @@ class GooglePlayBillingManager @Inject constructor(
      * Check if user has any premium subscription
      */
     fun hasPremiumSubscription(): Boolean {
-        return isPurchased(PREMIUM_MONTHLY_SKU) || 
-               isPurchased(PREMIUM_YEARLY_SKU) || 
-               isPurchased(PREMIUM_LIFETIME_SKU)
+        return isPurchased(PREMIUM_MONTHLY_SKU) ||
+            isPurchased(PREMIUM_YEARLY_SKU) ||
+            isPurchased(PREMIUM_LIFETIME_SKU)
     }
 
     /**
@@ -356,11 +355,11 @@ class GooglePlayBillingManager @Inject constructor(
         getSubscriptionProductDetails(sku)?.let { productDetails ->
             return productDetails.subscriptionOfferDetails?.firstOrNull()?.pricingPhases?.pricingPhaseList?.firstOrNull()?.formattedPrice
         }
-        
+
         getInAppProductDetails(sku)?.let { productDetails ->
             return productDetails.oneTimePurchaseOfferDetails?.formattedPrice
         }
-        
+
         return null
     }
 

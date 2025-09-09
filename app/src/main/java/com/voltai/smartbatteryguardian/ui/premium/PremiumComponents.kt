@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -39,7 +38,7 @@ fun PremiumGate(
     content: @Composable () -> Unit
 ) {
     val isFeatureAvailable = premiumViewModel.isFeatureAvailable(featureId)
-    
+
     if (isFeatureAvailable) {
         content()
     } else {
@@ -68,13 +67,13 @@ fun PremiumLockedContent(
     content: @Composable () -> Unit
 ) {
     val paywallData = premiumViewModel.showPremiumPaywall(featureId)
-    
+
     Box(
         modifier = modifier.fillMaxSize()
     ) {
         // Blurred background content
         content()
-        
+
         // Premium overlay
         Box(
             modifier = Modifier
@@ -118,9 +117,9 @@ fun PremiumUpgradeCard(
         ) {
             // Premium badge
             PremiumBadge()
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = paywallData.title,
                 fontSize = 22.sp,
@@ -128,26 +127,26 @@ fun PremiumUpgradeCard(
                 color = Color.Black,
                 textAlign = TextAlign.Center
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = paywallData.description,
                 fontSize = 14.sp,
                 color = Color.Gray,
                 textAlign = TextAlign.Center
             )
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Benefits list
             paywallData.benefits.take(3).forEach { benefit ->
                 PremiumBenefitItem(benefit = benefit)
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Upgrade button
             Button(
                 onClick = onUpgradeClick,
@@ -166,9 +165,9 @@ fun PremiumUpgradeCard(
                     color = Color.Black
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Text(
                 text = "Starting from ${paywallData.recommendedPlan.price}",
                 fontSize = 12.sp,
@@ -195,7 +194,7 @@ fun PremiumBadge(
             repeatMode = RepeatMode.Restart
         )
     )
-    
+
     Box(
         modifier = modifier
             .size(size.dp)
@@ -236,9 +235,9 @@ fun PremiumBenefitItem(
             tint = Color(0xFF4CAF50),
             modifier = Modifier.size(20.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Text(
             text = benefit,
             fontSize = 14.sp,
@@ -258,14 +257,15 @@ fun PremiumStatusIndicator(
 ) {
     val premiumStatus by premiumViewModel.premiumState.collectAsState()
     val isPremium = premiumStatus != PremiumManager.PremiumStatus.FREE
-    
+
     Surface(
         modifier = Modifier.clickable { onPremiumClick() },
         shape = RoundedCornerShape(16.dp),
-        color = if (isPremium) 
-            Color(0xFFFFD700).copy(alpha = 0.2f) 
-        else 
+        color = if (isPremium) {
+            Color(0xFFFFD700).copy(alpha = 0.2f)
+        } else {
             Color.Gray.copy(alpha = 0.2f)
+        }
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
@@ -275,9 +275,9 @@ fun PremiumStatusIndicator(
                 text = if (isPremium) "💎" else "⭐",
                 fontSize = 14.sp
             )
-            
+
             Spacer(modifier = Modifier.width(4.dp))
-            
+
             Text(
                 text = if (isPremium) "Pro" else "Free",
                 fontSize = 12.sp,
@@ -331,9 +331,9 @@ fun PremiumFeatureBanner(
                     modifier = Modifier.size(24.dp)
                 )
             }
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -343,14 +343,14 @@ fun PremiumFeatureBanner(
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
-                
+
                 Text(
                     text = description,
                     fontSize = 12.sp,
                     color = Color.White.copy(alpha = 0.7f)
                 )
             }
-            
+
             Icon(
                 imageVector = Icons.Default.ArrowForward,
                 contentDescription = "Upgrade",
@@ -412,7 +412,7 @@ fun PremiumFeatureShowcaseCard(
         PremiumManager.FeatureCategory.ALERTS -> Color(0xFFE91E63)
         PremiumManager.FeatureCategory.WIDGETS -> Color(0xFF607D8B)
     }
-    
+
     Card(
         modifier = modifier
             .height(140.dp)
@@ -455,7 +455,7 @@ fun PremiumFeatureShowcaseCard(
                         fontSize = 16.sp
                     )
                 }
-                
+
                 if (feature.isPremium) {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
@@ -471,7 +471,7 @@ fun PremiumFeatureShowcaseCard(
                     }
                 }
             }
-            
+
             Column {
                 Text(
                     text = feature.title,
@@ -479,7 +479,7 @@ fun PremiumFeatureShowcaseCard(
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
-                
+
                 Text(
                     text = feature.description,
                     fontSize = 11.sp,

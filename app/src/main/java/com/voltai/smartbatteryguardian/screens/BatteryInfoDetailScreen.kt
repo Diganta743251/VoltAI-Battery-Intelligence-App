@@ -15,18 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 import com.voltai.smartbatteryguardian.rememberBatteryData
-import com.voltai.smartbatteryguardian.utils.getHealthStatus
-import com.voltai.smartbatteryguardian.utils.getHealthColor
 import com.voltai.smartbatteryguardian.utils.getBatteryColor
+import com.voltai.smartbatteryguardian.utils.getHealthColor
+import com.voltai.smartbatteryguardian.utils.getHealthStatus
 import com.voltai.smartbatteryguardian.utils.getTemperatureColor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,16 +48,16 @@ fun BatteryInfoDetailScreen(onBackClick: () -> Unit) {
                 }
             },
             colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                ),
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         )
 
         LazyColumn(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Main Battery Status Card
@@ -70,9 +66,9 @@ fun BatteryInfoDetailScreen(onBackClick: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(24.dp),
@@ -122,9 +118,9 @@ fun BatteryInfoDetailScreen(onBackClick: () -> Unit) {
                         // Battery level bars (enhanced version)
                         Canvas(
                             modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(80.dp),
+                            Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
                         ) {
                             drawBatteryHistoryBars(batteryData.batteryLevel)
                         }
@@ -184,7 +180,9 @@ fun BatteryInfoDetailScreen(onBackClick: () -> Unit) {
                         BatteryDetailRow(
                             icon = Icons.Default.Warning,
                             label = "Health",
-                            value = "${getHealthStatus(batteryData.healthPercentage)} (${batteryData.healthPercentage}%)",
+                            value = "${getHealthStatus(
+                                batteryData.healthPercentage
+                            )} (${batteryData.healthPercentage}%)",
                             iconColor = getHealthColor(batteryData.healthPercentage),
                         )
 
@@ -274,9 +272,9 @@ fun BatteryDetailRow(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -358,4 +356,3 @@ private fun DrawScope.drawBatteryHistoryBars(currentLevel: Int) {
         )
     }
 }
-

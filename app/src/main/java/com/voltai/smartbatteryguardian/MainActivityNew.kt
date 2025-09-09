@@ -16,11 +16,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.voltai.smartbatteryguardian.navigation.AppNavHost
 import com.voltai.smartbatteryguardian.service.BatteryMonitoringService
@@ -82,7 +80,7 @@ class MainActivityNew : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    
+
                     AppNavHost(
                         navController = navController,
                         batteryDataProvider = batteryDataProvider,

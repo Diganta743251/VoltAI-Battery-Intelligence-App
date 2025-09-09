@@ -10,19 +10,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CustomizableHomeViewModel @Inject constructor(
-    private val homeScreenRepository: com.voltai.smartbatteryguardian.data.HomeScreenRepository
+    private val homeScreenRepository: com.voltai.smartbatteryguardian.data.HomeScreenRepository,
+    private val premiumManager: com.voltai.smartbatteryguardian.premium.PremiumManager
 ) : ViewModel() {
-    
+
+    val isPremium: StateFlow<Boolean> = premiumManager.premiumState
+
     private val _uiState = MutableStateFlow(HomeScreenUiState())
     val uiState: StateFlow<HomeScreenUiState> = _uiState.asStateFlow()
-    
+
     private val _effects = MutableSharedFlow<HomeScreenEffect>()
     val effects: SharedFlow<HomeScreenEffect> = _effects.asSharedFlow()
-    
+
     init {
         loadConfiguration()
     }
-    
+
     fun onEvent(event: HomeScreenEvent) {
         try {
             when (event) {
@@ -46,13 +49,13 @@ class CustomizableHomeViewModel @Inject constructor(
             emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Error))
         }
     }
-    
+
     private fun enterEditMode() {
         _uiState.value = _uiState.value.copy(isEditMode = true)
         emitEffect(HomeScreenEffect.ShowEditModeHint)
         emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.LongPress))
     }
-    
+
     private fun exitEditMode() {
         _uiState.value = _uiState.value.copy(
             isEditMode = false,
@@ -62,19 +65,19 @@ class CustomizableHomeViewModel @Inject constructor(
         saveConfiguration()
         emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Success))
     }
-    
+
     private fun showAddCardSheet() {
         _uiState.value = _uiState.value.copy(showAddCardSheet = true)
         emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Click))
     }
-    
+
     private fun hideAddCardSheet() {
         _uiState.value = _uiState.value.copy(showAddCardSheet = false)
     }
-    
+
     private fun addCard(cardType: CardType, position: Pair<Int, Int>) {
         val currentConfig = _uiState.value.config
-        
+
         // Enhanced position finding with multiple fallback strategies
         val availablePosition = findBestAvailablePosition(
             currentConfig.cards,
@@ -82,71 +85,71 @@ class CustomizableHomeViewModel @Inject constructor(
             currentConfig.gridColumns,
             preferredPosition = position
         )
-        
+
         if (availablePosition == null) {
             emitEffect(HomeScreenEffect.ShowError("No space available for this card size"))
             emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Error))
             return
         }
-        
+
         val newCard = HomeCard(
             cardType = cardType,
             size = cardType.defaultSize,
             row = availablePosition.first,
             column = availablePosition.second
         )
-        
+
         // Double-check position validity before adding
         if (!isValidCardPosition(currentConfig.cards, newCard, currentConfig.gridColumns)) {
             emitEffect(HomeScreenEffect.ShowError("Invalid card position detected"))
             emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Error))
             return
         }
-        
+
         val updatedCards = currentConfig.cards + newCard
         val updatedConfig = currentConfig.copy(cards = updatedCards)
-        
+
         _uiState.value = _uiState.value.copy(
             config = updatedConfig,
             showAddCardSheet = false,
             selectedCard = newCard // Auto-select new card for immediate editing
         )
-        
+
         emitEffect(HomeScreenEffect.CardAdded(newCard.id))
         emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Success))
-        
+
         // Auto-save after adding card
         saveConfiguration()
     }
-    
+
     private fun removeCard(cardId: String) {
         val currentConfig = _uiState.value.config
         val updatedCards = currentConfig.cards.filter { it.id != cardId }
         val updatedConfig = currentConfig.copy(cards = updatedCards)
-        
+
         _uiState.value = _uiState.value.copy(
             config = updatedConfig,
             selectedCard = null
         )
-        
+
         emitEffect(HomeScreenEffect.CardRemoved(cardId))
         emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.LongPress))
     }
-    
+
     fun moveCardWithDrag(cardId: String, dragOffset: Offset) {
         try {
             val currentConfig = _uiState.value.config
             val cards = currentConfig.cards
             val cardToMove = cards.find { it.id == cardId } ?: return
-            
+
             // Enhanced thresholds for better UX
             val horizontalThreshold = 80f
             val verticalThreshold = 120f
-            
+
             // Calculate new grid position based on drag direction
             val newRow: Int
             val newColumn: Int
-            
+
             when {
                 dragOffset.x > horizontalThreshold -> {
                     // Move right in grid
@@ -173,17 +176,17 @@ class CustomizableHomeViewModel @Inject constructor(
                     return
                 }
             }
-            
+
             // Use the same validation logic as moveCard
             if (isValidPosition(
-                    cards, 
-                    cardToMove.size, 
-                    newRow, 
-                    newColumn, 
-                    currentConfig.gridColumns, 
+                    cards,
+                    cardToMove.size,
+                    newRow,
+                    newColumn,
+                    currentConfig.gridColumns,
                     cardId
-                )) {
-                
+                )
+            ) {
                 val updatedCards = cards.map { card ->
                     if (card.id == cardId) {
                         card.copy(row = newRow, column = newColumn)
@@ -191,13 +194,13 @@ class CustomizableHomeViewModel @Inject constructor(
                         card
                     }
                 }
-                
+
                 val updatedConfig = currentConfig.copy(cards = updatedCards)
                 _uiState.value = _uiState.value.copy(config = updatedConfig)
-                
+
                 emitEffect(HomeScreenEffect.CardMoved(cardId, Pair(newRow, newColumn)))
                 emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Success))
-                
+
                 // Auto-save after successful move
                 saveConfiguration()
             } else {
@@ -205,17 +208,16 @@ class CustomizableHomeViewModel @Inject constructor(
                 emitEffect(HomeScreenEffect.ShowError("Cannot move card to that position"))
                 emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Error))
             }
-            
         } catch (e: Exception) {
             emitEffect(HomeScreenEffect.ShowError("Failed to move card: ${e.message}"))
             emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Error))
         }
     }
-    
+
     private fun moveCard(cardId: String, newPosition: Pair<Int, Int>) {
         val currentConfig = _uiState.value.config
         val cardToMove = currentConfig.cards.find { it.id == cardId } ?: return
-        
+
         // Check if the new position is valid
         if (!isValidPosition(
                 currentConfig.cards,
@@ -224,12 +226,13 @@ class CustomizableHomeViewModel @Inject constructor(
                 newPosition.second,
                 currentConfig.gridColumns,
                 cardId
-            )) {
+            )
+        ) {
             emitEffect(HomeScreenEffect.ShowError("Invalid position"))
             emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Error))
             return
         }
-        
+
         val updatedCards = currentConfig.cards.map { card ->
             if (card.id == cardId) {
                 card.copy(row = newPosition.first, column = newPosition.second)
@@ -237,32 +240,32 @@ class CustomizableHomeViewModel @Inject constructor(
                 card
             }
         }
-        
+
         val updatedConfig = currentConfig.copy(cards = updatedCards)
         _uiState.value = _uiState.value.copy(config = updatedConfig)
-        
+
         emitEffect(HomeScreenEffect.CardMoved(cardId, newPosition))
         emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Click))
     }
-    
+
     private fun resizeCard(cardId: String, newSize: CardSize) {
         try {
             val currentConfig = _uiState.value.config
             val cardToResize = currentConfig.cards.find { it.id == cardId }
-            
+
             if (cardToResize == null) {
                 emitEffect(HomeScreenEffect.ShowError("Card not found"))
                 emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Error))
                 return
             }
-            
+
             // Check if the new size is allowed for this card type
             if (newSize !in cardToResize.cardType.allowedSizes) {
                 emitEffect(HomeScreenEffect.ShowError("Size ${newSize.displayName} not supported for this card"))
                 emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Error))
                 return
             }
-            
+
             // Check if the card fits with the new size
             if (!isValidPosition(
                     currentConfig.cards,
@@ -271,12 +274,13 @@ class CustomizableHomeViewModel @Inject constructor(
                     cardToResize.column,
                     currentConfig.gridColumns,
                     cardId
-                )) {
+                )
+            ) {
                 emitEffect(HomeScreenEffect.ShowError("Not enough space to resize to ${newSize.displayName}"))
                 emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Error))
                 return
             }
-            
+
             val updatedCards = currentConfig.cards.map { card ->
                 if (card.id == cardId) {
                     card.copy(size = newSize)
@@ -284,54 +288,53 @@ class CustomizableHomeViewModel @Inject constructor(
                     card
                 }
             }
-            
+
             val updatedConfig = currentConfig.copy(cards = updatedCards)
             _uiState.value = _uiState.value.copy(config = updatedConfig)
-            
+
             emitEffect(HomeScreenEffect.CardResized(cardId, newSize))
             emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Success))
-            
+
             // Auto-save after successful resize
             saveConfiguration()
-            
         } catch (e: Exception) {
             emitEffect(HomeScreenEffect.ShowError("Failed to resize card: ${e.message}"))
             emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Error))
         }
     }
-    
+
     private fun selectCard(card: HomeCard?) {
         _uiState.value = _uiState.value.copy(selectedCard = card)
         if (card != null) {
             emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Click))
         }
     }
-    
+
     private fun updateConfig(config: HomeScreenConfig) {
         _uiState.value = _uiState.value.copy(config = config)
     }
-    
+
     private fun resetToDefaults(keepCustomizations: Boolean) {
         val defaultCards = getDefaultHomeCards()
         val currentConfig = _uiState.value.config
-        
+
         val newConfig = if (keepCustomizations) {
             currentConfig.copy(cards = defaultCards)
         } else {
             HomeScreenConfig(cards = defaultCards)
         }
-        
+
         _uiState.value = _uiState.value.copy(
             config = newConfig,
             isEditMode = false,
             selectedCard = null
         )
-        
+
         emitEffect(HomeScreenEffect.ConfigurationReset)
         emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Success))
         saveConfiguration()
     }
-    
+
     private fun loadConfiguration() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
@@ -351,7 +354,7 @@ class CustomizableHomeViewModel @Inject constructor(
             }
         }
     }
-    
+
     private fun saveConfiguration() {
         viewModelScope.launch {
             try {
@@ -363,27 +366,27 @@ class CustomizableHomeViewModel @Inject constructor(
             }
         }
     }
-    
+
     fun onDragStart(cardId: String) {
         _uiState.value = _uiState.value.copy(isDragActive = true)
         emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.LongPress))
     }
-    
+
     fun onDragEnd() {
         _uiState.value = _uiState.value.copy(isDragActive = false)
         emitEffect(HomeScreenEffect.PerformHapticFeedback(HapticType.Click))
     }
-    
+
     fun dismissError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
     }
-    
+
     private fun emitEffect(effect: HomeScreenEffect) {
         viewModelScope.launch {
             _effects.emit(effect)
         }
     }
-    
+
     /**
      * Enhanced position finding with multiple strategies
      */
@@ -399,11 +402,11 @@ class CustomizableHomeViewModel @Inject constructor(
                 return pos
             }
         }
-        
+
         // Strategy 1: Find first available position (original logic)
         val simplePosition = findNextAvailablePosition(cards, cardSize, gridColumns)
         if (simplePosition != null) return simplePosition
-        
+
         // Strategy 2: Try compact arrangement - look for gaps in existing layout
         val occupiedPositions = getOccupiedPositions(cards)
         for (row in 0 until 10) {
@@ -413,10 +416,10 @@ class CustomizableHomeViewModel @Inject constructor(
                 }
             }
         }
-        
+
         return null // No position found
     }
-    
+
     /**
      * Check if a card can be placed at a specific position
      */
@@ -429,7 +432,7 @@ class CustomizableHomeViewModel @Inject constructor(
     ): Boolean {
         // Check bounds
         if (col + cardSize.columns > gridColumns) return false
-        
+
         // Check for overlaps
         for (r in row until row + cardSize.rows) {
             for (c in col until col + cardSize.columns) {
@@ -440,7 +443,7 @@ class CustomizableHomeViewModel @Inject constructor(
         }
         return true
     }
-    
+
     /**
      * Get all occupied positions from current cards
      */
@@ -453,7 +456,7 @@ class CustomizableHomeViewModel @Inject constructor(
             }
         }.toSet()
     }
-    
+
     /**
      * Enhanced validation for card positions
      */
@@ -480,15 +483,15 @@ sealed class HomeScreenEffect {
     object ShowEditModeHint : HomeScreenEffect()
     object ConfigurationSaved : HomeScreenEffect()
     object ConfigurationReset : HomeScreenEffect()
-    
+
     data class CardAdded(val cardId: String) : HomeScreenEffect()
     data class CardRemoved(val cardId: String) : HomeScreenEffect()
     data class CardMoved(val cardId: String, val newPosition: Pair<Int, Int>) : HomeScreenEffect()
     data class CardResized(val cardId: String, val newSize: CardSize) : HomeScreenEffect()
-    
+
     data class ShowError(val message: String) : HomeScreenEffect()
     data class ShowSuccess(val message: String) : HomeScreenEffect()
-    
+
     data class PerformHapticFeedback(val type: HapticType) : HomeScreenEffect()
 }
 

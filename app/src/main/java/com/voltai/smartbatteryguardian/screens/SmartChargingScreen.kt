@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -16,18 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.math.*
-import java.text.SimpleDateFormat
-import java.util.*
 import com.voltai.smartbatteryguardian.models.RecommendationPriority
-import com.voltai.smartbatteryguardian.models.ChargingProfile
+import java.util.*
+import kotlin.math.*
 
 // Local Data Models for Smart Charging
 data class ChargingRecommendation(
@@ -90,16 +86,16 @@ data class OptimizationTip(
 @Composable
 fun SmartChargingScreen() {
     val context = LocalContext.current
-    
+
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("🧠 Smart Charging", "📊 Insights", "⚙️ Profiles", "🔧 Optimization", "📈 Analytics")
-    
+
     // Generate sample data
     val recommendations = remember { generateChargingRecommendations() }
     val profiles = remember { generateLocalChargingProfiles() }
     val insights = remember { generateChargingInsights() }
     val optimizationTips = remember { generateOptimizationTips() }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -127,9 +123,9 @@ fun SmartChargingScreen() {
                 ) {
                     // AI Brain Animation
                     AIBrainIndicator()
-                    
+
                     Spacer(modifier = Modifier.width(16.dp))
-                    
+
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Smart Charging AI",
@@ -143,13 +139,13 @@ fun SmartChargingScreen() {
                             color = Color.White.copy(alpha = 0.85f)
                         )
                     }
-                    
+
                     // AI Status Indicator
                     AIStatusCard()
                 }
-                
+
                 Spacer(modifier = Modifier.height(20.dp))
-                
+
                 // Quick AI Insights
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -162,7 +158,7 @@ fun SmartChargingScreen() {
                 }
             }
         }
-        
+
         // Tab Row
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -184,7 +180,7 @@ fun SmartChargingScreen() {
                 }
             }
         }
-        
+
         // Content
         LazyColumn(
             modifier = Modifier
@@ -232,7 +228,7 @@ fun AIBrainIndicator() {
             repeatMode = RepeatMode.Restart
         )
     )
-    
+
     Box(
         modifier = Modifier
             .size(64.dp)
@@ -252,7 +248,7 @@ fun AIBrainIndicator() {
             fontSize = 32.sp,
             modifier = Modifier.graphicsLayer { rotationZ = rotation / 8f }
         )
-        
+
         // Pulsing ring
         val pulseScale by animateFloatAsState(
             targetValue = 1.2f,
@@ -261,18 +257,18 @@ fun AIBrainIndicator() {
                 repeatMode = RepeatMode.Reverse
             )
         )
-        
+
         Box(
             modifier = Modifier
                 .size(56.dp)
-                .graphicsLayer { 
-                    scaleX = pulseScale 
+                .graphicsLayer {
+                    scaleX = pulseScale
                     scaleY = pulseScale
                     alpha = 1f - ((pulseScale - 1f) / 0.2f) * 0.5f
                 }
                 .border(
-                    2.dp, 
-                    Color.White.copy(alpha = 0.4f), 
+                    2.dp,
+                    Color.White.copy(alpha = 0.4f),
                     CircleShape
                 )
         )
@@ -305,7 +301,7 @@ fun AIStatusCard() {
                     fontWeight = FontWeight.Medium
                 )
             }
-            
+
             Text(
                 text = "Learning...",
                 fontSize = 9.sp,
@@ -363,9 +359,9 @@ fun CurrentChargingStatusCard() {
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF4A148C)
                 )
-                
+
                 Spacer(modifier = Modifier.weight(1f))
-                
+
                 Surface(
                     shape = RoundedCornerShape(20.dp),
                     color = Color(0xFF4CAF50).copy(alpha = 0.1f)
@@ -379,9 +375,9 @@ fun CurrentChargingStatusCard() {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Battery level and charging animation
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -389,9 +385,9 @@ fun CurrentChargingStatusCard() {
             ) {
                 // Animated battery
                 AnimatedBatteryIcon(level = 67, isCharging = true)
-                
+
                 Spacer(modifier = Modifier.width(20.dp))
-                
+
                 Column {
                     Text(
                         text = "67%",
@@ -404,9 +400,9 @@ fun CurrentChargingStatusCard() {
                         fontSize = 14.sp,
                         color = Color(0xFF666666)
                     )
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     LinearProgressIndicator(
                         progress = 0.67f,
                         modifier = Modifier
@@ -418,9 +414,9 @@ fun CurrentChargingStatusCard() {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Charging details
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -461,16 +457,16 @@ fun AnimatedBatteryIcon(level: Int, isCharging: Boolean) {
         targetValue = level / 100f,
         animationSpec = tween(1000, easing = EaseOutCubic)
     )
-    
+
     Box(
         modifier = Modifier.size(60.dp),
         contentAlignment = Alignment.Center
     ) {
         // Battery outline
-        Canvas(modifier = Modifier.fillMaxSize()) { 
+        Canvas(modifier = Modifier.fillMaxSize()) {
             val strokeWidth = 3.dp.toPx()
             val cornerRadius = 6.dp.toPx()
-            
+
             // Battery body
             drawRoundRect(
                 color = Color(0xFF666666),
@@ -485,7 +481,7 @@ fun AnimatedBatteryIcon(level: Int, isCharging: Boolean) {
                 cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
                 style = androidx.compose.ui.graphics.drawscope.Stroke(width = strokeWidth)
             )
-            
+
             // Battery tip
             drawRoundRect(
                 color = Color(0xFF666666),
@@ -499,7 +495,7 @@ fun AnimatedBatteryIcon(level: Int, isCharging: Boolean) {
                 ),
                 cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius / 2, cornerRadius / 2)
             )
-            
+
             // Battery level fill
             val fillColor = when {
                 level > 80 -> Color(0xFF4CAF50)
@@ -507,7 +503,7 @@ fun AnimatedBatteryIcon(level: Int, isCharging: Boolean) {
                 level > 20 -> Color(0xFFFF5722)
                 else -> Color(0xFFF44336)
             }
-            
+
             drawRoundRect(
                 color = fillColor,
                 size = androidx.compose.ui.geometry.Size(
@@ -518,10 +514,13 @@ fun AnimatedBatteryIcon(level: Int, isCharging: Boolean) {
                     x = size.width * 0.1f + strokeWidth,
                     y = size.height * 0.2f + strokeWidth
                 ),
-                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius - strokeWidth, cornerRadius - strokeWidth)
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(
+                    cornerRadius - strokeWidth,
+                    cornerRadius - strokeWidth
+                )
             )
         }
-        
+
         // Charging bolt animation
         if (isCharging) {
             val boltAlpha by animateFloatAsState(
@@ -531,7 +530,7 @@ fun AnimatedBatteryIcon(level: Int, isCharging: Boolean) {
                     repeatMode = RepeatMode.Reverse
                 )
             )
-            
+
             Text(
                 text = "⚡",
                 fontSize = 16.sp,
@@ -561,9 +560,9 @@ fun SmartRecommendationsCard(recommendations: List<ChargingRecommendation>) {
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.width(8.dp))
-                
+
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                     color = Color(0xFF6A1B9A).copy(alpha = 0.1f)
@@ -577,9 +576,9 @@ fun SmartRecommendationsCard(recommendations: List<ChargingRecommendation>) {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             recommendations.forEach { recommendation ->
                 RecommendationCard(recommendation)
                 if (recommendation != recommendations.last()) {
@@ -599,7 +598,7 @@ fun RecommendationCard(recommendation: ChargingRecommendation) {
         RecommendationPriority.LOW -> Color(0xFF4CAF50)
         RecommendationPriority.INFO -> Color(0xFF2196F3)
     }
-    
+
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = Color(0xFFF8F9FA)
@@ -612,9 +611,9 @@ fun RecommendationCard(recommendation: ChargingRecommendation) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = recommendation.icon, fontSize = 20.sp)
-                
+
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = recommendation.title,
@@ -628,7 +627,7 @@ fun RecommendationCard(recommendation: ChargingRecommendation) {
                         lineHeight = 16.sp
                     )
                 }
-                
+
                 Surface(
                     shape = RoundedCornerShape(8.dp),
                     color = priorityColor.copy(alpha = 0.1f)
@@ -642,9 +641,9 @@ fun RecommendationCard(recommendation: ChargingRecommendation) {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -663,7 +662,7 @@ fun RecommendationCard(recommendation: ChargingRecommendation) {
                         color = Color(0xFF666666)
                     )
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Handle action */ },
                     modifier = Modifier.height(32.dp)
@@ -691,9 +690,9 @@ fun ChargingInsightCard(insight: ChargingInsight) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = insight.icon, fontSize = 24.sp)
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = insight.title,
@@ -707,7 +706,7 @@ fun ChargingInsightCard(insight: ChargingInsight) {
                     lineHeight = 16.sp
                 )
             }
-            
+
             Column(
                 horizontalAlignment = Alignment.End
             ) {
@@ -716,13 +715,13 @@ fun ChargingInsightCard(insight: ChargingInsight) {
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 val changeColor = when (insight.changeType) {
                     ChangeType.POSITIVE -> Color(0xFF4CAF50)
                     ChangeType.NEGATIVE -> Color(0xFFF44336)
                     ChangeType.NEUTRAL -> Color(0xFF666666)
                 }
-                
+
                 Text(
                     text = insight.change,
                     fontSize = 12.sp,
@@ -740,13 +739,17 @@ fun ChargingProfileCard(profile: LocalChargingProfile) {
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (profile.isRecommended) 
-                Color(0xFF6A1B9A).copy(alpha = 0.05f) 
-            else Color.White
+            containerColor = if (profile.isRecommended) {
+                Color(0xFF6A1B9A).copy(alpha = 0.05f)
+            } else {
+                Color.White
+            }
         ),
-        border = if (profile.isRecommended) 
-            BorderStroke(2.dp, Color(0xFF6A1B9A).copy(alpha = 0.3f)) 
-        else null,
+        border = if (profile.isRecommended) {
+            BorderStroke(2.dp, Color(0xFF6A1B9A).copy(alpha = 0.3f))
+        } else {
+            null
+        },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
@@ -757,9 +760,9 @@ fun ChargingProfileCard(profile: LocalChargingProfile) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = profile.icon, fontSize = 24.sp)
-                
+
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -769,7 +772,7 @@ fun ChargingProfileCard(profile: LocalChargingProfile) {
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        
+
                         if (profile.isRecommended) {
                             Spacer(modifier = Modifier.width(8.dp))
                             Surface(
@@ -786,7 +789,7 @@ fun ChargingProfileCard(profile: LocalChargingProfile) {
                             }
                         }
                     }
-                    
+
                     Text(
                         text = profile.description,
                         fontSize = 12.sp,
@@ -794,7 +797,7 @@ fun ChargingProfileCard(profile: LocalChargingProfile) {
                         lineHeight = 16.sp
                     )
                 }
-                
+
                 Switch(
                     checked = profile.isRecommended,
                     onCheckedChange = { /* Handle toggle */ },
@@ -804,9 +807,9 @@ fun ChargingProfileCard(profile: LocalChargingProfile) {
                     )
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Profile details
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -816,10 +819,10 @@ fun ChargingProfileCard(profile: LocalChargingProfile) {
                 ProfileDetailItem("Speed", profile.chargingSpeed.name)
                 ProfileDetailItem("Windows", "${profile.timeWindows.size}")
             }
-            
+
             if (profile.benefits.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 profile.benefits.take(2).forEach { benefit ->
                     Text(
                         text = "• $benefit",
@@ -872,9 +875,9 @@ fun OptimizationTipCard(tip: OptimizationTip) {
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.weight(1f))
-                
+
                 Surface(
                     shape = RoundedCornerShape(6.dp),
                     color = when (tip.difficulty) {
@@ -896,18 +899,18 @@ fun OptimizationTipCard(tip: OptimizationTip) {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = tip.description,
                 fontSize = 14.sp,
                 color = Color(0xFF666666),
                 lineHeight = 20.sp
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween

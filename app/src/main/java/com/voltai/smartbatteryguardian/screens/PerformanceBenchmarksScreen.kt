@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -16,12 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.delay
 
 // Future-ready benchmark data models
 data class BenchmarkSuite(
@@ -87,14 +84,14 @@ data class Score(val category: String, val value: Int, val maxValue: Int)
 fun PerformanceBenchmarksScreen() {
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("📊 Overview", "🏃 Benchmarks", "⚡ Stress Tests", "🏆 Rankings", "📈 Analysis")
-    
+
     val benchmarkSuites = remember { getBenchmarkSuites() }
     val stressTests = remember { getStressTests() }
     val competitiveData = remember { getCompetitiveAnalysis() }
     val performanceProfile = remember { getPerformanceProfile() }
-    
+
     var isBenchmarking by remember { mutableStateOf(false) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -137,9 +134,9 @@ fun PerformanceBenchmarksScreen() {
                     ) {
                         BenchmarkAnimation(isBenchmarking)
                     }
-                    
+
                     Spacer(modifier = Modifier.width(16.dp))
-                    
+
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Performance Benchmarks",
@@ -153,25 +150,41 @@ fun PerformanceBenchmarksScreen() {
                             color = Color.White.copy(alpha = 0.85f)
                         )
                     }
-                    
+
                     OverallScoreCard(performanceProfile.overallRating)
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Quick Stats Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    BenchmarkQuickStatCard("🔋", "${performanceProfile.scores.find { it.category == "Battery" }?.value ?: 0}", "Battery")
-                    BenchmarkQuickStatCard("⚡", "${performanceProfile.scores.find { it.category == "Charging" }?.value ?: 0}", "Charging")
-                    BenchmarkQuickStatCard("🌡️", "${performanceProfile.scores.find { it.category == "Thermal" }?.value ?: 0}", "Thermal")
-                    BenchmarkQuickStatCard("⚙️", "${performanceProfile.scores.find { it.category == "Efficiency" }?.value ?: 0}", "Efficiency")
+                    BenchmarkQuickStatCard(
+                        "🔋",
+                        "${performanceProfile.scores.find { it.category == "Battery" }?.value ?: 0}",
+                        "Battery"
+                    )
+                    BenchmarkQuickStatCard(
+                        "⚡",
+                        "${performanceProfile.scores.find { it.category == "Charging" }?.value ?: 0}",
+                        "Charging"
+                    )
+                    BenchmarkQuickStatCard(
+                        "🌡️",
+                        "${performanceProfile.scores.find { it.category == "Thermal" }?.value ?: 0}",
+                        "Thermal"
+                    )
+                    BenchmarkQuickStatCard(
+                        "⚙️",
+                        "${performanceProfile.scores.find { it.category == "Efficiency" }?.value ?: 0}",
+                        "Efficiency"
+                    )
                 }
             }
         }
-        
+
         // Benchmark Tabs
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -193,7 +206,7 @@ fun PerformanceBenchmarksScreen() {
                 }
             }
         }
-        
+
         // Benchmark Content
         LazyColumn(
             modifier = Modifier
@@ -253,7 +266,7 @@ fun BenchmarkAnimation(isBenchmarking: Boolean) {
             repeatMode = RepeatMode.Reverse
         )
     )
-    
+
     val alpha by animateFloatAsState(
         targetValue = if (isBenchmarking) 0.7f else 1f,
         animationSpec = infiniteRepeatable(
@@ -261,7 +274,7 @@ fun BenchmarkAnimation(isBenchmarking: Boolean) {
             repeatMode = RepeatMode.Reverse
         )
     )
-    
+
     Text(
         text = if (isBenchmarking) "⚡" else "📊",
         fontSize = (28 * scale).sp,
@@ -346,18 +359,18 @@ fun PerformanceOverviewCard(profile: PerformanceProfile) {
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Score Visualization
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 profile.scores.forEach { score ->
                     ScoreProgressBar(score)
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Strengths and Weaknesses
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -378,7 +391,7 @@ fun PerformanceOverviewCard(profile: PerformanceProfile) {
                         )
                     }
                 }
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "⚠️ Areas to Improve",
@@ -411,7 +424,7 @@ fun ScoreProgressBar(score: Score) {
             fontSize = 14.sp,
             modifier = Modifier.weight(1f)
         )
-        
+
         Row(verticalAlignment = Alignment.CenterVertically) {
             LinearProgressIndicator(
                 progress = score.value.toFloat() / score.maxValue.toFloat(),
@@ -456,18 +469,18 @@ fun QuickBenchmarkCard(onBenchmark: () -> Unit) {
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFFEF4444)
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Text(
                 text = "Run comprehensive battery and performance tests",
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
                 color = Color(0xFF666666)
             )
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -539,19 +552,19 @@ fun BenchmarkSuiteCard(suite: BenchmarkSuite) {
                         )
                     }
                 }
-                
+
                 BenchmarkStatusBadge(suite.status)
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Test Results
             suite.tests.forEach { test ->
                 BenchmarkTestResult(test)
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -562,7 +575,7 @@ fun BenchmarkSuiteCard(suite: BenchmarkSuite) {
                     fontSize = 12.sp,
                     color = Color(0xFF666666)
                 )
-                
+
                 Button(
                     onClick = { /* Run benchmark */ },
                     colors = ButtonDefaults.buttonColors(
@@ -585,7 +598,7 @@ fun BenchmarkStatusBadge(status: BenchmarkStatus) {
         BenchmarkStatus.COMPLETED -> Color(0xFF3B82F6) to "DONE"
         BenchmarkStatus.FAILED -> Color(0xFFEF4444) to "FAILED"
     }
-    
+
     Surface(
         shape = RoundedCornerShape(6.dp),
         color = color.copy(alpha = 0.1f)
@@ -614,7 +627,7 @@ fun BenchmarkTestResult(test: BenchmarkTest) {
             fontSize = 14.sp,
             modifier = Modifier.weight(1f)
         )
-        
+
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "${test.score}${test.unit}",
@@ -642,7 +655,7 @@ fun PerformanceLevelIndicator(level: PerformanceLevel) {
         PerformanceLevel.BELOW_AVERAGE -> "👎" to Color(0xFFEF4444)
         PerformanceLevel.POOR -> "💀" to Color(0xFFDC2626)
     }
-    
+
     Text(
         text = emoji,
         fontSize = 16.sp
@@ -664,25 +677,25 @@ fun StressTestCard(test: BatteryStressTest, modifier: Modifier = Modifier) {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = test.scenario.name.replace("_", " "),
                 fontSize = 12.sp,
                 color = Color(0xFF666666)
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Test Results
             StressTestMetric("Battery", "${test.startLevel}% → ${test.endLevel}%")
             StressTestMetric("Duration", "${test.duration}h")
             StressTestMetric("Drain Rate", "${test.drainRate}%/h")
             StressTestMetric("Efficiency", "${test.efficiency}%")
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Button(
                 onClick = { /* Run stress test */ },
                 modifier = Modifier.fillMaxWidth(),
@@ -720,22 +733,30 @@ fun StressTestMetric(label: String, value: String) {
 fun getBenchmarkSuites(): List<BenchmarkSuite> {
     return listOf(
         BenchmarkSuite(
-            "Battery Life", "Comprehensive battery endurance testing", "🔋",
-            BenchmarkCategory.BATTERY_LIFE, "15 min", 
+            "Battery Life",
+            "Comprehensive battery endurance testing",
+            "🔋",
+            BenchmarkCategory.BATTERY_LIFE,
+            "15 min",
             listOf(
                 BenchmarkTest("Screen On Time", 8, 10, "h", PerformanceLevel.GOOD, TestDetails(mapOf())),
                 BenchmarkTest("Standby Time", 72, 96, "h", PerformanceLevel.AVERAGE, TestDetails(mapOf()))
             ),
-            "2 hours ago", BenchmarkStatus.COMPLETED
+            "2 hours ago",
+            BenchmarkStatus.COMPLETED
         ),
         BenchmarkSuite(
-            "Charging Speed", "Fast charging performance analysis", "⚡",
-            BenchmarkCategory.CHARGING_SPEED, "5 min",
+            "Charging Speed",
+            "Fast charging performance analysis",
+            "⚡",
+            BenchmarkCategory.CHARGING_SPEED,
+            "5 min",
             listOf(
                 BenchmarkTest("0-50% Time", 28, 30, "min", PerformanceLevel.EXCELLENT, TestDetails(mapOf())),
                 BenchmarkTest("50-100% Time", 45, 60, "min", PerformanceLevel.GOOD, TestDetails(mapOf()))
             ),
-            "1 day ago", BenchmarkStatus.READY
+            "1 day ago",
+            BenchmarkStatus.READY
         )
     )
 }
@@ -751,9 +772,12 @@ fun getStressTests(): List<BatteryStressTest> {
 
 fun getCompetitiveAnalysis(): CompetitiveAnalysis {
     return CompetitiveAnalysis(
-        "Current Device", 4000, "Snapdragon 8 Gen 2",
+        "Current Device",
+        4000,
+        "Snapdragon 8 Gen 2",
         mapOf("Battery" to 87, "Charging" to 92, "Efficiency" to 79),
-        12, 85.3f
+        12,
+        85.3f
     )
 }
 
@@ -775,8 +799,13 @@ fun getPerformanceProfile(): PerformanceProfile {
 
 // Placeholder composables for future implementation
 @Composable fun RecentTestsCard(suites: List<BenchmarkSuite>) { /* Future implementation */ }
+
 @Composable fun DeviceRankingCard(analysis: CompetitiveAnalysis) { /* Future implementation */ }
+
 @Composable fun LeaderboardCard() { /* Future implementation */ }
+
 @Composable fun PerformanceAnalysisCard(profile: PerformanceProfile) { /* Future implementation */ }
+
 @Composable fun TrendAnalysisCard() { /* Future implementation */ }
+
 @Composable fun RecommendationsCard() { /* Future implementation */ }

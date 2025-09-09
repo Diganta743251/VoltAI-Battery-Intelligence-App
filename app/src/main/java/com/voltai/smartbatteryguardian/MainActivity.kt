@@ -11,7 +11,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        
+
         // Launch the professional main activity (comprehensive version)
         startActivity(Intent(this, ProfessionalMainActivity::class.java))
         finish()

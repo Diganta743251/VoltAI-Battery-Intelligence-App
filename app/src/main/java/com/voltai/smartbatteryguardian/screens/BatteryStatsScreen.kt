@@ -5,7 +5,6 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -14,37 +13,35 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.voltai.smartbatteryguardian.analytics.rememberBatteryAnalytics
-import com.voltai.smartbatteryguardian.analytics.DailyBatteryStats
 import com.voltai.smartbatteryguardian.analytics.BatteryInsight
+import com.voltai.smartbatteryguardian.analytics.DailyBatteryStats
 import com.voltai.smartbatteryguardian.analytics.InsightSeverity
-import com.voltai.smartbatteryguardian.analytics.PowerConsumption
 import com.voltai.smartbatteryguardian.analytics.OptimizationTip
-import com.voltai.smartbatteryguardian.ui.animation.AnimationSpecs
+import com.voltai.smartbatteryguardian.analytics.PowerConsumption
+import com.voltai.smartbatteryguardian.analytics.rememberBatteryAnalytics
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun BatteryStatsScreen() {
     val context = LocalContext.current
     val analyticsEngine = rememberBatteryAnalytics(context)
-    
+
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("Overview", "Analytics", "Insights", "Consumption")
-    
+
     val dailyStats = remember { analyticsEngine.generateDailyStats(7) }
     val weeklyAnalysis = remember { analyticsEngine.generateWeeklyAnalysis() }
     val insights = remember { analyticsEngine.generateBatteryInsights() }
     val powerConsumption = remember { analyticsEngine.getPowerConsumptionBreakdown() }
     val chargingAnalysis = remember { analyticsEngine.getChargingPatternAnalysis() }
     val optimizationTips = remember { analyticsEngine.getOptimizationRecommendations() }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -75,9 +72,9 @@ fun BatteryStatsScreen() {
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         // Tab Row
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -103,9 +100,9 @@ fun BatteryStatsScreen() {
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Tab Content with Animation
         AnimatedContent(
             targetState = selectedTab,
@@ -114,10 +111,10 @@ fun BatteryStatsScreen() {
                     initialOffsetX = { if (targetState > initialState) it else -it },
                     animationSpec = tween(400)
                 ) + fadeIn(animationSpec = tween(200, delayMillis = 100)) with
-                slideOutHorizontally(
-                    targetOffsetX = { if (targetState > initialState) -it else it },
-                    animationSpec = tween(200)
-                ) + fadeOut(animationSpec = tween(150))
+                    slideOutHorizontally(
+                        targetOffsetX = { if (targetState > initialState) -it else it },
+                        animationSpec = tween(200)
+                    ) + fadeOut(animationSpec = tween(150))
             }
         ) { tab ->
             when (tab) {
@@ -161,7 +158,7 @@ fun OverviewTab(
                     modifier = Modifier.weight(1f)
                 )
             }
-            
+
             AnimatedVisibility(
                 visible = true,
                 enter = slideInVertically(
@@ -178,9 +175,9 @@ fun OverviewTab(
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -194,13 +191,16 @@ fun OverviewTab(
             ) {
                 QuickStatCard(
                     title = "Efficiency Trend",
-                    value = "${if (weeklyAnalysis.powerEfficiencyTrend > 0) "+" else ""}${String.format("%.1f", weeklyAnalysis.powerEfficiencyTrend * 100)}%",
+                    value = "${if (weeklyAnalysis.powerEfficiencyTrend > 0) "+" else ""}${String.format(
+                        "%.1f",
+                        weeklyAnalysis.powerEfficiencyTrend * 100
+                    )}%",
                     icon = if (weeklyAnalysis.powerEfficiencyTrend > 0) "📈" else "📉",
                     color = if (weeklyAnalysis.powerEfficiencyTrend > 0) Color(0xFF4CAF50) else Color(0xFFFF5722),
                     modifier = Modifier.weight(1f)
                 )
             }
-            
+
             AnimatedVisibility(
                 visible = true,
                 enter = slideInVertically(
@@ -217,9 +217,9 @@ fun OverviewTab(
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(20.dp))
-        
+
         // Daily Usage Chart Placeholder
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -233,9 +233,9 @@ fun OverviewTab(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Simplified chart representation
                 dailyStats.forEach { stat ->
                     DailyUsageItem(stat)
@@ -243,9 +243,9 @@ fun OverviewTab(
                 }
             }
         }
-        
+
         Spacer(modifier = Modifier.height(20.dp))
-        
+
         // Charging Analysis
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -262,9 +262,9 @@ fun OverviewTab(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
@@ -285,9 +285,9 @@ fun OverviewTab(
                         icon = "🌡️"
                     )
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Text(
                     text = "Optimal charging windows: ${chargingAnalysis.optimalChargingWindows.joinToString(", ")}",
                     fontSize = 14.sp,
@@ -324,17 +324,17 @@ fun AnalyticsTab(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Text(
                         text = "Top Power Consumers:",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
                     )
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     week.topPowerConsumers.take(3).forEach { (component, percentage) ->
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -364,7 +364,7 @@ fun AnalyticsTab(
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
         }
     }
@@ -405,18 +405,18 @@ fun ConsumptionTab(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 powerConsumption.forEach { consumption ->
                     PowerConsumptionItem(consumption)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }
-        
+
         Spacer(modifier = Modifier.height(20.dp))
-        
+
         // Optimization Tips
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -433,9 +433,9 @@ fun ConsumptionTab(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 optimizationTips.forEach { tip ->
                     OptimizationTipItem(tip)
                     Spacer(modifier = Modifier.height(12.dp))
@@ -504,7 +504,7 @@ fun DailyUsageItem(stat: DailyBatteryStats) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        
+
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = "${stat.totalUsage.toInt()}%",
@@ -519,7 +519,7 @@ fun DailyUsageItem(stat: DailyBatteryStats) {
             )
         }
     }
-    
+
     LinearProgressIndicator(
         progress = stat.totalUsage / 100f,
         modifier = Modifier
@@ -587,7 +587,7 @@ fun InsightCard(insight: BatteryInsight) {
                         lineHeight = 20.sp
                     )
                 }
-                
+
                 Surface(
                     shape = RoundedCornerShape(8.dp),
                     color = getSeverityColor(insight.severity)
@@ -601,7 +601,7 @@ fun InsightCard(insight: BatteryInsight) {
                     )
                 }
             }
-            
+
             insight.improvement?.let { improvement ->
                 Spacer(modifier = Modifier.height(12.dp))
                 Card(
@@ -642,7 +642,7 @@ fun PowerConsumptionItem(consumption: PowerConsumption) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        
+
         Text(
             text = "${consumption.percentage.toInt()}%",
             fontSize = 16.sp,
@@ -650,7 +650,7 @@ fun PowerConsumptionItem(consumption: PowerConsumption) {
             color = MaterialTheme.colorScheme.primary
         )
     }
-    
+
     LinearProgressIndicator(
         progress = consumption.percentage / 50f, // Normalized for display
         modifier = Modifier
@@ -690,7 +690,7 @@ fun OptimizationTipItem(tip: OptimizationTip) {
                     lineHeight = 16.sp
                 )
             }
-            
+
             Column(horizontalAlignment = Alignment.End) {
                 Surface(
                     shape = RoundedCornerShape(6.dp),

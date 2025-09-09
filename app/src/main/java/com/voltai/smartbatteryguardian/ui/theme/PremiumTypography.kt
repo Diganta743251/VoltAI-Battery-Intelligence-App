@@ -3,13 +3,10 @@ package com.voltai.smartbatteryguardian.ui.theme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.voltai.smartbatteryguardian.R
 
 /**
  * Premium Typography System
@@ -43,7 +40,7 @@ val PremiumTypography = Typography(
         lineHeight = 44.sp,
         letterSpacing = 0.sp
     ),
-    
+
     // Headlines for sections
     headlineLarge = TextStyle(
         fontFamily = PremiumFontFamily,
@@ -66,7 +63,7 @@ val PremiumTypography = Typography(
         lineHeight = 32.sp,
         letterSpacing = 0.sp
     ),
-    
+
     // Titles for cards and components
     titleLarge = TextStyle(
         fontFamily = PremiumFontFamily,
@@ -89,7 +86,7 @@ val PremiumTypography = Typography(
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp
     ),
-    
+
     // Body text
     bodyLarge = TextStyle(
         fontFamily = PremiumFontFamily,
@@ -112,7 +109,7 @@ val PremiumTypography = Typography(
         lineHeight = 16.sp,
         letterSpacing = 0.4.sp
     ),
-    
+
     // Labels for UI elements
     labelLarge = TextStyle(
         fontFamily = PremiumFontFamily,
@@ -170,7 +167,7 @@ object PremiumTextStyles {
         lineHeight = 12.sp,
         letterSpacing = 0.8.sp
     )
-    
+
     val metricValue = TextStyle(
         fontFamily = PremiumFontFamily,
         fontWeight = FontWeight.Bold,
@@ -178,7 +175,7 @@ object PremiumTextStyles {
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     )
-    
+
     val metricLabel = TextStyle(
         fontFamily = PremiumFontFamily,
         fontWeight = FontWeight.Medium,
@@ -186,7 +183,7 @@ object PremiumTextStyles {
         lineHeight = 16.sp,
         letterSpacing = 0.4.sp
     )
-    
+
     val cardTitle = TextStyle(
         fontFamily = PremiumFontFamily,
         fontWeight = FontWeight.SemiBold,
@@ -194,7 +191,7 @@ object PremiumTextStyles {
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp
     )
-    
+
     val cardSubtitle = TextStyle(
         fontFamily = PremiumFontFamily,
         fontWeight = FontWeight.Normal,
@@ -202,7 +199,7 @@ object PremiumTextStyles {
         lineHeight = 18.sp,
         letterSpacing = 0.25.sp
     )
-    
+
     val buttonText = TextStyle(
         fontFamily = PremiumFontFamily,
         fontWeight = FontWeight.SemiBold,
@@ -210,7 +207,7 @@ object PremiumTextStyles {
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp
     )
-    
+
     val tabText = TextStyle(
         fontFamily = PremiumFontFamily,
         fontWeight = FontWeight.Medium,

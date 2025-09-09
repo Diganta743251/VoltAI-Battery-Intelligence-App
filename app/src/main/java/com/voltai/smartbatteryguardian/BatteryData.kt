@@ -13,7 +13,7 @@ data class BatteryData(
     val chargingStatus: String = "Not Charging",
     val remainingTime: String = "Unknown",
     val batteryUsed: String = "0%",
-    
+
     // Technical Data
     val temperature: Float = 25.0f,
     val voltage: Double = 3.7,
@@ -21,27 +21,27 @@ data class BatteryData(
     val healthPercentage: Int = 100,
     val capacity: String = "Unknown",
     val cycleCount: Int = 0,
-    
+
     // Screen Time Data
     val screenOnTime: String = "0h 0m",
     val screenOffTime: String = "24h 0m",
-    
+
     // Advanced Metrics
     val powerConsumption: Double = 0.0,
     val chargingSpeed: String = "Normal",
     val estimatedLife: String = "Unknown",
     val powerSource: String = "Battery",
-    
+
     // Historical Data
     val dailyUsagePattern: List<Float> = emptyList(),
     val weeklyStats: WeeklyStats = WeeklyStats(),
     val monthlyTrends: MonthlyTrends = MonthlyTrends(),
-    
+
     // AI Insights
     val batteryScore: Int = 85,
     val recommendations: List<String> = emptyList(),
     val optimizationTips: List<String> = emptyList(),
-    
+
     // System Info
     val deviceModel: String = "Unknown",
     val androidVersion: String = "Unknown",

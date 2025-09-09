@@ -25,7 +25,7 @@ class AdvancedNotificationManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     private val notificationManager = NotificationManagerCompat.from(context)
-    
+
     companion object {
         // Notification Channels
         const val CHANNEL_BATTERY_MONITORING = "battery_monitoring"
@@ -35,7 +35,7 @@ class AdvancedNotificationManager @Inject constructor(
         const val CHANNEL_CHARGING = "charging"
         const val CHANNEL_CRITICAL_ALERTS = "critical_alerts"
         const val CHANNEL_PREMIUM = "premium"
-        
+
         // Notification IDs
         const val ID_BATTERY_MONITORING = 1001
         const val ID_LOW_BATTERY = 1002
@@ -48,11 +48,11 @@ class AdvancedNotificationManager @Inject constructor(
         const val ID_PREMIUM_FEATURE = 1009
         const val ID_WEEKLY_REPORT = 1010
     }
-    
+
     init {
         createNotificationChannels()
     }
-    
+
     /**
      * Create all notification channels with appropriate priorities and behaviors
      */
@@ -69,7 +69,7 @@ class AdvancedNotificationManager @Inject constructor(
                     enableLights(false)
                     enableVibration(false)
                 },
-                
+
                 NotificationChannel(
                     CHANNEL_BATTERY_ALERTS,
                     "Battery Alerts",
@@ -80,7 +80,7 @@ class AdvancedNotificationManager @Inject constructor(
                     enableLights(true)
                     lightColor = android.graphics.Color.YELLOW
                 },
-                
+
                 NotificationChannel(
                     CHANNEL_AI_INSIGHTS,
                     "AI Insights",
@@ -91,7 +91,7 @@ class AdvancedNotificationManager @Inject constructor(
                     enableLights(true)
                     lightColor = android.graphics.Color.BLUE
                 },
-                
+
                 NotificationChannel(
                     CHANNEL_OPTIMIZATION,
                     "Optimization",
@@ -100,7 +100,7 @@ class AdvancedNotificationManager @Inject constructor(
                     description = "Battery optimization suggestions"
                     setShowBadge(true)
                 },
-                
+
                 NotificationChannel(
                     CHANNEL_CHARGING,
                     "Charging Status",
@@ -111,7 +111,7 @@ class AdvancedNotificationManager @Inject constructor(
                     enableLights(true)
                     lightColor = android.graphics.Color.GREEN
                 },
-                
+
                 NotificationChannel(
                     CHANNEL_CRITICAL_ALERTS,
                     "Critical Alerts",
@@ -123,7 +123,7 @@ class AdvancedNotificationManager @Inject constructor(
                     enableVibration(true)
                     lightColor = android.graphics.Color.RED
                 },
-                
+
                 NotificationChannel(
                     CHANNEL_PREMIUM,
                     "Premium Features",
@@ -133,14 +133,16 @@ class AdvancedNotificationManager @Inject constructor(
                     setShowBadge(false)
                 }
             )
-            
-            val systemNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            val systemNotificationManager = context.getSystemService(
+                Context.NOTIFICATION_SERVICE
+            ) as NotificationManager
             channels.forEach { channel ->
                 systemNotificationManager.createNotificationChannel(channel)
             }
         }
     }
-    
+
     /**
      * Show persistent battery monitoring notification
      */
@@ -151,17 +153,19 @@ class AdvancedNotificationManager @Inject constructor(
     ): Notification {
         val intent = Intent(context, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
-            context, 0, intent,
+            context,
+            0,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        
+
         val status = if (isCharging) "Charging" else "On Battery"
         val contentText = if (aiRecommendation != null) {
             "$batteryLevel% - $status\n💡 $aiRecommendation"
         } else {
             "$batteryLevel% - $status"
         }
-        
+
         val builder = NotificationCompat.Builder(context, CHANNEL_BATTERY_MONITORING)
             .setContentTitle("VoltAI Battery Guardian")
             .setContentText("$batteryLevel% - $status")
@@ -171,19 +175,19 @@ class AdvancedNotificationManager @Inject constructor(
             .setSilent(true)
             .setShowWhen(false)
             .setColor(getBatteryColor(batteryLevel))
-        
+
         if (aiRecommendation != null) {
             builder.setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
         }
-        
+
         // Add quick actions
         addBatteryQuickActions(builder, batteryLevel, isCharging)
-        
+
         val notification = builder.build()
         notificationManager.notify(ID_BATTERY_MONITORING, notification)
         return notification
     }
-    
+
     /**
      * Update battery monitoring notification with current status
      */
@@ -195,7 +199,7 @@ class AdvancedNotificationManager @Inject constructor(
     ) {
         showBatteryMonitoringNotification(batteryLevel, isCharging, aiRecommendation)
     }
-    
+
     /**
      * Show low battery alert with optimization suggestions
      */
@@ -204,17 +208,19 @@ class AdvancedNotificationManager @Inject constructor(
             putExtra("open_screen", "battery_saver")
         }
         val pendingIntent = PendingIntent.getActivity(
-            context, ID_LOW_BATTERY, intent,
+            context,
+            ID_LOW_BATTERY,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        
+
         val title = "Low Battery Warning"
         val text = if (estimatedTimeRemaining != null) {
             "Battery at $batteryLevel%. Approximately $estimatedTimeRemaining remaining."
         } else {
             "Battery at $batteryLevel%. Consider enabling battery saver mode."
         }
-        
+
         val builder = NotificationCompat.Builder(context, CHANNEL_BATTERY_ALERTS)
             .setContentTitle(title)
             .setContentText(text)
@@ -233,17 +239,17 @@ class AdvancedNotificationManager @Inject constructor(
                 "View Details",
                 pendingIntent
             )
-        
+
         notificationManager.notify(ID_LOW_BATTERY, builder.build())
     }
-    
+
     /**
      * Show high temperature warning - overload for Float parameter
      */
     fun showHighTemperatureAlert(temperature: Float) {
         showHighTemperatureAlert(temperature.toDouble())
     }
-    
+
     /**
      * Show high temperature warning
      */
@@ -252,10 +258,12 @@ class AdvancedNotificationManager @Inject constructor(
             putExtra("open_screen", "temperature_detail")
         }
         val pendingIntent = PendingIntent.getActivity(
-            context, ID_HIGH_TEMPERATURE, intent,
+            context,
+            ID_HIGH_TEMPERATURE,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        
+
         val builder = NotificationCompat.Builder(context, CHANNEL_CRITICAL_ALERTS)
             .setContentTitle("High Battery Temperature")
             .setContentText("Battery temperature: ${temperature.toInt()}°C. Consider cooling down your device.")
@@ -264,26 +272,28 @@ class AdvancedNotificationManager @Inject constructor(
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setColor(android.graphics.Color.parseColor("#FF5722"))
-            .setStyle(NotificationCompat.BigTextStyle().bigText(
-                "Battery temperature is ${temperature.toInt()}°C. High temperatures can damage battery health. " +
-                "Remove device case, avoid direct sunlight, and stop intensive tasks."
-            ))
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(
+                    "Battery temperature is ${temperature.toInt()}°C. High temperatures can damage battery health. " +
+                        "Remove device case, avoid direct sunlight, and stop intensive tasks."
+                )
+            )
             .addAction(
                 R.drawable.ic_launcher_foreground,
                 "Cool Down Tips",
                 pendingIntent
             )
-        
+
         notificationManager.notify(ID_HIGH_TEMPERATURE, builder.build())
     }
-    
+
     /**
      * Show charging complete notification - overload without parameters
      */
     fun showChargingCompleteNotification() {
         showChargingCompleteNotification(100, 0L)
     }
-    
+
     /**
      * Show charging complete notification
      */
@@ -291,7 +301,7 @@ class AdvancedNotificationManager @Inject constructor(
         val hours = chargingDuration / (1000 * 60 * 60)
         val minutes = (chargingDuration % (1000 * 60 * 60)) / (1000 * 60)
         val durationText = if (hours > 0) "${hours}h ${minutes}m" else "${minutes}m"
-        
+
         val builder = NotificationCompat.Builder(context, CHANNEL_CHARGING)
             .setContentTitle("Charging Complete")
             .setContentText("Battery charged to $finalLevel% in $durationText")
@@ -304,10 +314,10 @@ class AdvancedNotificationManager @Inject constructor(
                 "View Session",
                 createChargingHistoryIntent()
             )
-        
+
         notificationManager.notify(ID_CHARGING_COMPLETE, builder.build())
     }
-    
+
     /**
      * Show battery health alert - overload with Float parameters
      */
@@ -316,25 +326,27 @@ class AdvancedNotificationManager @Inject constructor(
             putExtra("open_screen", "battery_health")
         }
         val pendingIntent = PendingIntent.getActivity(
-            context, ID_AI_HEALTH_ALERT, intent,
+            context,
+            ID_AI_HEALTH_ALERT,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        
+
         val healthScoreInt = healthScore.toInt()
         val title = when {
             healthScoreInt < 60 -> "Critical Battery Health"
             healthScoreInt < 80 -> "Battery Health Alert"
             else -> "Battery Health Update"
         }
-        
+
         val priority = when {
             healthScoreInt < 60 -> NotificationCompat.PRIORITY_HIGH
             healthScoreInt < 80 -> NotificationCompat.PRIORITY_DEFAULT
             else -> NotificationCompat.PRIORITY_LOW
         }
-        
+
         val channel = if (healthScoreInt < 60) CHANNEL_CRITICAL_ALERTS else CHANNEL_AI_INSIGHTS
-        
+
         val builder = NotificationCompat.Builder(context, channel)
             .setContentTitle(title)
             .setContentText("Health: $healthScoreInt% | Confidence: ${(confidence * 100).toInt()}%")
@@ -343,20 +355,22 @@ class AdvancedNotificationManager @Inject constructor(
             .setPriority(priority)
             .setAutoCancel(true)
             .setColor(getBatteryHealthColor(healthScoreInt))
-            .setStyle(NotificationCompat.BigTextStyle().bigText(
-                "Battery Health: $healthScoreInt%\n" +
-                "AI Confidence: ${(confidence * 100).toInt()}%\n" +
-                "Recommendation: Monitor battery usage patterns."
-            ))
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(
+                    "Battery Health: $healthScoreInt%\n" +
+                        "AI Confidence: ${(confidence * 100).toInt()}%\n" +
+                        "Recommendation: Monitor battery usage patterns."
+                )
+            )
             .addAction(
                 R.drawable.ic_launcher_foreground,
                 "View Details",
                 pendingIntent
             )
-        
+
         notificationManager.notify(ID_AI_HEALTH_ALERT, builder.build())
     }
-    
+
     /**
      * Show AI health alert with predictions
      */
@@ -365,25 +379,27 @@ class AdvancedNotificationManager @Inject constructor(
             putExtra("open_screen", "battery_health")
         }
         val pendingIntent = PendingIntent.getActivity(
-            context, ID_AI_HEALTH_ALERT, intent,
+            context,
+            ID_AI_HEALTH_ALERT,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        
+
         val healthScore = prediction.healthScore.toInt()
         val title = when {
             healthScore < 60 -> "Critical Battery Health"
             healthScore < 80 -> "Battery Health Alert"
             else -> "Battery Health Update"
         }
-        
+
         val priority = when {
             healthScore < 60 -> NotificationCompat.PRIORITY_HIGH
             healthScore < 80 -> NotificationCompat.PRIORITY_DEFAULT
             else -> NotificationCompat.PRIORITY_LOW
         }
-        
+
         val channel = if (healthScore < 60) CHANNEL_CRITICAL_ALERTS else CHANNEL_AI_INSIGHTS
-        
+
         val builder = NotificationCompat.Builder(context, channel)
             .setContentTitle(title)
             .setContentText("Health: $healthScore% | Confidence: ${(prediction.confidence * 100).toInt()}%")
@@ -392,17 +408,19 @@ class AdvancedNotificationManager @Inject constructor(
             .setPriority(priority)
             .setAutoCancel(true)
             .setColor(getBatteryHealthColor(healthScore))
-            .setStyle(NotificationCompat.BigTextStyle().bigText(
-                "Battery Health: $healthScore%\n" +
-                "Degradation Rate: ${String.format("%.1f", prediction.degradationRate)}%/month\n" +
-                "Top Recommendation: ${prediction.recommendations.firstOrNull() ?: "Monitor regularly"}"
-            ))
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(
+                    "Battery Health: $healthScore%\n" +
+                        "Degradation Rate: ${String.format("%.1f", prediction.degradationRate)}%/month\n" +
+                        "Top Recommendation: ${prediction.recommendations.firstOrNull() ?: "Monitor regularly"}"
+                )
+            )
             .addAction(
                 R.drawable.ic_launcher_foreground,
                 "View Details",
                 pendingIntent
             )
-        
+
         if (prediction.recommendations.isNotEmpty()) {
             builder.addAction(
                 R.drawable.ic_launcher_foreground,
@@ -410,10 +428,10 @@ class AdvancedNotificationManager @Inject constructor(
                 createOptimizationIntent()
             )
         }
-        
+
         notificationManager.notify(ID_AI_HEALTH_ALERT, builder.build())
     }
-    
+
     /**
      * Show optimization suggestion notification
      */
@@ -426,10 +444,12 @@ class AdvancedNotificationManager @Inject constructor(
             putExtra("open_screen", "system_optimization")
         }
         val pendingIntent = PendingIntent.getActivity(
-            context, ID_OPTIMIZATION_SUGGESTION, intent,
+            context,
+            ID_OPTIMIZATION_SUGGESTION,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        
+
         val builder = NotificationCompat.Builder(context, CHANNEL_OPTIMIZATION)
             .setContentTitle("🚀 Battery Optimization Available")
             .setContentText("$optimizationType optimization can save $potentialSavings")
@@ -438,9 +458,11 @@ class AdvancedNotificationManager @Inject constructor(
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .setColor(android.graphics.Color.parseColor("#2196F3"))
-            .setStyle(NotificationCompat.BigTextStyle().bigText(
-                "$optimizationType Optimization Available\n\n$description\n\nPotential battery savings: $potentialSavings"
-            ))
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(
+                    "$optimizationType Optimization Available\n\n$description\n\nPotential battery savings: $potentialSavings"
+                )
+            )
             .addAction(
                 R.drawable.ic_launcher_foreground,
                 "Apply Now",
@@ -451,10 +473,10 @@ class AdvancedNotificationManager @Inject constructor(
                 "Learn More",
                 pendingIntent
             )
-        
+
         notificationManager.notify(ID_OPTIMIZATION_SUGGESTION, builder.build())
     }
-    
+
     /**
      * Show slow charging alert
      */
@@ -463,35 +485,39 @@ class AdvancedNotificationManager @Inject constructor(
             putExtra("open_screen", "charging_analytics")
         }
         val pendingIntent = PendingIntent.getActivity(
-            context, ID_CHARGING_SLOW, intent,
+            context,
+            ID_CHARGING_SLOW,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        
+
         val speedDiff = ((expectedSpeed - chargingSpeed) / expectedSpeed * 100).toInt()
-        
+
         val builder = NotificationCompat.Builder(context, CHANNEL_CHARGING)
             .setContentTitle("Slow Charging Detected")
-            .setContentText("Charging ${speedDiff}% slower than expected")
+            .setContentText("Charging $speedDiff% slower than expected")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .setColor(android.graphics.Color.parseColor("#FF9800"))
-            .setStyle(NotificationCompat.BigTextStyle().bigText(
-                "Slow Charging Detected\n\n" +
-                "Current: ${String.format("%.1f", chargingSpeed)}W\n" +
-                "Expected: ${String.format("%.1f", expectedSpeed)}W\n\n" +
-                "Check cable, adapter, and charging port for issues."
-            ))
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(
+                    "Slow Charging Detected\n\n" +
+                        "Current: ${String.format("%.1f", chargingSpeed)}W\n" +
+                        "Expected: ${String.format("%.1f", expectedSpeed)}W\n\n" +
+                        "Check cable, adapter, and charging port for issues."
+                )
+            )
             .addAction(
                 R.drawable.ic_launcher_foreground,
                 "Charging Tips",
                 pendingIntent
             )
-        
+
         notificationManager.notify(ID_CHARGING_SLOW, builder.build())
     }
-    
+
     /**
      * Show weekly battery report
      */
@@ -505,16 +531,18 @@ class AdvancedNotificationManager @Inject constructor(
             putExtra("open_screen", "analytics_dashboard")
         }
         val pendingIntent = PendingIntent.getActivity(
-            context, ID_WEEKLY_REPORT, intent,
+            context,
+            ID_WEEKLY_REPORT,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        
+
         val healthChangeText = if (healthChange >= 0) {
             "+${String.format("%.1f", healthChange)}%"
         } else {
             "${String.format("%.1f", healthChange)}%"
         }
-        
+
         val builder = NotificationCompat.Builder(context, CHANNEL_AI_INSIGHTS)
             .setContentTitle("📊 Weekly Battery Report")
             .setContentText("Avg life: $avgBatteryLife | Health: $healthChangeText")
@@ -523,43 +551,50 @@ class AdvancedNotificationManager @Inject constructor(
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setAutoCancel(true)
             .setColor(android.graphics.Color.parseColor("#9C27B0"))
-            .setStyle(NotificationCompat.BigTextStyle().bigText(
-                "Weekly Battery Summary\n\n" +
-                "📱 Average battery life: $avgBatteryLife\n" +
-                "💚 Health change: $healthChangeText\n" +
-                "⚡ Charging sessions: $chargingSessions\n" +
-                "📊 Top battery app: $topDrainingApp\n\n" +
-                "Tap for detailed insights and trends."
-            ))
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(
+                    "Weekly Battery Summary\n\n" +
+                        "📱 Average battery life: $avgBatteryLife\n" +
+                        "💚 Health change: $healthChangeText\n" +
+                        "⚡ Charging sessions: $chargingSessions\n" +
+                        "📊 Top battery app: $topDrainingApp\n\n" +
+                        "Tap for detailed insights and trends."
+                )
+            )
             .addAction(
                 R.drawable.ic_launcher_foreground,
                 "View Report",
                 pendingIntent
             )
-        
+
         notificationManager.notify(ID_WEEKLY_REPORT, builder.build())
     }
-    
+
     /**
      * Cancel specific notification
      */
     fun cancelNotification(notificationId: Int) {
         notificationManager.cancel(notificationId)
     }
-    
+
     /**
      * Cancel all notifications except persistent monitoring
      */
     fun cancelAllExceptMonitoring() {
         listOf(
-            ID_LOW_BATTERY, ID_HIGH_TEMPERATURE, ID_CHARGING_COMPLETE,
-            ID_AI_HEALTH_ALERT, ID_OPTIMIZATION_SUGGESTION, ID_CHARGING_SLOW,
-            ID_PREMIUM_FEATURE, ID_WEEKLY_REPORT
+            ID_LOW_BATTERY,
+            ID_HIGH_TEMPERATURE,
+            ID_CHARGING_COMPLETE,
+            ID_AI_HEALTH_ALERT,
+            ID_OPTIMIZATION_SUGGESTION,
+            ID_CHARGING_SLOW,
+            ID_PREMIUM_FEATURE,
+            ID_WEEKLY_REPORT
         ).forEach { notificationId ->
             notificationManager.cancel(notificationId)
         }
     }
-    
+
     // Helper methods
     private fun addBatteryQuickActions(
         builder: NotificationCompat.Builder,
@@ -573,18 +608,18 @@ class AdvancedNotificationManager @Inject constructor(
                 createBatterySaverIntent()
             )
         }
-        
+
         builder.addAction(
             R.drawable.ic_launcher_foreground,
             "Details",
             createMainAppIntent()
         )
     }
-    
+
     private fun getBatteryIcon(batteryLevel: Int, isCharging: Boolean): Int {
         return R.drawable.ic_launcher_foreground // Simplified - would use actual battery icons
     }
-    
+
     private fun getBatteryColor(batteryLevel: Int): Int {
         return when {
             batteryLevel > 80 -> android.graphics.Color.parseColor("#4CAF50")
@@ -593,7 +628,7 @@ class AdvancedNotificationManager @Inject constructor(
             else -> android.graphics.Color.parseColor("#D32F2F")
         }
     }
-    
+
     private fun getBatteryHealthColor(healthScore: Int): Int {
         return when {
             healthScore >= 90 -> android.graphics.Color.parseColor("#4CAF50")
@@ -602,41 +637,49 @@ class AdvancedNotificationManager @Inject constructor(
             else -> android.graphics.Color.parseColor("#D32F2F")
         }
     }
-    
+
     private fun createMainAppIntent(): PendingIntent {
         val intent = Intent(context, MainActivity::class.java)
         return PendingIntent.getActivity(
-            context, 0, intent,
+            context,
+            0,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
-    
+
     private fun createBatterySaverIntent(): PendingIntent {
         val intent = Intent(context, MainActivity::class.java).apply {
             putExtra("action", "enable_battery_saver")
         }
         return PendingIntent.getActivity(
-            context, 100, intent,
+            context,
+            100,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
-    
+
     private fun createOptimizationIntent(): PendingIntent {
         val intent = Intent(context, MainActivity::class.java).apply {
             putExtra("open_screen", "system_optimization")
         }
         return PendingIntent.getActivity(
-            context, 200, intent,
+            context,
+            200,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
-    
+
     private fun createChargingHistoryIntent(): PendingIntent {
         val intent = Intent(context, MainActivity::class.java).apply {
             putExtra("open_screen", "charging_analytics")
         }
         return PendingIntent.getActivity(
-            context, 300, intent,
+            context,
+            300,
+            intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
     }

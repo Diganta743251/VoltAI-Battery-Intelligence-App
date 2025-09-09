@@ -8,10 +8,10 @@ import com.voltai.smartbatteryguardian.ui.home.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.first
-import kotlinx.serialization.encodeToString
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,12 +31,12 @@ class HomeScreenRepository @Inject constructor(
         val HOME_THEME = stringPreferencesKey("home_theme")
         val CONFIG_VERSION = intPreferencesKey("config_version")
     }
-    
+
     private val json = Json {
         ignoreUnknownKeys = true
         encodeDefaults = true
     }
-    
+
     /**
      * Save the complete home screen configuration
      */
@@ -44,20 +44,22 @@ class HomeScreenRepository @Inject constructor(
         try {
             context.homeScreenDataStore.edit { preferences ->
                 // Save serialized card configuration
-                val cardsJson = json.encodeToString(config.cards.map { card ->
-                    SerializableHomeCard(
-                        id = card.id,
-                        cardTypeId = card.cardType.id,
-                        sizeName = card.size.name,
-                        row = card.row,
-                        column = card.column,
-                        isVisible = card.isVisible,
-                        customTitle = card.customTitle,
-                        lastUpdated = card.lastUpdated
-                    )
-                })
+                val cardsJson = json.encodeToString(
+                    config.cards.map { card ->
+                        SerializableHomeCard(
+                            id = card.id,
+                            cardTypeId = card.cardType.id,
+                            sizeName = card.size.name,
+                            row = card.row,
+                            column = card.column,
+                            isVisible = card.isVisible,
+                            customTitle = card.customTitle,
+                            lastUpdated = card.lastUpdated
+                        )
+                    }
+                )
                 preferences[PreferencesKeys.HOME_SCREEN_CONFIG] = cardsJson
-                
+
                 // Save other config properties
                 preferences[PreferencesKeys.GRID_COLUMNS] = config.gridColumns
                 preferences[PreferencesKeys.CARD_SPACING] = config.cardSpacing
@@ -71,7 +73,7 @@ class HomeScreenRepository @Inject constructor(
             throw HomeScreenPersistenceException("Failed to save home screen config", e)
         }
     }
-    
+
     /**
      * Load the home screen configuration
      */
@@ -107,7 +109,7 @@ class HomeScreenRepository @Inject constructor(
                     } else {
                         getDefaultHomeCards()
                     }
-                    
+
                     HomeScreenConfig(
                         cards = cards,
                         gridColumns = preferences[PreferencesKeys.GRID_COLUMNS] ?: 2,
@@ -125,7 +127,7 @@ class HomeScreenRepository @Inject constructor(
                 }
             }
     }
-    
+
     /**
      * Clear all saved configurations
      */
@@ -134,7 +136,7 @@ class HomeScreenRepository @Inject constructor(
             preferences.clear()
         }
     }
-    
+
     /**
      * Check if config exists
      */
@@ -145,7 +147,7 @@ class HomeScreenRepository @Inject constructor(
                 preferences[PreferencesKeys.HOME_SCREEN_CONFIG] != null
             }
     }
-    
+
     /**
      * Save individual card state
      */
@@ -161,7 +163,7 @@ class HomeScreenRepository @Inject constructor(
                         card
                     }
                 }
-                
+
                 // Save updated configuration
                 val updatedConfig = currentConfig.copy(cards = updatedCards)
                 saveHomeScreenConfig(updatedConfig)

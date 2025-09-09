@@ -39,24 +39,24 @@ fun IdleLogScreen(onBackClick: () -> Unit = {}) {
 
         LazyColumn(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
                 ) {
                     Row(
                         modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
@@ -96,15 +96,15 @@ fun IdleLogScreen(onBackClick: () -> Unit = {}) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
                 ) {
                     Row(
                         modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
@@ -144,15 +144,15 @@ fun IdleLogScreen(onBackClick: () -> Unit = {}) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
                 ) {
                     Row(
                         modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
@@ -192,9 +192,9 @@ fun IdleLogScreen(onBackClick: () -> Unit = {}) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
@@ -210,11 +210,11 @@ fun IdleLogScreen(onBackClick: () -> Unit = {}) {
 
                         Text(
                             text =
-                                "Your device has different sleep states to save battery:\n\n" +
-                                    "• Deep Sleep: Lowest power consumption\n" +
-                                    "• Light Sleep: Moderate power saving\n" +
-                                    "• Active: Normal operation mode\n\n" +
-                                    "More time in deep sleep means better battery life.",
+                            "Your device has different sleep states to save battery:\n\n" +
+                                "• Deep Sleep: Lowest power consumption\n" +
+                                "• Light Sleep: Moderate power saving\n" +
+                                "• Active: Normal operation mode\n\n" +
+                                "More time in deep sleep means better battery life.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

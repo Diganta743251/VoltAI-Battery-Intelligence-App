@@ -15,10 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.voltai.smartbatteryguardian.rememberBatteryData
@@ -33,10 +31,10 @@ fun HistoryScreen(
     val context = LocalContext.current
     val batteryData by rememberBatteryData(context)
     val scrollState = rememberScrollState()
-    
+
     // Mock data for demonstration - replace with actual repository data
     val batteryHistory = remember { generateMockBatteryHistory() }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,7 +53,7 @@ fun HistoryScreen(
             carbonSaved = batteryHistory.sumOf { it.carbonFootprint },
             modifier = Modifier.padding(16.dp)
         )
-        
+
         // Battery History List
         LazyColumn(
             modifier = Modifier
@@ -73,7 +71,7 @@ fun HistoryScreen(
                     BatteryHistoryCard(session)
                 }
             }
-            
+
             // Yesterday's sessions
             val yesterday = batteryHistory.filter { isYesterday(it.timestamp) }
             if (yesterday.isNotEmpty()) {
@@ -84,10 +82,10 @@ fun HistoryScreen(
                     BatteryHistoryCard(session)
                 }
             }
-            
+
             // Earlier this week
-            val thisWeek = batteryHistory.filter { 
-                !isToday(it.timestamp) && !isYesterday(it.timestamp) && isThisWeek(it.timestamp) 
+            val thisWeek = batteryHistory.filter {
+                !isToday(it.timestamp) && !isYesterday(it.timestamp) && isThisWeek(it.timestamp)
             }
             if (thisWeek.isNotEmpty()) {
                 item {
@@ -97,7 +95,7 @@ fun HistoryScreen(
                     BatteryHistoryCard(session)
                 }
             }
-            
+
             // Bottom spacing
             item {
                 Spacer(modifier = Modifier.height(16.dp))
@@ -136,9 +134,9 @@ fun CarbonFootprintCard(
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = "Adopt a greener lifestyle by optimizing device energy use. Charge during periods of less demand, minimize waste, and choose clean energy.",
                     fontSize = 14.sp,
@@ -146,9 +144,9 @@ fun CarbonFootprintCard(
                     lineHeight = 20.sp
                 )
             }
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             // Environmental illustration
             Box(
                 modifier = Modifier
@@ -214,9 +212,9 @@ fun BatteryHistoryCard(session: BatterySession) {
                         tint = if (session.isCharging) Color(0xFF4CAF50) else Color(0xFFFF5722),
                         modifier = Modifier.size(20.dp)
                     )
-                    
+
                     Spacer(modifier = Modifier.width(8.dp))
-                    
+
                     Text(
                         text = if (session.isCharging) "Charged for" else "Used for",
                         fontSize = 14.sp,
@@ -224,7 +222,7 @@ fun BatteryHistoryCard(session: BatterySession) {
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-                
+
                 Text(
                     text = "${if (session.isCharging) "+" else "-"}${session.batteryChange}% • ${session.energyUsed}mAh",
                     fontSize = 14.sp,
@@ -232,9 +230,9 @@ fun BatteryHistoryCard(session: BatterySession) {
                     color = if (session.isCharging) Color(0xFF4CAF50) else Color(0xFFFF5722)
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Duration and time
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -246,16 +244,16 @@ fun BatteryHistoryCard(session: BatterySession) {
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                
+
                 Text(
                     text = formatTime(session.timestamp, session.endTime),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Battery level indicator
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -266,17 +264,17 @@ fun BatteryHistoryCard(session: BatterySession) {
                     level = session.startLevel,
                     modifier = Modifier.size(24.dp)
                 )
-                
+
                 Spacer(modifier = Modifier.width(8.dp))
-                
+
                 Text(
                     text = "${session.startLevel}%",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 // Progress bar
                 LinearProgressIndicator(
                     progress = session.batteryChange / 100f,
@@ -286,17 +284,17 @@ fun BatteryHistoryCard(session: BatterySession) {
                     color = if (session.isCharging) Color(0xFF4CAF50) else Color(0xFFFF5722),
                     trackColor = Color.Gray.copy(alpha = 0.2f)
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Text(
                     text = "${session.endLevel}%",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Spacer(modifier = Modifier.width(8.dp))
-                
+
                 // End level
                 BatteryLevelIndicator(
                     level = session.endLevel,
@@ -351,24 +349,30 @@ fun generateMockBatteryHistory(): List<BatterySession> {
     val sessions = mutableListOf<BatterySession>()
     val now = System.currentTimeMillis()
     val random = kotlin.random.Random
-    
+
     // Generate sessions for the last 7 days
     for (day in 0..6) {
         val dayStart = now - (day * 24 * 60 * 60 * 1000)
-        
+
         // 2-4 sessions per day
         for (session in 1..random.nextInt(2, 5)) {
             val isCharging = random.nextBoolean()
             val batteryChange = if (isCharging) random.nextInt(10, 50) else random.nextInt(5, 40)
             val startLevel = if (isCharging) random.nextInt(20, 80) else random.nextInt(30, 90)
-            val endLevel = if (isCharging) (startLevel + batteryChange).coerceAtMost(100) else (startLevel - batteryChange).coerceAtLeast(0)
+            val endLevel = if (isCharging) {
+                (startLevel + batteryChange).coerceAtMost(
+                    100
+                )
+            } else {
+                (startLevel - batteryChange).coerceAtLeast(0)
+            }
             val durationMinutes = random.nextInt(30, 180)
             val energyUsed = random.nextInt(200, 800)
             val carbonFootprint = energyUsed * 0.0005 // rough calculation
-            
+
             val sessionStart = dayStart + (session * 6 * 60 * 60 * 1000) // spread throughout day
             val sessionEnd = sessionStart + (durationMinutes * 60 * 1000)
-            
+
             sessions.add(
                 BatterySession(
                     id = "session_${day}_$session",
@@ -385,7 +389,7 @@ fun generateMockBatteryHistory(): List<BatterySession> {
             )
         }
     }
-    
+
     return sessions.sortedByDescending { it.timestamp }
 }
 
@@ -411,7 +415,7 @@ fun isToday(timestamp: Long): Boolean {
     val cal2 = Calendar.getInstance()
     cal2.timeInMillis = timestamp
     return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
-            cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+        cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
 }
 
 fun isYesterday(timestamp: Long): Boolean {
@@ -420,7 +424,7 @@ fun isYesterday(timestamp: Long): Boolean {
     cal2.timeInMillis = timestamp
     cal1.add(Calendar.DAY_OF_YEAR, -1)
     return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
-            cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+        cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
 }
 
 fun isThisWeek(timestamp: Long): Boolean {
@@ -428,5 +432,5 @@ fun isThisWeek(timestamp: Long): Boolean {
     val cal2 = Calendar.getInstance()
     cal2.timeInMillis = timestamp
     return cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR) &&
-            cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+        cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
 }

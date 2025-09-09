@@ -176,7 +176,9 @@ interface OptimizationSettingsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveSettings(settings: OptimizationSettingsEntity)
 
-    @Query("UPDATE optimization_settings SET batteryOptimizationEnabled = :enabled, lastModified = :timestamp WHERE id = 1")
+    @Query(
+        "UPDATE optimization_settings SET batteryOptimizationEnabled = :enabled, lastModified = :timestamp WHERE id = 1"
+    )
     suspend fun updateBatteryOptimization(enabled: Boolean, timestamp: Long = System.currentTimeMillis())
 
     @Query("UPDATE optimization_settings SET premiumFeaturesEnabled = :enabled, lastModified = :timestamp WHERE id = 1")
@@ -186,15 +188,18 @@ interface OptimizationSettingsDao {
 // Database Migrations
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("""
+        database.execSQL(
+            """
             ALTER TABLE battery_logs ADD COLUMN powerSource TEXT NOT NULL DEFAULT 'Battery'
-        """)
+        """
+        )
     }
 }
 
 val MIGRATION_2_3 = object : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("""
+        database.execSQL(
+            """
             CREATE TABLE IF NOT EXISTS battery_alerts (
                 id INTEGER PRIMARY KEY NOT NULL,
                 alertType TEXT NOT NULL,
@@ -204,7 +209,8 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
                 isRead INTEGER NOT NULL DEFAULT 0,
                 actionTaken TEXT
             )
-        """)
+        """
+        )
     }
 }
 

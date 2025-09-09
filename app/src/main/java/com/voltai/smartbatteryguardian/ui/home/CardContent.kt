@@ -11,21 +11,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.voltai.smartbatteryguardian.BatteryData
 import com.voltai.smartbatteryguardian.ui.animation.AnimationSpecs
 import com.voltai.smartbatteryguardian.ui.components.*
 import kotlin.math.PI
-import kotlin.math.cos
 import kotlin.math.sin
 
 @Composable
@@ -66,7 +62,7 @@ fun CardContent(
             CardType.REAL_TIME_MONITORING -> RealTimeMonitoringCard()
             CardType.BATTERY_OPTIMIZATION -> BatteryOptimizationCard()
         }
-        
+
         // Edit mode dimming overlay
         if (isEditMode) {
             Box(
@@ -84,7 +80,7 @@ private fun BatteryLevelCardContent(batteryData: BatteryData, isEditMode: Boolea
         targetValue = batteryData.batteryLevel / 100f,
         animationSpec = AnimationSpecs.bouncy
     )
-    
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
@@ -102,14 +98,14 @@ private fun BatteryLevelCardContent(batteryData: BatteryData, isEditMode: Boolea
                     color = getBatteryLevelColor(batteryData.batteryLevel),
                     letterSpacing = (-1).sp
                 )
-            Text(
-                text = "Battery Level",
-                fontSize = 12.sp,
-                color = Color(0xFF444444),
-                fontWeight = FontWeight.Medium
-            )
+                Text(
+                    text = "Battery Level",
+                    fontSize = 12.sp,
+                    color = Color(0xFF444444),
+                    fontWeight = FontWeight.Medium
+                )
             }
-            
+
             Icon(
                 imageVector = if (batteryData.isCharging) Icons.Default.Phone else Icons.Default.Star,
                 contentDescription = "Battery",
@@ -117,7 +113,7 @@ private fun BatteryLevelCardContent(batteryData: BatteryData, isEditMode: Boolea
                 tint = getBatteryLevelColor(batteryData.batteryLevel)
             )
         }
-        
+
         // Animated Battery Bar
         Box(
             modifier = Modifier
@@ -143,7 +139,7 @@ private fun BatteryLevelCardContent(batteryData: BatteryData, isEditMode: Boolea
                     )
             )
         }
-        
+
         Text(
             text = batteryData.remainingTime,
             fontSize = 11.sp,
@@ -163,7 +159,7 @@ private fun ChargingStatusCardContent(batteryData: BatteryData, isEditMode: Bool
             repeatMode = RepeatMode.Reverse
         )
     )
-    
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
@@ -174,7 +170,7 @@ private fun ChargingStatusCardContent(batteryData: BatteryData, isEditMode: Bool
             color = Color(0xFF444444),
             fontWeight = FontWeight.Medium
         )
-        
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -194,9 +190,9 @@ private fun ChargingStatusCardContent(batteryData: BatteryData, isEditMode: Bool
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = batteryData.chargingStatus,
                 fontSize = 14.sp,
@@ -205,7 +201,7 @@ private fun ChargingStatusCardContent(batteryData: BatteryData, isEditMode: Bool
                 textAlign = TextAlign.Center
             )
         }
-        
+
         Text(
             text = if (batteryData.isCharging) "Plugged In" else "On Battery",
             fontSize = 10.sp,
@@ -223,12 +219,12 @@ private fun TemperatureCardContent(batteryData: BatteryData, isEditMode: Boolean
         batteryData.temperature > 35f -> Color(0xFFFFB74D)
         else -> Color(0xFF81C784)
     }
-    
+
     val animatedTemp by animateFloatAsState(
         targetValue = batteryData.temperature,
         animationSpec = AnimationSpecs.smooth
     )
-    
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
@@ -239,7 +235,7 @@ private fun TemperatureCardContent(batteryData: BatteryData, isEditMode: Boolean
             color = Color(0xFF444444),
             fontWeight = FontWeight.Medium
         )
-        
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -250,7 +246,7 @@ private fun TemperatureCardContent(batteryData: BatteryData, isEditMode: Boolean
                 fontWeight = FontWeight.Bold,
                 color = tempColor
             )
-            
+
             Text(
                 text = when {
                     batteryData.temperature > 45f -> "Hot"
@@ -262,7 +258,7 @@ private fun TemperatureCardContent(batteryData: BatteryData, isEditMode: Boolean
                 fontWeight = FontWeight.Medium
             )
         }
-        
+
         // Temperature Indicator Bar
         Box(
             modifier = Modifier
@@ -296,7 +292,7 @@ private fun HealthCardContent(batteryData: BatteryData, isEditMode: Boolean) {
             stiffness = Spring.StiffnessMedium
         )
     )
-    
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
@@ -307,7 +303,7 @@ private fun HealthCardContent(batteryData: BatteryData, isEditMode: Boolean) {
             color = Color(0xFF444444),
             fontWeight = FontWeight.Medium
         )
-        
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -320,7 +316,7 @@ private fun HealthCardContent(batteryData: BatteryData, isEditMode: Boolean) {
                 color = Color(0xFF4CAF50),
                 trackColor = Color(0xFFE8F5E8)
             )
-            
+
             Column {
                 Text(
                     text = "${batteryData.healthPercentage}%",
@@ -336,7 +332,7 @@ private fun HealthCardContent(batteryData: BatteryData, isEditMode: Boolean) {
                 )
             }
         }
-        
+
         Text(
             text = batteryData.capacity,
             fontSize = 10.sp,
@@ -357,7 +353,7 @@ private fun CurrentVoltageCardContent(batteryData: BatteryData, isEditMode: Bool
             color = Color(0xFF444444),
             fontWeight = FontWeight.Medium
         )
-        
+
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -380,7 +376,7 @@ private fun CurrentVoltageCardContent(batteryData: BatteryData, isEditMode: Bool
                 )
             }
         }
-        
+
         // Mini Waveform
         AnimatedWaveform(
             isActive = batteryData.isCharging,
@@ -401,7 +397,7 @@ private fun ScreenTimeCardContent(batteryData: BatteryData, isEditMode: Boolean)
             color = Color(0xFF444444),
             fontWeight = FontWeight.Medium
         )
-        
+
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -411,15 +407,15 @@ private fun ScreenTimeCardContent(batteryData: BatteryData, isEditMode: Boolean)
                 value = batteryData.screenOnTime,
                 color = Color(0xFF2196F3)
             )
-            
+
             ScreenTimeItem(
                 icon = "🔒",
                 label = "Screen Off",
                 value = batteryData.screenOffTime,
-                        color = Color(0xFF333333)
+                color = Color(0xFF333333)
             )
         }
-        
+
         Text(
             text = "Battery Used: ${batteryData.batteryUsed}",
             fontSize = 9.sp,
@@ -467,7 +463,7 @@ private fun AIInsightsCardContent(batteryData: BatteryData, isEditMode: Boolean)
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = Icons.Default.Star,
@@ -482,7 +478,7 @@ private fun AIInsightsCardContent(batteryData: BatteryData, isEditMode: Boolean)
                 fontWeight = FontWeight.Medium
             )
         }
-        
+
         Text(
             text = "Battery optimization active. 23% improvement detected.",
             fontSize = 12.sp,
@@ -490,7 +486,7 @@ private fun AIInsightsCardContent(batteryData: BatteryData, isEditMode: Boolean)
             lineHeight = 16.sp,
             modifier = Modifier.fillMaxWidth()
         )
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -508,7 +504,7 @@ private fun AIInsightsCardContent(batteryData: BatteryData, isEditMode: Boolean)
                     fontWeight = FontWeight.Medium
                 )
             }
-            
+
             Text(
                 text = "+23%",
                 fontSize = 14.sp,
@@ -532,7 +528,7 @@ private fun AppUsageCardContent(batteryData: BatteryData, isEditMode: Boolean) {
             color = Color(0xFF444444),
             fontWeight = FontWeight.Medium
         )
-        
+
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -540,7 +536,7 @@ private fun AppUsageCardContent(batteryData: BatteryData, isEditMode: Boolean) {
             AppUsageItem("YouTube", "18%", Color(0xFFFFB74D))
             AppUsageItem("Instagram", "12%", Color(0xFF81C784))
         }
-        
+
         Text(
             text = "Last 24 hours",
             fontSize = 9.sp,
@@ -583,7 +579,7 @@ private fun ChargingHistoryCardContent(batteryData: BatteryData, isEditMode: Boo
             color = Color(0xFF444444),
             fontWeight = FontWeight.Medium
         )
-        
+
         // Mini chart placeholder
         Box(
             modifier = Modifier
@@ -601,7 +597,7 @@ private fun ChargingHistoryCardContent(batteryData: BatteryData, isEditMode: Boo
                 color = Color(0xFF444444)
             )
         }
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -632,7 +628,7 @@ private fun PowerModesCardContent(batteryData: BatteryData, isEditMode: Boolean)
             color = Color(0xFF444444),
             fontWeight = FontWeight.Medium
         )
-        
+
         Column(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
@@ -678,7 +674,7 @@ private fun QuickActionsCardContent(batteryData: BatteryData, isEditMode: Boolea
             color = Color(0xFF444444),
             fontWeight = FontWeight.Medium
         )
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -768,7 +764,7 @@ private fun AnimatedWaveform(
             repeatMode = RepeatMode.Restart
         )
     )
-    
+
     Canvas(
         modifier = modifier
             .fillMaxWidth()
@@ -781,19 +777,19 @@ private fun AnimatedWaveform(
             val height = size.height
             val amplitude = height * 0.3f
             val frequency = 4f
-            
+
             for (i in 0 until points) {
                 val x = (i.toFloat() / (points - 1)) * width
                 val phase = animatedValue * 2 * PI + (x / width) * frequency * 2 * PI
                 val y = height / 2 + amplitude * sin(phase).toFloat()
-                
+
                 if (i == 0) {
                     path.moveTo(x, y)
                 } else {
                     path.lineTo(x, y)
                 }
             }
-            
+
             drawPath(
                 path = path,
                 color = color,
@@ -826,7 +822,7 @@ fun HistoryCardContent(batteryData: BatteryData, isEditMode: Boolean) {
                 fontWeight = FontWeight.Medium
             )
         }
-        
+
         // Show recent session info
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -844,7 +840,7 @@ fun HistoryCardContent(batteryData: BatteryData, isEditMode: Boolean) {
                 color = Color(0xFF2196F3)
             )
         }
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -917,7 +913,7 @@ fun OverlaysCardContent(batteryData: BatteryData, isEditMode: Boolean) {
                 fontWeight = FontWeight.Medium
             )
         }
-        
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -928,9 +924,9 @@ fun OverlaysCardContent(batteryData: BatteryData, isEditMode: Boolean) {
                 modifier = Modifier.size(24.dp),
                 tint = Color(0xFF607D8B)
             )
-            
+
             Spacer(modifier = Modifier.height(4.dp))
-            
+
             Text(
                 text = "Configure",
                 fontSize = 12.sp,
@@ -938,7 +934,7 @@ fun OverlaysCardContent(batteryData: BatteryData, isEditMode: Boolean) {
                 color = Color(0xFF444444)
             )
         }
-        
+
         Text(
             text = "Screen overlays",
             fontSize = 9.sp,
@@ -973,7 +969,7 @@ private fun ChargingAnalyticsCardContent(batteryData: BatteryData, isEditMode: B
                 fontWeight = FontWeight.Medium
             )
         }
-        
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -990,7 +986,7 @@ private fun ChargingAnalyticsCardContent(batteryData: BatteryData, isEditMode: B
                 textAlign = TextAlign.Center
             )
         }
-        
+
         Text(
             text = "Premium feature",
             fontSize = 9.sp,
@@ -1024,7 +1020,7 @@ private fun ChemistryLabCardContent(batteryData: BatteryData, isEditMode: Boolea
                 fontWeight = FontWeight.Medium
             )
         }
-        
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -1041,7 +1037,7 @@ private fun ChemistryLabCardContent(batteryData: BatteryData, isEditMode: Boolea
                 textAlign = TextAlign.Center
             )
         }
-        
+
         Text(
             text = "Premium feature",
             fontSize = 9.sp,
@@ -1075,7 +1071,7 @@ private fun SystemOptimizationCardContent(batteryData: BatteryData, isEditMode: 
                 fontWeight = FontWeight.Medium
             )
         }
-        
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -1092,7 +1088,7 @@ private fun SystemOptimizationCardContent(batteryData: BatteryData, isEditMode: 
                 textAlign = TextAlign.Center
             )
         }
-        
+
         Text(
             text = "Premium feature",
             fontSize = 9.sp,
@@ -1126,7 +1122,7 @@ private fun PerformanceBenchmarksCardContent(batteryData: BatteryData, isEditMod
                 fontWeight = FontWeight.Medium
             )
         }
-        
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -1143,7 +1139,7 @@ private fun PerformanceBenchmarksCardContent(batteryData: BatteryData, isEditMod
                 textAlign = TextAlign.Center
             )
         }
-        
+
         Text(
             text = "Premium feature",
             fontSize = 9.sp,
@@ -1177,7 +1173,7 @@ fun DataExportImportCardContent(batteryData: BatteryData, isEditMode: Boolean) {
                 fontWeight = FontWeight.Medium
             )
         }
-        
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -1194,7 +1190,7 @@ fun DataExportImportCardContent(batteryData: BatteryData, isEditMode: Boolean) {
                 textAlign = TextAlign.Center
             )
         }
-        
+
         Text(
             text = "Premium feature",
             fontSize = 9.sp,

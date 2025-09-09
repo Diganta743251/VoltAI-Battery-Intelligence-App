@@ -117,22 +117,22 @@ object PremiumGradients {
         Color(0xFF6366F1),
         Color(0xFF8B5CF6)
     )
-    
+
     val secondaryGradient = listOf(
         Color(0xFF10B981),
         Color(0xFF059669)
     )
-    
+
     val batteryHealthGradient = listOf(
         Color(0xFF4ADE80),
         Color(0xFF22C55E)
     )
-    
+
     val chargingGradient = listOf(
         Color(0xFFF59E0B),
         Color(0xFFEAB308)
     )
-    
+
     val premiumGradient = listOf(
         Color(0xFFFFD700),
         Color(0xFFB8860B)
@@ -159,7 +159,7 @@ fun PremiumVoltAITheme(
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
-    
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && themeConfig.isDynamicColorEnabled -> {
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
@@ -170,7 +170,7 @@ fun PremiumVoltAITheme(
         darkTheme -> PremiumDarkColorScheme
         else -> PremiumLightColorScheme
     }
-    
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
@@ -179,7 +179,7 @@ fun PremiumVoltAITheme(
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
-    
+
     MaterialTheme(
         colorScheme = colorScheme,
         typography = PremiumTypography,
@@ -217,7 +217,7 @@ class PremiumColors(
             batteryYellow = Color(0xFFFBBF24),
             batteryRed = Color(0xFFEF4444)
         )
-        
+
         fun dark() = PremiumColors(
             success = Color(0xFF34D399),
             onSuccess = Color(0xFF065F46),

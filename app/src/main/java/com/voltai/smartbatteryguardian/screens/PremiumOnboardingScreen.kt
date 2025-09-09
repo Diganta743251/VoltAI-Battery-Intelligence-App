@@ -14,8 +14,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -41,7 +39,7 @@ fun PremiumOnboardingScreen(
 ) {
     val features = remember { getPremiumFeatures() }
     val pagerState = rememberPagerState(pageCount = { features.size })
-    
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -57,7 +55,7 @@ fun PremiumOnboardingScreen(
     ) {
         // Background particles animation
         PremiumBackgroundAnimation()
-        
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -76,14 +74,14 @@ fun PremiumOnboardingScreen(
                         tint = Color.White
                     )
                 }
-                
+
                 Text(
                     text = "VoltAI Premium",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
-                
+
                 TextButton(onClick = onSkipClick) {
                     Text(
                         text = "Skip",
@@ -91,18 +89,18 @@ fun PremiumOnboardingScreen(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
-            
+
             // Premium badge with animation
             Box(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 PremiumBadgeAnimation()
             }
-            
+
             Spacer(modifier = Modifier.height(24.dp))
-            
+
             Text(
                 text = "Unlock Advanced Battery Intelligence",
                 fontSize = 28.sp,
@@ -111,9 +109,9 @@ fun PremiumOnboardingScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = "Experience AI-powered optimization and professional analytics",
                 fontSize = 16.sp,
@@ -121,9 +119,9 @@ fun PremiumOnboardingScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             Spacer(modifier = Modifier.height(32.dp))
-            
+
             // Feature pager
             HorizontalPager(
                 state = pagerState,
@@ -134,9 +132,9 @@ fun PremiumOnboardingScreen(
                     modifier = Modifier.fillMaxSize()
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Page indicators
             Row(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -147,19 +145,20 @@ fun PremiumOnboardingScreen(
                         modifier = Modifier
                             .size(if (pagerState.currentPage == index) 12.dp else 8.dp)
                             .background(
-                                if (pagerState.currentPage == index) 
-                                    Color.White 
-                                else 
-                                    Color.White.copy(alpha = 0.5f),
+                                if (pagerState.currentPage == index) {
+                                    Color.White
+                                } else {
+                                    Color.White.copy(alpha = 0.5f)
+                                },
                                 CircleShape
                             )
                             .animateContentSize()
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
-            
+
             // Pricing
             PricingSection(onUpgradeClick = onUpgradeClick)
         }
@@ -169,7 +168,7 @@ fun PremiumOnboardingScreen(
 @Composable
 private fun PremiumBackgroundAnimation() {
     val infiniteTransition = rememberInfiniteTransition(label = "background")
-    
+
     repeat(15) { index ->
         val animationDelay = (index * 200)
         val xOffset by infiniteTransition.animateFloat(
@@ -185,7 +184,7 @@ private fun PremiumBackgroundAnimation() {
             ),
             label = "x$index"
         )
-        
+
         val yOffset by infiniteTransition.animateFloat(
             initialValue = (index * 60f),
             targetValue = (index * 60f) + 20f,
@@ -195,7 +194,7 @@ private fun PremiumBackgroundAnimation() {
             ),
             label = "y$index"
         )
-        
+
         Box(
             modifier = Modifier
                 .offset(x = xOffset.dp, y = yOffset.dp)
@@ -219,7 +218,7 @@ private fun PremiumBadgeAnimation() {
         ),
         label = "rotation"
     )
-    
+
     val scale by rememberInfiniteTransition(label = "scale").animateFloat(
         initialValue = 1f,
         targetValue = 1.1f,
@@ -229,7 +228,7 @@ private fun PremiumBadgeAnimation() {
         ),
         label = "scale"
     )
-    
+
     Box(
         modifier = Modifier
             .size(80.dp)
@@ -268,7 +267,7 @@ private fun PremiumFeatureCard(
             containerColor = Color.White.copy(alpha = 0.1f)
         ),
         border = BorderStroke(
-            1.dp, 
+            1.dp,
             Color.White.copy(alpha = 0.2f)
         )
     ) {
@@ -293,7 +292,7 @@ private fun PremiumFeatureCard(
                     fontSize = 48.sp
                 )
             }
-            
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -304,9 +303,9 @@ private fun PremiumFeatureCard(
                     color = Color.White,
                     textAlign = TextAlign.Center
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = feature.description,
                     fontSize = 16.sp,
@@ -315,7 +314,7 @@ private fun PremiumFeatureCard(
                     lineHeight = 24.sp
                 )
             }
-            
+
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -331,7 +330,7 @@ private fun PremiumFeatureCard(
                             tint = Color(0xFF4CAF50),
                             modifier = Modifier.size(20.dp)
                         )
-                        
+
                         Text(
                             text = benefit,
                             fontSize = 14.sp,
@@ -364,7 +363,7 @@ private fun PricingSection(onUpgradeClick: () -> Unit) {
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
-        
+
         // Pricing card
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -394,7 +393,7 @@ private fun PricingSection(onUpgradeClick: () -> Unit) {
                         color = Color.White.copy(alpha = 0.7f)
                     )
                 }
-                
+
                 Text(
                     text = "Was $5.99/month",
                     fontSize = 12.sp,
@@ -403,7 +402,7 @@ private fun PricingSection(onUpgradeClick: () -> Unit) {
                 )
             }
         }
-        
+
         // CTA Button
         Button(
             onClick = onUpgradeClick,
@@ -427,7 +426,7 @@ private fun PricingSection(onUpgradeClick: () -> Unit) {
                 )
             }
         }
-        
+
         Text(
             text = "Cancel anytime • No commitment • 7-day free trial",
             fontSize = 12.sp,

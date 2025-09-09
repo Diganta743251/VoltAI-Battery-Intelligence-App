@@ -4,7 +4,6 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -13,7 +12,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -33,7 +31,7 @@ fun EditModeControls(
     modifier: Modifier = Modifier
 ) {
     val haptic = LocalHapticFeedback.current
-    
+
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
@@ -54,7 +52,7 @@ fun EditModeControls(
                         RoundedCornerShape(2.dp)
                     )
             )
-            
+
             // Title
             Text(
                 text = "Edit Dashboard",
@@ -63,7 +61,7 @@ fun EditModeControls(
                 color = Color(0xFF1A1A1A),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
-            
+
             // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -81,7 +79,7 @@ fun EditModeControls(
                     contentColor = Color.White,
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 // Reset Button
                 EditControlButton(
                     icon = Icons.Default.Refresh,
@@ -95,7 +93,7 @@ fun EditModeControls(
                     modifier = Modifier.weight(1f)
                 )
             }
-            
+
             // Done Button
             Button(
                 onClick = {
@@ -136,12 +134,12 @@ private fun EditControlButton(
     modifier: Modifier = Modifier
 ) {
     var isPressed by remember { mutableStateOf(false) }
-    
+
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.95f else 1f,
         animationSpec = AnimationSpecs.snappy
     )
-    
+
     Surface(
         modifier = modifier
             .height(48.dp)
@@ -166,9 +164,9 @@ private fun EditControlButton(
                 tint = contentColor,
                 modifier = Modifier.size(18.dp)
             )
-            
+
             Spacer(modifier = Modifier.width(8.dp))
-            
+
             Text(
                 text = text,
                 fontSize = 14.sp,
@@ -177,7 +175,7 @@ private fun EditControlButton(
             )
         }
     }
-    
+
     LaunchedEffect(isPressed) {
         if (isPressed) {
             kotlinx.coroutines.delay(100)
@@ -198,7 +196,7 @@ fun AddCardBottomSheet(
         skipPartiallyExpanded = true
     )
     val haptic = LocalHapticFeedback.current
-    
+
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = bottomSheetState,
@@ -231,9 +229,9 @@ fun AddCardBottomSheet(
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF1A1A1A)
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = "Choose a card to add to your dashboard",
                     fontSize = 14.sp,
@@ -241,12 +239,12 @@ fun AddCardBottomSheet(
                     textAlign = TextAlign.Center
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(24.dp))
-            
+
             // Card Categories
             val cardsByCategory = availableCards.groupBy { it.category }
-            
+
             LazyColumn(
                 modifier = Modifier.heightIn(max = 400.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -289,7 +287,7 @@ private fun CardCategorySection(
                 color = category.color.copy(alpha = 0.2f),
                 modifier = Modifier.size(8.dp)
             ) {}
-            
+
             Text(
                 text = category.displayName,
                 fontSize = 16.sp,
@@ -297,7 +295,7 @@ private fun CardCategorySection(
                 color = category.color
             )
         }
-        
+
         // Cards Grid
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -319,17 +317,17 @@ private fun AddCardItem(
     modifier: Modifier = Modifier
 ) {
     var isPressed by remember { mutableStateOf(false) }
-    
+
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.98f else 1f,
         animationSpec = AnimationSpecs.snappy
     )
-    
+
     val elevation by animateDpAsState(
         targetValue = if (isPressed) 2.dp else 4.dp,
         animationSpec = tween(300)
     )
-    
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -367,7 +365,7 @@ private fun AddCardItem(
                     )
                 }
             }
-            
+
             // Card Info
             Column(
                 modifier = Modifier.weight(1f)
@@ -382,7 +380,7 @@ private fun AddCardItem(
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF1A1A1A)
                     )
-                    
+
                     if (cardType.isPremium) {
                         Surface(
                             shape = RoundedCornerShape(4.dp),
@@ -399,7 +397,7 @@ private fun AddCardItem(
                         }
                     }
                 }
-                
+
                 Text(
                     text = cardType.description,
                     fontSize = 13.sp,
@@ -407,7 +405,7 @@ private fun AddCardItem(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                
+
                 // Size badges
                 Row(
                     modifier = Modifier.padding(top = 6.dp),
@@ -429,7 +427,7 @@ private fun AddCardItem(
                     }
                 }
             }
-            
+
             // Add Button
             Surface(
                 shape = CircleShape,
@@ -450,7 +448,7 @@ private fun AddCardItem(
             }
         }
     }
-    
+
     LaunchedEffect(isPressed) {
         if (isPressed) {
             kotlinx.coroutines.delay(100)

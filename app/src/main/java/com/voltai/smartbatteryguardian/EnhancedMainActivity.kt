@@ -35,19 +35,19 @@ class EnhancedMainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            com.voltai.ui.theme.VoltAITheme {
+            com.voltai.smartbatteryguardian.ui.theme.VoltAITheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
+                    color = MaterialTheme.colorScheme.surface,
                 ) {
-                    EnhancedBatteryScreen()
+                    MaterialBatteryScreen()
                 }
             }
         }
     }
 
     @Composable
-    fun EnhancedBatteryScreen() {
+    fun MaterialBatteryScreen() {
         var batteryLevel by remember { mutableStateOf(0) }
         var isCharging by remember { mutableStateOf(false) }
         var voltage by remember { mutableStateOf(0f) }
@@ -83,7 +83,7 @@ class EnhancedMainActivity : ComponentActivity() {
 
                         voltage = it.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0) / 1000f
                         temperature = it.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10f
-                        
+
                         val healthValue = it.getIntExtra(BatteryManager.EXTRA_HEALTH, -1)
                         health = when (healthValue) {
                             BatteryManager.BATTERY_HEALTH_GOOD -> 100
@@ -94,7 +94,7 @@ class EnhancedMainActivity : ComponentActivity() {
                             BatteryManager.BATTERY_HEALTH_COLD -> 80
                             else -> 95
                         }
-                        
+
                         status = when (batteryStatus) {
                             BatteryManager.BATTERY_STATUS_CHARGING -> "Charging"
                             BatteryManager.BATTERY_STATUS_DISCHARGING -> "Discharging"
@@ -115,225 +115,201 @@ class EnhancedMainActivity : ComponentActivity() {
             }
         }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFFF8F9FA),
-                            Color(0xFFE3F2FD),
-                        ),
-                    ),
-                )
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-        ) {
-            // Header
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Text(
-                    text = "⚡ VoltAI",
-                    fontSize = 36.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF0066CC),
-                )
-
-                Text(
-                    text = "Smart Battery Guardian",
-                    fontSize = 16.sp,
-                    color = Color(0xFF666666),
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Animated Battery Ring
-            AnimatedBatteryRingEnhanced(
-                batteryLevel = batteryLevel,
-                isCharging = isCharging,
-            )
-
-            // Battery Status Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    Text(
-                        text = "$batteryLevel%",
-                        fontSize = 48.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = getBatteryColorEnhanced(batteryLevel),
-                    )
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        if (isCharging) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "⚡ Charging",
-                                color = Color(0xFF4CAF50),
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 16.sp,
+                                text = "⚡ VoltAI",
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
                             )
-                        } else {
                             Text(
-                                text = "🔋 On Battery",
-                                color = Color(0xFF666666),
-                                fontSize = 16.sp,
+                                text = "Smart Battery Guardian",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                    }
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                )
+            },
+            containerColor = MaterialTheme.colorScheme.surface
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
 
-                    Text(
-                        text = status,
-                        color = Color(0xFF888888),
-                        fontSize = 14.sp,
+                // Simple Battery Ring
+                SimpleBatteryRing(
+                    batteryLevel = batteryLevel,
+                    isCharging = isCharging
+                )
+
+                // Battery Status Card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.large,
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        Text(
+                            text = "$batteryLevel%",
+                            style = MaterialTheme.typography.displaySmall,
+                            fontWeight = FontWeight.Bold,
+                            color = getBatteryColorMaterial(batteryLevel)
+                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            if (isCharging) {
+                                Icon(
+                                    imageVector = Icons.Default.Phone,
+                                    contentDescription = "Charging",
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Text(
+                                    text = "Charging",
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Star,
+                                    contentDescription = "On Battery",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Text(
+                                    text = "On Battery",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
+                        }
+
+                        Text(
+                            text = status,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+
+                // Enhanced Stats
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    MaterialStatCard(
+                        title = "Health",
+                        value = "$health%",
+                        icon = "❤️",
+                        modifier = Modifier.weight(1f)
+                    )
+                    MaterialStatCard(
+                        title = "Temp",
+                        value = "${String.format(Locale.US, "%.1f", temperature)}°C",
+                        icon = "🌡️",
+                        modifier = Modifier.weight(1f)
+                    )
+                    MaterialStatCard(
+                        title = "Voltage",
+                        value = "${String.format(Locale.US, "%.2f", voltage)}V",
+                        icon = "⚡",
+                        modifier = Modifier.weight(1f)
                     )
                 }
-            }
 
-            // Enhanced Stats
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-            ) {
-                QuickStatCardEnhanced(
-                    title = "Health",
-                    value = "$health%",
-                    icon = "❤️",
-                    modifier = Modifier.weight(1f),
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                QuickStatCardEnhanced(
-                    title = "Temp",
-                    value = "${String.format(Locale.US, "%.1f", temperature)}°C",
-                    icon = "🌡️",
-                    modifier = Modifier.weight(1f),
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                QuickStatCardEnhanced(
-                    title = "Voltage",
-                    value = "${String.format(Locale.US, "%.2f", voltage)}V",
-                    icon = "⚡",
-                    modifier = Modifier.weight(1f),
-                )
-            }
+                Spacer(modifier = Modifier.weight(1f))
 
-            Spacer(modifier = Modifier.weight(1f))
+                // Action Button
+                Button(
+                    onClick = {
+                        // Force refresh - the LaunchedEffect will handle updates
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Refresh",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Refresh Battery Status",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
 
-            // Action Button
-            Button(
-                onClick = {
-                    // Force refresh - the LaunchedEffect will handle updates
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0066CC)),
-            ) {
                 Text(
-                    text = "🔄 Refresh Battery Status",
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(8.dp),
+                    text = "VoltAI v1.0.0 - Smart Battery Management",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
-            Text(
-                text = "VoltAI v1.0.0 - Smart Battery Management",
-                fontSize = 12.sp,
-                color = Color(0xFF888888),
-            )
         }
     }
 
     @Composable
-    fun AnimatedBatteryRingEnhanced(
+    fun SimpleBatteryRing(
         batteryLevel: Int,
-        isCharging: Boolean,
+        isCharging: Boolean
     ) {
-        val infiniteTransition = rememberInfiniteTransition(label = "battery")
-        val animatedLevel by animateFloatAsState(
-            targetValue = batteryLevel.toFloat(),
-            animationSpec = tween(1000, easing = EaseOutCubic),
-            label = "level",
-        )
-
-        val glowAlpha by infiniteTransition.animateFloat(
-            initialValue = 0.3f,
-            targetValue = 1f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(1500),
-                repeatMode = RepeatMode.Reverse,
-            ),
-            label = "glow",
-        )
-
         Box(
             modifier = Modifier.size(160.dp),
-            contentAlignment = Alignment.Center,
+            contentAlignment = Alignment.Center
         ) {
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                val center = this.center
-                val radius = size.minDimension / 2.5f
-
-                // Background ring
-                drawCircle(
-                    color = Color(0xFFE0E0E0),
-                    radius = radius,
-                    center = center,
-                    style = Stroke(width = 12.dp.toPx(), cap = StrokeCap.Round),
-                )
-
-                // Battery level arc
-                val sweepAngle = 360f * (animatedLevel / 100f)
-                drawArc(
-                    color = getBatteryColorEnhanced(batteryLevel),
-                    startAngle = -90f,
-                    sweepAngle = sweepAngle,
-                    useCenter = false,
-                    topLeft = Offset(center.x - radius, center.y - radius),
-                    size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2),
-                    style = Stroke(width = 12.dp.toPx(), cap = StrokeCap.Round),
-                )
-
-                // Charging glow
-                if (isCharging) {
-                    drawCircle(
-                        color = Color(0xFF4CAF50).copy(alpha = glowAlpha * 0.3f),
-                        radius = radius + 8.dp.toPx(),
-                        center = center,
-                        style = Stroke(width = 16.dp.toPx()),
-                    )
-                }
-            }
-
+            CircularProgressIndicator(
+                progress = batteryLevel / 100f,
+                modifier = Modifier.fillMaxSize(),
+                strokeWidth = 12.dp,
+                color = getBatteryColorMaterial(batteryLevel),
+                trackColor = MaterialTheme.colorScheme.surfaceVariant
+            )
+            
             // Center content
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = "$batteryLevel%",
-                    fontSize = 24.sp,
+                    style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = getBatteryColorEnhanced(batteryLevel),
+                    color = getBatteryColorMaterial(batteryLevel)
                 )
                 if (isCharging) {
-                    Text(
-                        text = "⚡",
-                        fontSize = 16.sp,
+                    Icon(
+                        imageVector = Icons.Default.Phone,
+                        contentDescription = "Charging",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
             }
@@ -341,50 +317,53 @@ class EnhancedMainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun QuickStatCardEnhanced(
+    fun MaterialStatCard(
         title: String,
         value: String,
         icon: String,
-        modifier: Modifier = Modifier,
+        modifier: Modifier = Modifier
     ) {
         Card(
             modifier = modifier,
-            shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            shape = MaterialTheme.shapes.medium,
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+            )
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
                     text = icon,
-                    fontSize = 20.sp,
+                    style = MaterialTheme.typography.headlineSmall
                 )
                 Text(
                     text = title,
-                    fontSize = 12.sp,
-                    color = Color(0xFF666666),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = value,
-                    fontSize = 14.sp,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF0066CC),
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
     }
-    
-    private fun getBatteryColorEnhanced(level: Int): Color {
+
+    @Composable
+    private fun getBatteryColorMaterial(level: Int): Color {
         return when {
-            level > 80 -> Color(0xFF4CAF50) // Green
-            level > 50 -> Color(0xFF2196F3) // Blue
-            level > 20 -> Color(0xFFFF9800) // Orange
-            else -> Color(0xFFF44336) // Red
+            level > 80 -> MaterialTheme.colorScheme.primary
+            level > 50 -> MaterialTheme.colorScheme.secondary  
+            level > 20 -> MaterialTheme.colorScheme.tertiary
+            else -> MaterialTheme.colorScheme.error
         }
     }
 

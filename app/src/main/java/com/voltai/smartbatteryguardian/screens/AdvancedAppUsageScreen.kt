@@ -1,18 +1,14 @@
 package com.voltai.smartbatteryguardian.screens
 
-import android.app.usage.UsageStats
-import android.app.usage.UsageStatsManager
 import android.content.Context
-import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,24 +19,18 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.Canvas
+import com.voltai.smartbatteryguardian.models.AppUsageData
+import com.voltai.smartbatteryguardian.models.InsightSeverity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 import kotlin.random.Random
-import com.voltai.smartbatteryguardian.models.AppUsageData
 
 data class AppCategory(
     val name: String,
@@ -59,24 +49,24 @@ data class UsageInsight(
     val icon: String
 )
 
-enum class InsightSeverity { HIGH, MEDIUM, LOW, POSITIVE }
+// InsightSeverity moved to PremiumDataModels
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun AdvancedAppUsageScreen() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    
+
     var selectedTab by remember { mutableStateOf(0) }
     var selectedPeriod by remember { mutableStateOf(0) }
     var appsData by remember { mutableStateOf<List<AppUsageData>>(emptyList()) }
     var categories by remember { mutableStateOf<List<AppCategory>>(emptyList()) }
     var insights by remember { mutableStateOf<List<UsageInsight>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
-    
+
     val tabs = listOf("📊 Overview", "📱 Apps", "📂 Categories", "💡 Insights", "📈 Analytics")
     val periods = listOf("Today", "Yesterday", "Week", "Month")
-    
+
     // Load usage data
     LaunchedEffect(selectedPeriod) {
         scope.launch {
@@ -88,7 +78,7 @@ fun AdvancedAppUsageScreen() {
             isLoading = false
         }
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -128,9 +118,9 @@ fun AdvancedAppUsageScreen() {
                             fontSize = 24.sp
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.width(16.dp))
-                    
+
                     Column {
                         Text(
                             text = "App Usage Analytics",
@@ -145,9 +135,9 @@ fun AdvancedAppUsageScreen() {
                         )
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Period Selector
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -171,7 +161,7 @@ fun AdvancedAppUsageScreen() {
                 }
             }
         }
-        
+
         // Tab Row
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -194,7 +184,7 @@ fun AdvancedAppUsageScreen() {
                 }
             }
         }
-        
+
         // Content with Loading State
         if (isLoading) {
             Box(
@@ -272,7 +262,7 @@ fun OverviewTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
                 )
             }
         }
-        
+
         item {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -293,7 +283,7 @@ fun OverviewTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
                 )
             }
         }
-        
+
         // Usage Distribution Chart
         item {
             Card(
@@ -310,9 +300,9 @@ fun OverviewTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     // Donut Chart
                     Box(
                         modifier = Modifier
@@ -325,7 +315,7 @@ fun OverviewTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
                 }
             }
         }
-        
+
         // Top Apps Quick View
         item {
             Card(
@@ -351,9 +341,9 @@ fun OverviewTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
                             Text("View All")
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     appsData.take(5).forEachIndexed { index, app ->
                         TopAppItem(app, index + 1)
                         if (index < 4) {
@@ -363,7 +353,7 @@ fun OverviewTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
                 }
             }
         }
-        
+
         // Hourly Usage Pattern
         item {
             Card(
@@ -380,9 +370,9 @@ fun OverviewTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     HourlyUsageChart()
                 }
             }
@@ -455,14 +445,14 @@ fun AnalyticsTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     WeeklyTrendChart()
                 }
             }
         }
-        
+
         // Battery Impact Analysis
         item {
             Card(
@@ -478,9 +468,9 @@ fun AnalyticsTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     appsData.take(10).forEach { app ->
                         BatteryImpactItem(app)
                         Spacer(modifier = Modifier.height(8.dp))
@@ -531,7 +521,7 @@ fun OverviewStatsCard(
                     fontSize = 16.sp
                 )
             }
-            
+
             Text(
                 text = value,
                 fontSize = 18.sp,
@@ -554,12 +544,12 @@ fun UsageDonutChart(categories: List<AppCategory>) {
         val radius = (size.minDimension - strokeWidth) / 2
         val centerX = size.width / 2
         val centerY = size.height / 2
-        
+
         var startAngle = -90f
-        
+
         categories.forEach { category ->
             val sweepAngle = (category.totalUsage / total) * 360f
-            
+
             drawArc(
                 color = category.color,
                 startAngle = startAngle,
@@ -572,7 +562,7 @@ fun UsageDonutChart(categories: List<AppCategory>) {
                     centerY - radius
                 )
             )
-            
+
             startAngle += sweepAngle
         }
     }
@@ -600,9 +590,9 @@ fun TopAppItem(app: AppUsageData, rank: Int) {
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -619,7 +609,7 @@ fun TopAppItem(app: AppUsageData, rank: Int) {
                 color = Color(0xFF666666)
             )
         }
-        
+
         Column(
             horizontalAlignment = Alignment.End
         ) {
@@ -666,9 +656,9 @@ fun DetailedAppUsageCard(app: AppUsageData) {
                         )
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
@@ -683,7 +673,7 @@ fun DetailedAppUsageCard(app: AppUsageData) {
                         color = Color(0xFF666666)
                     )
                 }
-                
+
                 Column(
                     horizontalAlignment = Alignment.End
                 ) {
@@ -700,9 +690,9 @@ fun DetailedAppUsageCard(app: AppUsageData) {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Usage breakdown
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -712,12 +702,14 @@ fun DetailedAppUsageCard(app: AppUsageData) {
                 UsageMetricItem("Yesterday", formatDuration(app.usageYesterday))
                 UsageMetricItem("Avg Session", formatDuration(app.avgSessionTime))
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Usage bar
             LinearProgressIndicator(
-                progress = (app.totalTimeInForeground.toFloat() / (8 * 60 * 60 * 1000L)).coerceAtMost(1f), // Max 8 hours
+                progress = (app.totalTimeInForeground.toFloat() / (8 * 60 * 60 * 1000L)).coerceAtMost(
+                    1f
+                ), // Max 8 hours
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(6.dp)
@@ -754,9 +746,9 @@ fun CategoryCard(category: AppCategory) {
                         fontSize = 24.sp
                     )
                 }
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
@@ -771,7 +763,7 @@ fun CategoryCard(category: AppCategory) {
                         color = Color(0xFF666666)
                     )
                 }
-                
+
                 Text(
                     text = "${category.batteryImpact.toInt()}%",
                     fontWeight = FontWeight.Bold,
@@ -779,9 +771,9 @@ fun CategoryCard(category: AppCategory) {
                     color = category.color
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Top apps in category
             category.apps.take(3).forEach { app ->
                 Row(
@@ -818,14 +810,21 @@ fun InsightCard(insight: UsageInsight) {
                 InsightSeverity.MEDIUM -> Color(0xFFFFF8E1)
                 InsightSeverity.LOW -> Color(0xFFF3E5F5)
                 InsightSeverity.POSITIVE -> Color(0xFFE8F5E8)
+                InsightSeverity.CRITICAL -> Color(0xFFFFEBEE)
+                InsightSeverity.INFO -> Color(0xFFE3F2FD)
+                InsightSeverity.WARNING -> Color(0xFFFFF8E1)
             }
         ),
         border = BorderStroke(
-            1.dp, when (insight.severity) {
+            1.dp,
+            when (insight.severity) {
                 InsightSeverity.HIGH -> Color(0xFFFF5722)
                 InsightSeverity.MEDIUM -> Color(0xFFFF9800)
                 InsightSeverity.LOW -> Color(0xFF9C27B0)
                 InsightSeverity.POSITIVE -> Color(0xFF4CAF50)
+                InsightSeverity.CRITICAL -> Color(0xFFD32F2F)
+                InsightSeverity.INFO -> Color(0xFF1976D2)
+                InsightSeverity.WARNING -> Color(0xFFFF9800)
             }
         )
     ) {
@@ -839,9 +838,9 @@ fun InsightCard(insight: UsageInsight) {
                     text = insight.icon,
                     fontSize = 24.sp
                 )
-                
+
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
@@ -858,21 +857,24 @@ fun InsightCard(insight: UsageInsight) {
                             InsightSeverity.MEDIUM -> Color(0xFFFF9800)
                             InsightSeverity.LOW -> Color(0xFF9C27B0)
                             InsightSeverity.POSITIVE -> Color(0xFF4CAF50)
+                            InsightSeverity.CRITICAL -> Color(0xFFD32F2F)
+                            InsightSeverity.INFO -> Color(0xFF1976D2)
+                            InsightSeverity.WARNING -> Color(0xFFFF9800)
                         },
                         fontWeight = FontWeight.Medium
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Text(
                 text = insight.description,
                 fontSize = 14.sp,
                 lineHeight = 20.sp,
                 color = Color(0xFF333333)
             )
-            
+
             if (insight.recommendation.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -903,7 +905,7 @@ fun HourlyUsageChart() {
             baseUsage
         }
     }
-    
+
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
@@ -911,12 +913,12 @@ fun HourlyUsageChart() {
     ) {
         val barWidth = size.width / 24
         val maxUsage = hourlyData.maxOrNull() ?: 1
-        
+
         hourlyData.forEachIndexed { index, usage ->
             val barHeight = (usage.toFloat() / maxUsage) * size.height * 0.8f
             val x = index * barWidth + barWidth * 0.2f
             val y = size.height - barHeight
-            
+
             drawRoundRect(
                 color = Color(0xFF2196F3).copy(alpha = 0.8f),
                 topLeft = androidx.compose.ui.geometry.Offset(x, y),
@@ -925,7 +927,7 @@ fun HourlyUsageChart() {
             )
         }
     }
-    
+
     // Hour labels
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -947,7 +949,7 @@ fun WeeklyTrendChart() {
         (0..6).map { Random.nextInt(2, 8) } // Hours per day
     }
     val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-    
+
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
@@ -955,14 +957,14 @@ fun WeeklyTrendChart() {
     ) {
         val stepX = size.width / (weeklyData.size - 1)
         val maxHours = 8f
-        
+
         val points = weeklyData.mapIndexed { index, hours ->
             androidx.compose.ui.geometry.Offset(
                 x = index * stepX,
                 y = size.height - (hours.toFloat() / maxHours) * size.height
             )
         }
-        
+
         // Draw line
         for (i in 0 until points.size - 1) {
             drawLine(
@@ -973,7 +975,7 @@ fun WeeklyTrendChart() {
                 cap = StrokeCap.Round
             )
         }
-        
+
         // Draw points
         points.forEach { point ->
             drawCircle(
@@ -988,9 +990,9 @@ fun WeeklyTrendChart() {
             )
         }
     }
-    
+
     Spacer(modifier = Modifier.height(8.dp))
-    
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
@@ -1015,9 +1017,9 @@ fun BatteryImpactItem(app: AppUsageData) {
             text = getAppIcon(app.packageName),
             fontSize = 16.sp
         )
-        
+
         Spacer(modifier = Modifier.width(8.dp))
-        
+
         Text(
             text = app.appName,
             modifier = Modifier.weight(1f),
@@ -1025,7 +1027,7 @@ fun BatteryImpactItem(app: AppUsageData) {
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        
+
         LinearProgressIndicator(
             progress = (app.batteryUsage / 100).toFloat().coerceIn(0f, 1f),
             modifier = Modifier
@@ -1038,9 +1040,9 @@ fun BatteryImpactItem(app: AppUsageData) {
             },
             trackColor = Color(0xFFE0E0E0)
         )
-        
+
         Spacer(modifier = Modifier.width(8.dp))
-        
+
         Text(
             text = "${app.batteryUsage.toInt()}%",
             fontSize = 12.sp,
@@ -1094,7 +1096,7 @@ fun generateMockAppUsageData(): List<AppUsageData> {
         "Gallery" to "\uD83D\uDDBC",
         "Clock" to "⏰"
     )
-    
+
     return mockApps.mapIndexed { index, (name, icon) ->
         val baseUsage = Random.nextLong(30 * 60 * 1000L, 4 * 60 * 60 * 1000L) // 30min to 4hours
         AppUsageData(
@@ -1117,7 +1119,7 @@ fun generateMockAppUsageData(): List<AppUsageData> {
 
 fun categorizeApps(apps: List<AppUsageData>): List<AppCategory> {
     val categories = apps.groupBy { getAppCategory(it.appName) }
-    
+
     return categories.map { (categoryName, categoryApps) ->
         AppCategory(
             name = categoryName,
@@ -1131,14 +1133,16 @@ fun categorizeApps(apps: List<AppUsageData>): List<AppCategory> {
 
 fun generateUsageInsights(apps: List<AppUsageData>): List<UsageInsight> {
     val insights = mutableListOf<UsageInsight>()
-    
+
     // High usage app insight
     val topApp = apps.firstOrNull()
     if (topApp != null && topApp.totalTimeInForeground > 3 * 60 * 60 * 1000L) { // More than 3 hours
         insights.add(
             UsageInsight(
                 title = "High Usage Detected",
-                description = "${topApp.appName} consumed ${formatDuration(topApp.totalTimeInForeground)} of screen time today.",
+                description = "${topApp.appName} consumed ${formatDuration(
+                    topApp.totalTimeInForeground
+                )} of screen time today.",
                 impact = "High Battery Impact",
                 severity = InsightSeverity.HIGH,
                 recommendation = "Consider setting app limits or taking regular breaks.",
@@ -1146,7 +1150,7 @@ fun generateUsageInsights(apps: List<AppUsageData>): List<UsageInsight> {
             )
         )
     }
-    
+
     // Battery drain insight
     val highBatteryApps = apps.filter { it.batteryUsage > 15.0 }
     if (highBatteryApps.isNotEmpty()) {
@@ -1161,7 +1165,7 @@ fun generateUsageInsights(apps: List<AppUsageData>): List<UsageInsight> {
             )
         )
     }
-    
+
     // Positive insight
     val totalUsage = apps.sumOf { it.totalTimeInForeground }
     if (totalUsage < 4 * 60 * 60 * 1000L) { // Less than 4 hours
@@ -1176,14 +1180,14 @@ fun generateUsageInsights(apps: List<AppUsageData>): List<UsageInsight> {
             )
         )
     }
-    
+
     return insights
 }
 
 fun formatDuration(millis: Long): String {
     val hours = millis / (60 * 60 * 1000)
     val minutes = (millis % (60 * 60 * 1000)) / (60 * 1000)
-    
+
     return when {
         hours > 0 -> "${hours}h ${minutes}m"
         minutes > 0 -> "${minutes}m"

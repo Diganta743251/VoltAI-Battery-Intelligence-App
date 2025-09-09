@@ -7,23 +7,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.math.cos
-import kotlin.math.sin
 
 // Custom data models for Charging Analytics
 data class AnalyticsChargingSession(
@@ -52,10 +47,10 @@ data class AnalyticsChargingProfile(
 fun ChargingAnalyticsScreen() {
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("⚡ Overview", "📊 Analytics", "🔌 Sessions", "🧠 Insights")
-    
+
     val chargingProfiles = remember { generateChargingProfiles() }
     val recentSessions = remember { generateChargingSessions() }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -97,9 +92,9 @@ fun ChargingAnalyticsScreen() {
                     ) {
                         Text(text = "⚡", fontSize = 28.sp)
                     }
-                    
+
                     Spacer(modifier = Modifier.width(16.dp))
-                    
+
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Charging Analytics",
@@ -113,12 +108,12 @@ fun ChargingAnalyticsScreen() {
                             color = Color.White.copy(alpha = 0.85f)
                         )
                     }
-                    
+
                     ChargingStatusIndicator()
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Quick Stats Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -130,7 +125,7 @@ fun ChargingAnalyticsScreen() {
                 }
             }
         }
-        
+
         // Tab Row
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -152,7 +147,7 @@ fun ChargingAnalyticsScreen() {
                 }
             }
         }
-        
+
         // Content
         LazyColumn(
             modifier = Modifier
@@ -196,7 +191,7 @@ fun ChargingStatusIndicator() {
             repeatMode = RepeatMode.Restart
         )
     )
-    
+
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = Color.White.copy(alpha = 0.15f)
@@ -265,9 +260,9 @@ fun ChargingOverviewCard() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
@@ -292,7 +287,7 @@ fun ChargingOverviewCard() {
                         color = Color(0xFF666666)
                     )
                 }
-                
+
                 Column {
                     InfoRow("🔋 Sessions", "3")
                     InfoRow("⏱️ Total Time", "2h 15m")
@@ -331,7 +326,7 @@ fun ChargingSessionCard(session: AnalyticsChargingSession) {
                         color = Color(0xFF2196F3)
                     )
                 }
-                
+
                 Surface(
                     shape = RoundedCornerShape(8.dp),
                     color = when {
@@ -353,9 +348,9 @@ fun ChargingSessionCard(session: AnalyticsChargingSession) {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -425,10 +420,17 @@ fun generateChargingSessions(): List<AnalyticsChargingSession> {
 
 // Placeholder composables for other sections
 @Composable fun ChargingPatternsCard() { /* Implementation */ }
+
 @Composable fun ChargerTypesCard(profiles: List<AnalyticsChargingProfile>) { /* Implementation */ }
+
 @Composable fun ChargingEfficiencyChart() { /* Implementation */ }
+
 @Composable fun PowerDeliveryAnalysis() { /* Implementation */ }
+
 @Composable fun TemperatureAnalysis() { /* Implementation */ }
+
 @Composable fun AIInsightsCard() { /* Implementation */ }
+
 @Composable fun OptimizationRecommendations() { /* Implementation */ }
+
 @Composable fun PredictiveAnalysis() { /* Implementation */ }

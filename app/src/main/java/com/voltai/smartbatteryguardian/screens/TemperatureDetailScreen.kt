@@ -46,16 +46,16 @@ fun TemperatureDetailScreen(onBackClick: () -> Unit = {}) {
                 }
             },
             colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                ),
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         )
 
         LazyColumn(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Current Temperature Card
@@ -170,9 +170,9 @@ fun TemperatureDetailScreen(onBackClick: () -> Unit = {}) {
 
                         Canvas(
                             modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(120.dp),
+                            Modifier
+                                .fillMaxWidth()
+                                .height(120.dp),
                         ) {
                             drawTemperatureGraph(batteryData.temperature)
                         }
@@ -254,9 +254,9 @@ fun TemperatureDetailScreen(onBackClick: () -> Unit = {}) {
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(20.dp),
@@ -337,9 +337,9 @@ fun TemperatureAnalysisRow(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -376,9 +376,9 @@ fun TemperatureGuidelineItem(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Canvas(

@@ -7,23 +7,19 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.math.*
-import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.*
 
 // Data Models
 data class DiagnosticResult(
@@ -55,12 +51,12 @@ enum class DiagnosticSeverity {
 @Composable
 fun BatteryDiagnosticsScreen() {
     val context = LocalContext.current
-    
+
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("🔬 Diagnostics", "📊 Voltage", "🌡️ Temperature", "🔄 Cycles", "🧪 Tests")
-    
+
     var isRunningDiagnostics by remember { mutableStateOf(false) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -88,9 +84,9 @@ fun BatteryDiagnosticsScreen() {
                 ) {
                     // Diagnostic Scanner Animation
                     DiagnosticScannerIcon(isScanning = isRunningDiagnostics)
-                    
+
                     Spacer(modifier = Modifier.width(16.dp))
-                    
+
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Battery Diagnostics",
@@ -104,13 +100,13 @@ fun BatteryDiagnosticsScreen() {
                             color = Color.White.copy(alpha = 0.85f)
                         )
                     }
-                    
+
                     // Diagnostic Status
                     DiagnosticStatusCard()
                 }
-                
+
                 Spacer(modifier = Modifier.height(20.dp))
-                
+
                 // Quick Diagnostic Stats
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -123,7 +119,7 @@ fun BatteryDiagnosticsScreen() {
                 }
             }
         }
-        
+
         // Tab Row
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -145,7 +141,7 @@ fun BatteryDiagnosticsScreen() {
                 }
             }
         }
-        
+
         // Content
         LazyColumn(
             modifier = Modifier
@@ -155,7 +151,7 @@ fun BatteryDiagnosticsScreen() {
         ) {
             when (selectedTab) {
                 0 -> {
-                    item { 
+                    item {
                         DiagnosticsOverviewCard(
                             isRunningDiagnostics = isRunningDiagnostics,
                             onStartDiagnostics = { isRunningDiagnostics = true }
@@ -187,20 +183,28 @@ fun BatteryDiagnosticsScreen() {
 fun DiagnosticScannerIcon(isScanning: Boolean) {
     val rotation by animateFloatAsState(
         targetValue = if (isScanning) 360f else 0f,
-        animationSpec = if (isScanning) infiniteRepeatable(
-            animation = tween(durationMillis = 2000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ) else tween(500)
+        animationSpec = if (isScanning) {
+            infiniteRepeatable(
+                animation = tween(durationMillis = 2000, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart
+            )
+        } else {
+            tween(500)
+        }
     )
-    
+
     val pulseScale by animateFloatAsState(
         targetValue = if (isScanning) 1.1f else 1.0f,
-        animationSpec = if (isScanning) infiniteRepeatable(
-            animation = tween(1000, easing = EaseInOutSine),
-            repeatMode = RepeatMode.Reverse
-        ) else tween(300)
+        animationSpec = if (isScanning) {
+            infiniteRepeatable(
+                animation = tween(1000, easing = EaseInOutSine),
+                repeatMode = RepeatMode.Reverse
+            )
+        } else {
+            tween(300)
+        }
     )
-    
+
     Box(
         modifier = Modifier
             .size(64.dp)
@@ -221,7 +225,7 @@ fun DiagnosticScannerIcon(isScanning: Boolean) {
         contentAlignment = Alignment.Center
     ) {
         Text(text = "🔬", fontSize = 32.sp)
-        
+
         if (isScanning) {
             // Scanning rings
             repeat(3) { index ->
@@ -233,7 +237,7 @@ fun DiagnosticScannerIcon(isScanning: Boolean) {
                         repeatMode = RepeatMode.Restart
                     )
                 )
-                
+
                 Box(
                     modifier = Modifier
                         .size((40 + index * 8).dp)
@@ -279,7 +283,7 @@ fun DiagnosticStatusCard() {
                     fontWeight = FontWeight.Medium
                 )
             }
-            
+
             Text(
                 text = "Last scan: 2m ago",
                 fontSize = 9.sp,
@@ -340,9 +344,9 @@ fun DiagnosticsOverviewCard(
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF1565C0)
                 )
-                
+
                 Spacer(modifier = Modifier.weight(1f))
-                
+
                 Button(
                     onClick = onStartDiagnostics,
                     enabled = !isRunningDiagnostics,
@@ -363,9 +367,9 @@ fun DiagnosticsOverviewCard(
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Status Summary
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -375,17 +379,17 @@ fun DiagnosticsOverviewCard(
                 StatusSummaryItem("Warning", 1, Color(0xFFFF9800))
                 StatusSummaryItem("Optimal", 4, Color(0xFF4CAF50))
             }
-            
+
             if (isRunningDiagnostics) {
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 LinearProgressIndicator(
                     modifier = Modifier.fillMaxWidth(),
                     color = Color(0xFF1565C0)
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = "Running comprehensive battery analysis...",
                     fontSize = 12.sp,
@@ -433,9 +437,9 @@ fun GeneralDiagnosticResultsCard() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Sample diagnostic results
             DiagnosticItem(
                 icon = "⚡",
@@ -445,9 +449,9 @@ fun GeneralDiagnosticResultsCard() {
                 statusColor = Color(0xFF4CAF50),
                 description = "Voltage levels are within optimal range"
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             DiagnosticItem(
                 icon = "🌡️",
                 title = "Temperature",
@@ -456,9 +460,9 @@ fun GeneralDiagnosticResultsCard() {
                 statusColor = Color(0xFF8BC34A),
                 description = "Temperature within safe operating range"
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             DiagnosticItem(
                 icon = "🔄",
                 title = "Charge Cycles",
@@ -485,9 +489,9 @@ fun DiagnosticItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = icon, fontSize = 20.sp)
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
@@ -500,7 +504,7 @@ fun DiagnosticItem(
                 color = Color(0xFF666666)
             )
         }
-        
+
         Column(
             horizontalAlignment = Alignment.End
         ) {
@@ -510,7 +514,7 @@ fun DiagnosticItem(
                 fontWeight = FontWeight.Bold,
                 color = statusColor
             )
-            
+
             Surface(
                 shape = RoundedCornerShape(6.dp),
                 color = statusColor.copy(alpha = 0.1f)
@@ -543,9 +547,9 @@ fun VoltageAnalysisCard() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Voltage gauge placeholder
             Box(
                 modifier = Modifier
@@ -570,9 +574,9 @@ fun VoltageAnalysisCard() {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Voltage metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -602,9 +606,9 @@ fun TemperatureAnalysisCard() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Temperature gauge placeholder
             Box(
                 modifier = Modifier
@@ -629,9 +633,9 @@ fun TemperatureAnalysisCard() {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Temperature metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -661,9 +665,9 @@ fun CycleAnalysisCard() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Cycle progress indicator
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -677,7 +681,7 @@ fun CycleAnalysisCard() {
                     color = Color(0xFFFF9800),
                     trackColor = Color(0xFFE0E0E0)
                 )
-                
+
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -693,9 +697,9 @@ fun CycleAnalysisCard() {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Cycle metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -725,9 +729,9 @@ fun DiagnosticTestsCard() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Sample diagnostic tests
             TestItem("Voltage Stability Test", "COMPLETED", Color(0xFF4CAF50), "⚡")
             Spacer(modifier = Modifier.height(12.dp))
@@ -748,7 +752,7 @@ fun TestItem(name: String, status: String, statusColor: Color, icon: String) {
     ) {
         Text(text = icon, fontSize = 16.sp)
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = name,
@@ -756,7 +760,7 @@ fun TestItem(name: String, status: String, statusColor: Color, icon: String) {
                 fontWeight = FontWeight.Medium
             )
         }
-        
+
         Surface(
             shape = RoundedCornerShape(6.dp),
             color = statusColor.copy(alpha = 0.1f)

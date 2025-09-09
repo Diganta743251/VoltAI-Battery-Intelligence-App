@@ -15,7 +15,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -41,16 +40,16 @@ fun PremiumPaywallScreen(
     val context = LocalContext.current
     val premiumState by premiumViewModel.premiumState.collectAsState()
     val billingState by premiumViewModel.billingState.collectAsState()
-    
+
     var selectedPlan by remember { mutableStateOf("premium_yearly") }
     var isLoading by remember { mutableStateOf(false) }
-    
+
     // Premium benefits animation
     val animatedFloat by animateFloatAsState(
         targetValue = 1f,
         animationSpec = tween(1000, easing = EaseOutBounce)
     )
-    
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -73,17 +72,17 @@ fun PremiumPaywallScreen(
             item {
                 PremiumHeader(onBackClick = onBackClick)
             }
-            
+
             // Hero Section
             item {
                 PremiumHeroSection(animatedFloat)
             }
-            
+
             // Features Grid
             item {
                 PremiumFeaturesGrid(animatedFloat)
             }
-            
+
             // Pricing Plans
             item {
                 PremiumPricingSection(
@@ -92,7 +91,7 @@ fun PremiumPaywallScreen(
                     isLoading = isLoading
                 )
             }
-            
+
             // Purchase Button
             item {
                 PremiumPurchaseButton(
@@ -114,12 +113,12 @@ fun PremiumPaywallScreen(
                     }
                 )
             }
-            
+
             // Trust Indicators
             item {
                 TrustIndicators()
             }
-            
+
             // Footer
             item {
                 PremiumFooter(
@@ -133,7 +132,7 @@ fun PremiumPaywallScreen(
                 )
             }
         }
-        
+
         // Close Button (floating)
         FloatingActionButton(
             onClick = onDismiss,
@@ -166,7 +165,7 @@ private fun PremiumHeader(onBackClick: () -> Unit) {
                 tint = Color.White
             )
         }
-        
+
         Surface(
             shape = RoundedCornerShape(20.dp),
             color = Color(0xFFFFD700).copy(alpha = 0.2f)
@@ -209,9 +208,9 @@ private fun PremiumHeroSection(animatedFloat: Float) {
                 color = Color.White
             )
         }
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         Text(
             text = "Unlock VoltAI Premium",
             fontSize = 28.sp,
@@ -219,9 +218,9 @@ private fun PremiumHeroSection(animatedFloat: Float) {
             color = Color.White,
             textAlign = TextAlign.Center
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Text(
             text = "Advanced AI-powered battery management",
             fontSize = 16.sp,
@@ -271,7 +270,7 @@ private fun PremiumFeaturesGrid(animatedFloat: Float) {
             color = Color(0xFF607D8B)
         )
     )
-    
+
     LazyColumn(
         modifier = Modifier.height(300.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -321,9 +320,9 @@ private fun PremiumFeatureCard(
                 tint = feature.color,
                 modifier = Modifier.size((24 * animatedFloat).dp)
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = feature.title,
                 fontSize = 14.sp,
@@ -331,7 +330,7 @@ private fun PremiumFeatureCard(
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
-            
+
             Text(
                 text = feature.description,
                 fontSize = 11.sp,
@@ -374,7 +373,7 @@ private fun PremiumPricingSection(
             isPopular = false
         )
     )
-    
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -386,9 +385,9 @@ private fun PremiumPricingSection(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         pricingPlans.forEach { plan ->
             PricingPlanCard(
                 plan = plan,
@@ -414,14 +413,17 @@ private fun PricingPlanCard(
             .clickable(enabled = enabled) { onSelected() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) 
-                Color(0xFFFFD700).copy(alpha = 0.2f) 
-            else 
+            containerColor = if (isSelected) {
+                Color(0xFFFFD700).copy(alpha = 0.2f)
+            } else {
                 Color.White.copy(alpha = 0.1f)
+            }
         ),
-        border = if (isSelected) 
-            BorderStroke(2.dp, Color(0xFFFFD700)) 
-        else null
+        border = if (isSelected) {
+            BorderStroke(2.dp, Color(0xFFFFD700))
+        } else {
+            null
+        }
     ) {
         Row(
             modifier = Modifier
@@ -442,7 +444,7 @@ private fun PricingPlanCard(
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
-                    
+
                     if (plan.isPopular) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Surface(
@@ -459,7 +461,7 @@ private fun PricingPlanCard(
                         }
                     }
                 }
-                
+
                 Row(
                     verticalAlignment = Alignment.Bottom
                 ) {
@@ -475,7 +477,7 @@ private fun PricingPlanCard(
                         color = Color.White.copy(alpha = 0.7f)
                     )
                 }
-                
+
                 plan.savings?.let { savings ->
                     Text(
                         text = savings,
@@ -485,7 +487,7 @@ private fun PricingPlanCard(
                     )
                 }
             }
-            
+
             RadioButton(
                 selected = isSelected,
                 onClick = onSelected,
@@ -511,7 +513,7 @@ private fun PremiumPurchaseButton(
         billingState != PremiumManager.BillingState.CONNECTED -> "Connecting..."
         else -> "Start Premium"
     }
-    
+
     Button(
         onClick = onPurchaseClick,
         enabled = !isLoading && billingState == PremiumManager.BillingState.CONNECTED,
@@ -533,7 +535,7 @@ private fun PremiumPurchaseButton(
             )
             Spacer(modifier = Modifier.width(8.dp))
         }
-        
+
         Text(
             text = buttonText,
             fontSize = 18.sp,
@@ -601,9 +603,9 @@ private fun PremiumFooter(onRestoreClick: () -> Unit) {
                 fontSize = 14.sp
             )
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -618,7 +620,7 @@ private fun PremiumFooter(onRestoreClick: () -> Unit) {
                 fontSize = 12.sp
             )
         }
-        
+
         Spacer(modifier = Modifier.height(24.dp))
     }
 }

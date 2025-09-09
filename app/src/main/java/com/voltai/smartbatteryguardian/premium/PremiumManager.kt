@@ -2,11 +2,9 @@ package com.voltai.smartbatteryguardian.premium
 
 import android.app.Activity
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.voltai.smartbatteryguardian.billing.GooglePlayBillingManager
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,16 +18,29 @@ import javax.inject.Singleton
 @Singleton
 class PremiumManager @Inject constructor(
     private val context: Context,
-    private val billingManager: GooglePlayBillingManager
+    private val scope: CoroutineScope = GlobalScope
 ) {
+
+    companion object {
+        private const val PREFS_NAME = "premium_prefs"
+        private const val KEY_PREMIUM_STATUS = "premium_status"
+        private const val KEY_TRIAL_USED = "trial_used"
+        private const val KEY_TRIAL_START_TIME = "trial_start_time"
+        private const val KEY_TRIAL_END_TIME = "trial_end_time"
+        private const val TRIAL_PERIOD_DAYS = 7
+    }
+
+    private val sharedPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val billingManager = GooglePlayBillingManager(context)
 
     private val _premiumStatus = MutableStateFlow(PremiumStatus.FREE)
     val premiumStatus: StateFlow<PremiumStatus> = _premiumStatus.asStateFlow()
 
+    private val _premiumState = MutableStateFlow(false)
+    val premiumState: StateFlow<Boolean> = _premiumState.asStateFlow()
+
     private val _billingState = MutableStateFlow(BillingState.DISCONNECTED)
     val billingState: StateFlow<BillingState> = _billingState.asStateFlow()
-
-    private val scope = CoroutineScope(Dispatchers.Main)
 
     enum class PremiumStatus {
         FREE,
@@ -164,7 +175,7 @@ class PremiumManager @Inject constructor(
             price = "$2.99",
             features = listOf(
                 "Advanced Analytics",
-                "Thermal Management", 
+                "Thermal Management",
                 "Cloud Backup",
                 "Smart Alerts",
                 "Premium Themes",
@@ -209,6 +220,9 @@ class PremiumManager @Inject constructor(
     init {
         // Initialize billing connection
         initializeBilling()
+
+        // Update premium state including trial
+        updatePremiumState()
     }
 
     private fun initializeBilling() {
@@ -237,6 +251,13 @@ class PremiumManager @Inject constructor(
             GooglePlayBillingManager.PremiumStatusType.FREE -> PremiumStatus.FREE
         }
         _premiumStatus.value = premiumStatus
+        updatePremiumState()
+    }
+
+    private fun updatePremiumState() {
+        val trialStatus = getTrialStatus()
+        val hasPremium = _premiumStatus.value != PremiumStatus.FREE || trialStatus.isTrialActive
+        _premiumState.value = hasPremium
     }
 
     /**
@@ -281,7 +302,7 @@ class PremiumManager @Inject constructor(
                 // Check if it's a subscription or in-app purchase
                 val subscriptionProduct = billingManager.getSubscriptionProductDetails(sku)
                 val inAppProduct = billingManager.getInAppProductDetails(sku)
-                
+
                 when {
                     subscriptionProduct != null -> {
                         billingManager.purchaseSubscription(activity, subscriptionProduct) { result ->
@@ -332,7 +353,7 @@ class PremiumManager @Inject constructor(
             }
         }
     }
-    
+
     private fun mapPurchaseResult(billingResult: GooglePlayBillingManager.PurchaseResult): PurchaseResult {
         return when (billingResult) {
             GooglePlayBillingManager.PurchaseResult.SUCCESS -> PurchaseResult.SUCCESS
@@ -400,7 +421,9 @@ class PremiumManager @Inject constructor(
                 mostUsedFeature = "advanced_analytics",
                 usageScore = 85
             )
-        } else null
+        } else {
+            null
+        }
     }
 
     data class FeatureUsageStats(
@@ -414,12 +437,47 @@ class PremiumManager @Inject constructor(
      * Check trial status (if applicable)
      */
     fun getTrialStatus(): TrialStatus {
-        // TODO: Implement trial logic
-        return TrialStatus(
-            isTrialActive = false,
-            daysRemaining = 0,
-            trialUsed = false
-        )
+        val trialStartTime = sharedPrefs.getLong(KEY_TRIAL_START_TIME, 0L)
+        val trialEndTime = sharedPrefs.getLong(KEY_TRIAL_END_TIME, 0L)
+        val trialUsed = sharedPrefs.getBoolean(KEY_TRIAL_USED, false)
+        val currentTime = System.currentTimeMillis()
+
+        return when {
+            !trialUsed && trialStartTime == 0L -> {
+                // Trial not started yet
+                TrialStatus(
+                    isTrialActive = false,
+                    daysRemaining = TRIAL_PERIOD_DAYS,
+                    trialUsed = false
+                )
+            }
+            trialUsed && currentTime < trialEndTime -> {
+                // Trial active
+                val timeRemaining = trialEndTime - currentTime
+                val daysRemaining = (timeRemaining / (24 * 60 * 60 * 1000L)).toInt()
+                TrialStatus(
+                    isTrialActive = true,
+                    daysRemaining = maxOf(0, daysRemaining),
+                    trialUsed = true
+                )
+            }
+            trialUsed && currentTime >= trialEndTime -> {
+                // Trial expired
+                TrialStatus(
+                    isTrialActive = false,
+                    daysRemaining = 0,
+                    trialUsed = true
+                )
+            }
+            else -> {
+                // Fallback case
+                TrialStatus(
+                    isTrialActive = false,
+                    daysRemaining = 0,
+                    trialUsed = false
+                )
+            }
+        }
     }
 
     data class TrialStatus(
@@ -429,11 +487,44 @@ class PremiumManager @Inject constructor(
     )
 
     /**
+     * Start the trial period
+     */
+    fun startTrial(): Boolean {
+        val currentStatus = getTrialStatus()
+
+        return if (!currentStatus.trialUsed) {
+            val currentTime = System.currentTimeMillis()
+            val endTime = currentTime + (TRIAL_PERIOD_DAYS * 24 * 60 * 60 * 1000L)
+
+            with(sharedPrefs.edit()) {
+                putBoolean(KEY_TRIAL_USED, true)
+                putLong(KEY_TRIAL_START_TIME, currentTime)
+                putLong(KEY_TRIAL_END_TIME, endTime)
+                apply()
+            }
+
+            // Update premium state to reflect trial status
+            updatePremiumState()
+            true
+        } else {
+            false // Trial already used
+        }
+    }
+
+    /**
+     * Check if user has access to premium features (including trial)
+     */
+    fun isPremiumWithTrial(): Boolean {
+        val trialStatus = getTrialStatus()
+        return _premiumStatus.value != PremiumStatus.FREE || trialStatus.isTrialActive
+    }
+
+    /**
      * Get premium upgrade suggestions based on usage
      */
     fun getUpgradeSuggestions(): List<UpgradeSuggestion> {
         if (isPremium()) return emptyList()
-        
+
         return listOf(
             UpgradeSuggestion(
                 featureId = "advanced_analytics",
@@ -443,7 +534,7 @@ class PremiumManager @Inject constructor(
             ),
             UpgradeSuggestion(
                 featureId = "cloud_backup",
-                title = "Enable Cloud Backup", 
+                title = "Enable Cloud Backup",
                 description = "Keep your battery data safe and synced across devices",
                 urgency = SuggestionUrgency.MEDIUM
             )

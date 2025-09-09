@@ -1,7 +1,7 @@
 package com.voltai.smartbatteryguardian.models
 
-import androidx.compose.ui.graphics.Color
 import android.graphics.drawable.Drawable
+import androidx.compose.ui.graphics.Color
 
 /**
  * Common data models for premium features
@@ -98,7 +98,7 @@ enum class DiagnosticStatus {
 }
 
 enum class DiagnosticSeverity {
-    CRITICAL, HIGH, MEDIUM, LOW, INFO
+    CRITICAL, HIGH, MEDIUM, LOW, INFO, WARNING, POSITIVE
 }
 
 // Real-time Monitoring Models
@@ -124,3 +124,20 @@ data class BenchmarkResult(
 enum class BenchmarkCategory {
     CPU, GPU, MEMORY, STORAGE, BATTERY, OVERALL
 }
+
+// Battery Health Analytics Models
+data class HealthMetric(
+    val name: String,
+    val value: String,
+    val percentage: Float,
+    val status: HealthStatus,
+    val icon: String,
+    val description: String
+)
+
+enum class HealthStatus {
+    EXCELLENT, GOOD, FAIR, POOR, CRITICAL
+}
+
+// Common Insight Severity (alias to DiagnosticSeverity for consistency)
+typealias InsightSeverity = DiagnosticSeverity

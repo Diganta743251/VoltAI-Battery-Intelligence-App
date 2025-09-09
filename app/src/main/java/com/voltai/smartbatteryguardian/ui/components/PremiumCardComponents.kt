@@ -6,7 +6,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,9 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,7 +44,7 @@ fun BatteryHealthAnalyticsCard() {
             ) {
                 AnimatedHealthRing(healthPercentage = 89f)
             }
-            
+
             Text(
                 text = "89% Excellent",
                 fontSize = 18.sp,
@@ -56,7 +53,7 @@ fun BatteryHealthAnalyticsCard() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -86,7 +83,7 @@ fun SmartChargingCard() {
         ) {
             // Charging Optimization Indicator
             ChargingOptimizationIndicator(isOptimizing = true)
-            
+
             Text(
                 text = "Optimizing Now",
                 fontSize = 16.sp,
@@ -95,7 +92,7 @@ fun SmartChargingCard() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -125,7 +122,7 @@ fun BatteryDiagnosticsCard() {
         ) {
             // Diagnostic Status
             DiagnosticStatusIndicator(status = "All Clear")
-            
+
             Text(
                 text = "All Systems OK",
                 fontSize = 16.sp,
@@ -134,7 +131,7 @@ fun BatteryDiagnosticsCard() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -164,7 +161,7 @@ fun RealTimeMonitoringCard() {
         ) {
             // Live Metrics Chart
             LiveMetricsChart()
-            
+
             Text(
                 text = "4.2V • 1.8A",
                 fontSize = 16.sp,
@@ -173,7 +170,7 @@ fun RealTimeMonitoringCard() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -203,7 +200,7 @@ fun BatteryOptimizationCard() {
         ) {
             // Optimization Progress
             OptimizationProgress(progress = 0.75f)
-            
+
             Text(
                 text = "75% Optimized",
                 fontSize = 16.sp,
@@ -212,7 +209,7 @@ fun BatteryOptimizationCard() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -241,7 +238,7 @@ private fun PremiumCardBase(
         ),
         label = "shimmer_alpha"
     )
-    
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -273,7 +270,7 @@ private fun PremiumCardBase(
                     fontSize = 12.sp
                 )
             }
-            
+
             // Shimmer overlay
             Box(
                 modifier = Modifier
@@ -282,7 +279,7 @@ private fun PremiumCardBase(
                         Color.White.copy(alpha = shimmerAlpha * 0.1f)
                     )
             )
-            
+
             // Title
             Text(
                 text = title,
@@ -293,7 +290,7 @@ private fun PremiumCardBase(
                     .align(Alignment.TopStart)
                     .padding(16.dp)
             )
-            
+
             // Icon
             Text(
                 text = icon,
@@ -302,7 +299,7 @@ private fun PremiumCardBase(
                     .align(Alignment.TopCenter)
                     .padding(top = 8.dp)
             )
-            
+
             // Content
             Box(
                 modifier = Modifier
@@ -322,14 +319,14 @@ private fun AnimatedHealthRing(healthPercentage: Float) {
         animationSpec = tween(1000, easing = EaseOutCubic),
         label = "health_ring"
     )
-    
+
     Canvas(
         modifier = Modifier.size(80.dp)
     ) {
         val strokeWidth = 8.dp.toPx()
         val radius = (size.minDimension - strokeWidth) / 2
         val center = center
-        
+
         // Background ring
         drawCircle(
             color = Color.White.copy(alpha = 0.2f),
@@ -337,7 +334,7 @@ private fun AnimatedHealthRing(healthPercentage: Float) {
             center = center,
             style = Stroke(strokeWidth)
         )
-        
+
         // Progress ring
         drawArc(
             color = Color.White,
@@ -365,7 +362,7 @@ private fun ChargingOptimizationIndicator(isOptimizing: Boolean) {
         ),
         label = "rotation"
     )
-    
+
     Box(
         modifier = Modifier
             .size(60.dp)
@@ -375,13 +372,13 @@ private fun ChargingOptimizationIndicator(isOptimizing: Boolean) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             val strokeWidth = 4.dp.toPx()
             val radius = (size.minDimension - strokeWidth) / 2
-            
+
             drawCircle(
                 color = Color.White.copy(alpha = 0.3f),
                 radius = radius,
                 style = Stroke(strokeWidth)
             )
-            
+
             drawArc(
                 color = Color.White,
                 startAngle = 0f,
@@ -395,7 +392,7 @@ private fun ChargingOptimizationIndicator(isOptimizing: Boolean) {
                 )
             )
         }
-        
+
         Text(
             text = "⚡",
             fontSize = 24.sp
@@ -414,7 +411,7 @@ private fun DiagnosticStatusIndicator(status: String) {
         ),
         label = "pulse"
     )
-    
+
     Box(
         modifier = Modifier
             .size(60.dp)
@@ -449,7 +446,7 @@ private fun LiveMetricsChart() {
         ),
         label = "height"
     )
-    
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -476,7 +473,7 @@ private fun OptimizationProgress(progress: Float) {
         animationSpec = tween(1000, easing = EaseOutCubic),
         label = "optimization_progress"
     )
-    
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -488,14 +485,14 @@ private fun OptimizationProgress(progress: Float) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val strokeWidth = 6.dp.toPx()
                 val radius = (size.minDimension - strokeWidth) / 2
-                
+
                 // Background
                 drawCircle(
                     color = Color.White.copy(alpha = 0.2f),
                     radius = radius,
                     style = Stroke(strokeWidth)
                 )
-                
+
                 // Progress
                 drawArc(
                     color = Color.White,
@@ -510,7 +507,7 @@ private fun OptimizationProgress(progress: Float) {
                     )
                 )
             }
-            
+
             Text(
                 text = "🎯",
                 fontSize = 20.sp

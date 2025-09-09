@@ -1,6 +1,5 @@
 package com.voltai.smartbatteryguardian.screens
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
@@ -8,7 +7,6 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -41,29 +39,29 @@ fun DataExportImportScreen(
     viewModel: DataExportImportViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    
+
     val exportState by viewModel.exportState.collectAsState()
     val importState by viewModel.importState.collectAsState()
     val exportProgress by viewModel.exportProgress.collectAsState()
     val importProgress by viewModel.importProgress.collectAsState()
     val cloudBackups by viewModel.cloudBackups.collectAsState()
-    
+
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("Export", "Import", "Cloud Backup")
-    
+
     // File picker launchers
     val exportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/*")
     ) { uri ->
         uri?.let { viewModel.exportToUri(it) }
     }
-    
+
     val importLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri ->
         uri?.let { viewModel.importFromUri(it) }
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,7 +76,7 @@ fun DataExportImportScreen(
     ) {
         // Header
         DataExportImportHeader(onBackClick = onBackClick)
-        
+
         // Tab Row
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -99,7 +97,7 @@ fun DataExportImportScreen(
                 )
             }
         }
-        
+
         // Content based on selected tab
         when (selectedTab) {
             0 -> PremiumGate(
@@ -171,9 +169,9 @@ private fun DataExportImportHeader(onBackClick: () -> Unit) {
                     tint = Color.White
                 )
             }
-            
+
             Spacer(modifier = Modifier.width(8.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "Data Export & Import",
@@ -187,7 +185,7 @@ private fun DataExportImportHeader(onBackClick: () -> Unit) {
                     color = Color.White.copy(alpha = 0.8f)
                 )
             }
-            
+
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = Color.White.copy(alpha = 0.2f)
@@ -230,17 +228,17 @@ private fun ExportTab(
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
-        
+
         // Export formats
         item {
             ExportFormatSection(onExportClick = { format, _ -> onExportClick(format, "config") })
         }
-        
+
         // Export options
         item {
             ExportOptionsSection()
         }
-        
+
         // Export progress
         if (exportState != DataExportImportViewModel.ExportState.IDLE) {
             item {
@@ -250,7 +248,7 @@ private fun ExportTab(
                 )
             }
         }
-        
+
         // Export statistics
         item {
             ExportStatisticsSection()
@@ -277,9 +275,9 @@ private fun ExportFormatSection(
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF2E7D32)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // CSV Export
             ExportFormatCard(
                 icon = Icons.Default.List,
@@ -290,9 +288,9 @@ private fun ExportFormatSection(
                     onExportClick("CSV", "csv_config")
                 }
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // JSON Export
             ExportFormatCard(
                 icon = Icons.Default.Settings,
@@ -303,9 +301,9 @@ private fun ExportFormatSection(
                     onExportClick("JSON", "json_config")
                 }
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Complete Backup
             ExportFormatCard(
                 icon = Icons.Default.Settings,
@@ -350,9 +348,9 @@ private fun ExportFormatCard(
                 tint = Color(0xFF4CAF50),
                 modifier = Modifier.size(32.dp)
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
@@ -374,7 +372,7 @@ private fun ExportFormatCard(
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
-            
+
             Icon(
                 imageVector = Icons.Default.ArrowForward,
                 contentDescription = "Export",
@@ -402,51 +400,51 @@ private fun ExportOptionsSection() {
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF2E7D32)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             var includeBatteryReadings by remember { mutableStateOf(true) }
             var includeChargingSessions by remember { mutableStateOf(true) }
             var includeAppUsage by remember { mutableStateOf(true) }
             var includeHealthRecords by remember { mutableStateOf(true) }
             var includePredictions by remember { mutableStateOf(true) }
             var includeSystemMetrics by remember { mutableStateOf(false) }
-            
+
             ExportOptionCheckbox(
                 checked = includeBatteryReadings,
                 onCheckedChange = { includeBatteryReadings = it },
                 title = "Battery Readings",
                 description = "Real-time battery level, voltage, temperature data"
             )
-            
+
             ExportOptionCheckbox(
                 checked = includeChargingSessions,
                 onCheckedChange = { includeChargingSessions = it },
                 title = "Charging Sessions",
                 description = "Complete charging session history and analytics"
             )
-            
+
             ExportOptionCheckbox(
                 checked = includeAppUsage,
                 onCheckedChange = { includeAppUsage = it },
                 title = "App Usage Stats",
                 description = "Battery usage by app and usage patterns"
             )
-            
+
             ExportOptionCheckbox(
                 checked = includeHealthRecords,
                 onCheckedChange = { includeHealthRecords = it },
                 title = "Health Records",
                 description = "Battery health trends and degradation data"
             )
-            
+
             ExportOptionCheckbox(
                 checked = includePredictions,
                 onCheckedChange = { includePredictions = it },
                 title = "AI Predictions",
                 description = "Machine learning predictions and recommendations"
             )
-            
+
             ExportOptionCheckbox(
                 checked = includeSystemMetrics,
                 onCheckedChange = { includeSystemMetrics = it },
@@ -477,9 +475,9 @@ private fun ExportOptionCheckbox(
                 checkedColor = Color(0xFF4CAF50)
             )
         )
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
@@ -574,7 +572,7 @@ private fun ExportProgressSection(
                     else -> {}
                 }
             }
-            
+
             if (exportState == DataExportImportViewModel.ExportState.EXPORTING) {
                 Spacer(modifier = Modifier.height(12.dp))
                 LinearProgressIndicator(
@@ -604,9 +602,9 @@ private fun ExportStatisticsSection() {
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF2E7D32)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -682,11 +680,11 @@ private fun ImportTab(
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
-        
+
         item {
             ImportOptionsSection(onImportClick = onImportClick)
         }
-        
+
         if (importState != DataExportImportViewModel.ImportState.IDLE) {
             item {
                 ImportProgressSection(
@@ -695,7 +693,7 @@ private fun ImportTab(
                 )
             }
         }
-        
+
         item {
             ImportGuidelinesSection()
         }
@@ -719,9 +717,9 @@ private fun ImportOptionsSection(onImportClick: () -> Unit) {
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF2E7D32)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Button(
                 onClick = onImportClick,
                 modifier = Modifier
@@ -744,18 +742,18 @@ private fun ImportOptionsSection(onImportClick: () -> Unit) {
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = "Supported formats:",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color(0xFF2E7D32)
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             SupportedFormatItem(
                 format = "JSON Files (.json)",
                 description = "VoltAI exported JSON data files"
@@ -789,9 +787,9 @@ private fun SupportedFormatItem(
             tint = Color(0xFF4CAF50),
             modifier = Modifier.size(16.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Column {
             Text(
                 text = format,
@@ -886,7 +884,7 @@ private fun ImportProgressSection(
                     else -> {}
                 }
             }
-            
+
             if (importState == DataExportImportViewModel.ImportState.IMPORTING) {
                 Spacer(modifier = Modifier.height(12.dp))
                 LinearProgressIndicator(
@@ -929,15 +927,15 @@ private fun ImportGuidelinesSection() {
                     color = Color(0xFFE65100)
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Text(
                 text = "• Only import files exported from VoltAI Smart Battery Guardian\n" +
-                      "• Large files may take several minutes to import\n" +
-                      "• A backup will be created automatically before importing\n" +
-                      "• Duplicate data will be handled according to your settings\n" +
-                      "• Import process cannot be undone once completed",
+                    "• Large files may take several minutes to import\n" +
+                    "• A backup will be created automatically before importing\n" +
+                    "• Duplicate data will be handled according to your settings\n" +
+                    "• Import process cannot be undone once completed",
                 fontSize = 12.sp,
                 color = Color(0xFFBF360C),
                 lineHeight = 18.sp
@@ -973,11 +971,11 @@ private fun CloudBackupTab(
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
-        
+
         item {
             CloudBackupActionsSection(onCreateBackup = onCreateBackup)
         }
-        
+
         item {
             CloudBackupListSection(
                 backups = cloudBackups,
@@ -1005,9 +1003,9 @@ private fun CloudBackupActionsSection(onCreateBackup: () -> Unit) {
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF2E7D32)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Button(
                 onClick = onCreateBackup,
                 modifier = Modifier
@@ -1030,9 +1028,9 @@ private fun CloudBackupActionsSection(onCreateBackup: () -> Unit) {
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Text(
                 text = "Creates an encrypted backup of all your battery data and settings in Google Drive.",
                 fontSize = 12.sp,
@@ -1064,9 +1062,9 @@ private fun CloudBackupListSection(
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF2E7D32)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             if (backups.isEmpty()) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -1099,7 +1097,7 @@ private fun CloudBackupListSection(
                         onRestore = { onRestoreBackup(backup.id) },
                         onDelete = { onDeleteBackup(backup.id) }
                     )
-                    
+
                     if (backup != backups.last()) {
                         Spacer(modifier = Modifier.height(12.dp))
                     }
@@ -1150,7 +1148,7 @@ private fun CloudBackupItem(
                         color = Color.Gray
                     )
                 }
-                
+
                 Row {
                     IconButton(
                         onClick = onRestore,

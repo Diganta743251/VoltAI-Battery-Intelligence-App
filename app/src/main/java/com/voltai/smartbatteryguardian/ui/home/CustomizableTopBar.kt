@@ -2,7 +2,6 @@ package com.voltai.smartbatteryguardian.ui.home
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -14,15 +13,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.voltai.smartbatteryguardian.ui.animation.AnimationSpecs
@@ -38,18 +34,18 @@ fun CustomizableTopBar(
     modifier: Modifier = Modifier
 ) {
     val haptic = LocalHapticFeedback.current
-    
+
     // Animated elevation and colors for edit mode
     val elevation by animateDpAsState(
         targetValue = if (isEditMode) 8.dp else 4.dp,
         animationSpec = tween(300)
     )
-    
+
     val backgroundColor by animateColorAsState(
         targetValue = if (isEditMode) Color(0xFFFFF3E0) else Color.White,
         animationSpec = tween(300)
     )
-    
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -75,7 +71,7 @@ fun CustomizableTopBar(
                         color = Color(0xFF1A1A1A),
                         letterSpacing = (-0.5).sp
                     )
-                    
+
                     AnimatedContent(
                         targetState = isEditMode,
                         transitionSpec = {
@@ -96,7 +92,7 @@ fun CustomizableTopBar(
                         )
                     }
                 }
-                
+
                 // Action Buttons
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -118,7 +114,7 @@ fun CustomizableTopBar(
                             contentColor = Color(0xFF666666)
                         )
                     }
-                    
+
                     // Edit Mode Toggle Button
                     TopBarButton(
                         icon = if (isEditMode) Icons.Default.Done else Icons.Default.Edit,
@@ -132,7 +128,7 @@ fun CustomizableTopBar(
                     )
                 }
             }
-            
+
             // Edit Mode Controls
             AnimatedVisibility(
                 visible = isEditMode,
@@ -144,7 +140,7 @@ fun CustomizableTopBar(
                 ) + fadeOut(animationSpec = tween(150))
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -159,7 +155,7 @@ fun CustomizableTopBar(
                         },
                         modifier = Modifier.weight(1f)
                     )
-                    
+
                     // Reset Layout Button
                     EditModeActionButton(
                         text = "Reset",
@@ -187,7 +183,7 @@ private fun TopBarButton(
     modifier: Modifier = Modifier
 ) {
     var isPressed by remember { mutableStateOf(false) }
-    
+
     val scale by animateFloatAsState(
         targetValue = when {
             isPressed -> 0.9f
@@ -199,12 +195,12 @@ private fun TopBarButton(
             stiffness = Spring.StiffnessHigh
         )
     )
-    
+
     val elevation by animateDpAsState(
         targetValue = if (isSelected) 6.dp else 2.dp,
         animationSpec = tween(300)
     )
-    
+
     Surface(
         modifier = modifier
             .size(44.dp)
@@ -232,7 +228,7 @@ private fun TopBarButton(
             )
         }
     }
-    
+
     LaunchedEffect(isPressed) {
         if (isPressed) {
             kotlinx.coroutines.delay(100)
@@ -250,24 +246,24 @@ private fun EditModeActionButton(
     isDestructive: Boolean = false
 ) {
     var isPressed by remember { mutableStateOf(false) }
-    
+
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.95f else 1f,
         animationSpec = AnimationSpecs.snappy
     )
-    
+
     val backgroundColor = if (isDestructive) {
         Color(0xFFFFF3E0)
     } else {
         Color(0xFFE3F2FD)
     }
-    
+
     val contentColor = if (isDestructive) {
         Color(0xFFFF6F00)
     } else {
         Color(0xFF2196F3)
     }
-    
+
     Surface(
         modifier = modifier
             .height(48.dp)
@@ -295,9 +291,9 @@ private fun EditModeActionButton(
                 tint = contentColor,
                 modifier = Modifier.size(18.dp)
             )
-            
+
             Spacer(modifier = Modifier.width(8.dp))
-            
+
             Text(
                 text = text,
                 fontSize = 14.sp,
@@ -306,7 +302,7 @@ private fun EditModeActionButton(
             )
         }
     }
-    
+
     LaunchedEffect(isPressed) {
         if (isPressed) {
             kotlinx.coroutines.delay(100)

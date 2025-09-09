@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,12 +16,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.delay
 
 // Future-ready system optimization data models
 data class SystemMetrics(
@@ -66,7 +63,7 @@ data class SystemPerformanceBenchmark(
     val details: List<BenchmarkDetail>
 )
 
-// Extensible enums for future optimization capabilities  
+// Extensible enums for future optimization capabilities
 enum class SystemOptimizationCategory { CPU, MEMORY, STORAGE, NETWORK, GRAPHICS, BATTERY, THERMAL, AI_ASSISTED }
 enum class SystemOptimizationImpact { LOW, MEDIUM, HIGH, CRITICAL }
 enum class Priority { LOW, MEDIUM, HIGH, URGENT }
@@ -83,14 +80,14 @@ data class BenchmarkDetail(val metric: String, val value: Float, val unit: Strin
 fun SystemOptimizationCenterScreen() {
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("🚀 Overview", "⚙️ Optimizer", "🤖 AI Advisor", "📊 Benchmarks", "🔧 Advanced")
-    
+
     val systemMetrics = remember { getSystemMetrics() }
     val optimizationProfiles = remember { getOptimizationProfiles() }
     val aiRecommendations = remember { getAIRecommendations() }
     val benchmarks = remember { getSystemPerformanceBenchmarks() }
-    
+
     var isOptimizing by remember { mutableStateOf(false) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -133,9 +130,9 @@ fun SystemOptimizationCenterScreen() {
                     ) {
                         OptimizationAnimation(isOptimizing)
                     }
-                    
+
                     Spacer(modifier = Modifier.width(16.dp))
-                    
+
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "System Optimization Center",
@@ -149,12 +146,12 @@ fun SystemOptimizationCenterScreen() {
                             color = Color.White.copy(alpha = 0.85f)
                         )
                     }
-                    
+
                     PerformanceScoreIndicator(systemMetrics.performanceScore)
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // System Overview Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -167,7 +164,7 @@ fun SystemOptimizationCenterScreen() {
                 }
             }
         }
-        
+
         // Optimization Tabs
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -189,7 +186,7 @@ fun SystemOptimizationCenterScreen() {
                 }
             }
         }
-        
+
         // Optimization Content
         LazyColumn(
             modifier = Modifier
@@ -250,12 +247,12 @@ fun OptimizationAnimation(isOptimizing: Boolean) {
             repeatMode = RepeatMode.Restart
         )
     )
-    
+
     val scale by animateFloatAsState(
         targetValue = if (isOptimizing) 1.1f else 1f,
         animationSpec = tween(500)
     )
-    
+
     Text(
         text = if (isOptimizing) "⚡" else "🚀",
         fontSize = (28 * scale).sp,
@@ -338,18 +335,18 @@ fun SystemOverviewCard(metrics: SystemMetrics) {
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 SystemProgressMetric("CPU Usage", metrics.cpuUsage, Color(0xFFEF4444))
                 SystemProgressMetric("Memory", metrics.ramUsage, Color(0xFF3B82F6))
                 SystemProgressMetric("Storage", metrics.storageUsage, Color(0xFF8B5CF6))
                 SystemProgressMetric("GPU Load", metrics.gpuUsage, Color(0xFF10B981))
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Thermal Status
             ThermalStatusIndicator(metrics.thermalState)
         }
@@ -368,7 +365,7 @@ fun SystemProgressMetric(label: String, value: Float, color: Color) {
             fontSize = 14.sp,
             modifier = Modifier.weight(1f)
         )
-        
+
         Row(verticalAlignment = Alignment.CenterVertically) {
             LinearProgressIndicator(
                 progress = value / 100f,
@@ -397,7 +394,7 @@ fun ThermalStatusIndicator(thermalState: SystemThermalState) {
         SystemThermalState.HOT -> Triple(Color(0xFFFF6B00), "🔥", "Hot")
         SystemThermalState.CRITICAL -> Triple(Color(0xFFEF4444), "🚨", "Critical")
     }
-    
+
     Surface(
         shape = RoundedCornerShape(12.dp),
         color = color.copy(alpha = 0.1f)
@@ -447,18 +444,18 @@ fun QuickOptimizationCard(onOptimize: () -> Unit) {
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF10B981)
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Text(
                 text = "Optimize your device with AI-powered recommendations",
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
                 color = Color(0xFF666666)
             )
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             Button(
                 onClick = onOptimize,
                 modifier = Modifier
@@ -476,9 +473,9 @@ fun QuickOptimizationCard(onOptimize: () -> Unit) {
                     color = Color.White
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = "Estimated improvement: 15-25%",
                 fontSize = 12.sp,
@@ -522,7 +519,7 @@ fun OptimizationProfileCard(
                         )
                     }
                 }
-                
+
                 Switch(
                     checked = profile.isActive,
                     onCheckedChange = { /* Toggle optimization */ },
@@ -532,17 +529,17 @@ fun OptimizationProfileCard(
                     )
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = profile.description,
                 fontSize = 12.sp,
                 color = Color(0xFF666666)
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -553,7 +550,7 @@ fun OptimizationProfileCard(
                     color = Color(0xFF10B981),
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Text(
                     text = profile.impact.name,
                     fontSize = 11.sp,
@@ -593,21 +590,21 @@ fun AIRecommendationCard(recommendation: AIRecommendation) {
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     Text(
                         text = recommendation.description,
                         fontSize = 14.sp,
                         color = Color(0xFF666666)
                     )
                 }
-                
+
                 PriorityIndicator(recommendation.priority)
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -618,16 +615,16 @@ fun AIRecommendationCard(recommendation: AIRecommendation) {
                     color = Color(0xFF10B981),
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Text(
                     text = recommendation.implementationComplexity.name,
                     fontSize = 12.sp,
                     color = Color(0xFF666666)
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Button(
                 onClick = recommendation.action,
                 modifier = Modifier.fillMaxWidth(),
@@ -654,7 +651,7 @@ fun PriorityIndicator(priority: Priority) {
         Priority.MEDIUM -> Color(0xFF3B82F6) to "MED"
         Priority.LOW -> Color(0xFF666666) to "LOW"
     }
-    
+
     Surface(
         shape = RoundedCornerShape(6.dp),
         color = color.copy(alpha = 0.1f)
@@ -685,32 +682,114 @@ fun getSystemMetrics(): SystemMetrics {
 
 fun getOptimizationProfiles(): List<OptimizationProfile> {
     return listOf(
-        OptimizationProfile("CPU Governor", "Optimize CPU frequency scaling", "⚡", SystemOptimizationCategory.CPU, SystemOptimizationImpact.HIGH, true, 15f, TechnicalDetails(mapOf())),
-        OptimizationProfile("Memory Cleaner", "Free unused RAM", "💾", SystemOptimizationCategory.MEMORY, SystemOptimizationImpact.MEDIUM, false, 10f, TechnicalDetails(mapOf())),
-        OptimizationProfile("Background Apps", "Limit background processes", "📱", SystemOptimizationCategory.BATTERY, SystemOptimizationImpact.HIGH, true, 20f, TechnicalDetails(mapOf())),
-        OptimizationProfile("Network Optimizer", "Optimize data usage", "🌐", SystemOptimizationCategory.NETWORK, SystemOptimizationImpact.MEDIUM, false, 8f, TechnicalDetails(mapOf()))
+        OptimizationProfile(
+            "CPU Governor",
+            "Optimize CPU frequency scaling",
+            "⚡",
+            SystemOptimizationCategory.CPU,
+            SystemOptimizationImpact.HIGH,
+            true,
+            15f,
+            TechnicalDetails(mapOf())
+        ),
+        OptimizationProfile(
+            "Memory Cleaner",
+            "Free unused RAM",
+            "💾",
+            SystemOptimizationCategory.MEMORY,
+            SystemOptimizationImpact.MEDIUM,
+            false,
+            10f,
+            TechnicalDetails(mapOf())
+        ),
+        OptimizationProfile(
+            "Background Apps",
+            "Limit background processes",
+            "📱",
+            SystemOptimizationCategory.BATTERY,
+            SystemOptimizationImpact.HIGH,
+            true,
+            20f,
+            TechnicalDetails(mapOf())
+        ),
+        OptimizationProfile(
+            "Network Optimizer",
+            "Optimize data usage",
+            "🌐",
+            SystemOptimizationCategory.NETWORK,
+            SystemOptimizationImpact.MEDIUM,
+            false,
+            8f,
+            TechnicalDetails(mapOf())
+        )
     )
 }
 
 fun getAIRecommendations(): List<AIRecommendation> {
     return listOf(
-        AIRecommendation("Enable Adaptive Brightness", "Reduce display power consumption based on ambient light", Priority.HIGH, "Display", 12f, Complexity.SIMPLE) {},
-        AIRecommendation("Optimize App Refresh", "Reduce background app refresh frequency", Priority.MEDIUM, "Battery", 15f, Complexity.MODERATE) {},
-        AIRecommendation("Thermal Throttling", "Prevent overheating by managing CPU performance", Priority.URGENT, "Performance", 8f, Complexity.ADVANCED) {}
+        AIRecommendation(
+            "Enable Adaptive Brightness",
+            "Reduce display power consumption based on ambient light",
+            Priority.HIGH,
+            "Display",
+            12f,
+            Complexity.SIMPLE
+        ) {},
+        AIRecommendation(
+            "Optimize App Refresh",
+            "Reduce background app refresh frequency",
+            Priority.MEDIUM,
+            "Battery",
+            15f,
+            Complexity.MODERATE
+        ) {},
+        AIRecommendation(
+            "Thermal Throttling",
+            "Prevent overheating by managing CPU performance",
+            Priority.URGENT,
+            "Performance",
+            8f,
+            Complexity.ADVANCED
+        ) {}
     )
 }
 
 fun getSystemPerformanceBenchmarks(): List<SystemPerformanceBenchmark> {
     return listOf(
-        SystemPerformanceBenchmark("CPU Performance", 1250, 1500, SystemBenchmarkCategory.PERFORMANCE, TrendDirection.STABLE, emptyList()),
-        SystemPerformanceBenchmark("Memory Efficiency", 850, 1000, SystemBenchmarkCategory.EFFICIENCY, TrendDirection.IMPROVING, emptyList()),
-        SystemPerformanceBenchmark("Battery Life", 720, 900, SystemBenchmarkCategory.EFFICIENCY, TrendDirection.DECLINING, emptyList())
+        SystemPerformanceBenchmark(
+            "CPU Performance",
+            1250,
+            1500,
+            SystemBenchmarkCategory.PERFORMANCE,
+            TrendDirection.STABLE,
+            emptyList()
+        ),
+        SystemPerformanceBenchmark(
+            "Memory Efficiency",
+            850,
+            1000,
+            SystemBenchmarkCategory.EFFICIENCY,
+            TrendDirection.IMPROVING,
+            emptyList()
+        ),
+        SystemPerformanceBenchmark(
+            "Battery Life",
+            720,
+            900,
+            SystemBenchmarkCategory.EFFICIENCY,
+            TrendDirection.DECLINING,
+            emptyList()
+        )
     )
 }
 
 // Placeholder composables for future implementation
 @Composable fun OptimizationStatusCard(batteryOptimization: Float) { /* Future implementation */ }
+
 @Composable fun SystemPerformanceBenchmarkCard(benchmark: SystemPerformanceBenchmark) { /* Future implementation */ }
+
 @Composable fun AdvancedSettingsCard() { /* Future implementation */ }
+
 @Composable fun ExpertModeCard() { /* Future implementation */ }
+
 @Composable fun SystemAnalyticsCard() { /* Future implementation */ }

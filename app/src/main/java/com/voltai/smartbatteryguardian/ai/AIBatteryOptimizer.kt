@@ -3,9 +3,7 @@ package com.voltai.smartbatteryguardian.ai
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.compose.runtime.*
-import kotlinx.coroutines.delay
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -28,9 +26,9 @@ enum class OptimizationType {
 }
 
 enum class OptimizationImpact {
-    LOW,    // 1-5% battery savings
-    MEDIUM, // 5-15% battery savings  
-    HIGH,   // 15-25% battery savings
+    LOW, // 1-5% battery savings
+    MEDIUM, // 5-15% battery savings
+    HIGH, // 15-25% battery savings
     CRITICAL // 25%+ battery savings
 }
 
@@ -50,10 +48,10 @@ data class AIInsight(
 )
 
 class AIBatteryOptimizer(private val context: Context) {
-    
+
     private var learningData = mutableListOf<BatteryDataPoint>()
     private var userBehaviorPatterns = mutableMapOf<String, Float>()
-    
+
     data class BatteryDataPoint(
         val timestamp: Long,
         val batteryLevel: Int,
@@ -62,10 +60,10 @@ class AIBatteryOptimizer(private val context: Context) {
         val screenOnTime: Long,
         val activeApps: List<String>
     )
-    
+
     fun analyzeBatteryUsage(batteryData: com.voltai.smartbatteryguardian.BatteryData): List<OptimizationRecommendation> {
         val recommendations = mutableListOf<OptimizationRecommendation>()
-        
+
         // Screen Optimization Analysis
         if (batteryData.batteryLevel < 30) {
             recommendations.add(
@@ -78,7 +76,7 @@ class AIBatteryOptimizer(private val context: Context) {
                 )
             )
         }
-        
+
         // Thermal Management
         if (batteryData.temperature > 38f) {
             recommendations.add(
@@ -91,7 +89,7 @@ class AIBatteryOptimizer(private val context: Context) {
                 )
             )
         }
-        
+
         // Smart Charging Pattern
         if (batteryData.isCharging && batteryData.batteryLevel > 80) {
             recommendations.add(
@@ -104,7 +102,7 @@ class AIBatteryOptimizer(private val context: Context) {
                 )
             )
         }
-        
+
         // AI-Based App Management
         recommendations.add(
             OptimizationRecommendation(
@@ -115,7 +113,7 @@ class AIBatteryOptimizer(private val context: Context) {
                 action = { /* Hibernate unused apps */ }
             )
         )
-        
+
         // Connectivity Intelligence
         if (batteryData.batteryLevel < 20) {
             recommendations.add(
@@ -128,10 +126,10 @@ class AIBatteryOptimizer(private val context: Context) {
                 )
             )
         }
-        
+
         return recommendations
     }
-    
+
     fun getPredictedBatteryLife(batteryData: com.voltai.smartbatteryguardian.BatteryData): BatteryPrediction {
         // Advanced ML-style prediction (simplified simulation)
         val baseDischargeRate = when {
@@ -139,13 +137,13 @@ class AIBatteryOptimizer(private val context: Context) {
             batteryData.temperature < 15f -> 1.4f
             else -> 1.0f
         }
-        
+
         val usagePattern = getUserUsageIntensity()
         val healthFactor = batteryData.healthPercentage / 100f
-        
+
         val predictedHours = (batteryData.batteryLevel / (15 * baseDischargeRate * usagePattern)) * healthFactor
         val confidence = calculateConfidence(learningData.size)
-        
+
         return BatteryPrediction(
             remainingHours = predictedHours,
             confidenceLevel = confidence,
@@ -153,10 +151,10 @@ class AIBatteryOptimizer(private val context: Context) {
             learningProgress = minOf(learningData.size / 1000f, 1f)
         )
     }
-    
+
     fun getAIInsights(batteryData: com.voltai.smartbatteryguardian.BatteryData): List<AIInsight> {
         val insights = mutableListOf<AIInsight>()
-        
+
         // Pattern Recognition Insights
         insights.add(
             AIInsight(
@@ -167,11 +165,11 @@ class AIBatteryOptimizer(private val context: Context) {
                 priority = 4
             )
         )
-        
+
         if (batteryData.temperature > 35f) {
             insights.add(
                 AIInsight(
-                    category = "🌡️ Thermal Intelligence", 
+                    category = "🌡️ Thermal Intelligence",
                     insight = "Temperature spike detected during charging. AI recommends 20-minute cooling breaks between fast charges.",
                     confidence = 0.93f,
                     actionable = true,
@@ -179,7 +177,7 @@ class AIBatteryOptimizer(private val context: Context) {
                 )
             )
         }
-        
+
         // Health Prediction
         insights.add(
             AIInsight(
@@ -190,7 +188,7 @@ class AIBatteryOptimizer(private val context: Context) {
                 priority = 3
             )
         )
-        
+
         // Usage Anomaly Detection
         if (Random.nextFloat() > 0.7f) {
             insights.add(
@@ -203,19 +201,19 @@ class AIBatteryOptimizer(private val context: Context) {
                 )
             )
         }
-        
+
         return insights
     }
-    
+
     private fun getUserUsageIntensity(): Float {
         // Simulate learned user behavior
         return userBehaviorPatterns["intensity"] ?: 1.2f
     }
-    
+
     private fun calculateConfidence(dataPoints: Int): Float {
         return minOf(0.95f, 0.5f + (dataPoints / 2000f))
     }
-    
+
     fun recordBatteryDataPoint(batteryData: com.voltai.smartbatteryguardian.BatteryData) {
         val dataPoint = BatteryDataPoint(
             timestamp = System.currentTimeMillis(),
@@ -225,47 +223,47 @@ class AIBatteryOptimizer(private val context: Context) {
             screenOnTime = Random.nextLong(0, 3600000), // Simulated
             activeApps = getActiveApps()
         )
-        
+
         learningData.add(dataPoint)
-        
+
         // Keep only recent data (last 30 days)
         val thirtyDaysAgo = System.currentTimeMillis() - (30 * 24 * 60 * 60 * 1000)
         learningData.removeAll { it.timestamp < thirtyDaysAgo }
-        
+
         // Update usage patterns
         updateUserBehaviorPatterns(dataPoint)
     }
-    
+
     private fun getActiveApps(): List<String> {
         try {
             val pm = context.packageManager
             val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
-            return packages.filter { 
-                (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 
+            return packages.filter {
+                (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0
             }.map { it.packageName }.take(5)
         } catch (e: Exception) {
             return listOf("com.android.chrome", "com.whatsapp", "com.spotify.music")
         }
     }
-    
+
     private fun updateUserBehaviorPatterns(dataPoint: BatteryDataPoint) {
         // Simulate learning user behavior
         userBehaviorPatterns["intensity"] = Random.nextFloat() * 0.5f + 1f
         userBehaviorPatterns["charging_frequency"] = Random.nextFloat() + 0.5f
     }
-    
+
     fun getOptimizationScore(): Float {
         // Calculate overall optimization score based on applied recommendations
         val totalRecommendations = 10f // Base number of possible optimizations
         val appliedOptimizations = Random.nextInt(3, 8).toFloat()
         return (appliedOptimizations / totalRecommendations) * 100f
     }
-    
+
     fun enableAutoOptimization(): Boolean {
         // Simulate enabling various automatic optimizations
         return true
     }
-    
+
     companion object {
         fun getBatteryTemperatureRisk(temperature: Float): String {
             return when {
@@ -279,7 +277,7 @@ class AIBatteryOptimizer(private val context: Context) {
                 else -> "🚨 CRITICAL - Risk of permanent damage"
             }
         }
-        
+
         fun getSmartChargingRecommendation(batteryLevel: Int, isCharging: Boolean): String {
             return when {
                 batteryLevel < 20 && !isCharging -> "⚡ Connect charger immediately for optimal charging window"

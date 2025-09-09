@@ -43,18 +43,18 @@ fun BatterySaverScreen(onBackClick: () -> Unit = {}) {
 
         LazyColumn(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
@@ -91,9 +91,9 @@ fun BatterySaverScreen(onBackClick: () -> Unit = {}) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
@@ -130,9 +130,9 @@ fun BatterySaverScreen(onBackClick: () -> Unit = {}) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
@@ -169,9 +169,9 @@ fun BatterySaverScreen(onBackClick: () -> Unit = {}) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
@@ -200,11 +200,11 @@ fun BatterySaverScreen(onBackClick: () -> Unit = {}) {
 
                         Text(
                             text =
-                                "• Lower screen brightness when possible\n" +
-                                    "• Turn off location services for unused apps\n" +
-                                    "• Disable Wi-Fi and Bluetooth when not needed\n" +
-                                    "• Close apps running in the background\n" +
-                                    "• Use dark mode to save OLED display power",
+                            "• Lower screen brightness when possible\n" +
+                                "• Turn off location services for unused apps\n" +
+                                "• Disable Wi-Fi and Bluetooth when not needed\n" +
+                                "• Close apps running in the background\n" +
+                                "• Use dark mode to save OLED display power",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

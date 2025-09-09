@@ -76,9 +76,9 @@ class SimpleMainActivity : ComponentActivity() {
 
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -104,11 +104,11 @@ class SimpleMainActivity : ComponentActivity() {
                         fontSize = 48.sp,
                         fontWeight = FontWeight.Bold,
                         color =
-                            when {
-                                batteryLevel > 50 -> MaterialTheme.colorScheme.primary
-                                batteryLevel > 20 -> MaterialTheme.colorScheme.secondary
-                                else -> MaterialTheme.colorScheme.error
-                            },
+                        when {
+                            batteryLevel > 50 -> MaterialTheme.colorScheme.primary
+                            batteryLevel > 20 -> MaterialTheme.colorScheme.secondary
+                            else -> MaterialTheme.colorScheme.error
+                        },
                     )
 
                     Text(

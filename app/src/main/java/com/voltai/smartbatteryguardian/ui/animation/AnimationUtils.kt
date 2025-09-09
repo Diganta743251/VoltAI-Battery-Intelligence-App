@@ -1,7 +1,7 @@
 package com.voltai.smartbatteryguardian.ui.animation
 
-import androidx.compose.animation.core.*
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.*
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -30,83 +29,83 @@ import kotlin.math.roundToInt
  * Animation specifications for different types of animations
  */
 object AnimationSpecs {
-    
+
     // Spring animations for natural feel
     val bouncy = spring<Float>(
         dampingRatio = Spring.DampingRatioMediumBouncy,
         stiffness = Spring.StiffnessLow
     )
-    
+
     val smooth = spring<Float>(
         dampingRatio = Spring.DampingRatioNoBouncy,
         stiffness = Spring.StiffnessMedium
     )
-    
+
     val snappy = spring<Float>(
         dampingRatio = Spring.DampingRatioMediumBouncy,
         stiffness = Spring.StiffnessHigh
     )
-    
+
     // Tween animations for precise control
     val quick = tween<Float>(
         durationMillis = 200,
         easing = FastOutSlowInEasing
     )
-    
+
     val medium = tween<Float>(
         durationMillis = 300,
         easing = FastOutSlowInEasing
     )
-    
+
     val slow = tween<Float>(
         durationMillis = 500,
         easing = FastOutSlowInEasing
     )
-    
+
     // Entrance animations
     val slideInFromBottom = slideInVertically(
         animationSpec = tween(300, easing = FastOutSlowInEasing),
         initialOffsetY = { it }
     )
-    
+
     val scaleInAnimation = scaleIn(
         animationSpec = tween(200, easing = FastOutSlowInEasing),
         initialScale = 0.8f
     ) + fadeIn(animationSpec = tween(200))
-    
+
     // Exit animations
     val slideOutToBottom = slideOutVertically(
         animationSpec = tween(250, easing = FastOutLinearInEasing),
         targetOffsetY = { it }
     )
-    
+
     val scaleOutAnimation = scaleOut(
         animationSpec = tween(150, easing = FastOutLinearInEasing),
         targetScale = 0.8f
     ) + fadeOut(animationSpec = tween(150))
-    
+
     // Advanced animations for premium experience
     val premium = spring<Float>(
         dampingRatio = 0.75f,
         stiffness = 400f
     )
-    
+
     val elastic = spring<Float>(
         dampingRatio = 0.6f,
         stiffness = 600f
     )
-    
+
     val superSmooth = spring<Float>(
         dampingRatio = 1.0f,
         stiffness = 350f
     )
-    
+
     // Card movement animations
     val cardReorder = spring<Float>(
         dampingRatio = 0.8f,
         stiffness = 500f
     )
-    
+
     // Screen transitions
     val screenTransition = tween<Float>(
         durationMillis = 350,
@@ -125,7 +124,7 @@ fun Modifier.draggableCard(
 ) = composed {
     var offset by remember { mutableStateOf(Offset.Zero) }
     var isDragging by remember { mutableStateOf(false) }
-    
+
     val animatedOffset by animateOffsetAsState(
         targetValue = if (isDragging) offset else Offset.Zero,
         animationSpec = if (isDragging) {
@@ -137,17 +136,17 @@ fun Modifier.draggableCard(
             )
         }
     )
-    
+
     val scale by animateFloatAsState(
         targetValue = if (isDragging) 1.05f else 1f,
         animationSpec = AnimationSpecs.snappy
     )
-    
+
     val elevation by animateDpAsState(
         targetValue = if (isDragging) 12.dp else 4.dp,
         animationSpec = tween(200)
     )
-    
+
     if (enabled) {
         this
             .scale(scale)
@@ -185,12 +184,12 @@ fun Modifier.pressableCard(
 ) = composed {
     var isPressed by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
-    
+
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.95f else 1f,
         animationSpec = AnimationSpecs.snappy
     )
-    
+
     if (enabled) {
         this
             .scale(scale)
@@ -231,7 +230,7 @@ fun Modifier.shimmerEffect(
                 repeatMode = RepeatMode.Restart
             )
         )
-        
+
         this.graphicsLayer {
             translationX = shimmerOffset * size.width
             alpha = 0.7f + 0.3f * (1f + shimmerOffset) / 2f
@@ -302,20 +301,20 @@ object HapticHelper {
     fun HapticFeedback.performLightImpact() {
         performHapticFeedback(HapticFeedbackType.TextHandleMove)
     }
-    
+
     fun HapticFeedback.performMediumImpact() {
         performHapticFeedback(HapticFeedbackType.LongPress)
     }
-    
+
     fun HapticFeedback.performHeavyImpact() {
         performHapticFeedback(HapticFeedbackType.LongPress)
     }
-    
+
     fun HapticFeedback.performSuccess() {
         // Simulate success pattern with multiple quick feedbacks
         performHapticFeedback(HapticFeedbackType.TextHandleMove)
     }
-    
+
     fun HapticFeedback.performError() {
         // Simulate error pattern
         performHapticFeedback(HapticFeedbackType.LongPress)
@@ -379,18 +378,18 @@ fun MorphingContainer(
     content: @Composable (Boolean) -> Unit
 ) {
     val transition = updateTransition(targetState = targetState)
-    
+
     val cornerRadius by transition.animateDp(
         transitionSpec = { tween(300) }
     ) { state ->
         if (state) 24.dp else 12.dp
     }
-    
+
     val elevation by transition.animateDp(
         transitionSpec = { tween(300) }
     ) { state ->
         if (state) 8.dp else 2.dp
     }
-    
+
     content(targetState)
 }

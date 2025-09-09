@@ -43,16 +43,16 @@ fun OngoingDetailScreen(onBackClick: () -> Unit = {}) {
                 }
             },
             colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                ),
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         )
 
         LazyColumn(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Usage Overview Card
@@ -61,9 +61,9 @@ fun OngoingDetailScreen(onBackClick: () -> Unit = {}) {
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(24.dp),
@@ -126,9 +126,9 @@ fun OngoingDetailScreen(onBackClick: () -> Unit = {}) {
                         // Pie chart representation
                         Canvas(
                             modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(200.dp),
+                            Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
                         ) {
                             drawScreenTimeChart(batteryData.screenOnTime, batteryData.screenOffTime)
                         }
@@ -143,10 +143,10 @@ fun OngoingDetailScreen(onBackClick: () -> Unit = {}) {
                                 color = Color(0xFFFF9800),
                                 label = "Screen On",
                                 percentage =
-                                    calculateScreenOnPercentage(
-                                        batteryData.screenOnTime,
-                                        batteryData.screenOffTime,
-                                    ),
+                                calculateScreenOnPercentage(
+                                    batteryData.screenOnTime,
+                                    batteryData.screenOffTime,
+                                ),
                             )
 
                             ChartLegendItem(
@@ -229,9 +229,9 @@ fun OngoingDetailScreen(onBackClick: () -> Unit = {}) {
 
                         Canvas(
                             modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(80.dp),
+                            Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
                         ) {
                             drawUsageTimeline()
                         }
@@ -263,9 +263,9 @@ fun OngoingDetailScreen(onBackClick: () -> Unit = {}) {
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(20.dp),
@@ -379,9 +379,9 @@ fun DrainAnalysisRow(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(

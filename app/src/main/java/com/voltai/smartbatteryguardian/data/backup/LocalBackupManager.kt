@@ -1,7 +1,7 @@
 package com.voltai.smartbatteryguardian.data.backup
 
 import android.content.Context
-import android.net.Uri
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -101,7 +100,6 @@ class LocalBackupManager @Inject constructor(
                 fileSize = backupFile.length(),
                 errorMessage = null
             )
-
         } catch (e: Exception) {
             _backupState.value = BackupState.ERROR
             BackupResult(
@@ -136,7 +134,6 @@ class LocalBackupManager @Inject constructor(
                     null
                 }
             }?.sortedByDescending { it.createdTime } ?: emptyList()
-
         } catch (e: Exception) {
             emptyList()
         }
@@ -150,7 +147,9 @@ class LocalBackupManager @Inject constructor(
             val backupFile = File(context.getExternalFilesDir("backups"), "$backupId.json")
             if (backupFile.exists()) {
                 backupFile.delete()
-            } else false
+            } else {
+                false
+            }
         } catch (e: Exception) {
             false
         }

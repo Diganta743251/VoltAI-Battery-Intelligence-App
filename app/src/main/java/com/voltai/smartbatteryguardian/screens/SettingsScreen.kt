@@ -9,12 +9,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -29,7 +26,7 @@ fun SettingsScreen() {
     var temperatureAlertsEnabled by remember { mutableStateOf(true) }
     var selectedTheme by remember { mutableStateOf("Auto") }
     var selectedLanguage by remember { mutableStateOf("English") }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -61,9 +58,9 @@ fun SettingsScreen() {
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         // AI & Optimization Settings
         SettingsSection(
             title = "🤖 AI & Optimization",
@@ -76,7 +73,7 @@ fun SettingsScreen() {
                 checked = autoOptimizationEnabled,
                 onCheckedChange = { autoOptimizationEnabled = it }
             )
-            
+
             SettingsClickableItem(
                 title = "Optimization Schedule",
                 description = "Set when to run automatic optimizations",
@@ -84,7 +81,7 @@ fun SettingsScreen() {
                 value = "Every 2 hours",
                 onClick = { /* Show schedule picker */ }
             )
-            
+
             SettingsClickableItem(
                 title = "AI Learning Level",
                 description = "How aggressively AI learns your patterns",
@@ -93,9 +90,9 @@ fun SettingsScreen() {
                 onClick = { /* Show learning options */ }
             )
         }
-        
+
         Spacer(modifier = Modifier.height(20.dp))
-        
+
         // Alerts & Notifications
         SettingsSection(
             title = "🔔 Alerts & Notifications",
@@ -108,7 +105,7 @@ fun SettingsScreen() {
                 checked = notificationsEnabled,
                 onCheckedChange = { notificationsEnabled = it }
             )
-            
+
             SettingsToggleItem(
                 title = "Battery Level Alerts",
                 description = "Alert when battery reaches critical levels",
@@ -116,7 +113,7 @@ fun SettingsScreen() {
                 checked = batteryAlertsEnabled,
                 onCheckedChange = { batteryAlertsEnabled = it }
             )
-            
+
             SettingsToggleItem(
                 title = "Temperature Warnings",
                 description = "Alert when battery gets too hot",
@@ -124,7 +121,7 @@ fun SettingsScreen() {
                 checked = temperatureAlertsEnabled,
                 onCheckedChange = { temperatureAlertsEnabled = it }
             )
-            
+
             SettingsClickableItem(
                 title = "Notification Sound",
                 description = "Choose alert sound",
@@ -133,9 +130,9 @@ fun SettingsScreen() {
                 onClick = { /* Show sound picker */ }
             )
         }
-        
+
         Spacer(modifier = Modifier.height(20.dp))
-        
+
         // Appearance Settings
         SettingsSection(
             title = "🎨 Appearance",
@@ -148,7 +145,7 @@ fun SettingsScreen() {
                 checked = darkModeEnabled,
                 onCheckedChange = { darkModeEnabled = it }
             )
-            
+
             SettingsClickableItem(
                 title = "Theme Style",
                 description = "Choose your preferred theme",
@@ -156,7 +153,7 @@ fun SettingsScreen() {
                 value = selectedTheme,
                 onClick = { /* Show theme picker */ }
             )
-            
+
             SettingsClickableItem(
                 title = "Language",
                 description = "Select app language",
@@ -165,9 +162,9 @@ fun SettingsScreen() {
                 onClick = { /* Show language picker */ }
             )
         }
-        
+
         Spacer(modifier = Modifier.height(20.dp))
-        
+
         // Advanced Settings
         SettingsSection(
             title = "⚙️ Advanced",
@@ -180,7 +177,7 @@ fun SettingsScreen() {
                 value = "Last: 5 days ago",
                 onClick = { /* Start calibration */ }
             )
-            
+
             SettingsClickableItem(
                 title = "Data Export",
                 description = "Export battery data for analysis",
@@ -188,7 +185,7 @@ fun SettingsScreen() {
                 value = "CSV, JSON",
                 onClick = { /* Export data */ }
             )
-            
+
             SettingsClickableItem(
                 title = "Reset AI Learning",
                 description = "Clear all learned patterns",
@@ -197,9 +194,9 @@ fun SettingsScreen() {
                 onClick = { /* Reset AI */ }
             )
         }
-        
+
         Spacer(modifier = Modifier.height(20.dp))
-        
+
         // About Section
         SettingsSection(
             title = "📱 About VoltAI",
@@ -212,7 +209,7 @@ fun SettingsScreen() {
                 value = "1.0.0 Pro",
                 onClick = { /* Show version info */ }
             )
-            
+
             SettingsClickableItem(
                 title = "Privacy Policy",
                 description = "How we protect your data",
@@ -220,7 +217,7 @@ fun SettingsScreen() {
                 value = "",
                 onClick = { /* Open privacy policy */ }
             )
-            
+
             SettingsClickableItem(
                 title = "Rate VoltAI",
                 description = "Help us improve with your feedback",
@@ -229,7 +226,7 @@ fun SettingsScreen() {
                 onClick = { /* Open play store */ }
             )
         }
-        
+
         Spacer(modifier = Modifier.height(40.dp))
     }
 }
@@ -262,7 +259,7 @@ fun SettingsSection(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             content()
         }
     }
@@ -288,9 +285,9 @@ fun SettingsToggleItem(
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(24.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(16.dp))
-        
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -307,7 +304,7 @@ fun SettingsToggleItem(
                 lineHeight = 16.sp
             )
         }
-        
+
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
@@ -339,9 +336,9 @@ fun SettingsClickableItem(
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(24.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(16.dp))
-        
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -358,7 +355,7 @@ fun SettingsClickableItem(
                 lineHeight = 16.sp
             )
         }
-        
+
         if (value.isNotEmpty()) {
             Text(
                 text = value,
@@ -366,10 +363,10 @@ fun SettingsClickableItem(
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.primary
             )
-            
+
             Spacer(modifier = Modifier.width(8.dp))
         }
-        
+
         Icon(
             imageVector = Icons.Default.ArrowForward,
             contentDescription = null,

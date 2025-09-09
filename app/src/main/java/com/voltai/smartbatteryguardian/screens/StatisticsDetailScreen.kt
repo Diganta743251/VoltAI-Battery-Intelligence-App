@@ -41,18 +41,18 @@ fun StatisticsDetailScreen(onBackClick: () -> Unit = {}) {
 
         LazyColumn(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(20.dp),
@@ -106,9 +106,9 @@ fun StatisticsDetailScreen(onBackClick: () -> Unit = {}) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(20.dp),
@@ -133,10 +133,10 @@ fun StatisticsDetailScreen(onBackClick: () -> Unit = {}) {
 
                         Text(
                             text =
-                                "• Screen-on usage: ${(100 - batteryData.batteryLevel) / 5}%/hour average\n" +
-                                    "• Screen-off usage: ${(100 - batteryData.batteryLevel) / 15}%/hour average\n" +
-                                    "• Current battery level: ${batteryData.batteryLevel}%\n" +
-                                    "• Estimated full charge time: ${kotlin.random.Random.nextInt(6, 10)}h ${kotlin.random.Random.nextInt(10, 59)}m",
+                            "• Screen-on usage: ${(100 - batteryData.batteryLevel) / 5}%/hour average\n" +
+                                "• Screen-off usage: ${(100 - batteryData.batteryLevel) / 15}%/hour average\n" +
+                                "• Current battery level: ${batteryData.batteryLevel}%\n" +
+                                "• Estimated full charge time: ${kotlin.random.Random.nextInt(6, 10)}h ${kotlin.random.Random.nextInt(10, 59)}m",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

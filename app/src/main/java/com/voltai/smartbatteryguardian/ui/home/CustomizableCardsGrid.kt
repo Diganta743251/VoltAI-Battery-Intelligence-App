@@ -14,23 +14,21 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.zIndex
 import com.voltai.smartbatteryguardian.BatteryData
-import com.voltai.smartbatteryguardian.ui.animation.AnimationSpecs
-import com.voltai.smartbatteryguardian.ui.animation.AnimatedCardEntrance
 import com.voltai.smartbatteryguardian.ui.CardContent
+import com.voltai.smartbatteryguardian.ui.animation.AnimatedCardEntrance
+import com.voltai.smartbatteryguardian.ui.animation.AnimationSpecs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
@@ -55,7 +53,7 @@ fun CustomizableCardsGrid(
     // Performance optimization: Reduce animation complexity with many cards
     val shouldUseReducedAnimations = cards.size > 8
     val haptic = LocalHapticFeedback.current
-    
+
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
         modifier = modifier
@@ -98,7 +96,7 @@ fun CustomizableCardsGrid(
                 )
             }
         }
-        
+
         // Add Card Placeholder in Edit Mode
         if (isEditMode && cards.filter { it.isVisible }.size < 12) {
             item {
@@ -133,7 +131,7 @@ private fun DraggableCard(
     var isDragging by remember { mutableStateOf(false) }
     var dragOffset by remember { mutableStateOf(Offset.Zero) }
     val haptic = LocalHapticFeedback.current
-    
+
     // Animations
     val scale by animateFloatAsState(
         targetValue = when {
@@ -144,7 +142,7 @@ private fun DraggableCard(
         },
         animationSpec = AnimationSpecs.snappy
     )
-    
+
     val elevation by animateDpAsState(
         targetValue = when {
             isDragging -> 16.dp
@@ -154,7 +152,7 @@ private fun DraggableCard(
         },
         animationSpec = tween(300)
     )
-    
+
     val borderColor by animateColorAsState(
         targetValue = when {
             isSelected && isEditMode -> Color(0xFF2196F3)
@@ -163,7 +161,7 @@ private fun DraggableCard(
         },
         animationSpec = tween(200)
     )
-    
+
     val animatedOffset by animateOffsetAsState(
         targetValue = if (isDragging) dragOffset else Offset.Zero,
         animationSpec = if (isDragging) {
@@ -175,7 +173,7 @@ private fun DraggableCard(
             )
         }
     )
-    
+
     Box(
         modifier = modifier
             .scale(scale)
@@ -252,7 +250,7 @@ private fun DraggableCard(
                     batteryData = batteryData,
                     isEditMode = isEditMode
                 )
-                
+
                 // Edit Mode Overlay
                 if (isEditMode) {
                     EditModeOverlay(
@@ -307,7 +305,7 @@ private fun EditModeOverlay(
                 }
             }
         }
-        
+
         // Resize Handle (bottom-right)
         if (card.cardType.allowedSizes.size > 1) {
             AnimatedVisibility(
@@ -337,7 +335,7 @@ private fun EditModeOverlay(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Icon(
-                        imageVector = Icons.Default.MoreVert,
+                            imageVector = Icons.Default.MoreVert,
                             contentDescription = "Resize Card",
                             tint = Color.White,
                             modifier = Modifier.size(12.dp)
@@ -346,7 +344,7 @@ private fun EditModeOverlay(
                 }
             }
         }
-        
+
         // Edit Mode Overlay Background
         AnimatedVisibility(
             visible = isSelected,
@@ -409,7 +407,7 @@ private fun AddCardPlaceholder(
                         )
                     }
                 }
-                
+
                 Text(
                     text = "Add Card",
                     style = MaterialTheme.typography.bodySmall,
@@ -428,7 +426,7 @@ private fun getCardHeight(cardType: CardType, size: CardSize): Dp {
         CardSize.Large -> 200.dp
         CardSize.Wide -> 180.dp
     }
-    
+
     // Adjust height based on card content complexity
     val contentMultiplier = when (cardType) {
         CardType.BATTERY_LEVEL -> 1.0f
@@ -453,7 +451,7 @@ private fun getCardHeight(cardType: CardType, size: CardSize): Dp {
         CardType.SYSTEM_OPTIMIZATION -> 1.5f
         CardType.PERFORMANCE_BENCHMARKS -> 1.6f
         CardType.DATA_EXPORT_IMPORT -> 1.3f
-        
+
         // New Premium Analytics Cards
         CardType.BATTERY_HEALTH_ANALYTICS -> 1.6f
         CardType.SMART_CHARGING -> 1.5f
@@ -461,7 +459,7 @@ private fun getCardHeight(cardType: CardType, size: CardSize): Dp {
         CardType.REAL_TIME_MONITORING -> 1.5f
         CardType.BATTERY_OPTIMIZATION -> 1.4f
     }
-    
+
     return baseHeight * contentMultiplier
 }
 

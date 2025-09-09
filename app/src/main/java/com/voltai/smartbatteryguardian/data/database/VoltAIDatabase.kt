@@ -26,12 +26,12 @@ import com.voltai.smartbatteryguardian.data.database.entities.*
 )
 @TypeConverters(Converters::class)
 abstract class VoltAIDatabase : RoomDatabase() {
-    
+
     abstract fun batteryDao(): BatteryDao
-    
+
     companion object {
         const val DATABASE_NAME = "voltai_battery_guardian.db"
-        
+
         // Future database migrations
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
@@ -39,7 +39,7 @@ abstract class VoltAIDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE battery_readings ADD COLUMN newField TEXT")
             }
         }
-        
+
         val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 // Future migration logic
@@ -64,7 +64,7 @@ interface BatteryRepository {
     suspend fun savePrediction(prediction: AIPrediction): Long
     suspend fun saveUserPreferences(preferences: UserPreferences)
     suspend fun getRecentPredictions(predictionType: String, limit: Int): List<AIPrediction>
-    
+
     // Analytics functions
     suspend fun getBatteryTrends(days: Int): List<DailyBatteryStats>
     suspend fun getChargingEfficiency(days: Int): Double
@@ -73,20 +73,21 @@ interface BatteryRepository {
     suspend fun getSystemPerformance(days: Int): SystemPerformanceSummary
     suspend fun getOptimizationImpact(days: Int): Double
     suspend fun cleanupOldData(retentionDays: Int)
+    suspend fun getTotalBatteryCycles(): Int
 }
 
 class BatteryRepositoryImpl(
     private val dao: BatteryDao
 ) : BatteryRepository {
-    
+
     override suspend fun recordBatteryReading(reading: BatteryReading): Long {
         return dao.insertBatteryReading(reading)
     }
-    
+
     override suspend fun startChargingSession(session: ChargingSession): Long {
         return dao.insertChargingSession(session)
     }
-    
+
     override suspend fun endChargingSession(sessionId: Long, endTime: Long, endLevel: Int) {
         val activeSession = dao.getActiveChargingSession()
         activeSession?.let { session ->
@@ -98,82 +99,86 @@ class BatteryRepositoryImpl(
             dao.updateChargingSession(updatedSession)
         }
     }
-    
+
     override suspend fun recordAppUsage(stats: AppUsageStats): Long {
         return dao.insertAppUsageStats(stats)
     }
-    
+
     override suspend fun recordHealthData(record: BatteryHealthRecord): Long {
         return dao.insertBatteryHealthRecord(record)
     }
-    
+
     override suspend fun savePowerProfile(profile: PowerProfile): Long {
         return dao.insertPowerProfile(profile)
     }
-    
+
     override suspend fun activatePowerProfile(profileId: Long) {
         dao.deactivateAllProfiles()
         // Note: In a real implementation, you'd fetch the profile and update it
         // This is simplified for demonstration
     }
-    
+
     override suspend fun logOptimization(log: OptimizationLog): Long {
         return dao.insertOptimizationLog(log)
     }
-    
+
     override suspend fun recordSystemMetrics(metrics: SystemMetrics): Long {
         return dao.insertSystemMetrics(metrics)
     }
-    
+
     override suspend fun saveBenchmarkResult(result: BenchmarkResult): Long {
         return dao.insertBenchmarkResult(result)
     }
-    
+
     override suspend fun savePrediction(prediction: AIPrediction): Long {
         return dao.insertAIPrediction(prediction)
     }
-    
+
     override suspend fun saveUserPreferences(preferences: UserPreferences) {
         dao.insertUserPreferences(preferences)
     }
-    
+
     override suspend fun getRecentPredictions(predictionType: String, limit: Int): List<AIPrediction> {
         return dao.getRecentPredictions(predictionType, limit)
     }
-    
+
     // Analytics implementations
     override suspend fun getBatteryTrends(days: Int): List<DailyBatteryStats> {
         val startTime = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L)
         return dao.getDailyBatteryStatistics(startTime)
     }
-    
+
     override suspend fun getChargingEfficiency(days: Int): Double {
         val startTime = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L)
         return dao.getAverageChargingEfficiency(startTime)
     }
-    
+
     override suspend fun getTopBatteryApps(days: Int, limit: Int): List<AppBatterySummary> {
         val startTime = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L)
         return dao.getTopBatteryConsumingApps(startTime, limit)
     }
-    
+
     override suspend fun getHealthTrends(days: Int): List<DailyHealthTrend> {
         val startTime = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L)
         return dao.getDailyHealthTrends(startTime)
     }
-    
+
     override suspend fun getSystemPerformance(days: Int): SystemPerformanceSummary {
         val startTime = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L)
         return dao.getSystemPerformanceSummary(startTime)
     }
-    
+
     override suspend fun getOptimizationImpact(days: Int): Double {
         val startTime = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L)
         return dao.getAverageOptimizationImpact(startTime)
     }
-    
+
     override suspend fun cleanupOldData(retentionDays: Int) {
         dao.cleanupOldData(retentionDays)
+    }
+
+    override suspend fun getTotalBatteryCycles(): Int {
+        return dao.getTotalChargingSessions()
     }
 }
 
@@ -211,7 +216,7 @@ class BatteryDataCollector(
     private val dataSource: BatteryDataSource,
     private val repository: BatteryRepository
 ) {
-    
+
     suspend fun collectBatteryData(): BatteryReading {
         val reading = BatteryReading(
             batteryLevel = dataSource.getCurrentBatteryLevel(),
@@ -230,41 +235,41 @@ class BatteryDataCollector(
             cycleCount = estimateCycleCount(),
             wearLevel = calculateWearLevel()
         )
-        
+
         repository.recordBatteryReading(reading)
         return reading
     }
-    
+
     private suspend fun calculateChargingSpeed(): Double {
         // Implementation for calculating charging speed
         return 0.0 // Placeholder
     }
-    
+
     private suspend fun determineChargingType(): String? {
         // Implementation for determining charging type
         return null // Placeholder
     }
-    
+
     private suspend fun determinePlugType(): String? {
         // Implementation for determining plug type
         return null // Placeholder
     }
-    
+
     private suspend fun determinePowerSource(): String? {
         // Implementation for determining power source
         return null // Placeholder
     }
-    
+
     private suspend fun estimateTimeRemaining(): Long? {
         // Implementation for estimating time remaining
         return null // Placeholder
     }
-    
+
     private suspend fun estimateCycleCount(): Int? {
         // Implementation for estimating cycle count
         return null // Placeholder
     }
-    
+
     private suspend fun calculateWearLevel(): Double? {
         // Implementation for calculating wear level
         return null // Placeholder
@@ -275,7 +280,7 @@ class SystemDataCollector(
     private val dataSource: SystemDataSource,
     private val repository: BatteryRepository
 ) {
-    
+
     suspend fun collectSystemMetrics(): SystemMetrics {
         val metrics = SystemMetrics(
             cpuUsage = dataSource.getCpuUsage(),
@@ -294,21 +299,21 @@ class SystemDataCollector(
             networkConnections = 0, // Implementation needed
             locationRequests = 0 // Implementation needed
         )
-        
+
         repository.recordSystemMetrics(metrics)
         return metrics
     }
-    
+
     private fun calculatePerformanceScore(): Int {
         // Implementation for calculating performance score
         return 85 // Placeholder
     }
-    
+
     private fun calculateStabilityScore(): Int {
         // Implementation for calculating stability score
         return 90 // Placeholder
     }
-    
+
     private fun calculateEfficiencyScore(): Int {
         // Implementation for calculating efficiency score
         return 78 // Placeholder

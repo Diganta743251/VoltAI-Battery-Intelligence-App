@@ -80,7 +80,7 @@ class BatteryDataWorker @AssistedInject constructor(
 
     private suspend fun collectBatteryData() {
         val batteryIntent = applicationContext.registerReceiver(
-            null, 
+            null,
             IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         ) ?: return
 
@@ -91,11 +91,13 @@ class BatteryDataWorker @AssistedInject constructor(
         val scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
         val batteryPercentage = if (level != -1 && scale != -1) {
             (level * 100 / scale.toFloat()).toInt()
-        } else return
+        } else {
+            return
+        }
 
         val status = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
         val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL
+            status == BatteryManager.BATTERY_STATUS_FULL
 
         val temperature = batteryIntent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10.0f
         val voltage = batteryIntent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0) / 1000.0
@@ -106,7 +108,9 @@ class BatteryDataWorker @AssistedInject constructor(
             } catch (e: Exception) {
                 0
             }
-        } else 0
+        } else {
+            0
+        }
 
         val health = batteryIntent.getIntExtra(BatteryManager.EXTRA_HEALTH, BatteryManager.BATTERY_HEALTH_UNKNOWN)
         val healthPercentage = when (health) {
@@ -148,7 +152,7 @@ class BatteryDataWorker @AssistedInject constructor(
 
     private suspend fun manageChargingSessions() {
         val batteryIntent = applicationContext.registerReceiver(
-            null, 
+            null,
             IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         ) ?: return
 
@@ -156,11 +160,13 @@ class BatteryDataWorker @AssistedInject constructor(
         val scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
         val batteryPercentage = if (level != -1 && scale != -1) {
             (level * 100 / scale.toFloat()).toInt()
-        } else return
+        } else {
+            return
+        }
 
         val status = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
         val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL
+            status == BatteryManager.BATTERY_STATUS_FULL
 
         val temperature = batteryIntent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10.0f
         val plugged = batteryIntent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
@@ -201,7 +207,9 @@ class BatteryDataWorker @AssistedInject constructor(
             val sessionHours = duration / (1000 * 60 * 60f)
             val avgTemp = if (sessionHours > 0) {
                 (currentSession.averageTemperature + temperature) / 2
-            } else temperature
+            } else {
+                temperature
+            }
 
             val updatedSession = currentSession.copy(
                 averageTemperature = avgTemp
@@ -212,10 +220,10 @@ class BatteryDataWorker @AssistedInject constructor(
 
     private suspend fun cleanupOldData() {
         val thirtyDaysAgo = System.currentTimeMillis() - (30L * 24 * 60 * 60 * 1000)
-        
+
         // Clean up old battery logs (keep 30 days)
         batteryLogDao.deleteOldLogs(thirtyDaysAgo)
-        
+
         // Clean up old charging sessions (keep 90 days)
         val ninetyDaysAgo = System.currentTimeMillis() - (90L * 24 * 60 * 60 * 1000)
         chargingSessionDao.deleteOldSessions(ninetyDaysAgo)

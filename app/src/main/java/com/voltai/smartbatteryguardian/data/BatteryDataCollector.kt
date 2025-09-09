@@ -1,13 +1,12 @@
 package com.voltai.smartbatteryguardian.data
 
 import android.app.ActivityManager
-import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -15,11 +14,8 @@ import android.hardware.SensorManager
 import android.net.TrafficStats
 import android.os.BatteryManager
 import android.os.Build
-import android.os.Debug
 import android.os.PowerManager
 import android.os.StatFs
-import android.os.SystemClock
-import android.provider.Settings
 import androidx.annotation.RequiresApi
 import com.voltai.smartbatteryguardian.data.database.BatteryRepository
 import com.voltai.smartbatteryguardian.data.database.entities.*
@@ -51,7 +47,9 @@ class BatteryDataCollector @Inject constructor(
     private val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     private val usageStatsManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-    } else null
+    } else {
+        null
+    }
 
     // Sensor data
     private var currentAcceleration = FloatArray(3)
@@ -73,23 +71,23 @@ class BatteryDataCollector @Inject constructor(
         sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
-        
+
         sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
-        
+
         sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
-        
+
         sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
-        
+
         sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
-        
+
         sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
@@ -101,21 +99,21 @@ class BatteryDataCollector @Inject constructor(
     suspend fun collectBatteryData(): BatteryReading = withContext(Dispatchers.IO) {
         val intentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         val batteryStatus = context.registerReceiver(null, intentFilter)
-        
+
         val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
         val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
         val batteryPercentage = if (level >= 0 && scale > 0) (level * 100) / scale else -1
-        
+
         val status = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
         val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                        status == BatteryManager.BATTERY_STATUS_FULL
-        
+            status == BatteryManager.BATTERY_STATUS_FULL
+
         val voltage = batteryStatus?.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1) ?: -1
         val temperature = batteryStatus?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1) ?: -1
         val health = batteryStatus?.getIntExtra(BatteryManager.EXTRA_HEALTH, -1) ?: -1
         val technology = batteryStatus?.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY) ?: "Unknown"
         val plugged = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
-        
+
         BatteryReading(
             batteryLevel = batteryPercentage,
             isCharging = isCharging,
@@ -164,16 +162,16 @@ class BatteryDataCollector @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     suspend fun collectAppUsageStats(): List<AppUsageStats> = withContext(Dispatchers.IO) {
         if (usageStatsManager == null) return@withContext emptyList()
-        
+
         val endTime = System.currentTimeMillis()
         val startTime = endTime - (24 * 60 * 60 * 1000) // Last 24 hours
-        
+
         val usageStats = usageStatsManager.queryUsageStats(
             UsageStatsManager.INTERVAL_DAILY,
             startTime,
             endTime
         )
-        
+
         usageStats.map { stat ->
             AppUsageStats(
                 packageName = stat.packageName,
@@ -349,13 +347,17 @@ class BatteryDataCollector @Inject constructor(
                 if (chargingRate > 0) {
                     val hoursRemaining = (remainingCapacity * getBatteryCapacity() / 100.0) / (chargingRate * 1000.0)
                     (hoursRemaining * 60 * 60 * 1000).toLong() // Convert to milliseconds
-                } else null
+                } else {
+                    null
+                }
             } else {
                 val dischargeRate = kotlin.math.abs(getCurrentCurrent()) / 1000.0
                 if (dischargeRate > 0) {
                     val hoursRemaining = (batteryLevel * getBatteryCapacity() / 100.0) / (dischargeRate * 1000.0)
                     (hoursRemaining * 60 * 60 * 1000).toLong() // Convert to milliseconds
-                } else null
+                } else {
+                    null
+                }
             }
         } catch (e: Exception) {
             null
@@ -368,7 +370,9 @@ class BatteryDataCollector @Inject constructor(
             val cycleFile = File("/sys/class/power_supply/battery/cycle_count")
             if (cycleFile.exists()) {
                 cycleFile.readText().trim().toIntOrNull()
-            } else null
+            } else {
+                null
+            }
         } catch (e: Exception) {
             null
         }
@@ -380,7 +384,9 @@ class BatteryDataCollector @Inject constructor(
             val currentCapacity = getBatteryCapacity()
             if (currentCapacity > 0) {
                 100.0 - (currentCapacity / designCapacity * 100.0)
-            } else null
+            } else {
+                null
+            }
         } catch (e: Exception) {
             null
         }
@@ -391,13 +397,15 @@ class BatteryDataCollector @Inject constructor(
             val stat1 = readCpuStat()
             Thread.sleep(100) // Small delay
             val stat2 = readCpuStat()
-            
+
             val idle = stat2[3] - stat1[3]
             val total = stat2.sum() - stat1.sum()
-            
+
             if (total > 0) {
                 100.0 - (idle * 100.0 / total)
-            } else 0.0
+            } else {
+                0.0
+            }
         } catch (e: Exception) {
             0.0
         }
@@ -415,7 +423,7 @@ class BatteryDataCollector @Inject constructor(
                     tokens[4].toLong(), // idle
                     tokens[5].toLongOrNull() ?: 0L, // iowait
                     tokens[6].toLongOrNull() ?: 0L, // irq
-                    tokens[7].toLongOrNull() ?: 0L  // softirq
+                    tokens[7].toLongOrNull() ?: 0L // softirq
                 )
             }
         } catch (e: Exception) {
@@ -510,11 +518,11 @@ class BatteryDataCollector @Inject constructor(
     private fun calculateStabilityScore(): Int {
         // Simplified stability calculation based on sensor data
         val accelerationMagnitude = sqrt(
-            currentAcceleration[0].pow(2) + 
-            currentAcceleration[1].pow(2) + 
-            currentAcceleration[2].pow(2)
+            currentAcceleration[0].pow(2) +
+                currentAcceleration[1].pow(2) +
+                currentAcceleration[2].pow(2)
         )
-        
+
         return when {
             accelerationMagnitude < 10.5 -> 95 // Device is stable
             accelerationMagnitude < 12.0 -> 85 // Minor movement
@@ -527,7 +535,7 @@ class BatteryDataCollector @Inject constructor(
         return try {
             val batteryTemp = getCurrentBatteryTemperature()
             val cpuUsage = getCpuUsage()
-            
+
             val tempScore = when {
                 batteryTemp < 30 -> 100
                 batteryTemp < 35 -> 90
@@ -535,9 +543,9 @@ class BatteryDataCollector @Inject constructor(
                 batteryTemp < 45 -> 50
                 else -> 30
             }
-            
+
             val cpuScore = (100 - cpuUsage).toInt()
-            
+
             (tempScore + cpuScore) / 2
         } catch (e: Exception) {
             75

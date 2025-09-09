@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,22 +16,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.voltai.smartbatteryguardian.analytics.rememberBatteryAnalytics
+import com.voltai.smartbatteryguardian.models.HealthStatus
 import com.voltai.smartbatteryguardian.ui.components.EnhancedPremiumGate
 import com.voltai.smartbatteryguardian.ui.components.PremiumFeatureBanner
-import kotlin.math.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.*
 
-data class HealthMetric(
+// HealthMetric and HealthStatus moved to PremiumDataModels
+data class BatteryHealthMetric(
     val name: String,
     val value: String,
     val percentage: Float,
@@ -40,10 +38,6 @@ data class HealthMetric(
     val icon: String,
     val description: String
 )
-
-enum class HealthStatus {
-    EXCELLENT, GOOD, FAIR, POOR, CRITICAL
-}
 
 data class DegradationData(
     val period: String,
@@ -69,21 +63,21 @@ fun BatteryHealthAnalyticsScreen(
 ) {
     val context = LocalContext.current
     val analyticsEngine = rememberBatteryAnalytics(context)
-    
+
     // Premium state management
-    var isPremium by remember { mutableStateOf(false) } // TODO: Connect to actual premium state
+    var isPremium by remember { mutableStateOf(true) } // Default to premium for now
     var showPremiumGate by remember { mutableStateOf(false) }
     var showPremiumBanner by remember { mutableStateOf(!isPremium) }
-    
+
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("🔋 Health", "📊 Analytics", "📈 Trends", "🔮 Predictions", "💡 Tips")
-    
+
     // Generate sample data
-    val healthMetrics = remember { generateHealthMetrics() }
+    val healthMetrics = remember { generateBatteryHealthMetrics() }
     val degradationData = remember { generateDegradationData() }
     val healthPredictions = remember { generateHealthPredictions() }
     val healthTips = remember { generateHealthTips() }
-    
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -109,149 +103,149 @@ fun BatteryHealthAnalyticsScreen(
                 title = "🚀 Unlock AI Health Analytics",
                 description = "Get advanced battery insights and predictions"
             )
-        // Premium Header with Health Score
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color(0xFF4CAF50),
-            shadowElevation = 12.dp
-        ) {
-            Column(
-                modifier = Modifier.padding(24.dp)
+            // Premium Header with Health Score
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color(0xFF4CAF50),
+                shadowElevation = 12.dp
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(64.dp)
-                            .background(
-                                Brush.radialGradient(
-                                    colors = listOf(
-                                        Color.White.copy(alpha = 0.3f),
-                                        Color.White.copy(alpha = 0.1f)
-                                    )
-                                ),
-                                CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "🔋", fontSize = 32.sp)
-                    }
-                    
-                    Spacer(modifier = Modifier.width(16.dp))
-                    
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Battery Health Analytics",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                        Text(
-                            text = "Advanced health monitoring & diagnostics",
-                            fontSize = 14.sp,
-                            color = Color.White.copy(alpha = 0.85f)
-                        )
-                    }
-                    
-                    // Overall Health Score Circle
-                    OverallHealthScoreIndicator(healthScore = 89f)
-                }
-                
-                Spacer(modifier = Modifier.height(20.dp))
-                
-                // Quick Health Status Cards
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    QuickHealthCard("89%", "Health Score", "🎯", Color(0xFF4CAF50))
-                    QuickHealthCard("847", "Charge Cycles", "🔄", Color(0xFF2196F3))
-                    QuickHealthCard("2.3%", "Degradation", "📉", Color(0xFFFF9800))
-                    QuickHealthCard("8 months", "Est. Lifespan", "⏳", Color(0xFF9C27B0))
-                }
-            }
-        }
-        
-        // Tab Row
-        ScrollableTabRow(
-            selectedTabIndex = selectedTab,
-            containerColor = Color.Transparent,
-            contentColor = Color(0xFF4CAF50),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        ) {
-            tabs.forEachIndexed { index, title ->
-                val isPremiumTab = index > 1 // Analytics, Trends, Predictions, Tips are premium
-                Tab(
-                    selected = selectedTab == index,
-                    onClick = {
-                        if (!isPremium && isPremiumTab) {
-                            showPremiumGate = true
-                        } else {
-                            selectedTab = index
-                        }
-                    },
-                    modifier = Modifier.padding(vertical = 12.dp)
+                Column(
+                    modifier = Modifier.padding(24.dp)
                 ) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = title,
-                            fontSize = 14.sp,
-                            fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
-                            color = if (!isPremium && isPremiumTab) Color.Gray else LocalContentColor.current
-                        )
-                        if (!isPremium && isPremiumTab) {
+                        Box(
+                            modifier = Modifier
+                                .size(64.dp)
+                                .background(
+                                    Brush.radialGradient(
+                                        colors = listOf(
+                                            Color.White.copy(alpha = 0.3f),
+                                            Color.White.copy(alpha = 0.1f)
+                                        )
+                                    ),
+                                    CircleShape
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = "🔋", fontSize = 32.sp)
+                        }
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "💎",
-                                fontSize = 10.sp
+                                text = "Battery Health Analytics",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
                             )
+                            Text(
+                                text = "Advanced health monitoring & diagnostics",
+                                fontSize = 14.sp,
+                                color = Color.White.copy(alpha = 0.85f)
+                            )
+                        }
+
+                        // Overall Health Score Circle
+                        OverallHealthScoreIndicator(healthScore = 89f)
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // Quick Health Status Cards
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        QuickHealthCard("89%", "Health Score", "🎯", Color(0xFF4CAF50))
+                        QuickHealthCard("847", "Charge Cycles", "🔄", Color(0xFF2196F3))
+                        QuickHealthCard("2.3%", "Degradation", "📉", Color(0xFFFF9800))
+                        QuickHealthCard("8 months", "Est. Lifespan", "⏳", Color(0xFF9C27B0))
+                    }
+                }
+            }
+
+            // Tab Row
+            ScrollableTabRow(
+                selectedTabIndex = selectedTab,
+                containerColor = Color.Transparent,
+                contentColor = Color(0xFF4CAF50),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                tabs.forEachIndexed { index, title ->
+                    val isPremiumTab = index > 1 // Analytics, Trends, Predictions, Tips are premium
+                    Tab(
+                        selected = selectedTab == index,
+                        onClick = {
+                            if (!isPremium && isPremiumTab) {
+                                showPremiumGate = true
+                            } else {
+                                selectedTab = index
+                            }
+                        },
+                        modifier = Modifier.padding(vertical = 12.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = title,
+                                fontSize = 14.sp,
+                                fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
+                                color = if (!isPremium && isPremiumTab) Color.Gray else LocalContentColor.current
+                            )
+                            if (!isPremium && isPremiumTab) {
+                                Text(
+                                    text = "💎",
+                                    fontSize = 10.sp
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
-        
-        // Content
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            when (selectedTab) {
-                0 -> {
-                    item { HealthOverviewCard(healthMetrics) }
-                    item { HealthDetailedMetricsCard() }
-                    item { BatteryVitalSignsCard() }
-                }
-                1 -> {
-                    item { HealthScoreAnalyticsCard() }
-                    item { ComponentHealthCard() }
-                    item { HistoricalHealthChart() }
-                }
-                2 -> {
-                    item { DegradationTrendsCard(degradationData) }
-                    item { HealthTrendComparisonCard() }
-                    item { CycleCountAnalysisCard() }
-                }
-                3 -> {
-                    item { HealthPredictionsCard(healthPredictions) }
-                    item { MaintenanceScheduleCard() }
-                    item { LifespanPredictionCard() }
-                }
-                4 -> {
-                    items(healthTips) { tip ->
-                        HealthTipCard(tip)
+
+            // Content
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                when (selectedTab) {
+                    0 -> {
+                        item { HealthOverviewCard(healthMetrics) }
+                        item { HealthDetailedMetricsCard() }
+                        item { BatteryVitalSignsCard() }
+                    }
+                    1 -> {
+                        item { HealthScoreAnalyticsCard() }
+                        item { ComponentHealthCard() }
+                        item { HistoricalHealthChart() }
+                    }
+                    2 -> {
+                        item { DegradationTrendsCard(degradationData) }
+                        item { HealthTrendComparisonCard() }
+                        item { CycleCountAnalysisCard() }
+                    }
+                    3 -> {
+                        item { HealthPredictionsCard(healthPredictions) }
+                        item { MaintenanceScheduleCard() }
+                        item { LifespanPredictionCard() }
+                    }
+                    4 -> {
+                        items(healthTips) { tip ->
+                            HealthTipCard(tip)
+                        }
                     }
                 }
             }
-        }
         } // Close main Column
-        
+
         // Enhanced Premium Gate
         EnhancedPremiumGate(
             isVisible = showPremiumGate && !isPremium,
@@ -279,7 +273,7 @@ fun OverallHealthScoreIndicator(healthScore: Float) {
         targetValue = healthScore / 100f,
         animationSpec = tween(durationMillis = 1500, easing = EaseOutCubic)
     )
-    
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.size(80.dp)
@@ -292,7 +286,7 @@ fun OverallHealthScoreIndicator(healthScore: Float) {
             color = Color.White.copy(alpha = 0.9f),
             trackColor = Color.White.copy(alpha = 0.3f)
         )
-        
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -339,7 +333,7 @@ fun QuickHealthCard(value: String, label: String, icon: String, color: Color) {
 }
 
 @Composable
-fun HealthOverviewCard(healthMetrics: List<HealthMetric>) {
+fun HealthOverviewCard(healthMetrics: List<BatteryHealthMetric>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
@@ -355,9 +349,9 @@ fun HealthOverviewCard(healthMetrics: List<HealthMetric>) {
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF2E7D32)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             healthMetrics.forEach { metric ->
                 HealthMetricRow(metric)
                 if (metric != healthMetrics.last()) {
@@ -369,7 +363,7 @@ fun HealthOverviewCard(healthMetrics: List<HealthMetric>) {
 }
 
 @Composable
-fun HealthMetricRow(metric: HealthMetric) {
+fun HealthMetricRow(metric: BatteryHealthMetric) {
     val statusColor = when (metric.status) {
         HealthStatus.EXCELLENT -> Color(0xFF4CAF50)
         HealthStatus.GOOD -> Color(0xFF8BC34A)
@@ -377,16 +371,16 @@ fun HealthMetricRow(metric: HealthMetric) {
         HealthStatus.POOR -> Color(0xFFFF5722)
         HealthStatus.CRITICAL -> Color(0xFFF44336)
     }
-    
+
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = metric.icon, fontSize = 20.sp)
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = metric.name,
@@ -399,7 +393,7 @@ fun HealthMetricRow(metric: HealthMetric) {
                     color = Color(0xFF666666)
                 )
             }
-            
+
             Column(
                 horizontalAlignment = Alignment.End
             ) {
@@ -423,9 +417,9 @@ fun HealthMetricRow(metric: HealthMetric) {
                 }
             }
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         // Progress bar
         LinearProgressIndicator(
             progress = metric.percentage / 100f,
@@ -455,9 +449,9 @@ fun HealthDetailedMetricsCard() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
@@ -466,9 +460,9 @@ fun HealthDetailedMetricsCard() {
                 DetailedMetricItem("Temperature", "32.5°C", "🌡️", Color(0xFFFF5722))
                 DetailedMetricItem("Current", "-850mA", "⚡", Color(0xFF9C27B0))
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
@@ -495,9 +489,9 @@ fun DetailedMetricItem(label: String, value: String, icon: String, color: Color)
                 Text(text = icon, fontSize = 20.sp)
             }
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Text(
             text = value,
             fontSize = 14.sp,
@@ -528,9 +522,9 @@ fun DegradationTrendsCard(degradationData: List<DegradationData>) {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             degradationData.forEach { data ->
                 DegradationDataRow(data)
                 Spacer(modifier = Modifier.height(8.dp))
@@ -563,7 +557,7 @@ fun DegradationDataRow(data: DegradationData) {
                 color = Color(0xFF666666)
             )
         }
-        
+
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = "${data.degradation}%",
@@ -596,9 +590,9 @@ fun HealthPredictionsCard(predictions: List<HealthPrediction>) {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             predictions.forEach { prediction ->
                 HealthPredictionRow(prediction)
                 if (prediction != predictions.last()) {
@@ -630,7 +624,7 @@ fun HealthPredictionRow(prediction: HealthPrediction) {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
-            
+
             Surface(
                 shape = RoundedCornerShape(8.dp),
                 color = Color(0xFF2196F3).copy(alpha = 0.1f)
@@ -643,16 +637,16 @@ fun HealthPredictionRow(prediction: HealthPrediction) {
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Text(
             text = "Predicted Health: ${prediction.predictedHealth.toInt()}%",
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             color = if (prediction.predictedHealth > 70) Color(0xFF4CAF50) else Color(0xFFFF5722)
         )
-        
+
         if (prediction.maintenanceDate != null) {
             val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
             Text(
@@ -661,7 +655,7 @@ fun HealthPredictionRow(prediction: HealthPrediction) {
                 color = Color(0xFF666666)
             )
         }
-        
+
         prediction.factors.take(2).forEach { factor ->
             Text(
                 text = "• $factor",
@@ -694,9 +688,9 @@ fun HealthTipCard(tip: HealthTip) {
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.weight(1f))
-                
+
                 Surface(
                     shape = RoundedCornerShape(6.dp),
                     color = when (tip.priority) {
@@ -718,16 +712,16 @@ fun HealthTipCard(tip: HealthTip) {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = tip.description,
                 fontSize = 14.sp,
                 color = Color(0xFF666666),
                 lineHeight = 20.sp
             )
-            
+
             if (tip.impact.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -742,9 +736,9 @@ fun HealthTipCard(tip: HealthTip) {
 }
 
 // Data generation functions
-private fun generateHealthMetrics(): List<HealthMetric> {
+private fun generateBatteryHealthMetrics(): List<BatteryHealthMetric> {
     return listOf(
-        HealthMetric(
+        BatteryHealthMetric(
             name = "Overall Health",
             value = "89%",
             percentage = 89f,
@@ -752,7 +746,7 @@ private fun generateHealthMetrics(): List<HealthMetric> {
             icon = "🎯",
             description = "Battery is performing well"
         ),
-        HealthMetric(
+        BatteryHealthMetric(
             name = "Capacity Retention",
             value = "91%",
             percentage = 91f,
@@ -760,7 +754,7 @@ private fun generateHealthMetrics(): List<HealthMetric> {
             icon = "🔋",
             description = "Slight capacity loss detected"
         ),
-        HealthMetric(
+        BatteryHealthMetric(
             name = "Charging Efficiency",
             value = "94%",
             percentage = 94f,
@@ -768,7 +762,7 @@ private fun generateHealthMetrics(): List<HealthMetric> {
             icon = "⚡",
             description = "Charging optimally"
         ),
-        HealthMetric(
+        BatteryHealthMetric(
             name = "Temperature Management",
             value = "85%",
             percentage = 85f,
@@ -776,7 +770,7 @@ private fun generateHealthMetrics(): List<HealthMetric> {
             icon = "🌡️",
             description = "Temperature within safe range"
         ),
-        HealthMetric(
+        BatteryHealthMetric(
             name = "Cycle Life Remaining",
             value = "78%",
             percentage = 78f,

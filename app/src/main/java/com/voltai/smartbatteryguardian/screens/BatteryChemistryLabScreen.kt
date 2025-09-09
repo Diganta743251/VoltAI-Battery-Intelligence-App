@@ -7,19 +7,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.*
@@ -83,11 +80,11 @@ data class PulsePoint(val time: Float, val voltage: Float, val current: Float)
 fun BatteryChemistryLabScreen() {
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("🔬 Analysis", "⚛️ Molecular", "📈 Electrochemical", "🧪 Testing", "🔮 Future")
-    
+
     val chemistryProfile = remember { getCurrentBatteryChemistry() }
     val molecularData = remember { getMolecularAnalysis() }
     val electrochemicalData = remember { getElectrochemicalData() }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -130,9 +127,9 @@ fun BatteryChemistryLabScreen() {
                     ) {
                         Text(text = "🔬", fontSize = 32.sp)
                     }
-                    
+
                     Spacer(modifier = Modifier.width(16.dp))
-                    
+
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Battery Chemistry Lab",
@@ -146,12 +143,12 @@ fun BatteryChemistryLabScreen() {
                             color = Color.White.copy(alpha = 0.85f)
                         )
                     }
-                    
+
                     ChemistryTypeIndicator(chemistryProfile.chemistryType)
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Scientific Metrics Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -164,7 +161,7 @@ fun BatteryChemistryLabScreen() {
                 }
             }
         }
-        
+
         // Scientific Tab Row
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -186,7 +183,7 @@ fun BatteryChemistryLabScreen() {
                 }
             }
         }
-        
+
         // Scientific Content
         LazyColumn(
             modifier = Modifier
@@ -239,7 +236,7 @@ fun ChemistryTypeIndicator(chemistryType: ChemistryType) {
         ChemistryType.QUANTUM_DOT -> "QD-Li"
         ChemistryType.GRAPHENE_HYBRID -> "Gr-Li"
     }
-    
+
     Surface(
         shape = RoundedCornerShape(12.dp),
         color = Color.White.copy(alpha = 0.2f)
@@ -305,9 +302,9 @@ fun ChemistryOverviewCard(profile: BatteryChemistryProfile) {
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             // Chemistry Visualization
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -319,7 +316,7 @@ fun ChemistryOverviewCard(profile: BatteryChemistryProfile) {
                     ChemistryProperty("Energy Density", "${profile.energyDensity} Wh/kg")
                     ChemistryProperty("Power Density", "${profile.powerDensity} W/kg")
                 }
-                
+
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CircularProgressIndicator(
                         progress = profile.safetyRating / 10f,
@@ -364,9 +361,9 @@ fun MolecularStructureCard(molecularData: MolecularAnalysis) {
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 MolecularMetric("Li⁺ Concentration", molecularData.lithiumConcentration, "mol/L")
                 MolecularMetric("Electrolyte Purity", molecularData.electrolytePurity, "%")
@@ -375,9 +372,9 @@ fun MolecularStructureCard(molecularData: MolecularAnalysis) {
                 MolecularMetric("Thermal Stability", molecularData.thermalStability, "°C")
                 MolecularMetric("Ion Mobility", molecularData.ionMobility, "cm²/Vs")
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Crystal Structure Info
             Surface(
                 shape = RoundedCornerShape(12.dp),
@@ -418,7 +415,7 @@ fun MolecularMetric(label: String, value: Float, unit: String) {
             fontSize = 14.sp,
             modifier = Modifier.weight(1f)
         )
-        
+
         Row(verticalAlignment = Alignment.CenterVertically) {
             LinearProgressIndicator(
                 progress = (value / 100f).coerceIn(0f, 1f),
@@ -498,25 +495,25 @@ fun getElectrochemicalData(): ElectrochemicalData {
 }
 
 // Helper functions for generating scientific data
-fun generateImpedanceSpectrum(): List<ImpedancePoint> = 
+fun generateImpedanceSpectrum(): List<ImpedancePoint> =
     (1..100).map { i ->
         val freq = 10f.pow(i / 25f)
         ImpedancePoint(freq, 100f / sqrt(freq), atan(freq) * 57.3f)
     }
 
-fun generateCVData(): List<CVPoint> = 
+fun generateCVData(): List<CVPoint> =
     (0..100).map { i ->
         val voltage = 2.5f + (i / 100f) * 2f
         CVPoint(voltage, sin(voltage * PI.toFloat()) * 0.1f)
     }
 
-fun generateGalvanostaticData(): List<GalvanoPoint> = 
+fun generateGalvanostaticData(): List<GalvanoPoint> =
     (0..100).map { i ->
         val time = i * 60f
         GalvanoPoint(time, 4.2f - (i / 100f) * 1.5f, i * 10f)
     }
 
-fun generatePulseData(): List<PulsePoint> = 
+fun generatePulseData(): List<PulsePoint> =
     (0..50).map { i ->
         val time = i * 10f
         PulsePoint(time, 3.7f + sin(time * 0.1f) * 0.2f, if (i % 10 < 5) 1f else 0f)
@@ -524,15 +521,27 @@ fun generatePulseData(): List<PulsePoint> =
 
 // Placeholder composables for future implementation
 @Composable fun SafetyAnalysisCard(profile: BatteryChemistryProfile) { /* Future implementation */ }
+
 @Composable fun PerformanceMetricsCard(profile: BatteryChemistryProfile) { /* Future implementation */ }
+
 @Composable fun IonicAnalysisCard(molecularData: MolecularAnalysis) { /* Future implementation */ }
+
 @Composable fun ElectrolyteHealthCard(molecularData: MolecularAnalysis) { /* Future implementation */ }
+
 @Composable fun ImpedanceSpectroscopyCard(data: ElectrochemicalData) { /* Future implementation */ }
+
 @Composable fun CyclicVoltammetryCard(data: ElectrochemicalData) { /* Future implementation */ }
+
 @Composable fun GalvanostaticAnalysisCard(data: ElectrochemicalData) { /* Future implementation */ }
+
 @Composable fun ChemistryDiagnosticTestsCard() { /* Future implementation */ }
+
 @Composable fun CalibrationProtocolsCard() { /* Future implementation */ }
+
 @Composable fun QualityAssuranceCard() { /* Future implementation */ }
+
 @Composable fun FutureTechnologiesCard() { /* Future implementation */ }
+
 @Composable fun ResearchInsightsCard() { /* Future implementation */ }
+
 @Composable fun InnovationRoadmapCard() { /* Future implementation */ }

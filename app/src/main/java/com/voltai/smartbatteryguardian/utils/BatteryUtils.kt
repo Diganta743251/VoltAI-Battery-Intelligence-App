@@ -1,7 +1,7 @@
 package com.voltai.smartbatteryguardian.utils
 
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -38,7 +38,7 @@ fun getHealthCardColor(health: Int): CardColors {
         health >= 50 -> Color(0xFFFF5722).copy(alpha = 0.1f)
         else -> Color(0xFFF44336).copy(alpha = 0.1f)
     }
-    
+
     return CardDefaults.cardColors(
         containerColor = containerColor,
         contentColor = MaterialTheme.colorScheme.onSurface

@@ -45,7 +45,7 @@ class BatteryOptimizationTile : TileService() {
 
     override fun onClick() {
         super.onClick()
-        
+
         // Check if user has premium access
         if (!checkPremiumAccess()) {
             showPremiumRequiredToast()
@@ -60,7 +60,7 @@ class BatteryOptimizationTile : TileService() {
             try {
                 optimizationActive = !optimizationActive
                 updateTileState()
-                
+
                 if (optimizationActive) {
                     enableOptimization()
                     showToast("Battery optimization enabled")
@@ -68,10 +68,9 @@ class BatteryOptimizationTile : TileService() {
                     disableOptimization()
                     showToast("Battery optimization disabled")
                 }
-                
+
                 // Save state
                 saveOptimizationState()
-                
             } catch (e: Exception) {
                 showToast("Failed to toggle optimization")
                 // Revert state on error
@@ -86,16 +85,15 @@ class BatteryOptimizationTile : TileService() {
         try {
             // Enable background app restrictions
             enableBackgroundRestrictions()
-            
+
             // Activate power saving mode
             activatePowerSavingMode()
-            
+
             // Optimize system settings
             optimizeSystemSettings()
-            
+
             // Update notification
             showOptimizationNotification(true)
-            
         } catch (e: Exception) {
             throw Exception("Failed to enable optimization: ${e.message}")
         }
@@ -108,10 +106,9 @@ class BatteryOptimizationTile : TileService() {
             disableBackgroundRestrictions()
             deactivatePowerSavingMode()
             restoreSystemSettings()
-            
+
             // Clear optimization notification
             clearOptimizationNotification()
-            
         } catch (e: Exception) {
             throw Exception("Failed to disable optimization: ${e.message}")
         }
@@ -140,7 +137,7 @@ class BatteryOptimizationTile : TileService() {
     private fun optimizeSystemSettings() {
         // Apply system-level optimizations:
         // - Network optimization
-        // - Display optimization  
+        // - Display optimization
         // - Background sync adjustments
     }
 
@@ -151,20 +148,20 @@ class BatteryOptimizationTile : TileService() {
     private fun updateTileState() {
         qsTile?.apply {
             state = if (optimizationActive) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
-            
+
             label = if (optimizationActive) "Optimized" else "Battery Optimizer"
-            
+
             contentDescription = if (optimizationActive) {
                 "Battery optimization is active. Tap to disable."
             } else {
                 "Battery optimization is inactive. Tap to enable."
             }
-            
+
             icon = Icon.createWithResource(
-                this@BatteryOptimizationTile, 
+                this@BatteryOptimizationTile,
                 if (optimizationActive) R.drawable.ic_optimization_active else R.drawable.ic_optimization_inactive
             )
-            
+
             updateTile()
         }
     }
@@ -172,7 +169,7 @@ class BatteryOptimizationTile : TileService() {
     private fun checkPremiumAccess(): Boolean {
         // Check if user has premium subscription
         return try {
-            premiumManager.isPremiumUser()
+            premiumManager.isPremium()
         } catch (e: Exception) {
             // If premium manager is not available, allow access (graceful degradation)
             true
@@ -240,7 +237,7 @@ class PowerSaverTile : TileService() {
         powerSaverActive = !powerSaverActive
         updateTileState()
         savePowerSaverState()
-        
+
         if (powerSaverActive) {
             enablePowerSaver()
             showToast("Power saver enabled")
@@ -331,7 +328,7 @@ class ChargingModeTile : TileService() {
             ChargingMode.SLOW -> ChargingMode.OPTIMIZED
             ChargingMode.OPTIMIZED -> ChargingMode.NORMAL
         }
-        
+
         updateTileState()
         saveChargingMode()
         applyChargingMode()
@@ -367,7 +364,7 @@ class ChargingModeTile : TileService() {
                 ChargingMode.SLOW -> "Slow"
                 ChargingMode.OPTIMIZED -> "Optimized"
             }
-            
+
             icon = Icon.createWithResource(
                 this@ChargingModeTile,
                 when (chargingMode) {
@@ -377,7 +374,7 @@ class ChargingModeTile : TileService() {
                     ChargingMode.OPTIMIZED -> R.drawable.ic_charging_optimized
                 }
             )
-            
+
             updateTile()
         }
     }

@@ -108,8 +108,8 @@ class BatteryAnalyticsEngine @Inject constructor(
     enum class TrendDirection { IMPROVING, STABLE, DECLINING, CRITICAL }
     enum class RiskLevel { LOW, MEDIUM, HIGH, CRITICAL }
     enum class Priority { LOW, MEDIUM, HIGH, URGENT }
-    enum class RecommendationCategory { 
-        CHARGING, TEMPERATURE, USAGE, HEALTH, PERFORMANCE, SETTINGS 
+    enum class RecommendationCategory {
+        CHARGING, TEMPERATURE, USAGE, HEALTH, PERFORMANCE, SETTINGS
     }
 
     suspend fun generateInsights(currentBatteryData: BatteryData): BatteryInsights {
@@ -193,12 +193,14 @@ class BatteryAnalyticsEngine @Inject constructor(
                 val chargeGain = endLevel - session.startLevel
                 val duration = (session.endTime ?: 0) - session.startTime
                 val hours = duration / (1000.0 * 60 * 60)
-                
+
                 if (hours > 0 && chargeGain > 0) {
                     // Efficiency = charge gained per hour, normalized
                     val efficiency = chargeGain / hours
                     minOf(efficiency / 50.0, 1.0) // Normalize to 0-1 scale
-                } else null
+                } else {
+                    null
+                }
             }
         }
 
@@ -207,7 +209,7 @@ class BatteryAnalyticsEngine @Inject constructor(
 
     private suspend fun analyzeTemperaturePatterns(weekAgo: Long): TemperatureAnalysis {
         val logs = batteryLogDao.getLogsBetween(weekAgo, System.currentTimeMillis())
-        
+
         if (logs.isEmpty()) {
             return TemperatureAnalysis(25f, 25f, 0, RiskLevel.LOW)
         }
@@ -269,10 +271,15 @@ class BatteryAnalyticsEngine @Inject constructor(
                 .take(3)
                 .map { it.key }
 
-            val overchargingRisk = if (sessions.any { 
-                (it.endLevel ?: 0) > 95 && 
-                ((it.endTime ?: 0) - it.startTime) > 2 * 60 * 60 * 1000 
-            }) RiskLevel.HIGH else RiskLevel.LOW
+            val overchargingRisk = if (sessions.any {
+                    (it.endLevel ?: 0) > 95 &&
+                        ((it.endTime ?: 0) - it.startTime) > 2 * 60 * 60 * 1000
+                }
+            ) {
+                RiskLevel.HIGH
+            } else {
+                RiskLevel.LOW
+            }
 
             val efficiencyScore = (calculateChargingEfficiency() * 100).toInt()
 
@@ -286,14 +293,16 @@ class BatteryAnalyticsEngine @Inject constructor(
             if (discharge > 3f) { // More than 3% per hour
                 val intensity = minOf(5, (discharge / 2).toInt() + 1)
                 UsagePeriod(hour, hour + 1, intensity)
-            } else null
+            } else {
+                null
+            }
         }
 
         return UsagePatterns(dailyPattern, chargingHabits, heavyUsagePeriods)
     }
 
     private suspend fun generateRecommendations(
-        batteryData: BatteryData, 
+        batteryData: BatteryData,
         weekAgo: Long
     ): List<Recommendation> {
         val recommendations = mutableListOf<Recommendation>()
@@ -363,25 +372,27 @@ class BatteryAnalyticsEngine @Inject constructor(
     }
 
     private suspend fun generatePredictions(
-        batteryData: BatteryData, 
+        batteryData: BatteryData,
         monthAgo: Long
     ): BatteryPredictions {
         val logs = batteryLogDao.getLogsBetween(monthAgo, System.currentTimeMillis())
-        
+
         // Estimate battery lifespan
         val healthDegradation = if (logs.size > 100) {
             val oldestHealth = logs.first().healthPercentage
             val latestHealth = logs.last().healthPercentage
             val monthlyDegradation = (oldestHealth - latestHealth).toDouble()
             kotlin.math.max(monthlyDegradation, 0.5) // Minimum 0.5% per month
-        } else 1.0
+        } else {
+            1.0
+        }
 
         val remainingMonths = ((batteryData.healthPercentage - 60) / healthDegradation).toInt()
         val confidence = if (logs.size > 200) 0.85 else 0.65
 
         val lifespanFactors = listOf(
             LifespanFactor(
-                "Temperature Management", 
+                "Temperature Management",
                 if (batteryData.temperature > 40f) -0.3 else 0.1,
                 "High temperatures accelerate battery degradation"
             ),

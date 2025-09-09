@@ -12,8 +12,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -83,7 +81,7 @@ private fun PremiumGateContent(
         ),
         label = "shimmer_translate"
     )
-    
+
     val pulseScale by shimmerAnimation.animateFloat(
         initialValue = 1f,
         targetValue = 1.05f,
@@ -93,7 +91,7 @@ private fun PremiumGateContent(
         ),
         label = "pulse"
     )
-    
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -125,7 +123,7 @@ private fun PremiumGateContent(
                         )
                     )
             )
-            
+
             // Shimmer overlay
             Box(
                 modifier = Modifier
@@ -142,7 +140,7 @@ private fun PremiumGateContent(
                         )
                     )
             )
-            
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -162,7 +160,7 @@ private fun PremiumGateContent(
                         )
                     }
                 }
-                
+
                 // Premium icon with animation
                 Box(
                     modifier = Modifier
@@ -183,18 +181,18 @@ private fun PremiumGateContent(
                         fontSize = 32.sp
                     )
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Text(
                     text = "Premium Feature",
                     fontSize = 14.sp,
                     color = Color(0xFF6366F1),
                     fontWeight = FontWeight.Medium
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = featureName,
                     fontSize = 24.sp,
@@ -202,9 +200,9 @@ private fun PremiumGateContent(
                     color = Color.Black,
                     textAlign = TextAlign.Center
                 )
-                
+
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 Text(
                     text = featureDescription,
                     fontSize = 16.sp,
@@ -212,9 +210,9 @@ private fun PremiumGateContent(
                     textAlign = TextAlign.Center,
                     lineHeight = 24.sp
                 )
-                
+
                 Spacer(modifier = Modifier.height(24.dp))
-                
+
                 // Features preview
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -224,9 +222,9 @@ private fun PremiumGateContent(
                     PremiumFeatureItem("📊 Detailed Insights")
                     PremiumFeatureItem("🎯 Personalized Recommendations")
                 }
-                
+
                 Spacer(modifier = Modifier.height(24.dp))
-                
+
                 // Action buttons
                 Button(
                     onClick = onUpgradeClick,
@@ -245,9 +243,9 @@ private fun PremiumGateContent(
                         color = Color.White
                     )
                 }
-                
+
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 TextButton(
                     onClick = onLearnMoreClick,
                     modifier = Modifier.fillMaxWidth()
@@ -333,7 +331,7 @@ fun PremiumFeatureBanner(
                         color = Color.White.copy(alpha = 0.8f)
                     )
                 }
-                
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -346,7 +344,7 @@ fun PremiumFeatureBanner(
                     ) {
                         Text("Upgrade", fontWeight = FontWeight.Bold)
                     }
-                    
+
                     IconButton(
                         onClick = onDismiss,
                         modifier = Modifier.size(24.dp)

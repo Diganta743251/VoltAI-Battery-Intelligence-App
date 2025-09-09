@@ -5,13 +5,11 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
@@ -34,7 +32,7 @@ fun PremiumBadge(
         ),
         label = "shimmer"
     )
-    
+
     Surface(
         shape = RoundedCornerShape(6.dp),
         color = color.copy(alpha = 0.9f),
@@ -87,9 +85,9 @@ fun EnhancedBatteryHealthAnalyticsCard(batteryData: BatteryData) {
                     Spacer(modifier = Modifier.width(6.dp))
                     PremiumBadge(text = "AI", color = Color(0xFF6366F1))
                 }
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -97,9 +95,9 @@ fun EnhancedBatteryHealthAnalyticsCard(batteryData: BatteryData) {
                         healthPercentage = batteryData.healthPercentage,
                         modifier = Modifier.size(32.dp)
                     )
-                    
+
                     Spacer(modifier = Modifier.width(8.dp))
-                    
+
                     Column {
                         Text(
                             text = "${batteryData.healthPercentage}%",
@@ -116,9 +114,9 @@ fun EnhancedBatteryHealthAnalyticsCard(batteryData: BatteryData) {
                 }
             }
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -170,17 +168,17 @@ fun EnhancedSmartChargingCard(batteryData: BatteryData) {
             Spacer(modifier = Modifier.width(6.dp))
             PremiumBadge(text = "PRO", color = Color(0xFF6A1B9A))
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         if (batteryData.isCharging) {
             ChargingOptimizationIndicator()
         } else {
             ReadyToChargeIndicator()
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -238,14 +236,14 @@ fun EnhancedRealTimeMonitoringCard(batteryData: BatteryData) {
                 LiveIndicator(isActive = true)
             }
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         // Mini real-time chart
         MiniRealtimeChart(modifier = Modifier.fillMaxWidth().height(24.dp))
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -267,7 +265,7 @@ private fun AnimatedHealthRing(
         animationSpec = tween(1000, easing = EaseOutCubic),
         label = "health"
     )
-    
+
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -275,14 +273,14 @@ private fun AnimatedHealthRing(
         Canvas(modifier = Modifier.fillMaxSize()) {
             val strokeWidth = 3.dp.toPx()
             val radius = (size.minDimension - strokeWidth) / 2
-            
+
             // Background circle
             drawCircle(
                 color = Color(0xFFE8F5E8),
                 radius = radius,
                 style = Stroke(width = strokeWidth)
             )
-            
+
             // Progress arc
             drawArc(
                 color = getHealthColor(healthPercentage),
@@ -306,7 +304,7 @@ private fun ChargingOptimizationIndicator() {
         ),
         label = "pulse"
     )
-    
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -358,7 +356,7 @@ private fun LiveIndicator(isActive: Boolean) {
         ),
         label = "live"
     )
-    
+
     Surface(
         shape = CircleShape,
         color = if (isActive) Color(0xFF4CAF50).copy(alpha = alpha) else Color(0xFF666666),
@@ -377,16 +375,16 @@ private fun MiniRealtimeChart(modifier: Modifier = Modifier) {
         ),
         label = "chart"
     )
-    
+
     Canvas(modifier = modifier) {
         val path = Path()
         val points = (0..20).map { index ->
             val x = (index * size.width) / 20
-            val y = size.height / 2 + 
-                   sin((index * 0.5f) + animatedPhase) * size.height * 0.3f
+            val y = size.height / 2 +
+                sin((index * 0.5f) + animatedPhase) * size.height * 0.3f
             Pair(x, y.toFloat())
         }
-        
+
         points.forEachIndexed { index, (x, y) ->
             if (index == 0) {
                 path.moveTo(x, y)
@@ -394,7 +392,7 @@ private fun MiniRealtimeChart(modifier: Modifier = Modifier) {
                 path.lineTo(x, y)
             }
         }
-        
+
         drawPath(
             path = path,
             color = Color(0xFF2196F3),

@@ -28,18 +28,18 @@ fun AppNavHost(
     onNavigateToSettings: () -> Unit
 ) {
     val batteryData by batteryDataProvider.batteryData.collectAsState()
-    
+
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
             com.voltai.smartbatteryguardian.screens.HomeScreen(
                 onNavigateToSettings = onNavigateToSettings
             )
         }
-        
+
         composable("settings") {
             com.voltai.smartbatteryguardian.screens.SettingsScreen()
         }
-        
+
         // Existing screens
         composable("health") {
             com.voltai.smartbatteryguardian.screens.HealthDetailScreen()
@@ -61,25 +61,25 @@ fun AppNavHost(
         composable("statistics") {
             com.voltai.smartbatteryguardian.screens.StatisticsDetailScreen()
         }
-        composable("saver") { 
+        composable("saver") {
             com.voltai.smartbatteryguardian.screens.BatterySaverScreen()
         }
-        composable("bluetooth") { 
+        composable("bluetooth") {
             com.voltai.smartbatteryguardian.screens.BluetoothDevicesScreen()
         }
-        composable("device_log") { 
+        composable("device_log") {
             com.voltai.smartbatteryguardian.screens.DeviceLogScreen()
         }
-        composable("idle_log") { 
+        composable("idle_log") {
             com.voltai.smartbatteryguardian.screens.IdleLogScreen()
         }
-        composable("overlays") { 
+        composable("overlays") {
             com.voltai.smartbatteryguardian.screens.OverlaysScreen()
         }
-        composable("history") { 
+        composable("history") {
             com.voltai.smartbatteryguardian.screens.HistoryScreen()
         }
-        composable("wakelocks") { 
+        composable("wakelocks") {
             com.voltai.smartbatteryguardian.screens.WakelocksScreen()
         }
     }
@@ -92,7 +92,7 @@ fun appNavHost(navController: NavHostController) {
         composable("dashboard") {
             placeholderScreen("Dashboard - Using our TestMainActivity for now")
         }
-        
+
         // Available local screens from the screens folder
         composable("health") {
             com.voltai.smartbatteryguardian.screens.HealthDetailScreen()
@@ -114,7 +114,7 @@ fun appNavHost(navController: NavHostController) {
         composable("statistics") {
             com.voltai.smartbatteryguardian.screens.StatisticsDetailScreen()
         }
-        
+
         // Placeholder screens for other features
         composable("saver") { placeholderScreen("Battery Saver") }
         composable("bluetooth") { placeholderScreen("Bluetooth Devices") }

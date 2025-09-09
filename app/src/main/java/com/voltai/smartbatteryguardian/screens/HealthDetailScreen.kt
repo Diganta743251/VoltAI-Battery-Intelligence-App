@@ -22,10 +22,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.voltai.smartbatteryguardian.rememberBatteryData
-import com.voltai.smartbatteryguardian.utils.getHealthStatus
-import com.voltai.smartbatteryguardian.utils.getHealthColor
 import com.voltai.smartbatteryguardian.utils.getHealthCardColor
+import com.voltai.smartbatteryguardian.utils.getHealthColor
 import com.voltai.smartbatteryguardian.utils.getHealthDescription
+import com.voltai.smartbatteryguardian.utils.getHealthStatus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,16 +50,16 @@ fun HealthDetailScreen(onBackClick: () -> Unit = {}) {
                 }
             },
             colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                ),
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         )
 
         LazyColumn(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Health Overview Card
@@ -161,9 +161,9 @@ fun HealthDetailScreen(onBackClick: () -> Unit = {}) {
                         // Capacity bar
                         Canvas(
                             modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(20.dp),
+                            Modifier
+                                .fillMaxWidth()
+                                .height(20.dp),
                         ) {
                             drawCapacityBar(currentCapacity, designCapacity)
                         }
@@ -190,9 +190,9 @@ fun HealthDetailScreen(onBackClick: () -> Unit = {}) {
 
                         Canvas(
                             modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(100.dp),
+                            Modifier
+                                .fillMaxWidth()
+                                .height(100.dp),
                         ) {
                             drawHealthTrend(batteryData.healthPercentage)
                         }
@@ -238,7 +238,9 @@ fun HealthDetailScreen(onBackClick: () -> Unit = {}) {
                         HealthAnalysisRow(
                             icon = Icons.Default.Favorite,
                             label = "Overall Health",
-                            value = "${batteryData.healthPercentage}% (${getHealthStatus(batteryData.healthPercentage)})",
+                            value = "${batteryData.healthPercentage}% (${getHealthStatus(
+                                batteryData.healthPercentage
+                            )})",
                             iconColor = getHealthColor(batteryData.healthPercentage),
                         )
 
@@ -275,9 +277,9 @@ fun HealthDetailScreen(onBackClick: () -> Unit = {}) {
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        ),
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    ),
                 ) {
                     Column(
                         modifier = Modifier.padding(20.dp),
@@ -404,9 +406,9 @@ fun HealthAnalysisRow(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -443,9 +445,9 @@ fun HealthStatusItem(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Canvas(

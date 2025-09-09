@@ -44,12 +44,12 @@ enum class SettingsType { SWITCH, NAVIGATION, SLIDER, DROPDOWN, ACTION }
 @Composable
 fun PremiumSettingsScreen() {
     val context = LocalContext.current
-    
+
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("⚙️ General", "🔋 Battery", "🎨 Interface", "🔒 Privacy", "💎 Premium")
-    
+
     val settingsSections = remember { generateSettingsSections() }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -86,9 +86,9 @@ fun PremiumSettingsScreen() {
                     ) {
                         Text(text = "⚙️", fontSize = 24.sp)
                     }
-                    
+
                     Spacer(modifier = Modifier.width(16.dp))
-                    
+
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "VoltAI Settings",
@@ -102,7 +102,7 @@ fun PremiumSettingsScreen() {
                             color = Color.White.copy(alpha = 0.8f)
                         )
                     }
-                    
+
                     Surface(
                         shape = RoundedCornerShape(12.dp),
                         color = Color.White.copy(alpha = 0.2f)
@@ -118,7 +118,7 @@ fun PremiumSettingsScreen() {
                 }
             }
         }
-        
+
         // Tab Row
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -141,7 +141,7 @@ fun PremiumSettingsScreen() {
                 }
             }
         }
-        
+
         // Content
         LazyColumn(
             modifier = Modifier
@@ -150,21 +150,29 @@ fun PremiumSettingsScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             when (selectedTab) {
-                0 -> items(settingsSections.filter { it.title in listOf("General", "Notifications", "Data & Storage") }) { section ->
+                0 -> items(
+                    settingsSections.filter { it.title in listOf("General", "Notifications", "Data & Storage") }
+                ) { section ->
                     SettingsSectionCard(section)
                 }
-                1 -> items(settingsSections.filter { it.title in listOf("Battery Monitoring", "Power Optimization", "Charging") }) { section ->
+                1 -> items(
+                    settingsSections.filter { it.title in listOf("Battery Monitoring", "Power Optimization", "Charging") }
+                ) { section ->
                     SettingsSectionCard(section)
                 }
-                2 -> items(settingsSections.filter { it.title in listOf("Appearance", "Home Screen", "Charts & Graphs") }) { section ->
+                2 -> items(
+                    settingsSections.filter { it.title in listOf("Appearance", "Home Screen", "Charts & Graphs") }
+                ) { section ->
                     SettingsSectionCard(section)
                 }
-                3 -> items(settingsSections.filter { it.title in listOf("Privacy & Security", "Data Collection", "Permissions") }) { section ->
+                3 -> items(
+                    settingsSections.filter { it.title in listOf("Privacy & Security", "Data Collection", "Permissions") }
+                ) { section ->
                     SettingsSectionCard(section)
                 }
                 4 -> item { PremiumFeaturesCard() }
             }
-            
+
             // About Section
             item {
                 AboutCard()
@@ -198,9 +206,9 @@ fun SettingsSectionCard(section: SettingsSection) {
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             section.items.forEach { item ->
                 SettingsItemRow(item)
                 if (item != section.items.last()) {
@@ -225,9 +233,9 @@ fun SettingsItemRow(item: SettingsItem) {
             tint = if (item.isPremium) Color(0xFFFFD700) else Color(0xFF666666),
             modifier = Modifier.size(20.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -261,13 +269,13 @@ fun SettingsItemRow(item: SettingsItem) {
                 )
             }
         }
-        
+
         when (item.type) {
             SettingsType.SWITCH -> {
                 var isChecked by remember { mutableStateOf(item.value as? Boolean ?: false) }
                 Switch(
                     checked = isChecked,
-                    onCheckedChange = { 
+                    onCheckedChange = {
                         isChecked = it
                         item.action()
                     },
@@ -334,9 +342,9 @@ fun PremiumFeaturesCard() {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             listOf(
                 "🧠 AI-powered battery optimization",
                 "📊 Advanced analytics and insights",
@@ -362,9 +370,9 @@ fun PremiumFeaturesCard() {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             Button(
                 onClick = { /* Open premium purchase */ },
                 modifier = Modifier.fillMaxWidth(),
@@ -398,23 +406,23 @@ fun AboutCard() {
                 text = "🔋",
                 fontSize = 48.sp
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = "VoltAI Battery Guardian",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Text(
                 text = "Version 2.1.0 Professional",
                 fontSize = 14.sp,
                 color = Color(0xFF666666)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = "Advanced AI-powered battery management for Android",
                 fontSize = 12.sp,
@@ -434,46 +442,143 @@ fun generateSettingsSections(): List<SettingsSection> {
                 SettingsItem("Language", "English", Icons.Default.Settings, SettingsType.NAVIGATION),
                 SettingsItem("Units", "Metric", Icons.Default.Settings, SettingsType.NAVIGATION),
                 SettingsItem("Auto-start", "Launch on boot", Icons.Default.PlayArrow, SettingsType.SWITCH, true),
-                SettingsItem("Background monitoring", "Continuous battery tracking", Icons.Default.Settings, SettingsType.SWITCH, true, true)
+                SettingsItem(
+                    "Background monitoring",
+                    "Continuous battery tracking",
+                    Icons.Default.Settings,
+                    SettingsType.SWITCH,
+                    true,
+                    true
+                )
             )
         ),
         SettingsSection(
             title = "Notifications",
             icon = "🔔",
             items = listOf(
-                SettingsItem("Battery alerts", "Low battery warnings", Icons.Default.Notifications, SettingsType.SWITCH, true),
-                SettingsItem("Health notifications", "Battery health updates", Icons.Default.Favorite, SettingsType.SWITCH, true),
-                SettingsItem("Charging complete", "Full charge alerts", Icons.Default.Build, SettingsType.SWITCH, false),
-                SettingsItem("AI recommendations", "Smart optimization tips", Icons.Default.Star, SettingsType.SWITCH, true, true)
+                SettingsItem(
+                    "Battery alerts",
+                    "Low battery warnings",
+                    Icons.Default.Notifications,
+                    SettingsType.SWITCH,
+                    true
+                ),
+                SettingsItem(
+                    "Health notifications",
+                    "Battery health updates",
+                    Icons.Default.Favorite,
+                    SettingsType.SWITCH,
+                    true
+                ),
+                SettingsItem(
+                    "Charging complete",
+                    "Full charge alerts",
+                    Icons.Default.Build,
+                    SettingsType.SWITCH,
+                    false
+                ),
+                SettingsItem(
+                    "AI recommendations",
+                    "Smart optimization tips",
+                    Icons.Default.Star,
+                    SettingsType.SWITCH,
+                    true,
+                    true
+                )
             )
         ),
         SettingsSection(
             title = "Data & Storage",
             icon = "💾",
             items = listOf(
-                SettingsItem("Export data", "CSV/PDF reports", Icons.Default.Share, SettingsType.ACTION, "Export", true),
-                SettingsItem("Import settings", "Restore configuration", Icons.Default.Settings, SettingsType.ACTION, "Import", true),
+                SettingsItem(
+                    "Export data",
+                    "CSV/PDF reports",
+                    Icons.Default.Share,
+                    SettingsType.ACTION,
+                    "Export",
+                    true
+                ),
+                SettingsItem(
+                    "Import settings",
+                    "Restore configuration",
+                    Icons.Default.Settings,
+                    SettingsType.ACTION,
+                    "Import",
+                    true
+                ),
                 SettingsItem("Clear cache", "Free up storage", Icons.Default.Delete, SettingsType.ACTION, "Clear"),
-                SettingsItem("Data retention", "30 days", Icons.Default.Settings, SettingsType.NAVIGATION, isPremium = true)
+                SettingsItem(
+                    "Data retention",
+                    "30 days",
+                    Icons.Default.Settings,
+                    SettingsType.NAVIGATION,
+                    isPremium = true
+                )
             )
         ),
         SettingsSection(
             title = "Battery Monitoring",
             icon = "🔋",
             items = listOf(
-                SettingsItem("Real-time tracking", "Continuous monitoring", Icons.Default.Build, SettingsType.SWITCH, true),
-                SettingsItem("Health analysis", "Deep battery diagnostics", Icons.Default.Info, SettingsType.SWITCH, true, true),
-                SettingsItem("Temperature alerts", "Thermal warnings", Icons.Default.Warning, SettingsType.SWITCH, true),
-                SettingsItem("Calibration reminders", "Monthly calibration", Icons.Default.Settings, SettingsType.SWITCH, false, true)
+                SettingsItem(
+                    "Real-time tracking",
+                    "Continuous monitoring",
+                    Icons.Default.Build,
+                    SettingsType.SWITCH,
+                    true
+                ),
+                SettingsItem(
+                    "Health analysis",
+                    "Deep battery diagnostics",
+                    Icons.Default.Info,
+                    SettingsType.SWITCH,
+                    true,
+                    true
+                ),
+                SettingsItem(
+                    "Temperature alerts",
+                    "Thermal warnings",
+                    Icons.Default.Warning,
+                    SettingsType.SWITCH,
+                    true
+                ),
+                SettingsItem(
+                    "Calibration reminders",
+                    "Monthly calibration",
+                    Icons.Default.Settings,
+                    SettingsType.SWITCH,
+                    false,
+                    true
+                )
             )
         ),
         SettingsSection(
             title = "Privacy & Security",
             icon = "🔒",
             items = listOf(
-                SettingsItem("Data encryption", "Secure local storage", Icons.Default.Lock, SettingsType.SWITCH, true, true),
-                SettingsItem("Analytics sharing", "Help improve VoltAI", Icons.Default.Share, SettingsType.SWITCH, false),
-                SettingsItem("Crash reports", "Automatic bug reporting", Icons.Default.Warning, SettingsType.SWITCH, true),
+                SettingsItem(
+                    "Data encryption",
+                    "Secure local storage",
+                    Icons.Default.Lock,
+                    SettingsType.SWITCH,
+                    true,
+                    true
+                ),
+                SettingsItem(
+                    "Analytics sharing",
+                    "Help improve VoltAI",
+                    Icons.Default.Share,
+                    SettingsType.SWITCH,
+                    false
+                ),
+                SettingsItem(
+                    "Crash reports",
+                    "Automatic bug reporting",
+                    Icons.Default.Warning,
+                    SettingsType.SWITCH,
+                    true
+                ),
                 SettingsItem("Reset all data", "Factory reset", Icons.Default.Refresh, SettingsType.ACTION, "Reset")
             )
         )

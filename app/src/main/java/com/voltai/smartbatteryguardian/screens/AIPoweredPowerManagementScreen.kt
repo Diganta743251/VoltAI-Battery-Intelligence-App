@@ -3,6 +3,7 @@ package com.voltai.smartbatteryguardian.screens
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
@@ -24,9 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.Canvas
 import com.voltai.smartbatteryguardian.rememberBatteryData
-import kotlinx.coroutines.delay
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -116,16 +115,16 @@ fun AIPoweredPowerManagementScreen() {
     val batteryData by rememberBatteryData(context)
     var selectedTab by remember { mutableStateOf(0) }
     var isLearning by remember { mutableStateOf(false) }
-    
+
     val powerProfiles = remember { generatePowerProfiles() }
     val thermalData = remember { generateThermalData() }
     val adaptiveOptimization = remember { generateAdaptiveOptimization() }
     val powerInsights = remember { generatePowerInsights() }
-    
+
     val tabs = listOf("⚡ Profiles", "🧠 AI Adaptive", "🌡️ Thermal", "📊 Analytics", "💡 Insights")
-    
+
     var activeProfile by remember { mutableStateOf(powerProfiles.first { it.isActive }) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -162,9 +161,9 @@ fun AIPoweredPowerManagementScreen() {
                     ) {
                         AIOptimizationIcon(adaptiveOptimization.isEnabled)
                     }
-                    
+
                     Spacer(modifier = Modifier.width(20.dp))
-                    
+
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
@@ -180,7 +179,7 @@ fun AIPoweredPowerManagementScreen() {
                             color = Color.White.copy(alpha = 0.9f)
                         )
                     }
-                    
+
                     // Power Savings Display
                     Surface(
                         shape = RoundedCornerShape(12.dp),
@@ -204,9 +203,9 @@ fun AIPoweredPowerManagementScreen() {
                         }
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Current Profile Status
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -219,7 +218,7 @@ fun AIPoweredPowerManagementScreen() {
                 }
             }
         }
-        
+
         // Tab Row
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -242,7 +241,7 @@ fun AIPoweredPowerManagementScreen() {
                 }
             }
         }
-        
+
         // Content with smooth animations
         AnimatedContent(
             targetState = selectedTab,
@@ -278,7 +277,7 @@ fun AIOptimizationIcon(isLearning: Boolean) {
             repeatMode = RepeatMode.Restart
         )
     )
-    
+
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 0.8f,
         targetValue = 1.2f,
@@ -287,7 +286,7 @@ fun AIOptimizationIcon(isLearning: Boolean) {
             repeatMode = RepeatMode.Reverse
         )
     )
-    
+
     Box(
         modifier = Modifier
             .size(48.dp)
@@ -358,9 +357,9 @@ fun PowerProfilesTab(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
@@ -375,7 +374,7 @@ fun PowerProfilesTab(
                 }
             }
         }
-        
+
         // Custom Profiles
         item {
             Text(
@@ -385,7 +384,7 @@ fun PowerProfilesTab(
                 modifier = Modifier.padding(horizontal = 4.dp)
             )
         }
-        
+
         items(profiles.filter { it.isCustom }) { profile ->
             DetailedProfileCard(
                 profile = profile,
@@ -394,7 +393,7 @@ fun PowerProfilesTab(
                 onEdit = { /* Open profile editor */ }
             )
         }
-        
+
         // Create New Profile Button
         item {
             Card(
@@ -484,7 +483,7 @@ fun AIAdaptiveTab(
                                 )
                             }
                         }
-                        
+
                         Switch(
                             checked = optimization.isEnabled,
                             onCheckedChange = { onToggleLearning() },
@@ -494,10 +493,10 @@ fun AIAdaptiveTab(
                             )
                         )
                     }
-                    
+
                     if (optimization.isEnabled) {
                         Spacer(modifier = Modifier.height(20.dp))
-                        
+
                         // Learning Progress
                         Column {
                             Row(
@@ -516,9 +515,9 @@ fun AIAdaptiveTab(
                                     color = Color(0xFF6A1B9A)
                                 )
                             }
-                            
+
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             LinearProgressIndicator(
                                 progress = optimization.learningProgress.toFloat(),
                                 modifier = Modifier
@@ -528,9 +527,9 @@ fun AIAdaptiveTab(
                                 color = Color(0xFF6A1B9A),
                                 trackColor = Color(0xFF6A1B9A).copy(alpha = 0.2f)
                             )
-                            
+
                             Spacer(modifier = Modifier.height(12.dp))
-                            
+
                             Text(
                                 text = "Data Points: ${optimization.dataPoints} • Next: ${optimization.nextOptimization}",
                                 fontSize = 12.sp,
@@ -541,7 +540,7 @@ fun AIAdaptiveTab(
                 }
             }
         }
-        
+
         // Optimization Score
         item {
             Card(
@@ -558,15 +557,15 @@ fun AIAdaptiveTab(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Box(
                         modifier = Modifier.size(120.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         OptimizationScoreRing(optimization.optimizationScore)
-                        
+
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
@@ -583,9 +582,9 @@ fun AIAdaptiveTab(
                             )
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Text(
                         text = "Based on ${optimization.dataPoints} data points collected over time",
                         fontSize = 12.sp,
@@ -595,7 +594,7 @@ fun AIAdaptiveTab(
                 }
             }
         }
-        
+
         // Recent Adaptations
         item {
             Text(
@@ -605,7 +604,7 @@ fun AIAdaptiveTab(
                 modifier = Modifier.padding(horizontal = 4.dp)
             )
         }
-        
+
         items(optimization.adaptations) { adaptation ->
             AdaptationCard(adaptation)
         }
@@ -657,7 +656,7 @@ fun ThermalManagementTab(thermalData: ThermalData, batteryData: com.voltai.smart
                                 fontWeight = FontWeight.Medium
                             )
                         }
-                        
+
                         // Current Temperature Display
                         Surface(
                             shape = RoundedCornerShape(12.dp),
@@ -684,7 +683,7 @@ fun ThermalManagementTab(thermalData: ThermalData, batteryData: com.voltai.smart
                 }
             }
         }
-        
+
         // Temperature Trend Chart
         item {
             Card(
@@ -700,14 +699,14 @@ fun ThermalManagementTab(thermalData: ThermalData, batteryData: com.voltai.smart
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     ThermalTrendChart(thermalData.temperatureHistory)
                 }
             }
         }
-        
+
         // Component Temperatures
         item {
             Card(
@@ -723,9 +722,9 @@ fun ThermalManagementTab(thermalData: ThermalData, batteryData: com.voltai.smart
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     thermalData.hotspots.forEach { component ->
                         ComponentTemperatureItem(component)
                         Spacer(modifier = Modifier.height(8.dp))
@@ -733,7 +732,7 @@ fun ThermalManagementTab(thermalData: ThermalData, batteryData: com.voltai.smart
                 }
             }
         }
-        
+
         // Thermal Actions
         item {
             Card(
@@ -749,23 +748,23 @@ fun ThermalManagementTab(thermalData: ThermalData, batteryData: com.voltai.smart
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     ThermalActionItem(
                         title = "Active Cooling",
                         description = "Reduce CPU frequency when temperature exceeds threshold",
                         enabled = thermalData.coolingActive,
                         onToggle = { /* Toggle cooling */ }
                     )
-                    
+
                     ThermalActionItem(
                         title = "Background Limit",
                         description = "Limit background app activity during thermal events",
                         enabled = true,
                         onToggle = { /* Toggle background limiting */ }
                     )
-                    
+
                     ThermalActionItem(
                         title = "Display Dimming",
                         description = "Auto-dim display brightness when device gets warm",
@@ -801,14 +800,14 @@ fun PowerAnalyticsTab(profiles: List<PowerProfile>, thermalData: ThermalData) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     PowerSavingsChart(profiles)
                 }
             }
         }
-        
+
         // Usage Pattern Analysis
         item {
             Card(
@@ -824,14 +823,14 @@ fun PowerAnalyticsTab(profiles: List<PowerProfile>, thermalData: ThermalData) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     UsagePatternChart()
                 }
             }
         }
-        
+
         // Efficiency Metrics
         item {
             Card(
@@ -847,9 +846,9 @@ fun PowerAnalyticsTab(profiles: List<PowerProfile>, thermalData: ThermalData) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
@@ -906,7 +905,7 @@ fun PowerInsightsTab(insights: List<PowerInsight>) {
                 }
             }
         }
-        
+
         items(insights) { insight ->
             PowerInsightCard(insight)
         }
@@ -943,7 +942,7 @@ fun QuickProfileCard(
                 text = profile.icon,
                 fontSize = 32.sp
             )
-            
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -960,7 +959,7 @@ fun QuickProfileCard(
                     fontWeight = FontWeight.Medium
                 )
             }
-            
+
             if (profile.aiOptimized) {
                 Surface(
                     shape = RoundedCornerShape(8.dp),
@@ -1005,9 +1004,9 @@ fun DetailedProfileCard(
                     text = profile.icon,
                     fontSize = 32.sp
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
@@ -1040,7 +1039,7 @@ fun DetailedProfileCard(
                         color = Color(0xFF666666)
                     )
                 }
-                
+
                 Column(
                     horizontalAlignment = Alignment.End
                 ) {
@@ -1057,9 +1056,9 @@ fun DetailedProfileCard(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Performance Impact
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -1081,7 +1080,7 @@ fun DetailedProfileCard(
                         color = getPerformanceImpactColor(profile.performanceImpact)
                     )
                 }
-                
+
                 Row {
                     if (!isActive) {
                         TextButton(
@@ -1115,7 +1114,7 @@ fun OptimizationScoreRing(score: Int) {
         val strokeWidth = 12.dp.toPx()
         val radius = (size.minDimension - strokeWidth) / 2
         val center = androidx.compose.ui.geometry.Offset(size.width / 2, size.height / 2)
-        
+
         // Background ring
         drawArc(
             color = Color.Gray.copy(alpha = 0.2f),
@@ -1129,7 +1128,7 @@ fun OptimizationScoreRing(score: Int) {
                 center.y - radius
             )
         )
-        
+
         // Progress ring
         val sweepAngle = (score / 100f) * 360f
         drawArc(
@@ -1178,7 +1177,7 @@ fun AdaptationCard(adaptation: Adaptation) {
                         modifier = Modifier.padding(top = 4.dp)
                     )
                 }
-                
+
                 Surface(
                     shape = RoundedCornerShape(8.dp),
                     color = Color(0xFF4CAF50).copy(alpha = 0.1f)
@@ -1191,9 +1190,9 @@ fun AdaptationCard(adaptation: Adaptation) {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = "Impact: ${adaptation.impact}",
                 fontSize = 11.sp,
@@ -1212,18 +1211,18 @@ fun ThermalTrendChart(temperatureHistory: List<TempPoint>) {
             .height(120.dp)
     ) {
         if (temperatureHistory.isEmpty()) return@Canvas
-        
+
         val stepX = size.width / (temperatureHistory.size - 1).coerceAtLeast(1)
         val maxTemp = temperatureHistory.maxOfOrNull { it.temperature }?.toFloat() ?: 100f
         val minTemp = temperatureHistory.minOfOrNull { it.temperature }?.toFloat() ?: 0f
-        
+
         val tempPoints = temperatureHistory.mapIndexed { index, point ->
             androidx.compose.ui.geometry.Offset(
                 x = index * stepX,
                 y = size.height - ((point.temperature.toFloat() - minTemp) / (maxTemp - minTemp)) * size.height
             )
         }
-        
+
         // Draw temperature line
         for (i in 0 until tempPoints.size - 1) {
             drawLine(
@@ -1234,7 +1233,7 @@ fun ThermalTrendChart(temperatureHistory: List<TempPoint>) {
                 cap = StrokeCap.Round
             )
         }
-        
+
         // Draw points
         tempPoints.forEachIndexed { index, point ->
             drawCircle(
@@ -1256,9 +1255,9 @@ fun ComponentTemperatureItem(component: ComponentTemp) {
             text = component.icon,
             fontSize = 20.sp
         )
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -1273,7 +1272,7 @@ fun ComponentTemperatureItem(component: ComponentTemp) {
                 color = Color(0xFF666666)
             )
         }
-        
+
         Text(
             text = "${component.temperature.toInt()}°C",
             fontSize = 16.sp,
@@ -1310,7 +1309,7 @@ fun ThermalActionItem(
                 color = Color(0xFF666666)
             )
         }
-        
+
         Switch(
             checked = enabled,
             onCheckedChange = onToggle,
@@ -1391,7 +1390,8 @@ fun PowerInsightCard(insight: PowerInsight) {
             }
         ),
         border = BorderStroke(
-            1.dp, when (insight.priority) {
+            1.dp,
+            when (insight.priority) {
                 InsightPriority.CRITICAL -> Color(0xFFFF5722)
                 InsightPriority.HIGH -> Color(0xFFFF9800)
                 InsightPriority.MEDIUM -> Color(0xFF9C27B0)
@@ -1411,9 +1411,9 @@ fun PowerInsightCard(insight: PowerInsight) {
                     text = insight.icon,
                     fontSize = 24.sp
                 )
-                
+
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
@@ -1447,7 +1447,7 @@ fun PowerInsightCard(insight: PowerInsight) {
                         modifier = Modifier.padding(top = 4.dp)
                     )
                 }
-                
+
                 if (insight.potentialSaving.isNotEmpty()) {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
@@ -1463,7 +1463,7 @@ fun PowerInsightCard(insight: PowerInsight) {
                     }
                 }
             }
-            
+
             if (insight.recommendation.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
@@ -1547,7 +1547,7 @@ fun generateThermalData(): ThermalData {
             cpuUsage = Random.nextDouble(10.0, 90.0)
         )
     }.reversed()
-    
+
     return ThermalData(
         currentTemp = 32.5,
         maxTemp = 45.0,

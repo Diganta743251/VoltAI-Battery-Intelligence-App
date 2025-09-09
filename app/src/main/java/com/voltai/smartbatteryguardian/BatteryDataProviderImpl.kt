@@ -6,18 +6,17 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlin.math.abs
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 
 /**
  * Real implementation of BatteryDataProvider that monitors actual device battery
@@ -53,7 +52,7 @@ class BatteryDataProviderImpl @Inject constructor(
         }
 
         context.registerReceiver(batteryReceiver, filter)
-        
+
         // Initial battery state query
         val batteryStatus = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
         batteryStatus?.let { updateBatteryData(it) }
@@ -67,12 +66,14 @@ class BatteryDataProviderImpl @Inject constructor(
         val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
         val batteryPercentage = if (level != -1 && scale != -1) {
             (level * 100 / scale.toFloat()).toInt()
-        } else 0
+        } else {
+            0
+        }
 
         // Charging status
         val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
         val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL
+            status == BatteryManager.BATTERY_STATUS_FULL
 
         val chargingStatus = when (status) {
             BatteryManager.BATTERY_STATUS_CHARGING -> "Charging"
@@ -91,7 +92,9 @@ class BatteryDataProviderImpl @Inject constructor(
         // Current (requires API 21+)
         val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
-        } else 0
+        } else {
+            0
+        }
 
         // Health
         val health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, BatteryManager.BATTERY_HEALTH_UNKNOWN)
@@ -109,7 +112,9 @@ class BatteryDataProviderImpl @Inject constructor(
         val capacity = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val designCapacity = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
             if (designCapacity > 0) "${designCapacity / 1000} mAh" else "Unknown"
-        } else "Unknown"
+        } else {
+            "Unknown"
+        }
 
         // Power source
         val plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
@@ -157,7 +162,7 @@ class BatteryDataProviderImpl @Inject constructor(
 
     private fun calculateRemainingTime(level: Int, isCharging: Boolean, current: Int): String {
         if (current == 0) return "Unknown"
-        
+
         return if (isCharging) {
             val remainingCapacity = 100 - level
             val hours = remainingCapacity * 60 / (current / 1000f).coerceAtLeast(500f)
@@ -181,23 +186,23 @@ class BatteryDataProviderImpl @Inject constructor(
 
     private fun calculateBatteryScore(health: Int, temperature: Float, level: Int): Int {
         var score = 100
-        
+
         // Health factor
         score = (score * health / 100.0).toInt()
-        
+
         // Temperature factor
         when {
             temperature > 45 -> score -= 20
             temperature > 35 -> score -= 10
             temperature < 0 -> score -= 15
         }
-        
+
         // Level factor (very low or very high levels affect score)
         when {
             level < 20 -> score -= 5
             level > 95 -> score -= 3
         }
-        
+
         return score.coerceIn(0, 100)
     }
 
@@ -214,7 +219,7 @@ class BatteryDataProviderImpl @Inject constructor(
     }
 
     fun stopMonitoring() {
-        batteryReceiver?.let { 
+        batteryReceiver?.let {
             context.unregisterReceiver(it)
             batteryReceiver = null
         }

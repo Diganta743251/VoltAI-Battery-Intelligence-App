@@ -69,14 +69,14 @@ class DataExportImportViewModel @Inject constructor(
             try {
                 _exportState.value = ExportState.PREPARING
                 _exportProgress.value = 0f
-                
+
                 // Simulate export process
                 _exportState.value = ExportState.EXPORTING
                 for (i in 1..10) {
                     kotlinx.coroutines.delay(100)
                     _exportProgress.value = i / 10f
                 }
-                
+
                 _exportState.value = ExportState.COMPLETED
                 _successMessage.value = "Data exported successfully!"
             } catch (e: Exception) {
@@ -94,15 +94,15 @@ class DataExportImportViewModel @Inject constructor(
             try {
                 _importState.value = ImportState.VALIDATING
                 _importProgress.value = 0f
-                
+
                 kotlinx.coroutines.delay(500)
-                
+
                 _importState.value = ImportState.IMPORTING
                 for (i in 1..10) {
                     kotlinx.coroutines.delay(100)
                     _importProgress.value = i / 10f
                 }
-                
+
                 _importState.value = ImportState.COMPLETED
                 _successMessage.value = "Data imported successfully!"
             } catch (e: Exception) {
@@ -120,17 +120,17 @@ class DataExportImportViewModel @Inject constructor(
             try {
                 _cloudBackupState.value = BackupState.PREPARING
                 _cloudBackupProgress.value = 0f
-                
+
                 // Simulate backup process
                 _cloudBackupState.value = BackupState.UPLOADING
                 for (i in 1..10) {
                     kotlinx.coroutines.delay(200)
                     _cloudBackupProgress.value = i / 10f
                 }
-                
+
                 _cloudBackupState.value = BackupState.COMPLETED
                 _successMessage.value = "Cloud backup created successfully!"
-                
+
                 // Add new backup to list
                 val newBackup = CloudBackupItem(
                     id = "backup_${System.currentTimeMillis()}",
@@ -154,13 +154,13 @@ class DataExportImportViewModel @Inject constructor(
             try {
                 _cloudBackupState.value = BackupState.DOWNLOADING
                 _cloudBackupProgress.value = 0f
-                
+
                 // Simulate restore process
                 for (i in 1..10) {
                     kotlinx.coroutines.delay(150)
                     _cloudBackupProgress.value = i / 10f
                 }
-                
+
                 _cloudBackupState.value = BackupState.COMPLETED
                 _successMessage.value = "Data restored successfully from cloud backup!"
             } catch (e: Exception) {
