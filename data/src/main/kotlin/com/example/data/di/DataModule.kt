@@ -6,10 +6,12 @@ import com.voltai.data.repository.BatteryRepositoryImpl
 import com.voltai.data.repository.PowerProfileRepositoryImpl
 import com.voltai.data.repository.AppUsageRepositoryImpl
 import com.voltai.data.repository.ThermalRepositoryImpl
+import com.voltai.data.repository.CurrentRepositoryImpl
 import com.voltai.domain.repository.BatteryRepository
 import com.voltai.domain.repository.PowerProfileRepository
 import com.voltai.domain.repository.AppUsageRepository
 import com.voltai.domain.repository.ThermalRepository
+import com.voltai.domain.repository.ICurrentRepository
 import com.voltai.domain.usecase.*
 import dagger.Binds
 import dagger.Module
@@ -46,6 +48,12 @@ abstract class DataModule {
     abstract fun bindThermalRepository(
         thermalRepositoryImpl: ThermalRepositoryImpl
     ): ThermalRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCurrentRepository(
+        impl: CurrentRepositoryImpl
+    ): ICurrentRepository
 
     companion object {
         @Provides

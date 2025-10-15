@@ -1,168 +1,184 @@
 package com.voltai.smartbatteryguardian.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-// Removed legacy imports; use fully qualified names or modern screens where needed
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.voltai.smartbatteryguardian.BatteryDataProvider
+import com.voltai.smartbatteryguardian.screens.HomeScreen
+import com.voltai.smartbatteryguardian.screens.WelcomeScreen
 
 @Composable
-fun PlaceholderScreen(screenName: String) {
+fun placeholderScreen(screenName: String) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text("$screenName Screen - Coming Soon!")
     }
 }
 
 @Composable
-fun AppNavHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "splash") {
-        composable("splash") {
-            com.voltai.features.splash.SplashScreen(
-                onNavigateToMain = { 
-                    navController.navigate("onboarding") {
-                        popUpTo("splash") { inclusive = true }
-                    }
-                }
+fun AppNavHost(
+    navController: NavHostController,
+    batteryDataProvider: BatteryDataProvider,
+    onNavigateToSettings: () -> Unit,
+) {
+    val batteryData by batteryDataProvider.batteryData.collectAsState()
+
+    NavHost(navController = navController, startDestination = "home") {
+        composable("home") {
+            com.voltai.smartbatteryguardian.screens.HomeScreen(
+                onNavigateToSettings = onNavigateToSettings,
+                onNavigateToCard = { cardRoute ->
+                    navController.navigate(cardRoute)
+                },
+                onNavigateToPremiumOnboarding = {
+                    navController.navigate("premium_onboarding")
+                },
+                onShowWelcome = {
+                    navController.navigate("welcome")
+                },
             )
         }
-        
-        composable("onboarding") {
-            com.voltai.features.onboarding.OnboardingScreen(
-                onComplete = {
-                    navController.navigate("dashboard") {
-                        popUpTo("onboarding") { inclusive = true }
-                    }
-                }
-            )
-        }
-        
-        composable("dashboard") { 
-            // Use ModernDashboardScreen directly (following UI/UX Design Plan v2.1)
-            com.voltai.features.dashboard.ModernDashboardScreen(
-                // Dedicated feature screens
-                onNavigateToHealth = { navController.navigate("health") },
-                onNavigateToTemperature = { navController.navigate("temperature") },
-                onNavigateToVoltage = { navController.navigate("voltage") },
-                onNavigateToCurrent = { navController.navigate("current") },
-                onNavigateToUsage = { navController.navigate("usage") },
-                onNavigateToScreenTime = { navController.navigate("screen_time") },
-                onNavigateToCycleCount = { navController.navigate("cycle_count") },
-                onNavigateToForecast = { navController.navigate("forecast") },
-                onNavigateToTools = { navController.navigate("tools") },
-                onNavigateToHistory = { navController.navigate("history") },
-                onNavigateToSettings = { navController.navigate("settings") },
-                // Legacy navigation (keeping for compatibility)
-                onNavigateToSaver = { navController.navigate("saver") },
-                onNavigateToThermal = { navController.navigate("temperature") },
-                onNavigateToAppUsage = { navController.navigate("usage") },
-                onNavigateToBackup = { navController.navigate("backup") },
-                onNavigateToTips = { navController.navigate("tips") },
-                onNavigateToWidgetConfig = { navController.navigate("widget_config") }
-            )
-        }
-        
-        composable("charging") {
-            com.voltai.features.charging.ChargingScreen(
-                onNavigateBack = { navController.popBackStack() },
-                onDismiss = { navController.popBackStack() }
-            )
-        }
-        
-        // Core Feature Screens (following UI/UX Design Plan v2.1)
-        composable("health") { 
-            com.voltai.features.health.ModernHealthScreen(
-                onNavigateBack = { navController.popBackStack() }
-            ) 
-        }
-        composable("temperature") { 
-            com.voltai.features.temperature.TemperatureScreen(
-                onNavigateBack = { navController.popBackStack() }
-            ) 
-        }
-        composable("voltage") { 
-            com.voltai.features.voltage.VoltageScreen(
-                onNavigateBack = { navController.popBackStack() }
-            ) 
-        }
-        composable("current") { 
-            com.voltai.features.current.CurrentScreen(
-                onNavigateBack = { navController.popBackStack() }
-            ) 
-        }
-        composable("usage") { 
-            com.voltai.features.usage.UsageScreen(
-                onNavigateBack = { navController.popBackStack() }
-            ) 
-        }
-        composable("screen_time") { 
-            com.voltai.features.screen_time.ScreenTimeScreen(
-                onNavigateBack = { navController.popBackStack() }
-            ) 
-        }
-        composable("cycle_count") { 
-            com.voltai.features.cycle_count.CycleCountScreen(
-                onNavigateBack = { navController.popBackStack() }
-            ) 
-        }
-        composable("forecast") { 
-            com.voltai.features.forecast.ForecastScreen(
-                onNavigateBack = { navController.popBackStack() }
-            ) 
-        }
-        composable("tools") { 
-            com.voltai.features.tools.ToolsScreen(
-                onNavigateBack = { navController.popBackStack() }
-            ) 
-        }
-        composable("history") { 
-            com.voltai.features.history.HistoryScreen()
-        }
-        
-        // Legacy screens (kept for route compatibility) replaced with placeholders where implementations are absent
-        composable("saver") { PlaceholderScreen("Saver") }
-        composable("appusage") { PlaceholderScreen("App Usage") }
-        composable("thermal") { com.voltai.features.temperature.TemperatureScreen(onNavigateBack = { navController.popBackStack() }) }
-        composable("backup") { PlaceholderScreen("Backup") }
-        composable("tips") { PlaceholderScreen("Tips") }
-        composable("widget_config") { PlaceholderScreen("Widget Config") }
-        
-        // Settings
-        composable("settings") { 
-            com.voltai.features.settings.ModernSettingsScreen(
-                onNavigateBack = { navController.popBackStack() },
-                onNavigateToHelp = { navController.navigate("help") },
-                onNavigateToFeedback = { navController.navigate("feedback") }
-            ) 
-        }
-        composable("help") { PlaceholderScreen("Help") }
-        composable("feedback") { PlaceholderScreen("Feedback") }
-        
-        // Onboarding Flow
+
         composable("welcome") {
-            com.voltai.features.onboarding.WelcomeScreen(
-                onNavigateToPermissions = { navController.navigate("permissions") }
-            )
-        }
-        composable("permissions") {
-            com.voltai.features.onboarding.PermissionScreen(
-                onNavigateToComplete = { navController.navigate("complete") },
-                onNavigateBack = { navController.popBackStack() }
-            )
-        }
-        composable("complete") {
-            com.voltai.features.onboarding.CompleteScreen(
-                onNavigateToDashboard = { 
-                    navController.navigate("dashboard") {
+            WelcomeScreen(
+                onGetStarted = {
+                    navController.navigate("home") {
                         popUpTo("welcome") { inclusive = true }
                     }
                 },
-                onNavigateBack = { navController.popBackStack() }
+                onSkip = {
+                    navController.navigate("home") {
+                        popUpTo("welcome") { inclusive = true }
+                    }
+                },
             )
         }
+
+        composable("settings") {
+            com.voltai.smartbatteryguardian.screens.SettingsScreen()
+        }
+
+        // Existing screens
+        composable("health") {
+            com.voltai.smartbatteryguardian.screens.HealthDetailScreen()
+        }
+        composable("temperature") {
+            com.voltai.smartbatteryguardian.screens.TemperatureDetailScreen()
+        }
+        composable("battery_info") {
+            com.voltai.smartbatteryguardian.screens.BatteryInfoDetailScreen(
+                onBackClick = { navController.popBackStack() },
+            )
+        }
+        composable("current") {
+            com.voltai.smartbatteryguardian.screens.ElectricCurrentDetailScreen()
+        }
+        composable("ongoing") {
+            com.voltai.smartbatteryguardian.screens.OngoingDetailScreen()
+        }
+        composable("statistics") {
+            com.voltai.smartbatteryguardian.screens.StatisticsDetailScreen()
+        }
+        composable("saver") {
+            com.voltai.smartbatteryguardian.screens.BatterySaverScreen()
+        }
+        composable("bluetooth") {
+            com.voltai.smartbatteryguardian.screens.BluetoothDevicesScreen()
+        }
+        composable("device_log") {
+            com.voltai.smartbatteryguardian.screens.DeviceLogScreen()
+        }
+        composable("idle_log") {
+            com.voltai.smartbatteryguardian.screens.IdleLogScreen()
+        }
+        composable("overlays") {
+            com.voltai.smartbatteryguardian.screens.OverlaysScreen()
+        }
+        composable("history") {
+            com.voltai.smartbatteryguardian.screens.HistoryScreen()
+        }
+        composable("wakelocks") {
+            com.voltai.smartbatteryguardian.screens.WakelocksScreen()
+        }
+        // Advanced/premium routes used by Home cards
+        composable("charging_analytics") {
+            com.voltai.smartbatteryguardian.screens.ChargingAnalyticsScreen()
+        }
+        composable("chemistry_lab") {
+            com.voltai.smartbatteryguardian.screens.BatteryChemistryLabScreen()
+        }
+        composable("system_optimization") {
+            com.voltai.smartbatteryguardian.screens.SystemOptimizationCenterScreen()
+        }
+        composable("performance_benchmarks") {
+            com.voltai.smartbatteryguardian.screens.PerformanceBenchmarksScreen()
+        }
+        composable("data_export_import") {
+            com.voltai.smartbatteryguardian.screens.DataExportImportScreen()
+        }
+        composable("battery_health_analytics") {
+            com.voltai.smartbatteryguardian.screens.BatteryHealthAnalyticsScreen()
+        }
+        composable("smart_charging") {
+            com.voltai.smartbatteryguardian.screens.SmartChargingScreen()
+        }
+        composable("battery_diagnostics") {
+            com.voltai.smartbatteryguardian.screens.BatteryDiagnosticsScreen()
+        }
+        composable("real_time_monitoring") {
+            com.voltai.smartbatteryguardian.screens.RealTimeMonitoringScreen()
+        }
+        composable("battery_optimization") {
+            com.voltai.smartbatteryguardian.screens.BatteryOptimizationScreen()
+        }
+    }
+}
+
+@Composable
+fun appNavHost(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = "dashboard") {
+        // Main dashboard with available screens
+        composable("dashboard") {
+            placeholderScreen("Dashboard - Using our TestMainActivity for now")
+        }
+
+        // Available local screens from the screens folder
+        composable("health") {
+            com.voltai.smartbatteryguardian.screens.HealthDetailScreen()
+        }
+        composable("temperature") {
+            com.voltai.smartbatteryguardian.screens.TemperatureDetailScreen()
+        }
+        composable("battery_info") {
+            com.voltai.smartbatteryguardian.screens.BatteryInfoDetailScreen(
+                onBackClick = { navController.popBackStack() },
+            )
+        }
+        composable("current") {
+            com.voltai.smartbatteryguardian.screens.ElectricCurrentDetailScreen()
+        }
+        composable("ongoing") {
+            com.voltai.smartbatteryguardian.screens.OngoingDetailScreen()
+        }
+        composable("statistics") {
+            com.voltai.smartbatteryguardian.screens.StatisticsDetailScreen()
+        }
+
+        // Placeholder screens for other features
+        composable("saver") { placeholderScreen("Battery Saver") }
+        composable("bluetooth") { placeholderScreen("Bluetooth Devices") }
+        composable("device_log") { placeholderScreen("Device Log") }
+        composable("idle_log") { placeholderScreen("Idle Log") }
+        composable("overlays") { placeholderScreen("Overlays") }
+        composable("wakelocks") { placeholderScreen("Wakelocks") }
+        composable("settings") { placeholderScreen("Settings") }
+        composable("help") { placeholderScreen("Help") }
     }
 }

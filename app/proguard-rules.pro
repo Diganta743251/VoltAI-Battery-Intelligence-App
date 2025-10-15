@@ -7,6 +7,16 @@
 -keep class kotlin.** { *; }
 -keep class kotlinx.** { *; }
 
+# VoltAI domain/models and app package
+-keep class com.voltai.domain.model.** { *; }
+-keep class com.voltai.** { *; }
+
+# TensorFlow Lite
+-keep class org.tensorflow.lite.** { *; }
+
+# Hilt
+-keep class dagger.hilt.** { *; }
+
 # Keep Google Play Services
 -keep class com.google.android.gms.** { *; }
 -dontwarn com.google.android.gms.**

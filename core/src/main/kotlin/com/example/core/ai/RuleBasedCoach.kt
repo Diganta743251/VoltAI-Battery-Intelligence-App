@@ -1,11 +1,11 @@
 package com.voltai.core.ai
 
 import android.os.BatteryManager
-import com.voltai.data.local.BatteryLogEntity
+import com.voltai.domain.model.BatteryLog
 
 object RuleBasedCoach {
 
-    fun getBatteryTips(batteryLogs: List<BatteryLogEntity>): List<String> {
+    fun getBatteryTips(batteryLogs: List<BatteryLog>): List<String> {
         val tips = mutableListOf<String>()
 
         if (batteryLogs.isEmpty()) {
@@ -19,7 +19,7 @@ object RuleBasedCoach {
             val firstLog = recentLogs.last()
             val lastLog = recentLogs.first()
             val timeDiffHours = (lastLog.timestamp - firstLog.timestamp) / (1000.0 * 60 * 60)
-            val batteryDrop = firstLog.batteryPercentage - lastLog.batteryPercentage
+            val batteryDrop = firstLog.batteryLevel - lastLog.batteryLevel
 
             if (timeDiffHours > 0 && batteryDrop / timeDiffHours > 10) { // More than 10% drop per hour
                 tips.add("Your battery seems to be draining quickly. Check background apps or adjust screen brightness.")
@@ -28,7 +28,7 @@ object RuleBasedCoach {
 
         // Tip 2: Frequent overcharging (simplified: if last log is full and charging)
         val lastLog = batteryLogs.first()
-        if (lastLog.batteryPercentage == 100 && lastLog.status == BatteryManager.BATTERY_STATUS_FULL) {
+        if (lastLog.batteryLevel == 100 && lastLog.current < 0f) {
             tips.add("Consider unplugging your device once it reaches 100% to prolong battery health.")
         }
 

@@ -1,0 +1,576 @@
+Initialized native services in: C:\Users\Diganta1\.gradle\native
+Initialized jansi services in: C:\Users\Diganta1\.gradle\native
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Starting process 'Gradle build daemon'. Working directory: C:\Users\Diganta1\.gradle\daemon\8.13 Command: C:\Program Files\Eclipse Adoptium\jdk-17.0.15.6-hotspot\bin\java.exe --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED -Xmx2g -Dfile.encoding=windows-1252 -Duser.country=IN -Duser.language=en -Duser.variant -cp C:\Users\Diganta1\.gradle\wrapper\dists\gradle-8.13-bin\5xuhj0ry160q40clulazy9h7d\gradle-8.13\lib\gradle-daemon-main-8.13.jar -javaagent:C:\Users\Diganta1\.gradle\wrapper\dists\gradle-8.13-bin\5xuhj0ry160q40clulazy9h7d\gradle-8.13\lib\agents\gradle-instrumentation-agent-8.13.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.13
+Successfully started process 'Gradle build daemon'
+An attempt to start the daemon took 8.144 secs.
+The client will now receive all logging from the daemon (pid: 25648). The daemon log file: C:\Users\Diganta1\.gradle\daemon\8.13\daemon-25648.out.log
+Daemon will be stopped at the end of the build 
+Using 6 worker leases.
+Received JVM installation metadata from 'C:\Program Files\Eclipse Adoptium\jdk-17.0.15.6-hotspot': {JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-17.0.15.6-hotspot, JAVA_VERSION=17.0.15, JAVA_VENDOR=Eclipse Adoptium, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=17.0.15+6, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=17.0.15+6, VM_VENDOR=Eclipse Adoptium, OS_ARCH=amd64}
+Watching the file system is configured to be enabled if available
+Now considering [C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian] as hierarchies to watch
+File system watching is active
+Starting Build
+Settings evaluated using settings file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\settings.gradle'.
+Projects loaded. Root project using build file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\build.gradle'.
+Included projects: [root project 'VoltAI-SmartBatteryGuardian', project ':app', project ':core', project ':data', project ':domain']
+
+> Configure project :
+Evaluating root project 'VoltAI-SmartBatteryGuardian' using build file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\build.gradle'.
+Resolved plugin [id: 'io.gitlab.arturbosch.detekt', version: '1.23.6', apply: false]
+Resolved plugin [id: 'org.jlleitschuh.gradle.ktlint', version: '12.1.1', apply: false]
+
+> Configure project :app
+Evaluating project ':app' using build file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build.gradle'.
+Resolved plugin [id: 'com.android.application']
+Resolved plugin [id: 'org.jetbrains.kotlin.android']
+Resolved plugin [id: 'com.google.dagger.hilt.android']
+Resolved plugin [id: 'kotlin-kapt']
+Resolved plugin [id: 'org.jetbrains.kotlin.plugin.serialization', version: '1.9.10']
+Resolved plugin [id: 'io.gitlab.arturbosch.detekt']
+Resolved plugin [id: 'org.jlleitschuh.gradle.ktlint']
+Resolved plugin [id: 'jacoco']
+Resolved plugin [id: 'com.github.triplet.play', version: '3.9.1']
+Using default execution profile
+Using Kotlin Gradle Plugin gradle81 variant
+No release keystore found. Building unsigned release bundle locally.
+Skipping debuggable build with type 'debug'
+Add dependencies: ktlint version 1.0.1
+Add dependencies: ktlint version 1.0.1
+Add dependencies: ktlint version 1.0.1
+
+> Configure project :core
+Evaluating project ':core' using build file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\core\build.gradle'.
+Resolved plugin [id: 'com.android.library']
+Resolved plugin [id: 'org.jetbrains.kotlin.android']
+Resolved plugin [id: 'kotlin-kapt']
+Resolved plugin [id: 'com.google.dagger.hilt.android']
+Resolved plugin [id: 'jacoco']
+Using default execution profile
+Using Kotlin Gradle Plugin gradle81 variant
+
+> Configure project :data
+Evaluating project ':data' using build file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\data\build.gradle'.
+Resolved plugin [id: 'com.android.library']
+Resolved plugin [id: 'org.jetbrains.kotlin.android']
+Resolved plugin [id: 'kotlin-kapt']
+Resolved plugin [id: 'com.google.dagger.hilt.android']
+Using default execution profile
+Using Kotlin Gradle Plugin gradle81 variant
+
+> Configure project :domain
+Evaluating project ':domain' using build file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\domain\build.gradle'.
+Resolved plugin [id: 'org.jetbrains.kotlin.jvm']
+Using Kotlin Gradle Plugin gradle81 variant
+kotlin scripting plugin: created the scripting discovery configuration: kotlinScriptDef
+kotlin scripting plugin: created the scripting discovery configuration: testKotlinScriptDef
+All projects evaluated.
+Task path ':app:kaptGenerateStubsDebugKotlin' matched project ':app'
+Task name matched 'kaptGenerateStubsDebugKotlin'
+Selected primary task 'kaptGenerateStubsDebugKotlin' from project :app
+Tasks to be executed: [task ':domain:compileKotlin', task ':domain:compileJava', task ':domain:processResources', task ':domain:classes', task ':domain:jar', task ':app:preBuild', task ':app:preDebugBuild', task ':core:preBuild', task ':core:preDebugBuild', task ':core:writeDebugAarMetadata', task ':data:preBuild', task ':data:preDebugBuild', task ':data:writeDebugAarMetadata', task ':app:checkDebugAarMetadata', task ':app:generateDebugResValues', task ':core:generateDebugResValues', task ':core:generateDebugResources', task ':core:packageDebugResources', task ':data:generateDebugResValues', task ':data:generateDebugResources', task ':data:packageDebugResources', task ':app:mapDebugSourceSetPaths', task ':app:generateDebugResources', task ':app:mergeDebugResources', task ':app:packageDebugResources', task ':app:parseDebugLocalResources', task ':app:createDebugCompatibleScreenManifests', task ':app:extractDeepLinksDebug', task ':core:extractDeepLinksDebug', task ':core:processDebugManifest', task ':data:extractDeepLinksDebug', task ':data:processDebugManifest', task ':app:processDebugMainManifest', task ':app:processDebugManifest', task ':app:processDebugManifestForPackage', task ':core:compileDebugLibraryResources', task ':core:parseDebugLocalResources', task ':core:generateDebugRFile', task ':data:compileDebugLibraryResources', task ':data:parseDebugLocalResources', task ':data:generateDebugRFile', task ':app:processDebugResources', task ':core:kaptGenerateStubsDebugKotlin', task ':core:kaptDebugKotlin', task ':core:compileDebugKotlin', task ':core:javaPreCompileDebug', task ':core:compileDebugJavaWithJavac', task ':core:transformDebugClassesWithAsm', task ':core:bundleLibCompileToJarDebug', task ':core:bundleLibRuntimeToJarDebug', task ':data:kaptGenerateStubsDebugKotlin', task ':data:kaptDebugKotlin', task ':data:compileDebugKotlin', task ':data:javaPreCompileDebug', task ':data:compileDebugJavaWithJavac', task ':data:transformDebugClassesWithAsm', task ':data:bundleLibCompileToJarDebug', task ':app:kaptGenerateStubsDebugKotlin']
+Tasks that were excluded: []
+work action Parameters of JetifyTransform (Thread[included builds,5,main]) started.
+work action Parameters of IdentityTransform (Thread[Execution worker Thread 4,5,main]) started.
+work action Parameters of JetifyTransform (Thread[Execution worker Thread 4,5,main]) started.
+work action Parameters of IdentityTransform (Thread[Execution worker Thread 4,5,main]) started.
+work action Parameters of JetifyTransform (Thread[Execution worker Thread 4,5,main]) started.
+work action Parameters of IdentityTransform (Thread[Execution worker Thread 4,5,main]) started.
+Resolve mutations for :domain:compileKotlin (Thread[Execution worker Thread 4,5,main]) started.
+:domain:compileKotlin (Thread[Execution worker Thread 4,5,main]) started.
+
+> Task :domain:compileKotlin UP-TO-DATE
+Caching disabled for task ':domain:compileKotlin' because:
+  Build cache is disabled
+Skipping task ':domain:compileKotlin' as it is up-to-date.
+Resolve mutations for :domain:compileJava (Thread[Execution worker Thread 4,5,main]) started.
+:domain:compileJava (Thread[Execution worker Thread 4,5,main]) started.
+
+> Task :domain:compileJava NO-SOURCE
+Skipping task ':domain:compileJava' as it has no source files and no previous output files.
+Resolve mutations for :domain:processResources (Thread[Execution worker Thread 4,5,main]) started.
+:domain:processResources (Thread[Execution worker Thread 4,5,main]) started.
+
+> Task :domain:processResources NO-SOURCE
+Skipping task ':domain:processResources' as it has no source files and no previous output files.
+Resolve mutations for :domain:classes (Thread[Execution worker Thread 4,5,main]) started.
+:domain:classes (Thread[Execution worker Thread 4,5,main]) started.
+
+> Task :domain:classes UP-TO-DATE
+Skipping task ':domain:classes' as it has no actions.
+Resolve mutations for :domain:jar (Thread[Execution worker Thread 4,5,main]) started.
+:domain:jar (Thread[Execution worker Thread 4,5,main]) started.
+
+> Task :domain:jar UP-TO-DATE
+Caching disabled for task ':domain:jar' because:
+  Build cache is disabled
+  Not worth caching
+Skipping task ':domain:jar' as it is up-to-date.
+work action resolve domain.jar (project :domain) (Thread[Execution worker Thread 4,5,main]) started.
+JetifyTransform (Thread[Execution worker Thread 4,5,main]) started.
+Resolve mutations for :app:preBuild (Thread[Execution worker Thread 5,5,main]) started.
+:app:preBuild (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :app:preBuild UP-TO-DATE
+Skipping task ':app:preBuild' as it has no actions.
+Resolve mutations for :app:preDebugBuild (Thread[Execution worker Thread 5,5,main]) started.
+:app:preDebugBuild (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :app:preDebugBuild UP-TO-DATE
+Skipping task ':app:preDebugBuild' as it has no actions.
+Resolve mutations for :core:preBuild (Thread[Execution worker Thread 5,5,main]) started.
+:core:preBuild (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :core:preBuild UP-TO-DATE
+Skipping task ':core:preBuild' as it has no actions.
+Resolve mutations for :core:preDebugBuild (Thread[Execution worker Thread 5,5,main]) started.
+:core:preDebugBuild (Thread[Execution worker Thread 5,5,main]) started.
+JetifyTransform (Thread[Execution worker,5,main]) started.
+JetifyTransform (Thread[included builds,5,main]) started.
+JetifyTransform (Thread[Execution worker Thread 3,5,main]) started.
+
+> Task :core:preDebugBuild UP-TO-DATE
+Skipping task ':core:preDebugBuild' as it has no actions.
+Resolve mutations for :core:writeDebugAarMetadata (Thread[Execution worker Thread 5,5,main]) started.
+JetifyTransform (Thread[Execution worker Thread 2,5,main]) started.
+:core:writeDebugAarMetadata (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :core:writeDebugAarMetadata UP-TO-DATE
+Caching disabled for task ':core:writeDebugAarMetadata' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':core:writeDebugAarMetadata' as it is up-to-date.
+work action resolve aar-metadata.properties (project :core) (Thread[Execution worker Thread 5,5,main]) started.
+Resolve mutations for :data:preBuild (Thread[Execution worker Thread 5,5,main]) started.
+:data:preBuild (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :data:preBuild UP-TO-DATE
+Skipping task ':data:preBuild' as it has no actions.
+Resolve mutations for :data:preDebugBuild (Thread[Execution worker Thread 5,5,main]) started.
+:data:preDebugBuild (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :data:preDebugBuild UP-TO-DATE
+Skipping task ':data:preDebugBuild' as it has no actions.
+Resolve mutations for :data:writeDebugAarMetadata (Thread[Execution worker Thread 5,5,main]) started.
+:data:writeDebugAarMetadata (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :data:writeDebugAarMetadata UP-TO-DATE
+Caching disabled for task ':data:writeDebugAarMetadata' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':data:writeDebugAarMetadata' as it is up-to-date.
+work action resolve aar-metadata.properties (project :data) (Thread[Execution worker Thread 5,5,main]) started.
+Resolve mutations for :app:checkDebugAarMetadata (Thread[Execution worker Thread 5,5,main]) started.
+:app:checkDebugAarMetadata (Thread[Execution worker Thread 5,5,main]) started.
+IdentityTransform (Thread[Execution worker Thread 4,5,main]) started.
+IdentityTransform (Thread[Execution worker Thread 2,5,main]) started.
+IdentityTransform (Thread[Execution worker Thread 3,5,main]) started.
+IdentityTransform (Thread[Execution worker,5,main]) started.
+IdentityTransform (Thread[included builds,5,main]) started.
+
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+Caching disabled for task ':app:checkDebugAarMetadata' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':app:checkDebugAarMetadata' as it is up-to-date.
+Resolve mutations for :app:generateDebugResValues (Thread[Execution worker Thread 5,5,main]) started.
+:app:generateDebugResValues (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :app:generateDebugResValues UP-TO-DATE
+Caching disabled for task ':app:generateDebugResValues' because:
+  Build cache is disabled
+Skipping task ':app:generateDebugResValues' as it is up-to-date.
+Resolve mutations for :core:generateDebugResValues (Thread[Execution worker Thread 5,5,main]) started.
+:core:generateDebugResValues (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :core:generateDebugResValues UP-TO-DATE
+Caching disabled for task ':core:generateDebugResValues' because:
+  Build cache is disabled
+Skipping task ':core:generateDebugResValues' as it is up-to-date.
+Resolve mutations for :core:generateDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+:core:generateDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :core:generateDebugResources UP-TO-DATE
+Caching disabled for task ':core:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':core:generateDebugResources' as it is up-to-date.
+Resolve mutations for :core:packageDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+:core:packageDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :core:packageDebugResources UP-TO-DATE
+Caching disabled for task ':core:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':core:packageDebugResources' as it is up-to-date.
+work action resolve packageDebugResources (project :core) (Thread[Execution worker Thread 5,5,main]) started.
+Resolve mutations for :data:generateDebugResValues (Thread[Execution worker Thread 5,5,main]) started.
+:data:generateDebugResValues (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :data:generateDebugResValues UP-TO-DATE
+Caching disabled for task ':data:generateDebugResValues' because:
+  Build cache is disabled
+Skipping task ':data:generateDebugResValues' as it is up-to-date.
+Resolve mutations for :data:generateDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+:data:generateDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :data:generateDebugResources UP-TO-DATE
+Caching disabled for task ':data:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':data:generateDebugResources' as it is up-to-date.
+Resolve mutations for :data:packageDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+:data:packageDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :data:packageDebugResources UP-TO-DATE
+Caching disabled for task ':data:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':data:packageDebugResources' as it is up-to-date.
+work action resolve packageDebugResources (project :data) (Thread[Execution worker Thread 5,5,main]) started.
+Resolve mutations for :app:mapDebugSourceSetPaths (Thread[Execution worker Thread 5,5,main]) started.
+:app:mapDebugSourceSetPaths (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+Caching disabled for task ':app:mapDebugSourceSetPaths' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':app:mapDebugSourceSetPaths' as it is up-to-date.
+Resolve mutations for :app:generateDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+:app:generateDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :app:generateDebugResources UP-TO-DATE
+Caching disabled for task ':app:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':app:generateDebugResources' as it is up-to-date.
+Resolve mutations for :app:mergeDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+:app:mergeDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :app:mergeDebugResources UP-TO-DATE
+Caching disabled for task ':app:mergeDebugResources' because:
+  Build cache is disabled
+Skipping task ':app:mergeDebugResources' as it is up-to-date.
+Resolve mutations for :app:packageDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+:app:packageDebugResources (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :app:packageDebugResources UP-TO-DATE
+Caching disabled for task ':app:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':app:packageDebugResources' as it is up-to-date.
+Resolve mutations for :app:parseDebugLocalResources (Thread[Execution worker Thread 5,5,main]) started.
+:app:parseDebugLocalResources (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :app:parseDebugLocalResources UP-TO-DATE
+Caching disabled for task ':app:parseDebugLocalResources' because:
+  Build cache is disabled
+Skipping task ':app:parseDebugLocalResources' as it is up-to-date.
+Resolve mutations for :app:createDebugCompatibleScreenManifests (Thread[Execution worker Thread 5,5,main]) started.
+:app:createDebugCompatibleScreenManifests (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+Caching disabled for task ':app:createDebugCompatibleScreenManifests' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':app:createDebugCompatibleScreenManifests' as it is up-to-date.
+Resolve mutations for :app:extractDeepLinksDebug (Thread[Execution worker Thread 5,5,main]) started.
+:app:extractDeepLinksDebug (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+Caching disabled for task ':app:extractDeepLinksDebug' because:
+  Build cache is disabled
+Skipping task ':app:extractDeepLinksDebug' as it is up-to-date.
+Resolve mutations for :core:extractDeepLinksDebug (Thread[Execution worker Thread 5,5,main]) started.
+:core:extractDeepLinksDebug (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :core:extractDeepLinksDebug UP-TO-DATE
+Caching disabled for task ':core:extractDeepLinksDebug' because:
+  Build cache is disabled
+Skipping task ':core:extractDeepLinksDebug' as it is up-to-date.
+work action resolve navigation.json (project :core) (Thread[Execution worker Thread 5,5,main]) started.
+Resolve mutations for :core:processDebugManifest (Thread[Execution worker Thread 5,5,main]) started.
+:core:processDebugManifest (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :core:processDebugManifest UP-TO-DATE
+Caching disabled for task ':core:processDebugManifest' because:
+  Build cache is disabled
+Skipping task ':core:processDebugManifest' as it is up-to-date.
+work action resolve AndroidManifest.xml (project :core) (Thread[Execution worker Thread 5,5,main]) started.
+Resolve mutations for :data:extractDeepLinksDebug (Thread[Execution worker Thread 5,5,main]) started.
+:data:extractDeepLinksDebug (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:extractDeepLinksDebug UP-TO-DATE
+Caching disabled for task ':data:extractDeepLinksDebug' because:
+  Build cache is disabled
+Skipping task ':data:extractDeepLinksDebug' as it is up-to-date.
+work action resolve navigation.json (project :data) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :data:processDebugManifest (Thread[Execution worker Thread 2,5,main]) started.
+:data:processDebugManifest (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:processDebugManifest UP-TO-DATE
+Caching disabled for task ':data:processDebugManifest' because:
+  Build cache is disabled
+Skipping task ':data:processDebugManifest' as it is up-to-date.
+work action resolve AndroidManifest.xml (project :data) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:processDebugMainManifest (Thread[Execution worker Thread 2,5,main]) started.
+:app:processDebugMainManifest (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:processDebugMainManifest UP-TO-DATE
+Caching disabled for task ':app:processDebugMainManifest' because:
+  Build cache is disabled
+Skipping task ':app:processDebugMainManifest' as it is up-to-date.
+Resolve mutations for :app:processDebugManifest (Thread[Execution worker Thread 2,5,main]) started.
+:app:processDebugManifest (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:processDebugManifest UP-TO-DATE
+Caching disabled for task ':app:processDebugManifest' because:
+  Build cache is disabled
+Skipping task ':app:processDebugManifest' as it is up-to-date.
+Resolve mutations for :app:processDebugManifestForPackage (Thread[Execution worker Thread 2,5,main]) started.
+:app:processDebugManifestForPackage (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+Custom actions are attached to task ':app:processDebugManifestForPackage'.
+Caching disabled for task ':app:processDebugManifestForPackage' because:
+  Build cache is disabled
+Skipping task ':app:processDebugManifestForPackage' as it is up-to-date.
+Resolve mutations for :core:compileDebugLibraryResources (Thread[Execution worker Thread 2,5,main]) started.
+:core:compileDebugLibraryResources (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:compileDebugLibraryResources UP-TO-DATE
+Caching disabled for task ':core:compileDebugLibraryResources' because:
+  Build cache is disabled
+Skipping task ':core:compileDebugLibraryResources' as it is up-to-date.
+work action resolve out (project :core) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :core:parseDebugLocalResources (Thread[Execution worker Thread 2,5,main]) started.
+:core:parseDebugLocalResources (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:parseDebugLocalResources UP-TO-DATE
+Caching disabled for task ':core:parseDebugLocalResources' because:
+  Build cache is disabled
+Skipping task ':core:parseDebugLocalResources' as it is up-to-date.
+Resolve mutations for :core:generateDebugRFile (Thread[Execution worker Thread 2,5,main]) started.
+:core:generateDebugRFile (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:generateDebugRFile UP-TO-DATE
+Caching disabled for task ':core:generateDebugRFile' because:
+  Build cache is disabled
+Skipping task ':core:generateDebugRFile' as it is up-to-date.
+work action resolve package-aware-r.txt (project :core) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :data:compileDebugLibraryResources (Thread[Execution worker Thread 2,5,main]) started.
+:data:compileDebugLibraryResources (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:compileDebugLibraryResources UP-TO-DATE
+Caching disabled for task ':data:compileDebugLibraryResources' because:
+  Build cache is disabled
+Skipping task ':data:compileDebugLibraryResources' as it is up-to-date.
+work action resolve out (project :data) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :data:parseDebugLocalResources (Thread[Execution worker Thread 2,5,main]) started.
+:data:parseDebugLocalResources (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:parseDebugLocalResources UP-TO-DATE
+Caching disabled for task ':data:parseDebugLocalResources' because:
+  Build cache is disabled
+Skipping task ':data:parseDebugLocalResources' as it is up-to-date.
+Resolve mutations for :data:generateDebugRFile (Thread[Execution worker Thread 2,5,main]) started.
+:data:generateDebugRFile (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:generateDebugRFile UP-TO-DATE
+Caching disabled for task ':data:generateDebugRFile' because:
+  Build cache is disabled
+Skipping task ':data:generateDebugRFile' as it is up-to-date.
+work action resolve package-aware-r.txt (project :data) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:processDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+:app:processDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:processDebugResources UP-TO-DATE
+Caching disabled for task ':app:processDebugResources' because:
+  Build cache is disabled
+Skipping task ':app:processDebugResources' as it is up-to-date.
+Resolve mutations for :core:kaptGenerateStubsDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+:core:kaptGenerateStubsDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:kaptGenerateStubsDebugKotlin UP-TO-DATE
+Caching disabled for task ':core:kaptGenerateStubsDebugKotlin' because:
+  Build cache is disabled
+Skipping task ':core:kaptGenerateStubsDebugKotlin' as it is up-to-date.
+Resolve mutations for :core:kaptDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+:core:kaptDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:kaptDebugKotlin UP-TO-DATE
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\core\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\core\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\core\src\debug\java', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\core\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\core\src\debug\java', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\core\src\debug\java', not found
+Caching disabled for task ':core:kaptDebugKotlin' because:
+  Build cache is disabled
+Skipping task ':core:kaptDebugKotlin' as it is up-to-date.
+Resolve mutations for :core:compileDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+:core:compileDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:compileDebugKotlin UP-TO-DATE
+Caching disabled for task ':core:compileDebugKotlin' because:
+  Build cache is disabled
+Skipping task ':core:compileDebugKotlin' as it is up-to-date.
+Resolve mutations for :core:javaPreCompileDebug (Thread[Execution worker Thread 2,5,main]) started.
+:core:javaPreCompileDebug (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:javaPreCompileDebug UP-TO-DATE
+Caching disabled for task ':core:javaPreCompileDebug' because:
+  Build cache is disabled
+Skipping task ':core:javaPreCompileDebug' as it is up-to-date.
+Resolve mutations for :core:compileDebugJavaWithJavac (Thread[Execution worker Thread 2,5,main]) started.
+:core:compileDebugJavaWithJavac (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:compileDebugJavaWithJavac UP-TO-DATE
+Custom actions are attached to task ':core:compileDebugJavaWithJavac'.
+Caching disabled for task ':core:compileDebugJavaWithJavac' because:
+  Build cache is disabled
+Skipping task ':core:compileDebugJavaWithJavac' as it is up-to-date.
+No compile result for :core:compileDebugJavaWithJavac
+No compile result for :core:compileDebugJavaWithJavac
+No compile result for :core:compileDebugJavaWithJavac
+No compile result for :core:compileDebugJavaWithJavac
+Resolve mutations for :core:transformDebugClassesWithAsm (Thread[Execution worker Thread 2,5,main]) started.
+:core:transformDebugClassesWithAsm (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:transformDebugClassesWithAsm UP-TO-DATE
+Caching disabled for task ':core:transformDebugClassesWithAsm' because:
+  Build cache is disabled
+Skipping task ':core:transformDebugClassesWithAsm' as it is up-to-date.
+Resolve mutations for :core:bundleLibCompileToJarDebug (Thread[Execution worker Thread 2,5,main]) started.
+:core:bundleLibCompileToJarDebug (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:bundleLibCompileToJarDebug UP-TO-DATE
+Caching disabled for task ':core:bundleLibCompileToJarDebug' because:
+  Build cache is disabled
+  Simple merging task
+Skipping task ':core:bundleLibCompileToJarDebug' as it is up-to-date.
+work action resolve classes.jar (project :core) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :core:bundleLibRuntimeToJarDebug (Thread[Execution worker Thread 2,5,main]) started.
+:core:bundleLibRuntimeToJarDebug (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:bundleLibRuntimeToJarDebug UP-TO-DATE
+Caching disabled for task ':core:bundleLibRuntimeToJarDebug' because:
+  Build cache is disabled
+  Simple merging task
+Skipping task ':core:bundleLibRuntimeToJarDebug' as it is up-to-date.
+work action resolve classes.jar (project :core) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :data:kaptGenerateStubsDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+:data:kaptGenerateStubsDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:kaptGenerateStubsDebugKotlin UP-TO-DATE
+Caching disabled for task ':data:kaptGenerateStubsDebugKotlin' because:
+  Build cache is disabled
+Skipping task ':data:kaptGenerateStubsDebugKotlin' as it is up-to-date.
+Resolve mutations for :data:kaptDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+:data:kaptDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:kaptDebugKotlin UP-TO-DATE
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\data\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\data\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\data\src\debug\java', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\data\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\data\src\debug\java', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\data\src\debug\java', not found
+Caching disabled for task ':data:kaptDebugKotlin' because:
+  Build cache is disabled
+Skipping task ':data:kaptDebugKotlin' as it is up-to-date.
+Resolve mutations for :data:compileDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+:data:compileDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:compileDebugKotlin UP-TO-DATE
+Caching disabled for task ':data:compileDebugKotlin' because:
+  Build cache is disabled
+Skipping task ':data:compileDebugKotlin' as it is up-to-date.
+Resolve mutations for :data:javaPreCompileDebug (Thread[Execution worker Thread 2,5,main]) started.
+:data:javaPreCompileDebug (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:javaPreCompileDebug UP-TO-DATE
+Caching disabled for task ':data:javaPreCompileDebug' because:
+  Build cache is disabled
+Skipping task ':data:javaPreCompileDebug' as it is up-to-date.
+Resolve mutations for :data:compileDebugJavaWithJavac (Thread[Execution worker Thread 2,5,main]) started.
+:data:compileDebugJavaWithJavac (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:compileDebugJavaWithJavac UP-TO-DATE
+Custom actions are attached to task ':data:compileDebugJavaWithJavac'.
+Caching disabled for task ':data:compileDebugJavaWithJavac' because:
+  Build cache is disabled
+Skipping task ':data:compileDebugJavaWithJavac' as it is up-to-date.
+No compile result for :data:compileDebugJavaWithJavac
+No compile result for :data:compileDebugJavaWithJavac
+No compile result for :data:compileDebugJavaWithJavac
+No compile result for :data:compileDebugJavaWithJavac
+Resolve mutations for :data:transformDebugClassesWithAsm (Thread[Execution worker Thread 2,5,main]) started.
+:data:transformDebugClassesWithAsm (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:transformDebugClassesWithAsm UP-TO-DATE
+Caching disabled for task ':data:transformDebugClassesWithAsm' because:
+  Build cache is disabled
+Skipping task ':data:transformDebugClassesWithAsm' as it is up-to-date.
+Resolve mutations for :data:bundleLibCompileToJarDebug (Thread[Execution worker Thread 2,5,main]) started.
+:data:bundleLibCompileToJarDebug (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:bundleLibCompileToJarDebug UP-TO-DATE
+Caching disabled for task ':data:bundleLibCompileToJarDebug' because:
+  Build cache is disabled
+  Simple merging task
+Skipping task ':data:bundleLibCompileToJarDebug' as it is up-to-date.
+work action resolve classes.jar (project :data) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:kaptGenerateStubsDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+:app:kaptGenerateStubsDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:kaptGenerateStubsDebugKotlin
+Caching disabled for task ':app:kaptGenerateStubsDebugKotlin' because:
+  Build cache is disabled
+Task ':app:kaptGenerateStubsDebugKotlin' is not up-to-date because:
+  Value of input property 'compilerOptions.freeCompilerArgs' has changed for task ':app:kaptGenerateStubsDebugKotlin'
+The input changes require a full rebuild for incremental task ':app:kaptGenerateStubsDebugKotlin'.
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\java', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\java', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\java', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\java', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\java', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\java', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\java', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\kotlin', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\java', not found
+file or directory 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\debug\java', not found
+Using Kotlin/JVM incremental compilation
+[KOTLIN] Kotlin compilation 'jdkHome' argument: null
+i: starting the daemon as: C:\Program Files\Eclipse Adoptium\jdk-17.0.15.6-hotspot\bin\java -cp C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-compiler-embeddable\1.9.0\2c8c3a7402becca891f12739b3e9fd2dc2adbd7a\kotlin-compiler-embeddable-1.9.0.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib\1.9.0\8ee15ef0c67dc83d874f412d84378d7f0eb50b63\kotlin-stdlib-1.9.0.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-script-runtime\1.9.0\4b3102cbbb7e1b58d9d1adf89563f00069ffa7d1\kotlin-script-runtime-1.9.0.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-reflect\1.6.10\1cbe9c92c12a94eea200d23c2bbaedaf3daf5132\kotlin-reflect-1.6.10.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-daemon-embeddable\1.9.0\186543f5e28cf8d9a0290fecc2cf34301c40a65c\kotlin-daemon-embeddable-1.9.0.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.intellij.deps\trove4j\1.0.20200330\3afb14d5f9ceb459d724e907a21145e8ff394f02\trove4j-1.0.20200330.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib-common\1.9.0\cd65c21cfd1eec4d44ef09f9f52b6d9f8a720636\kotlin-stdlib-common-1.9.0.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains\annotations\13.0\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\annotations-13.0.jar -Djava.awt.headless=true -D$java.rmi.server.hostname=127.0.0.1 -Xmx2g -Dkotlin.environment.keepalive -ea --add-exports java.base/sun.nio.ch=ALL-UNNAMED org.jetbrains.kotlin.daemon.KotlinCompileDaemon --daemon-runFilesPath C:\Users\Diganta1\AppData\Local\kotlin\daemon --daemon-autoshutdownIdleSeconds=7200 --daemon-compilerClasspath C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-compiler-embeddable\1.9.0\2c8c3a7402becca891f12739b3e9fd2dc2adbd7a\kotlin-compiler-embeddable-1.9.0.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib\1.9.0\8ee15ef0c67dc83d874f412d84378d7f0eb50b63\kotlin-stdlib-1.9.0.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-script-runtime\1.9.0\4b3102cbbb7e1b58d9d1adf89563f00069ffa7d1\kotlin-script-runtime-1.9.0.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-reflect\1.6.10\1cbe9c92c12a94eea200d23c2bbaedaf3daf5132\kotlin-reflect-1.6.10.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-daemon-embeddable\1.9.0\186543f5e28cf8d9a0290fecc2cf34301c40a65c\kotlin-daemon-embeddable-1.9.0.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.intellij.deps\trove4j\1.0.20200330\3afb14d5f9ceb459d724e907a21145e8ff394f02\trove4j-1.0.20200330.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib-common\1.9.0\cd65c21cfd1eec4d44ef09f9f52b6d9f8a720636\kotlin-stdlib-common-1.9.0.jar;C:\Users\Diganta1\.gradle\caches\modules-2\files-2.1\org.jetbrains\annotations\13.0\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\annotations-13.0.jar
+i: Received the message signalling that the daemon is ready
+i: new daemon started, trying to find it
+i: found daemon on port 17267 (23 ms old), trying to connect
+i: connected to the daemon
+Options for KOTLIN DAEMON: IncrementalCompilationOptions(super=CompilationOptions(compilerMode=INCREMENTAL_COMPILER, targetPlatform=JVM, reportCategories=[0, 3], reportSeverity=2, requestedCompilationResults=[0], kotlinScriptExtensions=[]), areFileChangesKnown=false, modifiedFiles=null, deletedFiles=null, classpathChanges=NotAvailableForNonIncrementalRun, workingDir=C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\kotlin\kaptGenerateStubsDebugKotlin\cacheable, multiModuleICSettings=MultiModuleICSettings(buildHistoryFile=C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\kotlin\kaptGenerateStubsDebugKotlin\local-state\build-history.bin, useModuleDetection=true), usePreciseJavaTracking=true, outputFiles=[C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\tmp\kapt3\incrementalData\debug, C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\tmp\kapt3\stubs\debug, C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\kotlin\kaptGenerateStubsDebugKotlin\cacheable, C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\kotlin\kaptGenerateStubsDebugKotlin\local-state])
+
+[Incubating] Problems report is available at: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 2m 22s
+49 actionable tasks: 1 executed, 48 up-to-date
+Watched directory hierarchies: [C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian]

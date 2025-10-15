@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'jacoco'
 }
 
 android {
@@ -22,11 +23,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
     buildFeatures {
         compose true
@@ -46,11 +47,43 @@ android {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+tasks.register('jacocoTestReport', JacocoReport) {
+    dependsOn 'testDebugUnitTest'
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+    classDirectories.setFrom(fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", include: ["**/*.class"]))
+    sourceDirectories.setFrom(files(["src/main/java", "src/main/kotlin"]))
+    executionData.setFrom(fileTree(dir: buildDir, include: ["**/testDebugUnitTest.exec", "**/test.exec", "jacoco/testDebugUnitTest.exec"]))
+}
+
+tasks.register('jacocoTestCoverageVerification', JacocoCoverageVerification) {
+    dependsOn 'testDebugUnitTest', 'jacocoTestReport'
+    // Allow overriding via -PcoverageMinimum, default to 0.60
+    def minStr = (project.findProperty('coverageMinimum') ?: '0.60') as String
+    def minPct = new BigDecimal(minStr)
+    violationRules {
+        rule {
+            limit {
+                minimum = minPct
+            }
+        }
+    }
+    classDirectories.setFrom(fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", include: ["**/*.class"]))
+    executionData.setFrom(fileTree(dir: buildDir, include: ["**/testDebugUnitTest.exec", "**/test.exec", "jacoco/testDebugUnitTest.exec"]))
+}
+
 dependencies {
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'com.google.truth:truth:1.1.5'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
@@ -83,7 +116,12 @@ dependencies {
     // WorkManager
     implementation 'androidx.work:work-runtime-ktx:2.9.0'
 
+    // DataStore
+    implementation 'androidx.datastore:datastore-preferences:1.0.0'
+    
+    // JSON serialization
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0'
+
     // Project modules
-    implementation project(':data')
     implementation project(':domain')
 }

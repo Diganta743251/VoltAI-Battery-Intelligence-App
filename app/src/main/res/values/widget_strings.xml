@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Widget Text -->
+    <string name="battery_visualization">Battery Level</string>
+    <string name="battery_level_progress">Battery Progress</string>
+    <string name="battery_status">Battery Status</string>
+    
+    <!-- Widget Actions -->
+    <string name="toggle_battery_saver">Toggle Battery Saver</string>
+    <string name="toggle_optimization">Toggle Optimization</string>
+    <string name="refresh_widget">Refresh Widget</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="open_app">Open App</string>
+    
+    <!-- Battery States (References existing strings) -->
+    
+    <!-- Health States -->
+    <string name="health_good">Good</string>
+    <string name="health_overheat">Overheating</string>
+    <string name="health_dead">Dead</string>
+    <string name="health_over_voltage">Over Voltage</string>
+    <string name="health_unspecified_failure">Unspecified Failure</string>
+    <string name="health_cold">Cold</string>
+    <string name="health_unknown">Unknown</string>
+    
+    <!-- Temperature -->
+    <string name="temperature_normal">Normal</string>
+    <string name="temperature_warm">Warm</string>
+    <string name="temperature_hot">Hot</string>
+    <string name="temperature_critical">Critical</string>
+    
+    <!-- Charging Methods -->
+    <string name="charging_usb">USB</string>
+    <string name="charging_ac">AC</string>
+    <string name="charging_wireless">Wireless</string>
+    
+    <!-- Widget Descriptions -->
+    <string name="widget_small_description">Small battery widget</string>
+    <string name="widget_medium_description">Medium battery widget</string>
+    <string name="widget_large_description">Large battery widget</string>
+    
+    <!-- Units -->
+    <string name="percent_symbol" formatted="false">%</string>
+    <string name="celsius_symbol">°C</string>
+    <string name="volt_symbol">V</string>
+    <string name="milliamp_symbol">mA</string>
+</resources>

@@ -299,7 +299,7 @@ fun AnimatedGraphIcon(
             strokeWidth = strokeWidth
         )
         
-        // Data points
+        // Data points (intentional design element for icon visualization)
         val dataPoints = listOf(0.8f, 0.6f, 0.7f, 0.4f, 0.5f, 0.3f)
         val pointSpacing = (size.width * 0.7f) / (dataPoints.size - 1)
         

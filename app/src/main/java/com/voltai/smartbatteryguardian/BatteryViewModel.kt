@@ -18,79 +18,78 @@ data class BatteryInfoVm(
     val temperature: String = "0°C",
     val voltage: String = "0V",
     val health: String = "Unknown",
-    val isCharging: Boolean = false
+    val isCharging: Boolean = false,
 )
 
 class BatteryViewModel(application: Application) : AndroidViewModel(application) {
-    
     private val _batteryInfo = MutableLiveData(BatteryInfoVm())
     val batteryInfo: LiveData<BatteryInfoVm> = _batteryInfo
-    
+
     private val _screenOnTime = MutableLiveData("0h 0m")
     val screenOnTime: LiveData<String> = _screenOnTime
-    
+
     private val _screenOffTime = MutableLiveData("0h 0m")
     val screenOffTime: LiveData<String> = _screenOffTime
-    
+
     private val _batteryUsed = MutableLiveData("0%")
     val batteryUsed: LiveData<String> = _batteryUsed
-    
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
+
     private var batteryReceiver: BroadcastReceiver? = null
-    
+
     init {
         registerBatteryReceiver()
-        // Simulate some initial data
-        updateMockData()
     }
-    
+
     private fun registerBatteryReceiver() {
-        batteryReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                intent?.let { handleBatteryChanged(it) }
+        batteryReceiver =
+            object : BroadcastReceiver() {
+                override fun onReceive(
+                    context: Context?,
+                    intent: Intent?,
+                ) {
+                    intent?.let { handleBatteryChanged(it) }
+                }
             }
-        }
-        
+
         val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         getApplication<Application>().registerReceiver(batteryReceiver, filter)
     }
-    
+
     private fun handleBatteryChanged(intent: Intent) {
         viewModelScope.launch {
+            _isLoading.value = true
             val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
             val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-            val batteryPercentage = if (level != -1 && scale != -1) {
-                (level * 100) / scale
-            } else {
-                0
-            }
-            
+            val batteryPercentage =
+                if (level != -1 && scale != -1) {
+                    (level * 100) / scale
+                } else {
+                    0
+                }
+
             val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
             val temperature = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)
             val voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0)
             val health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, -1)
-            
-            val batteryInfo = BatteryInfoVm(
-                level = batteryPercentage,
-                status = getStatusString(status),
-                temperature = "${temperature / 10}°C",
-                voltage = "${voltage / 1000.0}V",
-                health = getHealthString(health),
-                isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING
-            )
-            
+
+            val batteryInfo =
+                BatteryInfoVm(
+                    level = batteryPercentage,
+                    status = getStatusString(status),
+                    temperature = "${temperature / 10}°C",
+                    voltage = "${voltage / 1000.0}V",
+                    health = getHealthString(health),
+                    isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING,
+                )
+
             _batteryInfo.value = batteryInfo
+            _isLoading.value = false
         }
     }
-    
-    private fun updateMockData() {
-        viewModelScope.launch {
-            // Simulate screen time data
-            _screenOnTime.value = "4h 32m"
-            _screenOffTime.value = "12h 15m"
-            _batteryUsed.value = "45%"
-        }
-    }
-    
+
     private fun getStatusString(status: Int): String {
         return when (status) {
             BatteryManager.BATTERY_STATUS_CHARGING -> "Charging"
@@ -100,7 +99,7 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
             else -> "Unknown"
         }
     }
-    
+
     private fun getHealthString(health: Int): String {
         return when (health) {
             BatteryManager.BATTERY_HEALTH_GOOD -> "Good"
@@ -112,10 +111,10 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
             else -> "Unknown"
         }
     }
-    
+
     override fun onCleared() {
         super.onCleared()
-        batteryReceiver?.let { 
+        batteryReceiver?.let {
             try {
                 getApplication<Application>().unregisterReceiver(it)
             } catch (e: IllegalArgumentException) {

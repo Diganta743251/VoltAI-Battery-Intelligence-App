@@ -1,6 +1,7 @@
 package com.voltai.core.utils
 
 import kotlin.math.max
+import kotlin.math.roundToInt
 
 object BatteryHealthCalculator {
     
@@ -84,6 +85,56 @@ object BatteryHealthCalculator {
         val cyclesRemaining = healthToLose / degradationPerCycle
         
         return cyclesRemaining / (averageCyclesPerMonth * 12f)
+    }
+
+    // Legacy wrappers expected by unit tests
+    fun calculateHealthScore(
+        voltage: Float,
+        temperature: Float,
+        cycleCount: Int,
+    ): Int {
+        // Start with perfect score
+        var score = 100f
+        // Cycle degradation (0.05% per cycle)
+        score -= (cycleCount * 0.05f)
+        // Temperature degradation for temps > 35°C
+        if (temperature > 35f) {
+            score -= (temperature - 35f) * 0.02f
+        }
+        // Voltage degradation using nominal 4.0V
+        val nominalV = 4.0f
+        if (voltage < nominalV * 0.9f) {
+            score -= if (voltage < nominalV * 0.8f) 5f else 3f
+        }
+        return score.coerceIn(0f, 100f).toInt()
+    }
+
+    fun estimateBatteryLifespan(healthScore: Int): Int {
+        // Simple mapping: scale 0..100 to 0..4 years (at least 0)
+        val years = (healthScore / 20f) - 1f // 90 -> 3.5, 30 -> 0.5
+        return years.coerceAtLeast(0f).roundToInt()
+    }
+
+    fun getHealthRecommendations(healthScore: Int): List<String> {
+        return when {
+            healthScore >= 90 -> listOf(
+                "Keep battery between 20% and 80%",
+                "Avoid extreme temperatures"
+            )
+            healthScore >= 70 -> listOf(
+                "Reduce background app usage",
+                "Use optimized charging when possible"
+            )
+            healthScore >= 40 -> listOf(
+                "Avoid frequent full discharges",
+                "Limit high-performance gaming sessions"
+            )
+            else -> listOf(
+                "Consider battery calibration",
+                "Minimize fast charging",
+                "Replace battery soon if degradation impacts daily use"
+            )
+        }
     }
 }
 

@@ -1,0 +1,103 @@
+name: Android CI
+
+on:
+  pull_request:
+    branches: [ "**" ]
+  push:
+    branches-ignore: [ "main" ]
+
+jobs:
+  ci:
+    name: Build, Test, Analyze (PR/Branch)
+    runs-on: ubuntu-latest
+
+    env:
+      JAVA_VERSION: '17'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Unit Tests
+        run: ./gradlew :core:test :features:test --stacktrace
+
+      - name: Coverage (Jacoco, enforce >= 60%)
+        run: ./gradlew :core:jacocoTestReport :core:jacocoTestCoverageVerification -PcoverageMinimum=0.60 --stacktrace
+
+      - name: Static Analysis - detekt (strict)
+        run: ./gradlew :app:detekt --stacktrace
+
+      - name: Static Analysis - ktlint (strict)
+        run: ./gradlew :app:ktlintCheck --stacktrace
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: VoltAI-Debug-APK
+          path: app/build/outputs/apk/debug/*.apk
+
+      - name: Read app version
+        id: app_version
+        run: |
+          OUT=$(./gradlew :app:printVersionInfo -q | grep VERSION_)
+          echo "$OUT"
+          echo "$OUT" | while IFS= read -r line; do echo "$line" >> $GITHUB_OUTPUT; done
+
+      - name: Upload Test & Analysis Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reports
+          path: |
+            core/build/reports/jacoco/jacocoTestReport/html/**
+            core/build/reports/jacoco/jacocoTestReport/*.xml
+            core/build/reports/tests/**
+            core/build/test-results/**
+            features/build/reports/tests/**
+            features/build/test-results/**
+            app/build/reports/detekt/**
+            app/build/reports/ktlint/**
+
+      - name: Slack notify (PR success)
+        if: success() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          VERSION_NAME: ${{ steps.app_version.outputs.VERSION_NAME || '' }}
+          VERSION_CODE: ${{ steps.app_version.outputs.VERSION_CODE || '' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PR_NUMBER: ${{ github.event.pull_request.number || '' }}
+        run: |
+          title="✅ VoltAI PR ${PR_NUMBER:-} built v${VERSION_NAME:-?} (${VERSION_CODE:-?})"
+          text="${title}\n<${RUN_URL}|View CI run>"
+          payload=$(jq -n --arg t "$text" '{text: $t}')
+          curl -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
+
+      - name: Discord notify (PR success)
+        if: success() && env.DISCORD_WEBHOOK_URL != ''
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          VERSION_NAME: ${{ steps.app_version.outputs.VERSION_NAME || '' }}
+          VERSION_CODE: ${{ steps.app_version.outputs.VERSION_CODE || '' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PR_NUMBER: ${{ github.event.pull_request.number || '' }}
+        run: |
+          content="✅ VoltAI PR ${PR_NUMBER:-} built v${VERSION_NAME:-?} (${VERSION_CODE:-?})\nRun: ${RUN_URL}"
+          payload=$(jq -n --arg c "$content" '{content: $c}')
+          curl -X POST -H 'Content-Type: application/json' -d "$payload" "$DISCORD_WEBHOOK_URL"

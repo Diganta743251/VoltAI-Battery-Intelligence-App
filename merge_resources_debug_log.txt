@@ -1,0 +1,555 @@
+Initialized native services in: C:\Users\Diganta1\.gradle\native
+Initialized jansi services in: C:\Users\Diganta1\.gradle\native
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Starting process 'Gradle build daemon'. Working directory: C:\Users\Diganta1\.gradle\daemon\8.13 Command: C:\Program Files\Eclipse Adoptium\jdk-17.0.15.6-hotspot\bin\java.exe --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED -Xmx2g -Dfile.encoding=windows-1252 -Duser.country=IN -Duser.language=en -Duser.variant -cp C:\Users\Diganta1\.gradle\wrapper\dists\gradle-8.13-bin\5xuhj0ry160q40clulazy9h7d\gradle-8.13\lib\gradle-daemon-main-8.13.jar -javaagent:C:\Users\Diganta1\.gradle\wrapper\dists\gradle-8.13-bin\5xuhj0ry160q40clulazy9h7d\gradle-8.13\lib\agents\gradle-instrumentation-agent-8.13.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.13
+Successfully started process 'Gradle build daemon'
+An attempt to start the daemon took 2.569 secs.
+The client will now receive all logging from the daemon (pid: 8856). The daemon log file: C:\Users\Diganta1\.gradle\daemon\8.13\daemon-8856.out.log
+Daemon will be stopped at the end of the build 
+Using 6 worker leases.
+Received JVM installation metadata from 'C:\Program Files\Eclipse Adoptium\jdk-17.0.15.6-hotspot': {JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-17.0.15.6-hotspot, JAVA_VERSION=17.0.15, JAVA_VENDOR=Eclipse Adoptium, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=17.0.15+6, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=17.0.15+6, VM_VENDOR=Eclipse Adoptium, OS_ARCH=amd64}
+Watching the file system is configured to be enabled if available
+Now considering [C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian] as hierarchies to watch
+File system watching is active
+Starting Build
+Settings evaluated using settings file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\settings.gradle'.
+Projects loaded. Root project using build file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\build.gradle'.
+Included projects: [root project 'VoltAI-SmartBatteryGuardian', project ':app', project ':core', project ':data', project ':domain']
+
+> Configure project :
+Evaluating root project 'VoltAI-SmartBatteryGuardian' using build file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\build.gradle'.
+Resolved plugin [id: 'io.gitlab.arturbosch.detekt', version: '1.23.6', apply: false]
+Resolved plugin [id: 'org.jlleitschuh.gradle.ktlint', version: '12.1.1', apply: false]
+
+> Configure project :app
+Evaluating project ':app' using build file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build.gradle'.
+Resolved plugin [id: 'com.android.application']
+Resolved plugin [id: 'org.jetbrains.kotlin.android']
+Resolved plugin [id: 'com.google.dagger.hilt.android']
+Resolved plugin [id: 'kotlin-kapt']
+Resolved plugin [id: 'org.jetbrains.kotlin.plugin.serialization', version: '1.9.10']
+Resolved plugin [id: 'io.gitlab.arturbosch.detekt']
+Resolved plugin [id: 'org.jlleitschuh.gradle.ktlint']
+Resolved plugin [id: 'jacoco']
+Resolved plugin [id: 'com.github.triplet.play', version: '3.9.1']
+Using default execution profile
+Using Kotlin Gradle Plugin gradle81 variant
+No release keystore found. Building unsigned release bundle locally.
+Skipping debuggable build with type 'debug'
+Add dependencies: ktlint version 1.0.1
+Add dependencies: ktlint version 1.0.1
+Add dependencies: ktlint version 1.0.1
+
+> Configure project :core
+Evaluating project ':core' using build file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\core\build.gradle'.
+Resolved plugin [id: 'com.android.library']
+Resolved plugin [id: 'org.jetbrains.kotlin.android']
+Resolved plugin [id: 'kotlin-kapt']
+Resolved plugin [id: 'com.google.dagger.hilt.android']
+Resolved plugin [id: 'jacoco']
+Using default execution profile
+Using Kotlin Gradle Plugin gradle81 variant
+
+> Configure project :data
+Evaluating project ':data' using build file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\data\build.gradle'.
+Resolved plugin [id: 'com.android.library']
+Resolved plugin [id: 'org.jetbrains.kotlin.android']
+Resolved plugin [id: 'kotlin-kapt']
+Resolved plugin [id: 'com.google.dagger.hilt.android']
+Using default execution profile
+Using Kotlin Gradle Plugin gradle81 variant
+
+> Configure project :domain
+Evaluating project ':domain' using build file 'C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\domain\build.gradle'.
+Resolved plugin [id: 'org.jetbrains.kotlin.jvm']
+Using Kotlin Gradle Plugin gradle81 variant
+kotlin scripting plugin: created the scripting discovery configuration: kotlinScriptDef
+kotlin scripting plugin: created the scripting discovery configuration: testKotlinScriptDef
+All projects evaluated.
+Task path ':app:mergeDebugResources' matched project ':app'
+Task name matched 'mergeDebugResources'
+Selected primary task 'mergeDebugResources' from project :app
+Tasks to be executed: [task ':app:preBuild', task ':app:preDebugBuild', task ':app:generateDebugResValues', task ':app:generateDebugResources', task ':core:preBuild', task ':core:preDebugBuild', task ':core:generateDebugResValues', task ':core:generateDebugResources', task ':core:packageDebugResources', task ':data:preBuild', task ':data:preDebugBuild', task ':data:generateDebugResValues', task ':data:generateDebugResources', task ':data:packageDebugResources', task ':app:mergeDebugResources']
+Tasks that were excluded: []
+Resolve mutations for :app:preBuild (Thread[included builds,5,main]) started.
+:app:preBuild (Thread[included builds,5,main]) started.
+
+> Task :app:preBuild UP-TO-DATE
+Skipping task ':app:preBuild' as it has no actions.
+Resolve mutations for :app:preDebugBuild (Thread[included builds,5,main]) started.
+:app:preDebugBuild (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:preDebugBuild UP-TO-DATE
+Skipping task ':app:preDebugBuild' as it has no actions.
+Resolve mutations for :app:generateDebugResValues (Thread[Execution worker Thread 2,5,main]) started.
+:app:generateDebugResValues (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:generateDebugResValues UP-TO-DATE
+Caching disabled for task ':app:generateDebugResValues' because:
+  Build cache is disabled
+Skipping task ':app:generateDebugResValues' as it is up-to-date.
+Resolve mutations for :app:generateDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+:app:generateDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:generateDebugResources UP-TO-DATE
+Caching disabled for task ':app:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':app:generateDebugResources' as it is up-to-date.
+Resolve mutations for :core:preBuild (Thread[Execution worker Thread 2,5,main]) started.
+:core:preBuild (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:preBuild UP-TO-DATE
+Skipping task ':core:preBuild' as it has no actions.
+Resolve mutations for :core:preDebugBuild (Thread[Execution worker Thread 2,5,main]) started.
+:core:preDebugBuild (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:preDebugBuild UP-TO-DATE
+Skipping task ':core:preDebugBuild' as it has no actions.
+Resolve mutations for :core:generateDebugResValues (Thread[Execution worker Thread 2,5,main]) started.
+:core:generateDebugResValues (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:generateDebugResValues UP-TO-DATE
+Caching disabled for task ':core:generateDebugResValues' because:
+  Build cache is disabled
+Skipping task ':core:generateDebugResValues' as it is up-to-date.
+Resolve mutations for :core:generateDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+:core:generateDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:generateDebugResources UP-TO-DATE
+Caching disabled for task ':core:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':core:generateDebugResources' as it is up-to-date.
+Resolve mutations for :core:packageDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+:core:packageDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :core:packageDebugResources UP-TO-DATE
+Caching disabled for task ':core:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':core:packageDebugResources' as it is up-to-date.
+work action resolve packageDebugResources (project :core) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :data:preBuild (Thread[Execution worker Thread 2,5,main]) started.
+:data:preBuild (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:preBuild UP-TO-DATE
+Skipping task ':data:preBuild' as it has no actions.
+Resolve mutations for :data:preDebugBuild (Thread[Execution worker Thread 2,5,main]) started.
+:data:preDebugBuild (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:preDebugBuild UP-TO-DATE
+Skipping task ':data:preDebugBuild' as it has no actions.
+Resolve mutations for :data:generateDebugResValues (Thread[Execution worker Thread 2,5,main]) started.
+:data:generateDebugResValues (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:generateDebugResValues UP-TO-DATE
+Caching disabled for task ':data:generateDebugResValues' because:
+  Build cache is disabled
+Skipping task ':data:generateDebugResValues' as it is up-to-date.
+Resolve mutations for :data:generateDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+:data:generateDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:generateDebugResources UP-TO-DATE
+Caching disabled for task ':data:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':data:generateDebugResources' as it is up-to-date.
+Resolve mutations for :data:packageDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+:data:packageDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :data:packageDebugResources UP-TO-DATE
+Caching disabled for task ':data:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':data:packageDebugResources' as it is up-to-date.
+work action resolve packageDebugResources (project :data) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:mergeDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+:app:mergeDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:mergeDebugResources
+Caching disabled for task ':app:mergeDebugResources' because:
+  Build cache is disabled
+Task ':app:mergeDebugResources' is not up-to-date because:
+  Task has failed previously.
+The input changes require a full rebuild for incremental task ':app:mergeDebugResources'.
+[MergeResources] Inputs are non-incremental full task action.
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-hi\values-hi.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-hi_values-hi.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values\values.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values_values.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-pt\values-pt.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-pt_values-pt.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-hr\values-hr.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-hr_values-hr.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-watch-v21\values-watch-v21.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-watch-v21_values-watch-v21.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-watch-v20\values-watch-v20.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-watch-v20_values-watch-v20.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-h320dp-port-v13\values-h320dp-port-v13.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-h320dp-port-v13_values-h320dp-port-v13.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-hy\values-hy.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-hy_values-hy.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-af\values-af.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-af_values-af.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v17\values-v17.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v17_values-v17.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-am\values-am.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-am_values-am.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-w360dp-port-v13\values-w360dp-port-v13.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-w360dp-port-v13_values-w360dp-port-v13.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-it\values-it.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-it_values-it.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-es-rUS\values-es-rUS.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-es-rUS_values-es-rUS.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v21\values-v21.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v21_values-v21.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v18\values-v18.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v18_values-v18.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v24\values-v24.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v24_values-v24.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v29\values-v29.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v29_values-v29.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ru\values-ru.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ru_values-ru.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v31\values-v31.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v31_values-v31.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-az\values-az.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-az_values-az.arsc.flat
+C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\values\strings.xml:8:4: Failed to flatten XML for resource 'based_on_app_data' with error: Invalid unicode escape sequence in string
+"{str}"
+C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\values\strings.xml:8:4: string/based_on_app_data does not contain a valid string resource.
+C:\Users\Diganta1\.gradle\caches\8.13\transforms\65e68a740462d5cb9e9f8a983d6d4278\transformed\biometric-1.1.0-alpha02\res\values\values.xml:42:4: Failed to flatten XML for resource 'full_charging_reminder_desc' with error: Invalid unicode escape sequence in string
+"{str}"
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v26\values-v26.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v26_values-v26.arsc.flat
+C:\Users\Diganta1\.gradle\caches\8.13\transforms\65e68a740462d5cb9e9f8a983d6d4278\transformed\biometric-1.1.0-alpha02\res\values\values.xml:42:4: string/full_charging_reminder_desc does not contain a valid string resource.
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-be\values-be.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-be_values-be.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-en-rCA\values-en-rCA.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-en-rCA_values-en-rCA.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ca\values-ca.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ca_values-ca.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-sl\values-sl.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-sl_values-sl.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-kn\values-kn.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-kn_values-kn.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-sv\values-sv.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-sv_values-sv.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-pt-rBR\values-pt-rBR.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-pt-rBR_values-pt-rBR.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-cs\values-cs.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-cs_values-cs.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-da\values-da.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-da_values-da.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-zh-rHK\values-zh-rHK.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-zh-rHK_values-zh-rHK.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-xlarge-v4\values-xlarge-v4.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-xlarge-v4_values-xlarge-v4.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-lt\values-lt.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-lt_values-lt.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ar\values-ar.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ar_values-ar.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ur\values-ur.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ur_values-ur.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-w320dp-land-v13\values-w320dp-land-v13.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-w320dp-land-v13_values-w320dp-land-v13.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-mr\values-mr.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-mr_values-mr.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-et\values-et.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-et_values-et.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-lv\values-lv.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-lv_values-lv.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-mk\values-mk.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-mk_values-mk.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ms\values-ms.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ms_values-ms.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-eu\values-eu.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-eu_values-eu.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-night-v8\values-night-v8.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-night-v8_values-night-v8.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v16\values-v16.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v16_values-v16.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-in\values-in.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-in_values-in.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-b+sr+Latn\values-b+sr+Latn.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-b+sr+Latn_values-b+sr+Latn.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v23\values-v23.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v23_values-v23.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-w600dp-land-v13\values-w600dp-land-v13.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-w600dp-land-v13_values-w600dp-land-v13.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-fi\values-fi.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-fi_values-fi.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-land\values-land.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-land_values-land.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-pa\values-pa.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-pa_values-pa.arsc.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_launcher_foreground.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_launcher_foreground.xml.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-en-rXC\values-en-rXC.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-en-rXC_values-en-rXC.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-small-v4\values-small-v4.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-small-v4_values-small-v4.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-pl\values-pl.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-pl_values-pl.arsc.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_open_app.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_open_app.xml.flat
+C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values\values.xml: Failed to compile file
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-xxhdpi\ic_launcher.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-xxhdpi_ic_launcher.webp.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\widget_background_large.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_widget_background_large.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\layout\widget_battery_small.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\layout_widget_battery_small.xml.flat
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-xhdpi\ic_launcher_round.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-xhdpi_ic_launcher_round.webp.flat
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-hdpi\ic_launcher_foreground.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-hdpi_ic_launcher_foreground.webp.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\widget_button_background.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_widget_button_background.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_optimization.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_optimization.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\layout\widget_battery_large.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\layout_widget_battery_large.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_power_saver_on.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_power_saver_on.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_charging_normal.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_charging_normal.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-anydpi-v26\ic_launcher.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-anydpi-v26_ic_launcher.xml.flat
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-xxhdpi\ic_launcher_foreground.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-xxhdpi_ic_launcher_foreground.webp.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_optimization_inactive.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_optimization_inactive.xml.flat
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-xxhdpi\ic_launcher_round.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-xxhdpi_ic_launcher_round.webp.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-h360dp-land-v13\values-h360dp-land-v13.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-h360dp-land-v13_values-h360dp-land-v13.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-h480dp-land-v13\values-h480dp-land-v13.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-h480dp-land-v13_values-h480dp-land-v13.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v22\values-v22.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v22_values-v22.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-bg\values-bg.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-bg_values-bg.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v27\values-v27.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v27_values-v27.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ka\values-ka.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ka_values-ka.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-sq\values-sq.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-sq_values-sq.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ko\values-ko.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ko_values-ko.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v28\values-v28.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v28_values-v28.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-h720dp-v13\values-h720dp-v13.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-h720dp-v13_values-h720dp-v13.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-iw\values-iw.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-iw_values-iw.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-tr\values-tr.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-tr_values-tr.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-en-rIN\values-en-rIN.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-en-rIN_values-en-rIN.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-bn\values-bn.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-bn_values-bn.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-si\values-si.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-si_values-si.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-kk\values-kk.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-kk_values-kk.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ml\values-ml.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ml_values-ml.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-el\values-el.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-el_values-el.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-vi\values-vi.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-vi_values-vi.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ta\values-ta.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ta_values-ta.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ne\values-ne.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ne_values-ne.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-th\values-th.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-th_values-th.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ja\values-ja.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ja_values-ja.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-pt-rPT\values-pt-rPT.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-pt-rPT_values-pt-rPT.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-fr\values-fr.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-fr_values-fr.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-or\values-or.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-or_values-or.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ro\values-ro.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ro_values-ro.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-de\values-de.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-de_values-de.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-ldrtl-v17\values-ldrtl-v17.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-ldrtl-v17_values-ldrtl-v17.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-fr-rCA\values-fr-rCA.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-fr-rCA_values-fr-rCA.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-my\values-my.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-my_values-my.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-nb\values-nb.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-nb_values-nb.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-nl\values-nl.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-nl_values-nl.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-hdpi-v4\values-hdpi-v4.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-hdpi-v4_values-hdpi-v4.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-b+es+419\values-b+es+419.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-b+es+419_values-b+es+419.arsc.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\widget_background.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_widget_background.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\status_indicator_background.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_status_indicator_background.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_charging_fast.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_charging_fast.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_voltage.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_voltage.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_settings.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_settings.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_refresh.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_refresh.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_power_saver_off.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_power_saver_off.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\widget_container.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_widget_container.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_health.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_health.xml.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-night-v31\values-night-v31.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-night-v31_values-night-v31.arsc.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\widget_background_small.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_widget_background_small.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\xml\accessibility_service_config.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\xml_accessibility_service_config.xml.flat
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-mdpi\ic_launcher_round.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-mdpi_ic_launcher_round.webp.flat
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-xxxhdpi\ic_launcher.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-xxxhdpi_ic_launcher.webp.flat
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-xxxhdpi\ic_launcher_foreground.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-xxxhdpi_ic_launcher_foreground.webp.flat
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-xhdpi\ic_launcher.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-xhdpi_ic_launcher.webp.flat
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-hdpi\ic_launcher.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-hdpi_ic_launcher.webp.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\xml\battery_widget_info.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\xml_battery_widget_info.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_charging_optimized.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_charging_optimized.xml.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-v34\values-v34.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-v34_values-v34.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-sr\values-sr.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-sr_values-sr.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-sw\values-sw.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-sw_values-sw.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-te\values-te.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-te_values-te.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-en-rAU\values-en-rAU.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-en-rAU_values-en-rAU.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-h550dp-port-v13\values-h550dp-port-v13.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-h550dp-port-v13_values-h550dp-port-v13.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-mn\values-mn.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-mn_values-mn.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-zh-rTW\values-zh-rTW.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-zh-rTW_values-zh-rTW.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-w400dp-port-v13\values-w400dp-port-v13.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-w400dp-port-v13_values-w400dp-port-v13.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-fa\values-fa.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-fa_values-fa.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-large-v4\values-large-v4.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-large-v4_values-large-v4.arsc.flat
+Compiling XML table C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values-gl\values-gl.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\values-gl_values-gl.arsc.flat
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-mdpi\ic_launcher.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-mdpi_ic_launcher.webp.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\layout\widget_battery_medium.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\layout_widget_battery_medium.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\battery_circle.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_battery_circle.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_charging_slow.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_charging_slow.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-anydpi-v26\ic_launcher_round.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-anydpi-v26_ic_launcher_round.xml.flat
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-xhdpi\ic_launcher_foreground.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-xhdpi_ic_launcher_foreground.webp.flat
+Compiling file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\mipmap-hdpi\ic_launcher_round.webp to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\mipmap-hdpi_ic_launcher_round.webp.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\battery_progress.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_battery_progress.xml.flat
+Compiling xml file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\src\main\res\drawable\ic_pause.xml to C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\merged_res\debug\mergeDebugResources\drawable_ic_pause.xml.flat
+
+> Task :app:mergeDebugResources FAILED
+
+[Incubating] Problems report is available at: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:mergeDebugResources'.
+> A failure occurred while executing com.android.build.gradle.internal.res.ResourceCompilerRunnable
+   > Resource compilation failed (Failed to compile values resource file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values\values.xml. Cause: java.lang.IllegalStateException: Can not extract resource from com.android.aaptcompiler.ParsedResource@3224516f.,Can not extract resource from com.android.aaptcompiler.ParsedResource@5269a7b9.). Check logs for more details.
+
+* Try:
+> Run with --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+* Exception is:
+org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:mergeDebugResources'.
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.lambda$executeIfValid$1(ExecuteActionsTaskExecuter.java:130)
+	at org.gradle.internal.Try$Failure.ifSuccessfulOrElse(Try.java:293)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:128)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+	at org.gradle.api.internal.tasks.execution.ProblemsTaskPathTrackingTaskExecuter.execute(ProblemsTaskPathTrackingTaskExecuter.java:40)
+	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+Caused by: org.gradle.workers.internal.DefaultWorkerExecutor$WorkExecutionException: A failure occurred while executing com.android.build.gradle.internal.res.ResourceCompilerRunnable
+	at org.gradle.workers.internal.DefaultWorkerExecutor$WorkItemExecution.waitForCompletion(DefaultWorkerExecutor.java:287)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.lambda$waitForItemsAndGatherFailures$2(DefaultAsyncWorkTracker.java:130)
+	at org.gradle.internal.Factories$1.create(Factories.java:31)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLocks(DefaultWorkerLeaseService.java:335)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLocks(DefaultWorkerLeaseService.java:318)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLock(DefaultWorkerLeaseService.java:323)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForItemsAndGatherFailures(DefaultAsyncWorkTracker.java:126)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForItemsAndGatherFailures(DefaultAsyncWorkTracker.java:92)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForAll(DefaultAsyncWorkTracker.java:78)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForCompletion(DefaultAsyncWorkTracker.java:66)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:252)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:30)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:27)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:48)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeAction(TaskExecution.java:229)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeActions(TaskExecution.java:212)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeWithPreviousOutputFiles(TaskExecution.java:195)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.execute(TaskExecution.java:162)
+	at org.gradle.internal.execution.steps.ExecuteStep.executeInternal(ExecuteStep.java:105)
+	at org.gradle.internal.execution.steps.ExecuteStep.access$000(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:59)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:56)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:56)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.CancelExecutionStep.execute(CancelExecutionStep.java:42)
+	at org.gradle.internal.execution.steps.TimeoutStep.executeWithoutTimeout(TimeoutStep.java:75)
+	at org.gradle.internal.execution.steps.TimeoutStep.execute(TimeoutStep.java:55)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:50)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:28)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:67)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:37)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:61)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:26)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:69)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:46)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:40)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:29)
+	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithoutCache(BuildCacheStep.java:189)
+	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$execute$1(BuildCacheStep.java:75)
+	at org.gradle.internal.Either$Right.fold(Either.java:175)
+	at org.gradle.internal.execution.caching.CachingState.fold(CachingState.java:62)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:73)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:48)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:46)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:35)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.executeBecause(SkipUpToDateStep.java:75)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.lambda$execute$2(SkipUpToDateStep.java:53)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:53)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:35)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:37)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:27)
+	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:49)
+	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:27)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:71)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:39)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:65)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:36)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:107)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:56)
+	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:64)
+	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:43)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.executeWithNonEmptySources(AbstractSkipEmptyWorkStep.java:125)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:56)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:36)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsStartedStep.execute(MarkSnapshottingInputsStartedStep.java:38)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:36)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:23)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:75)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:41)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.lambda$execute$0(AssignMutableWorkspaceStep.java:35)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$4.withWorkspace(TaskExecution.java:289)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:31)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:22)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:40)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:23)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.lambda$execute$2(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:39)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:46)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:34)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:48)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:35)
+	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:61)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:127)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+	at org.gradle.api.internal.tasks.execution.ProblemsTaskPathTrackingTaskExecuter.execute(ProblemsTaskPathTrackingTaskExecuter.java:40)
+	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+Caused by: com.android.aaptcompiler.ResourceCompilationException: Resource compilation failed (Failed to compile values resource file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values\values.xml. Cause: java.lang.IllegalStateException: Can not extract resource from com.android.aaptcompiler.ParsedResource@3224516f.,Can not extract resource from com.android.aaptcompiler.ParsedResource@5269a7b9.). Check logs for more details.
+	at com.android.aaptcompiler.ResourceCompiler.compileResource(ResourceCompiler.kt:129)
+	at com.android.build.gradle.internal.res.ResourceCompilerRunnable$Companion.compileSingleResource(ResourceCompilerRunnable.kt:34)
+	at com.android.build.gradle.internal.res.ResourceCompilerRunnable.run(ResourceCompilerRunnable.kt:15)
+	at com.android.build.gradle.internal.profile.ProfileAwareWorkAction.execute(ProfileAwareWorkAction.kt:74)
+	at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:66)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:62)
+	at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:62)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:59)
+	at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:174)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:194)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQueue.java:127)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:169)
+	at org.gradle.internal.Factories$1.create(Factories.java:31)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:263)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:127)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:132)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:164)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:133)
+	... 2 more
+Caused by: com.android.aaptcompiler.ResourceCompilationException: Failed to compile values resource file C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir\values\values.xml
+	at com.android.aaptcompiler.ResourceCompiler.compileTable(ResourceCompiler.kt:192)
+	at com.android.aaptcompiler.ResourceCompiler.access$compileTable(ResourceCompiler.kt:1)
+	at com.android.aaptcompiler.ResourceCompiler$getCompileMethod$1.invoke(ResourceCompiler.kt:138)
+	at com.android.aaptcompiler.ResourceCompiler$getCompileMethod$1.invoke(ResourceCompiler.kt:138)
+	at com.android.aaptcompiler.ResourceCompiler.compileResource(ResourceCompiler.kt:123)
+	... 31 more
+Caused by: java.lang.IllegalStateException: Can not extract resource from com.android.aaptcompiler.ParsedResource@3224516f.,Can not extract resource from com.android.aaptcompiler.ParsedResource@5269a7b9.
+	at com.android.aaptcompiler.TableExtractor.extractResourceValues(TableExtractor.kt:270)
+	at com.android.aaptcompiler.TableExtractor.extract(TableExtractor.kt:181)
+	at com.android.aaptcompiler.ResourceCompiler.compileTable(ResourceCompiler.kt:188)
+	... 35 more
+
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 41s
+9 actionable tasks: 1 executed, 8 up-to-date
+Watched directory hierarchies: [C:\Users\Diganta1\AndroidStudioProjects\VoltAI-SmartBatteryGuardian]

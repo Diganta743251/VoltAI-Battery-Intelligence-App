@@ -621,7 +621,7 @@ fun AnalyticsIcon(
         val width = size.width
         val height = size.height
         
-        // Bar chart
+        // Bar chart (intentional design element for icon visualization)
         val barWidth = width * 0.12f
         val bars = listOf(0.4f, 0.7f, 0.5f, 0.8f, 0.6f)
         

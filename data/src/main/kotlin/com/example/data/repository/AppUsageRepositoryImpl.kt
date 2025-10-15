@@ -5,13 +5,14 @@ import android.content.Context
 import android.content.pm.PackageManager
 import com.voltai.domain.model.AppUsage
 import com.voltai.domain.repository.AppUsageRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.Calendar
 import javax.inject.Inject
 
 class AppUsageRepositoryImpl @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
     private val usageStatsManager: UsageStatsManager
 ) : AppUsageRepository {
 
@@ -21,11 +22,24 @@ class AppUsageRepositoryImpl @Inject constructor(
         val endTime = System.currentTimeMillis()
         val startTime = calendar.timeInMillis
 
-        val usageStatsList = usageStatsManager.queryUsageStats(
+        var usageStatsList = usageStatsManager.queryUsageStats(
             UsageStatsManager.INTERVAL_DAILY,
             startTime,
             endTime
         )
+
+        // Fallback: Some OEMs/devices return empty for the last 24h even with permission granted.
+        // If daily is empty, try the last 7 days with WEEKLY interval so we can at least show something.
+        if (usageStatsList == null || usageStatsList.isEmpty()) {
+            val cal7 = Calendar.getInstance()
+            cal7.add(Calendar.DAY_OF_YEAR, -7)
+            val start7 = cal7.timeInMillis
+            usageStatsList = usageStatsManager.queryUsageStats(
+                UsageStatsManager.INTERVAL_WEEKLY,
+                start7,
+                endTime
+            )
+        }
 
         val appUsageList = mutableListOf<AppUsage>()
         val packageManager = context.packageManager

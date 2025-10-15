@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Widget Text Colors -->
+    <color name="widget_text_primary">#212121</color>
+    <color name="widget_text_secondary">#757575</color>
+    <color name="widget_text_success">#4CAF50</color>
+    <color name="widget_text_warning">#FF9800</color>
+    <color name="widget_text_error">#F44336</color>
+    
+    <!-- Widget Background Colors -->
+    <color name="widget_background_light">#FFFFFF</color>
+    <color name="widget_background_dark">#263238</color>
+    <color name="widget_background_transparent">#80FFFFFF</color>
+    
+    <!-- Battery Level Colors -->
+    <color name="battery_low">#F44336</color>
+    <color name="battery_medium">#FF9800</color>
+    <color name="battery_high">#4CAF50</color>
+    <color name="battery_full">#2196F3</color>
+    
+    <!-- Temperature Colors -->
+    <color name="temperature_normal">#4CAF50</color>
+    <color name="temperature_warm">#FF9800</color>
+    <color name="temperature_high">#FF5722</color>
+    <color name="temperature_critical">#F44336</color>
+    
+    <!-- Health Colors -->
+    <color name="health_good">#4CAF50</color>
+    <color name="health_fair">#FF9800</color>
+    <color name="health_poor">#FF5722</color>
+    <color name="health_critical">#F44336</color>
+    <color name="health_dead">#9E9E9E</color>
+    <color name="health_cold">#03A9F4</color>
+    <color name="health_unknown">#9E9E9E</color>
+    
+    <!-- Charging Colors -->
+    <color name="charging_indicator">#4CAF50</color>
+    <color name="charging_overlay">#804CAF50</color>
+    
+    <!-- Widget Elements -->
+    <color name="widget_outline">#BDBDBD</color>
+    <color name="widget_text">#212121</color>
+</resources>

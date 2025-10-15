@@ -1,0 +1,244 @@
+
+> Configure project :app
+No release keystore found. Building unsigned release bundle locally.
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :domain:processResources NO-SOURCE
+> Task :core:preBuild UP-TO-DATE
+> Task :core:preDebugBuild UP-TO-DATE
+> Task :data:preBuild UP-TO-DATE
+> Task :data:preDebugBuild UP-TO-DATE
+> Task :ui:preBuild UP-TO-DATE
+> Task :ui:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugResValues
+> Task :core:generateDebugResValues
+> Task :core:generateDebugResources
+> Task :ui:writeDebugAarMetadata
+> Task :data:writeDebugAarMetadata
+> Task :core:writeDebugAarMetadata
+> Task :core:packageDebugResources
+> Task :data:generateDebugResValues
+> Task :data:generateDebugResources
+> Task :data:packageDebugResources
+> Task :ui:generateDebugResValues
+> Task :ui:generateDebugResources
+> Task :ui:packageDebugResources
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:checkDebugAarMetadata
+> Task :domain:compileKotlin
+> Task :domain:compileJava NO-SOURCE
+> Task :domain:classes UP-TO-DATE
+> Task :app:mergeDebugResources
+> Task :domain:jar
+> Task :app:packageDebugResources
+> Task :app:parseDebugLocalResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :core:extractDeepLinksDebug
+> Task :data:extractDeepLinksDebug
+> Task :ui:extractDeepLinksDebug
+> Task :core:compileDebugLibraryResources
+> Task :core:parseDebugLocalResources
+> Task :core:processDebugManifest
+> Task :data:compileDebugLibraryResources
+> Task :ui:processDebugManifest
+> Task :data:processDebugManifest
+> Task :data:parseDebugLocalResources
+> Task :core:generateDebugRFile
+
+> Task :app:processDebugMainManifest
+[org.tensorflow:tensorflow-lite:2.13.0] C:\Users\Diganta1\.gradle\caches\8.13\transforms\bba0b38cfcfdac456b5c615f207cc227\transformed\jetified-tensorflow-lite-2.13.0\AndroidManifest.xml Warning:
+	Namespace 'org.tensorflow.lite' is used in multiple modules and/or libraries: org.tensorflow:tensorflow-lite:2.13.0, org.tensorflow:tensorflow-lite-api:2.13.0. Please ensure that all modules and libraries have a unique namespace. For more information, See https://developer.android.com/studio/build/configure-app-module#set-namespace
+[org.tensorflow:tensorflow-lite-support:0.4.4] C:\Users\Diganta1\.gradle\caches\8.13\transforms\a1b90f6fbcdff37d4fbd5b66540723d8\transformed\jetified-tensorflow-lite-support-0.4.4\AndroidManifest.xml Warning:
+	Namespace 'org.tensorflow.lite.support' is used in multiple modules and/or libraries: org.tensorflow:tensorflow-lite-support:0.4.4, org.tensorflow:tensorflow-lite-support-api:0.4.4. Please ensure that all modules and libraries have a unique namespace. For more information, See https://developer.android.com/studio/build/configure-app-module#set-namespace
+
+> Task :app:processDebugManifest
+> Task :ui:compileDebugLibraryResources
+> Task :data:generateDebugRFile
+> Task :ui:parseDebugLocalResources
+> Task :app:processDebugManifestForPackage
+> Task :ui:generateDebugRFile
+> Task :core:javaPreCompileDebug
+> Task :data:javaPreCompileDebug
+> Task :ui:javaPreCompileDebug
+> Task :app:javaPreCompileDebug
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :core:mergeDebugShaders
+> Task :core:compileDebugShaders NO-SOURCE
+> Task :core:generateDebugAssets UP-TO-DATE
+> Task :core:mergeDebugAssets
+> Task :data:mergeDebugShaders
+> Task :data:compileDebugShaders NO-SOURCE
+> Task :data:generateDebugAssets UP-TO-DATE
+> Task :data:mergeDebugAssets
+> Task :ui:mergeDebugShaders
+> Task :ui:compileDebugShaders NO-SOURCE
+> Task :ui:generateDebugAssets UP-TO-DATE
+> Task :ui:mergeDebugAssets
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets
+> Task :app:desugarDebugFileDependencies
+> Task :app:mergeDebugJniLibFolders
+> Task :core:mergeDebugJniLibFolders
+> Task :core:mergeDebugNativeLibs NO-SOURCE
+> Task :data:mergeDebugJniLibFolders
+> Task :data:mergeDebugNativeLibs NO-SOURCE
+> Task :core:copyDebugJniLibsProjectOnly
+> Task :data:copyDebugJniLibsProjectOnly
+> Task :ui:mergeDebugJniLibFolders
+> Task :ui:mergeDebugNativeLibs NO-SOURCE
+> Task :ui:copyDebugJniLibsProjectOnly
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :app:checkDebugDuplicateClasses
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:mergeDebugNativeLibs
+> Task :core:stripDebugDebugSymbols NO-SOURCE
+> Task :core:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :core:prepareDebugArtProfile UP-TO-DATE
+> Task :core:prepareLintJarForPublish UP-TO-DATE
+> Task :data:stripDebugDebugSymbols NO-SOURCE
+> Task :core:copyDebugJniLibsProjectAndLocalJars
+> Task :data:copyDebugJniLibsProjectAndLocalJars
+> Task :data:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :data:prepareDebugArtProfile UP-TO-DATE
+> Task :data:prepareLintJarForPublish UP-TO-DATE
+> Task :ui:stripDebugDebugSymbols NO-SOURCE
+> Task :ui:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :ui:prepareDebugArtProfile UP-TO-DATE
+> Task :ui:prepareLintJarForPublish UP-TO-DATE
+> Task :ui:copyDebugJniLibsProjectAndLocalJars
+> Task :app:stripDebugDebugSymbols
+> Task :core:kaptGenerateStubsDebugKotlin
+> Task :app:processDebugResources
+> Task :core:kaptDebugKotlin
+> Task :app:mergeExtDexDebug
+
+> Task :core:compileDebugKotlin
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/example/core/ai/AIBatteryAnalyzer.kt:106:59 Parameter 'log' is never used, could be renamed to _
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/example/core/ai/AIBatteryAnalyzer.kt:225:17 Variable 'jsonResponse' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/example/core/ai/AIBatteryAnalyzer.kt:285:37 Parameter 'batteryLogs' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/example/core/utils/BatteryUtils.kt:76:46 Parameter 'batteryLevel' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/ai/BatteryAIPredictor.kt:201:9 Parameter 'healthPercentage' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/analytics/BatteryAnalyticsEngine.kt:197:13 Variable 'periodData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/charging/SmartChargingScheduler.kt:428:13 Variable 'batteryManager' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/error/ErrorHandler.kt:233:12 Redundant 'suspend' modifier: lambda parameters of suspend function type uses existing continuation.
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/health/BatteryHealthAnalyzer.kt:23:13 Variable 'status' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/notifications/SmartNotificationManager.kt:144:9 Parameter 'voltage' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/performance/PerformanceManager.kt:418:38 Parameter 'operation' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/thermal/ThermalManager.kt:82:67 'TYPE_TEMPERATURE: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/thermal/ThermalManager.kt:110:24 'TYPE_TEMPERATURE: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/thermal/ThermalManager.kt:183:61 Parameter 'timestamp' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/thermal/ThermalManager.kt:190:62 Parameter 'timestamp' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/thermal/ThermalManager.kt:197:49 Parameter 'timestamp' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/thermal/ThermalManager.kt:260:48 Parameter 'temperature' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/core/src/main/kotlin/com/voltai/core/utils/BatteryHealthCalculator.kt:75:9 Parameter 'cycleCount' is never used
+
+> Task :core:compileDebugJavaWithJavac
+> Task :core:processDebugJavaRes
+> Task :core:extractDebugAnnotations
+> Task :core:mergeDebugJavaResource
+> Task :core:transformDebugClassesWithAsm
+> Task :core:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :core:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :core:bundleLibCompileToJarDebug
+> Task :core:bundleLibRuntimeToJarDebug
+> Task :core:syncDebugLibJars
+> Task :core:bundleLibRuntimeToDirDebug
+> Task :core:bundleDebugAar
+> Task :core:assembleDebug
+> Task :data:kaptGenerateStubsDebugKotlin
+> Task :data:kaptDebugKotlin
+
+> Task :data:compileDebugKotlin
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/data/src/main/kotlin/com/example/data/local/AppDatabase.kt:14:34 The corresponding parameter in the supertype 'Migration' is named 'db'. This may cause problems when calling this function with named arguments.
+
+> Task :data:compileDebugJavaWithJavac
+> Task :data:processDebugJavaRes
+> Task :data:extractDebugAnnotations
+> Task :data:mergeDebugJavaResource
+> Task :data:transformDebugClassesWithAsm
+> Task :data:bundleLibCompileToJarDebug
+> Task :data:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :data:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :data:bundleLibRuntimeToJarDebug
+> Task :data:syncDebugLibJars
+> Task :data:bundleDebugAar
+> Task :data:assembleDebug
+> Task :data:bundleLibRuntimeToDirDebug
+
+> Task :ui:compileDebugKotlin
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/components/LiveCurrentGraph.kt:48:9 Variable 'shimmerOffset' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/components/LiveCurrentGraph.kt:59:9 Variable 'wavePhase' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/components/LoadingComponents.kt:198:21 Parameter 'row' is never used, could be renamed to _
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/components/LoadingComponents.kt:203:29 Parameter 'col' is never used, could be renamed to _
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/components/ModernAnimatedIcons.kt:130:13 Variable 'strokeWidth' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/components/ModernToolsSection.kt:241:5 Parameter 'onNavigateToSaver' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/components/ModernToolsSection.kt:242:5 Parameter 'onNavigateToThermal' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/components/ModernToolsSection.kt:243:5 Parameter 'onNavigateToAppUsage' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/components/ModernToolsSection.kt:244:5 Parameter 'onNavigateToBackup' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/components/ModernToolsSection.kt:245:5 Parameter 'onNavigateToTips' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/components/ModernToolsSection.kt:246:5 Parameter 'onNavigateToWidgetConfig' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/screens/DashboardScreen.kt:21:5 Parameter 'onNavigateToHealth' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/screens/DashboardScreen.kt:22:5 Parameter 'onNavigateToHistory' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/screens/DashboardScreen.kt:23:5 Parameter 'onNavigateToSaver' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/screens/DashboardScreen.kt:24:5 Parameter 'onNavigateToThermal' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/screens/DashboardScreen.kt:25:5 Parameter 'onNavigateToAppUsage' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/screens/DashboardScreen.kt:26:5 Parameter 'onNavigateToSettings' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/screens/DashboardScreen.kt:27:5 Parameter 'onNavigateToBackup' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/screens/DashboardScreen.kt:28:5 Parameter 'onNavigateToTips' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/screens/DashboardScreen.kt:29:5 Parameter 'onNavigateToWidgetConfig' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/theme/PremiumThemes.kt:275:9 Parameter 'targetLevel' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/ui/src/main/kotlin/com/voltai/ui/theme/PremiumThemes.kt:433:17 Variable 'particleAnimation' is never used
+
+> Task :ui:compileDebugJavaWithJavac NO-SOURCE
+> Task :ui:bundleLibCompileToJarDebug
+> Task :ui:bundleLibRuntimeToJarDebug
+> Task :ui:processDebugJavaRes
+> Task :ui:extractDebugAnnotations
+> Task :ui:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :ui:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :ui:mergeDebugJavaResource
+> Task :ui:syncDebugLibJars
+> Task :ui:bundleLibRuntimeToDirDebug
+> Task :ui:bundleDebugAar
+> Task :ui:assembleDebug
+> Task :app:mergeLibDexDebug
+> Task :app:kaptGenerateStubsDebugKotlin
+> Task :app:kaptDebugKotlin
+> Task :app:compileDebugKotlin
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:29:35 Unresolved reference: LocalLifecycleOwner
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:107:26 Unresolved reference: LocalLifecycleOwner
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SimplifiedStatsScreen.kt:32:35 Unresolved reference: LocalLifecycleOwner
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SimplifiedStatsScreen.kt:53:26 Unresolved reference: LocalLifecycleOwner
+
+> Task :app:compileDebugKotlin FAILED
+
+[Incubating] Problems report is available at: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 3m 35s
+127 actionable tasks: 112 executed, 15 up-to-date

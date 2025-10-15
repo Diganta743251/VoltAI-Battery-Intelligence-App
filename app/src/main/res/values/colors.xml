@@ -26,6 +26,19 @@
     <color name="charging_green">#4CAF50</color>
     <color name="charging_glow">#FFEB3B</color>
     
+    <!-- Widget Colors -->
+    <color name="widget_background">#F5F5F5</color>
+    <color name="widget_border">#E0E0E0</color>
+    <color name="widget_gradient_start">#FFFFFF</color>
+    <color name="widget_gradient_end">#F8F9FA</color>
+    <color name="widget_stroke">#CCCCCC</color>
+    
+    <!-- Battery Widget Colors -->
+    <color name="battery_outline">#666666</color>
+    <color name="battery_fill">#4CAF50</color>
+    <color name="progress_background">#E0E0E0</color>
+    <color name="progress_foreground">#2196F3</color>
+    
     <!-- System Colors -->
     <color name="transparent">#00000000</color>
     <color name="semi_transparent">#80000000</color>

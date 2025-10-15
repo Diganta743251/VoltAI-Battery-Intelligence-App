@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/widget_background"
+    android:padding="16dp">
+
+    <!-- Header with App Title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:layout_marginRight="8dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="VoltAI Battery"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/widget_text_primary" />
+
+        <TextView
+            android:id="@+id/optimization_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Optimized"
+            android:textSize="12sp"
+            android:textColor="@color/widget_text_success"
+            android:background="@drawable/status_indicator_background"
+            android:padding="4dp" />
+
+    </LinearLayout>
+
+    <!-- Main Battery Info -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <!-- Battery Visualization -->
+        <ImageView
+            android:id="@+id/battery_visualization"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="16dp"
+            android:contentDescription="@string/battery_visualization" />
+
+        <!-- Battery Stats -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/battery_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="85%"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="@color/widget_text_primary" />
+
+            <TextView
+                android:id="@+id/battery_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Charging"
+                android:textSize="16sp"
+                android:textColor="@color/widget_text_secondary" />
+
+            <TextView
+                android:id="@+id/time_remaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2h 15m remaining"
+                android:textSize="14sp"
+                android:textColor="@color/widget_text_secondary"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Detailed Stats Grid -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <!-- Temperature -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_thermometer"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="32°C"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/widget_text_primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temp"
+                android:textSize="10sp"
+                android:textColor="@color/widget_text_secondary" />
+
+        </LinearLayout>
+
+        <!-- Voltage -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_voltage"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/voltage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.2V"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/widget_text_primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Voltage"
+                android:textSize="10sp"
+                android:textColor="@color/widget_text_secondary" />
+
+        </LinearLayout>
+
+        <!-- Health -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_health"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/health"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Good"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/widget_text_primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Health"
+                android:textSize="10sp"
+                android:textColor="@color/widget_text_secondary" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Advanced Quick Actions -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/battery_saver_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/widget_button_background"
+            android:src="@drawable/ic_battery_saver"
+            android:contentDescription="@string/toggle_battery_saver"
+            android:scaleType="centerInside" />
+
+        <ImageButton
+            android:id="@+id/optimization_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/widget_button_background"
+            android:src="@drawable/ic_optimization"
+            android:contentDescription="@string/toggle_optimization"
+            android:scaleType="centerInside" />
+
+        <ImageButton
+            android:id="@+id/settings_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/widget_button_background"
+            android:src="@drawable/ic_settings"
+            android:contentDescription="@string/open_settings"
+            android:scaleType="centerInside" />
+
+        <ImageButton
+            android:id="@+id/open_app_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/widget_button_background"
+            android:src="@drawable/ic_open_app"
+            android:contentDescription="@string/open_app"
+            android:scaleType="centerInside" />
+
+        <ImageButton
+            android:id="@+id/refresh_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/widget_button_background"
+            android:src="@drawable/ic_refresh"
+            android:contentDescription="@string/refresh_widget"
+            android:scaleType="centerInside" />
+
+    </LinearLayout>
+
+</LinearLayout>

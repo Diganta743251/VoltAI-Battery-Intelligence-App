@@ -18,31 +18,36 @@ import javax.inject.Singleton
 class CurrentRepository @Inject constructor(
     private val batteryMonitor: BatteryMonitor,
     private val currentSampleDao: CurrentSampleDao
-) {
+) : com.voltai.domain.repository.ICurrentRepository {
     private val repoScope = CoroutineScope(Dispatchers.IO)
 
-    // Persist incoming samples and expose recent window
-    val currentSamples: Flow<List<Float>> = flow {
-        batteryMonitor.getBatteryStatusFlow().collect { status ->
-            val now = System.currentTimeMillis()
-            repoScope.launch {
-                currentSampleDao.insert(
-                    CurrentSample(
-                        timestamp = now,
-                        currentMa = status.currentNow / 1000f, // uA -> mA
-                        isCharging = status.isCharging
-                    )
-                )
-                // Prune older than 7 days
-                val sevenDaysAgo = now - 7L * 24 * 60 * 60 * 1000
-                currentSampleDao.prune(sevenDaysAgo)
-            }
-            // Emit is handled by separate DB flow below
-        }
+    // Adapt to domain interfaces
+    override suspend fun save(log: com.voltai.domain.model.BatteryLog) {
+        currentSampleDao.insert(
+            CurrentSample(
+                timestamp = log.timestamp,
+                currentMa = log.current,
+                isCharging = log.current < 0f
+            )
+        )
     }
 
-    fun getRecentSamples(windowMillis: Long): Flow<List<Float>> {
-        val since = System.currentTimeMillis() - windowMillis
-        return currentSampleDao.getSamplesSince(since).map { list -> list.map { it.currentMa } }
+    override fun getRecentLogs(limit: Int): Flow<List<com.voltai.domain.model.BatteryLog>> {
+        // Since DAO is time-based, approximate by taking last N from the stream
+        val since = System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000
+        return currentSampleDao.getSamplesSince(since).map { list ->
+            list.takeLast(limit).map {
+                com.voltai.domain.model.BatteryLog(
+                    id = it.id,
+                    timestamp = it.timestamp,
+                    batteryLevel = 0,
+                    voltage = 0f,
+                    temperature = 0f,
+                    chargingStatus = if (it.isCharging) "Charging" else "Discharging",
+                    chargingType = "",
+                    current = it.currentMa
+                )
+            }
+        }
     }
 }

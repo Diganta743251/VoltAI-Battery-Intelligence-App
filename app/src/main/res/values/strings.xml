@@ -1,5 +1,336 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">VoltAI-SmartBatteryGuardian</string>
-    <string name="accessibility_service_description">Ultra Battery Saver Service</string>
+    <string name="app_name">VoltAI - Smart Battery Guardian</string>
+    <string name="app_subtitle">AI-Powered Battery Optimization</string>
+    <string name="app_description">The ultimate battery management app powered by artificial intelligence. Get intelligent insights, advanced analytics, and professional-grade battery optimization for maximum device performance.</string>
+    
+    <!-- Main Screen Titles -->
+    <string name="home_title">VoltAI Pro</string>
+    <string name="battery_health">Battery Health</string>
+    <string name="power_management">AI Power Management</string>
+    <string name="battery_stats">Battery Analytics</string>
+    <string name="settings">Settings</string>
+    
+    <!-- Focused Health Screen -->
+    <string name="last_full_charge">Last full charge</string>
+    <string name="valid_for_estimation">Valid for health estimation</string>
+    <string name="sessions">Sessions</string>
+    <string name="charged">Charged</string>
+    <string name="battery_health_care">Battery health care</string>
+    <string name="discover_health_tips">Discover habits and tips for optimal battery life</string>
+    <string name="selected_session">Selected session</string>
+    <string name="not_available">Not available</string>
+    <string name="date_label">Date: %1$s</string>
+    <string name="charging_cycles">Charging cycles</string>
+    <string name="based_on_app_data">Based on app data</string>
+    <string name="li_poly">Li-poly</string>
+    <string name="cycles">Cycles</string>
+    <string name="battery_type">Battery type</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="full_charging_reminder">Full charging reminder</string>
+    <string name="full_charging_reminder_desc">Get a notification when it is recommended to fully charge your battery</string>
+    <string name="health_history">Health history</string>
+    <string name="last_30_days">Last 30 days</string>
+    <string name="legend_charging">Charging</string>
+    <string name="legend_health_check">Health check</string>
+    <string name="legend_battery_health">Battery health</string>
+    <string name="battery_level_line">Battery level: %1$d%% to %2$d%%</string>
+    <string name="battery_health_line">Battery health: %1$d%% • %2$d mAh</string>
+    <string name="battery_health_care_cd">Battery health care, double tap to open tips</string>
+    <string name="health_history_chart_cd">Health history chart. Line chart of battery health over last 30 days</string>
+    <string name="charging_cycles_chart_cd">Charging cycles bar chart for recent sessions</string>
+    
+    <!-- Feature Descriptions -->
+    <string name="ai_optimization">AI Optimization</string>
+    <string name="smart_charging">Smart Charging Patterns</string>
+    <string name="thermal_management">Thermal Management</string>
+    <string name="predictive_analytics">Predictive Analytics</string>
+    <string name="professional_insights">Professional Insights</string>
+    
+    <!-- Status Messages -->
+    <string name="charging">Charging</string>
+    <string name="discharging">Discharging</string>
+    <string name="full">Full</string>
+    <string name="not_charging">Not Charging</string>
+    <string name="unknown">Unknown</string>
+    
+    <!-- Battery Health Status -->
+    <string name="excellent">Excellent</string>
+    <string name="very_good">Very Good</string>
+    <string name="good">Good</string>
+    <string name="fair">Fair</string>
+    <string name="poor">Poor</string>
+    <string name="critical">Critical</string>
+    
+    <!-- Temperature Status -->
+    <string name="cool">Cool</string>
+    <string name="optimal">Optimal</string>
+    <string name="normal">Normal</string>
+    <string name="warm">Warm</string>
+    <string name="hot">Hot</string>
+    
+    <!-- Permissions -->
+    <string name="permission_battery_stats">Battery Statistics</string>
+    <string name="permission_usage_stats">Usage Statistics</string>
+    <string name="permission_notifications">Notifications</string>
+    
+    <!-- Notifications -->
+    <string name="notification_channel_name">VoltAI Monitoring</string>
+    <string name="notification_channel_description">Battery monitoring and optimization alerts</string>
+    
+    <!-- Error Messages -->
+    <string name="error_battery_data">Unable to retrieve battery data</string>
+    <string name="error_permission_required">Permission required for full functionality</string>
+    
+    <!-- Pro Features -->
+    <string name="pro_feature_ai_insights">Advanced AI Insights</string>
+    <string name="pro_feature_detailed_analytics">Detailed Analytics</string>
+    <string name="pro_feature_predictive_modeling">Predictive Battery Modeling</string>
+    <string name="pro_feature_professional_reports">Professional Reports</string>
+    
+    <!-- Services -->
+    <string name="accessibility_service_description">Ultra Battery Saver Service - AI-powered battery optimization and monitoring service</string>
+    
+    <!-- AI Power Management (Simple) -->
+    <string name="live_battery_status">Live battery status</string>
+    <string name="thermal_trend_24h">Thermal trend (24h)</string>
+    <string name="no_thermal_data">Thermal data not available</string>
+    <string name="system_performance_24h">System performance (24h)</string>
+    <string name="cpu_label">CPU</string>
+    <string name="memory_label">Memory</string>
+    <string name="perf_label">Perf</string>
+    <string name="active_power_profile">Active power profile</string>
+    <string name="no_active_profile">No active profile</string>
+    <string name="temp_label">Temp:</string>
+    <string name="voltage_label">Voltage:</string>
+    <string name="current_label">Current:</string>
+    <string name="loading_profiles">Loading profiles…</string>
+    <string name="learning_patterns">Learning your patterns…</string>
+    <string name="ready_to_optimize">Ready to optimize</string>
+    <string name="loading">Loading…</string>
+    <string name="power_profiles_title">⚡ Power Profiles</string>
+    <string name="custom_profiles_title">🎛️ Custom Profiles</string>
+    <string name="create_custom_profile">Create Custom Profile</string>
+    <string name="thermal_management_title">Thermal Management</string>
+    <string name="temperature_trend_last_hour">📈 Temperature Trend (Last Hour)</string>
+    <string name="component_temperatures_title">🔧 Component Temperatures</string>
+    <string name="thermal_protection_title">🛡️ Thermal Protection</string>
+    <string name="active_cooling">Active Cooling</string>
+    <string name="active_cooling_desc">Reduce CPU frequency when temperature exceeds threshold</string>
+    <string name="background_limit">Background Limit</string>
+    <string name="background_limit_desc">Limit background app activity during thermal events</string>
+    <string name="display_dimming">Display Dimming</string>
+    <string name="display_dimming_desc">Auto-dim display brightness when device gets warm</string>
+    <string name="ai_adaptive_learning">AI Adaptive Learning</string>
+    <string name="active_learning_mode">Active Learning Mode</string>
+    <string name="learning_disabled">Learning Disabled</string>
+    <string name="learning_progress">Learning Progress</string>
+    <string name="data_points_next">Data Points: %1$d • Next: %2$s</string>
+    <string name="ai_optimization_score_title">🎯 AI Optimization Score</string>
+    <string name="based_on_points">Based on %1$d data points collected over time</string>
+    <string name="recent_ai_adaptations">🔄 Recent AI Adaptations</string>
+    <string name="activate">Activate</string>
+    <string name="edit">Edit</string>
+    <string name="current_value_label">Current</string>
+    <string name="thermal_trend_chart_cd">Thermal trend chart showing battery temperature over time</string>
+    <string name="power_savings_chart_cd">Power savings bar chart per profile</string>
+    <string name="usage_pattern_chart_cd">Battery level trend over time chart</string>
+    <string name="power_profile_cd">Power profile %1$s</string>
+    <string name="cpu_efficiency_label">CPU Efficiency</string>
+    <string name="perf_score_label">Perf Score</string>
+    <string name="active_profile_label">Active Profile</string>
+    <string name="savings_label">Savings</string>
+    <string name="thermal_label">Thermal</string>
+    <string name="ai_score_label">AI Score</string>
+    <string name="power_savings_analytics_title">💾 Power Savings Analytics</string>
+    <string name="personalized_power_recommendations">Personalized power optimization recommendations</string>
+    <string name="screen_efficiency_label">Screen Efficiency</string>
+    <string name="usage_pattern_analysis_title">📊 Usage Pattern Analysis</string>
+    <string name="efficiency_metrics_title">⚡ Efficiency Metrics</string>
+    <string name="ai_powered_insights_title">AI-Powered Insights</string>
+    <string name="profiles_tab_title">⚡ Profiles</string>
+    <string name="ai_adaptive_tab_title">🧠 AI Adaptive</string>
+    <string name="thermal_tab_title">🌡️ Thermal</string>
+    <string name="analytics_tab_title">📊 Analytics</string>
+    <string name="insights_tab_title">💡 Insights</string>
+    <string name="thermal_status_cool">Cool &amp; Efficient</string>
+    <string name="thermal_status_normal">Normal Temperature</string>
+    <string name="thermal_status_warm">Slightly Warm</string>
+    <string name="thermal_status_warning">Warning Temperature</string>
+    <string name="thermal_status_hot">Getting Hot</string>
+    <string name="thermal_status_critical">Critical Temperature</string>
+    <string name="opt_score_excellent">Excellent</string>
+    <string name="opt_score_good">Good</string>
+    <string name="opt_score_fair">Fair</string>
+    <string name="opt_score_needs_work">Needs Work</string>
+    <string name="optimization_ring_cd">Optimization score ring %1$d (%2$s)</string>
+  <!-- Temperature Detail Screen -->
+  <string name="temperature_detail_title">Battery Temperature</string>
+  <string name="temperature_subtitle_format">%1$s°C - %2$s</string>
+  <string name="temperature_range_24h_title">Temperature Range (24h)</string>
+  <string name="current_short_label">Current</string>
+  <string name="min_label">Min</string>
+  <string name="max_label">Max</string>
+  <string name="temperature_history_title">Temperature History</string>
+  <string name="temp_history_chart_cd">24-hour temperature history chart</string>
+  <string name="label_24h_ago">24h ago</string>
+  <string name="label_now">Now</string>
+  <string name="temperature_analysis_title">Temperature Analysis</string>
+  <string name="current_status_label">Current Status</string>
+  <string name="safety_level_label">Safety Level</string>
+  <string name="caution_label">Caution</string>
+  <string name="safe_label">Safe</string>
+  <string name="average_24h_label">24h Average</string>
+  <string name="trend_label">Trend</string>
+  <string name="trend_rising">Rising</string>
+  <string name="trend_cooling">Cooling</string>
+  <string name="trend_stable">Stable</string>
+  <string name="temperature_guidelines_title">🌡️ Temperature Guidelines</string>
+  <string name="guideline_range_cool">0°C - 25°C</string>
+  <string name="guideline_range_normal">25°C - 35°C</string>
+  <string name="guideline_range_warm">35°C - 45°C</string>
+  <string name="guideline_range_hot">45°C+</string>
+  <string name="status_cool">Cool</string>
+  <string name="status_normal">Normal</string>
+  <string name="status_warm">Warm</string>
+  <string name="status_hot">Hot</string>
+  <string name="temp_desc_cool">Battery is running cool - optimal for longevity</string>
+  <string name="temp_desc_normal">Battery temperature is in normal range</string>
+  <string name="temp_desc_warm">Battery is warm - consider reducing usage</string>
+  <string name="temp_desc_hot">Battery is hot - stop charging and let it cool</string>
+  <string name="thermal_status_label">Thermal Status:</string>
+  <string name="system_temp_is">System temperature is %1$s</string>
+  <string name="guideline_desc_cool">Optimal for battery longevity</string>
+  <string name="guideline_desc_normal">Safe operating temperature</string>
+  <string name="guideline_desc_warm">Monitor usage, avoid heavy tasks</string>
+  <string name="guideline_desc_hot">Stop charging, let device cool</string>
+  <!-- Wakelocks Screen -->
+  <string name="wakelocks_title">Wakelocks</string>
+  <string name="back">Back</string>
+  <string name="wakelock_partial_active">Partial wakelock active</string>
+  <string name="wakelock_system">System wakelock</string>
+  <string name="about_wakelocks_title">About Wakelocks</string>
+  <string name="about_wakelocks_body">Wakelocks prevent your device from going to sleep, which can drain battery. Apps and system processes use wakelocks to perform background tasks. Monitor which apps are keeping your device awake the most.</string>
+
+  <!-- System Optimization Center -->
+  <string name="system_opt_center_title">System Optimization Center</string>
+  <string name="system_opt_center_subtitle">AI-powered device performance tuning</string>
+  <string name="tab_overview">🚀 Overview</string>
+  <string name="tab_optimizer">⚙️ Optimizer</string>
+  <string name="tab_ai_advisor">🤖 AI Advisor</string>
+  <string name="tab_benchmarks">📊 Benchmarks</string>
+  <string name="tab_advanced">🔧 Advanced</string>
+  <string name="label_cpu">CPU</string>
+  <string name="label_ram">RAM</string>
+  <string name="label_storage">Storage</string>
+  <string name="label_network">Network</string>
+  <string name="system_performance_overview">🚀 System Performance Overview</string>
+  <string name="label_cpu_usage">CPU Usage</string>
+  <string name="label_memory">Memory</string>
+  <string name="label_storage_metric">Storage</string>
+  <string name="label_gpu_load">GPU Load</string>
+  <string name="quick_opt_title">⚡ Quick Optimization</string>
+  <string name="quick_opt_desc">Optimize your device with AI-powered recommendations</string>
+  <string name="quick_opt_button">🚀 Optimize Now</string>
+  <string name="quick_opt_estimate">Estimated improvement: 15-25%</string>
+  <string name="score_label">Score</string>
+  <string name="status_critical">Critical</string>
+  <string name="improvement_percent">%1$d%% improvement</string>
+  <string name="apply_recommendation">Apply Recommendation</string>
+  <string name="priority_urgent">URGENT</string>
+  <string name="priority_high">HIGH</string>
+  <string name="priority_medium_short">MED</string>
+  <string name="priority_low">LOW</string>
+  <string name="complexity">Complexity: %1$s</string>
+  <!-- Optimization Profiles -->
+  <string name="profile_cpu_governor_name">CPU Governor</string>
+  <string name="profile_cpu_governor_desc">Optimize CPU frequency scaling</string>
+  <string name="profile_memory_cleaner_name">Memory Cleaner</string>
+  <string name="profile_memory_cleaner_desc">Free unused RAM</string>
+  <string name="profile_background_apps_name">Background Apps</string>
+  <string name="profile_background_apps_desc">Limit background processes</string>
+  <string name="profile_network_optimizer_name">Network Optimizer</string>
+  <string name="profile_network_optimizer_desc">Optimize data usage</string>
+  <!-- AI Recommendations -->
+  <string name="reco_enable_adaptive_brightness_title">Enable Adaptive Brightness</string>
+  <string name="reco_enable_adaptive_brightness_desc">Reduce display power consumption based on ambient light</string>
+  <string name="reco_optimize_app_refresh_title">Optimize App Refresh</string>
+  <string name="reco_optimize_app_refresh_desc">Reduce background app refresh frequency</string>
+  <string name="reco_thermal_throttling_title">Thermal Throttling</string>
+  <string name="reco_thermal_throttling_desc">Prevent overheating by managing CPU performance</string>
+    
+    <string name="battery_component">Battery</string>
+    <string name="extra_hours_life">+%1$dh life</string>
+    <string name="savings_percent">%1$d%% savings</string>
+    <string name="ai_badge">🧠 AI</string>
+    <string name="ai_optimized_badge">🧠 AI Optimized</string>
+    <string name="ai_icon">🧠</string>
+    <string name="performance_impact_label">Performance Impact:</string>
+    <string name="extra_hours_short">+%1$dh</string>
+    <!-- App Welcome Screen (app module) -->
+    <string name="cd_voltai_logo">VoltAI Logo</string>
+    <string name="welcome_header_title">VoltAI Guardian</string>
+    <string name="welcome_header_subtitle">Smart Battery Management</string>
+    <string name="action_skip">Skip</string>
+    <string name="action_get_started">Get Started</string>
+    <string name="action_next">Next</string>
+    <string name="welcome_page1_title">Welcome to VoltAI Guardian</string>
+    <string name="welcome_page1_desc">Your intelligent battery health companion. Get detailed insights and recommendations for your device battery.</string>
+    <string name="welcome_page2_title">Real-time Battery Monitoring</string>
+    <string name="welcome_page2_desc">We continuously monitor battery health, temperature, voltage, and charging patterns to provide accurate insights.</string>
+    <string name="welcome_page3_title">AI-Powered Analysis</string>
+    <string name="welcome_page3_desc">AI analyzes your usage patterns and provides personalized tips to extend battery lifespan.</string>
+    <string name="welcome_page4_title">Data Collection Starting</string>
+    <string name="welcome_page4_desc">We will start collecting battery data now. It takes about 30 minutes for basic analysis and 24 hours for comprehensive insights.</string>
+    <string name="impact_none">None</string>
+    <string name="impact_low">Low</string>
+    <string name="impact_medium">Medium</string>
+    <string name="impact_high">High</string>
+    <string name="impact_label">Impact:</string>
+    <string name="confidence_label">Confidence</string>
+    <!-- Insights: Battery Level & Normal Status -->
+    <string name="insights_critical_battery_title">Critical Battery Level</string>
+    <string name="insights_critical_battery_desc">Battery is at %1$d%%. Consider enabling power saving mode immediately.</string>
+    <string name="insights_critical_battery_reco">Enable ultra power saving mode and close non-essential apps</string>
+    <string name="insights_moderate_battery_title">Moderate Battery Usage</string>
+    <string name="insights_moderate_battery_desc">Battery at %1$d%%. Consider optimizing background apps.</string>
+    <string name="insights_moderate_battery_reco">Review background app activity and disable unnecessary features</string>
+    <string name="insights_status_normal_title">Battery Status Normal</string>
+    <string name="insights_status_normal_desc">All battery metrics are within normal ranges. Level: %1$d%%, Temp: %2$.1f°C</string>
+    <string name="insights_status_normal_reco">Continue current usage patterns for optimal performance</string>
+    <!-- Insights: Temperature, Charging, Voltage -->
+    <string name="insights_high_temp_title">High Temperature Detected</string>
+    <string name="insights_high_temp_desc">Device temperature is %1$.1f°C. This can impact battery health and performance.</string>
+    <string name="insights_high_temp_reco">Reduce intensive tasks, remove device case, or move to cooler location</string>
+    <string name="insights_optimal_temp_title">Optimal Temperature</string>
+    <string name="insights_optimal_temp_desc">Device temperature is excellent at %1$.1f°C. Battery efficiency is optimal.</string>
+    <string name="insights_optimal_temp_reco">Continue current usage patterns for best battery health</string>
+    <string name="insights_charging_opt_title">Charging Optimization</string>
+    <string name="insights_charging_opt_desc">Currently charging. Voltage: %1$.2fV</string>
+    <string name="insights_charging_opt_reco">For best battery health, unplug when reaching 80-90%%</string>
+    <string name="insights_low_voltage_title">Low Battery Voltage</string>
+    <string name="insights_low_voltage_desc">Voltage at %1$.2fV indicates very low charge.</string>
+    <string name="insights_low_voltage_reco">Charge immediately to prevent battery damage</string>
+    <string name="insights_high_voltage_title">High Battery Voltage</string>
+    <string name="insights_high_voltage_desc">Voltage at %1$.2fV indicates full charge.</string>
+    <string name="insights_high_voltage_reco">Consider unplugging to avoid overcharging stress</string>
+    <string name="label_better_longevity">Better longevity</string>
+    <string name="label_prevent_damage">Prevent damage</string>
+    <!-- Adaptations: types, descriptions, impacts, next-optimization -->
+    <string name="adaptation_type_battery_cpu_scaling">Battery-Based CPU Scaling</string>
+    <string name="adaptation_desc_battery_cpu_scaling">CPU frequency adjusted based on current battery level (%1$d%%)</string>
+    <string name="adaptation_type_temp_perf">Temperature-Based Performance</string>
+    <string name="adaptation_desc_temp_perf">Performance throttling based on temperature (%1$.1f°C)</string>
+    <string name="adaptation_type_charging_state_opt">Charging State Optimization</string>
+    <string name="adaptation_desc_charging_opt_on">Optimized for charging efficiency</string>
+    <string name="adaptation_desc_charging_opt_off">Power saving mode active</string>
+    <string name="adaptation_impact_power_savings_percent">%1$d%% power savings</string>
+    <string name="adaptation_impact_temp_active">Thermal protection active</string>
+    <string name="adaptation_impact_temp_normal">Normal operation</string>
+    <string name="adaptation_impact_charging_faster">Faster charging</string>
+    <string name="adaptation_impact_charging_extended">Extended battery life</string>
+    <string name="next_optimization_critical">Critical power saving in 5min</string>
+    <string name="next_optimization_thermal">Thermal management in 2min</string>
+    <string name="next_optimization_background">Background optimization in 1h</string>
 </resources>

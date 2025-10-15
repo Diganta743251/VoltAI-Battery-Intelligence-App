@@ -15,6 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.voltai.features.R
 import com.voltai.ui.components.*
 import kotlinx.coroutines.delay
 
@@ -107,7 +109,7 @@ fun WelcomeScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Welcome to VoltAI",
+                    text = stringResource(id = R.string.welcome_title),
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -115,7 +117,7 @@ fun WelcomeScreen(
                 )
                 
                 Text(
-                    text = "Smart Battery Guardian",
+                    text = stringResource(id = R.string.welcome_subtitle),
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center
@@ -124,7 +126,7 @@ fun WelcomeScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 Text(
-                    text = "Your intelligent companion for battery health monitoring, optimization, and longevity insights.",
+                    text = stringResource(id = R.string.welcome_body),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center,
@@ -148,18 +150,18 @@ fun WelcomeScreen(
             ) {
                 FeatureItem(
                     icon = { HealthIcon(tint = Color(0xFF4CAF50)) },
-                    title = "Real-time Health Monitoring",
-                    description = "Track battery condition and degradation"
+                    title = stringResource(id = R.string.feature_health_title),
+                    description = stringResource(id = R.string.feature_health_desc)
                 )
                 FeatureItem(
                     icon = { ThermometerIcon(tint = Color(0xFFF44336)) },
-                    title = "Thermal Management",
-                    description = "Monitor temperature and prevent overheating"
+                    title = stringResource(id = R.string.feature_thermal_title),
+                    description = stringResource(id = R.string.feature_thermal_desc)
                 )
                 FeatureItem(
                     icon = { GraphIcon(tint = Color(0xFF2196F3)) },
-                    title = "Usage Analytics",
-                    description = "Detailed insights and optimization tips"
+                    title = stringResource(id = R.string.feature_usage_title),
+                    description = stringResource(id = R.string.feature_usage_desc)
                 )
             }
         }
@@ -185,7 +187,7 @@ fun WelcomeScreen(
                 )
             ) {
                 Text(
-                    text = "Get Started",
+                    text = stringResource(id = R.string.get_started),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
