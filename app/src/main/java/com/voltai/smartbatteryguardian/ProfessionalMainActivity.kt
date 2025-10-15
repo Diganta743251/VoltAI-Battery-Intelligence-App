@@ -222,7 +222,7 @@ fun ProfessionalBatteryApp() {
                     onNavigateToHealthTips = { navController.navigate("health_tips") },
                 )
             }
-            composable("power") { PowerManagementSimpleScreen() }
+            composable("power") { OverlayCustomizerScreen() }
             composable("stats") { SimplifiedStatsScreen() }
             composable("settings") {
                 SettingsCategoriesScreen(
