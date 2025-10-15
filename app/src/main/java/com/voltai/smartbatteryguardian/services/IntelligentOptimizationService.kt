@@ -30,7 +30,6 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class IntelligentOptimizationService : Service() {
-
     @Inject
     lateinit var database: VoltAIDatabase
 
@@ -63,7 +62,10 @@ class IntelligentOptimizationService : Service() {
     }
 
     enum class OptimizationLevel {
-        CONSERVATIVE, NORMAL, AGGRESSIVE, EMERGENCY
+        CONSERVATIVE,
+        NORMAL,
+        AGGRESSIVE,
+        EMERGENCY,
     }
 
     override fun onCreate() {
@@ -73,7 +75,11 @@ class IntelligentOptimizationService : Service() {
         startOptimizationCycle()
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
         val notification = createServiceNotification()
         startForeground(NOTIFICATION_ID, notification)
 
@@ -97,16 +103,17 @@ class IntelligentOptimizationService : Service() {
     }
 
     private fun createNotificationChannel() {
-        val channel = NotificationChannel(
-            CHANNEL_ID,
-            "Battery Optimization",
-            NotificationManager.IMPORTANCE_LOW
-        ).apply {
-            description = "Intelligent background optimization service"
-            setShowBadge(false)
-            enableLights(false)
-            enableVibration(false)
-        }
+        val channel =
+            NotificationChannel(
+                CHANNEL_ID,
+                "Battery Optimization",
+                NotificationManager.IMPORTANCE_LOW,
+            ).apply {
+                description = "Intelligent background optimization service"
+                setShowBadge(false)
+                enableLights(false)
+                enableVibration(false)
+            }
 
         val notificationManager = getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(channel)
@@ -114,12 +121,13 @@ class IntelligentOptimizationService : Service() {
 
     private fun createServiceNotification(): Notification {
         val intent = Intent(this, IntelligentOptimizationService::class.java)
-        val pendingIntent = PendingIntent.getService(
-            this,
-            0,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
+        val pendingIntent =
+            PendingIntent.getService(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE,
+            )
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("VoltAI Optimization Active")
@@ -131,25 +139,26 @@ class IntelligentOptimizationService : Service() {
             .addAction(
                 R.drawable.ic_pause,
                 "Pause",
-                createServiceActionIntent("TOGGLE_OPTIMIZATION")
+                createServiceActionIntent("TOGGLE_OPTIMIZATION"),
             )
             .addAction(
                 R.drawable.ic_settings,
                 "Settings",
-                createMainAppIntent()
+                createMainAppIntent(),
             )
             .build()
     }
 
     private fun createServiceActionIntent(action: String): PendingIntent {
-        val intent = Intent(this, IntelligentOptimizationService::class.java).apply {
-            this.action = action
-        }
+        val intent =
+            Intent(this, IntelligentOptimizationService::class.java).apply {
+                this.action = action
+            }
         return PendingIntent.getService(
             this,
             action.hashCode(),
             intent,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE,
         )
     }
 
@@ -159,16 +168,17 @@ class IntelligentOptimizationService : Service() {
             this,
             0,
             intent,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE,
         )
     }
 
     private fun registerReceivers() {
-        val batteryFilter = IntentFilter().apply {
-            addAction(Intent.ACTION_BATTERY_CHANGED)
-            addAction(Intent.ACTION_POWER_CONNECTED)
-            addAction(Intent.ACTION_POWER_DISCONNECTED)
-        }
+        val batteryFilter =
+            IntentFilter().apply {
+                addAction(Intent.ACTION_BATTERY_CHANGED)
+                addAction(Intent.ACTION_POWER_CONNECTED)
+                addAction(Intent.ACTION_POWER_DISCONNECTED)
+            }
         registerReceiver(batteryReceiver, batteryFilter)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -189,19 +199,20 @@ class IntelligentOptimizationService : Service() {
     }
 
     private fun startOptimizationCycle() {
-        optimizationJob = serviceScope.launch {
-            while (isActive) {
-                try {
-                    if (isOptimizationActive) {
-                        performIntelligentOptimization()
+        optimizationJob =
+            serviceScope.launch {
+                while (isActive) {
+                    try {
+                        if (isOptimizationActive) {
+                            performIntelligentOptimization()
+                        }
+                        delay(OPTIMIZATION_INTERVAL)
+                    } catch (e: Exception) {
+                        // Log error and continue
+                        delay(OPTIMIZATION_INTERVAL)
                     }
-                    delay(OPTIMIZATION_INTERVAL)
-                } catch (e: Exception) {
-                    // Log error and continue
-                    delay(OPTIMIZATION_INTERVAL)
                 }
             }
-        }
     }
 
     private suspend fun performIntelligentOptimization() {
@@ -236,7 +247,7 @@ class IntelligentOptimizationService : Service() {
     private fun determineOptimizationLevel(
         batteryLevel: Int,
         temperature: Double,
-        isCharging: Boolean
+        isCharging: Boolean,
     ): OptimizationLevel {
         return when {
             temperature > AGGRESSIVE_OPTIMIZATION_TEMP -> OptimizationLevel.EMERGENCY
@@ -303,11 +314,12 @@ class IntelligentOptimizationService : Service() {
         val endTime = System.currentTimeMillis()
         val startTime = endTime - 24 * 60 * 60 * 1000L // Last 24 hours
 
-        val usageStats = usageStatsManager.queryUsageStats(
-            UsageStatsManager.INTERVAL_DAILY,
-            startTime,
-            endTime
-        )
+        val usageStats =
+            usageStatsManager.queryUsageStats(
+                UsageStatsManager.INTERVAL_DAILY,
+                startTime,
+                endTime,
+            )
 
         // Identify rarely used apps
         val rarelyUsedApps = identifyRarelyUsedApps(usageStats)
@@ -325,10 +337,11 @@ class IntelligentOptimizationService : Service() {
     }
 
     private fun identifyRarelyUsedApps(usageStats: List<UsageStats>): List<ApplicationInfo> {
-        val rarelyUsedPackages = usageStats
-            .filter { it.totalTimeInForeground < 60_000L } // Less than 1 minute in last 24h
-            .map { it.packageName }
-            .toSet()
+        val rarelyUsedPackages =
+            usageStats
+                .filter { it.totalTimeInForeground < 60_000L } // Less than 1 minute in last 24h
+                .map { it.packageName }
+                .toSet()
 
         return packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
             .filter { it.packageName in rarelyUsedPackages }
@@ -336,10 +349,11 @@ class IntelligentOptimizationService : Service() {
     }
 
     private fun identifyFrequentlyUsedApps(usageStats: List<UsageStats>): List<ApplicationInfo> {
-        val frequentlyUsedPackages = usageStats
-            .filter { it.totalTimeInForeground > 30 * 60_000L } // More than 30 minutes
-            .map { it.packageName }
-            .toSet()
+        val frequentlyUsedPackages =
+            usageStats
+                .filter { it.totalTimeInForeground > 30 * 60_000L } // More than 30 minutes
+                .map { it.packageName }
+                .toSet()
 
         return packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
             .filter { it.packageName in frequentlyUsedPackages }
@@ -468,7 +482,10 @@ class IntelligentOptimizationService : Service() {
     }
 
     // Implementation methods for various optimization functions
-    private suspend fun setBackgroundAppLimits(backgroundLimit: Int, restrictSleepingApps: Boolean) {
+    private suspend fun setBackgroundAppLimits(
+        backgroundLimit: Int,
+        restrictSleepingApps: Boolean,
+    ) {
         // Store preferences for background app management
         val prefs = getSharedPreferences("optimization_settings", Context.MODE_PRIVATE)
         prefs.edit()
@@ -479,22 +496,24 @@ class IntelligentOptimizationService : Service() {
 
     private suspend fun adjustDisplaySettings(
         brightnessReduction: Float,
-        enableAdaptiveBrightness: Boolean
+        enableAdaptiveBrightness: Boolean,
     ) {
         try {
             if (Settings.System.canWrite(this)) {
-                val currentBrightness = Settings.System.getInt(
-                    contentResolver,
-                    Settings.System.SCREEN_BRIGHTNESS,
-                    128
-                )
-                val newBrightness = (currentBrightness * (1 - brightnessReduction)).toInt()
-                    .coerceIn(10, 255)
+                val currentBrightness =
+                    Settings.System.getInt(
+                        contentResolver,
+                        Settings.System.SCREEN_BRIGHTNESS,
+                        128,
+                    )
+                val newBrightness =
+                    (currentBrightness * (1 - brightnessReduction)).toInt()
+                        .coerceIn(10, 255)
 
                 Settings.System.putInt(
                     contentResolver,
                     Settings.System.SCREEN_BRIGHTNESS,
-                    newBrightness
+                    newBrightness,
                 )
 
                 Settings.System.putInt(
@@ -504,7 +523,7 @@ class IntelligentOptimizationService : Service() {
                         Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
                     } else {
                         Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL
-                    }
+                    },
                 )
             }
         } catch (e: Exception) {
@@ -515,7 +534,7 @@ class IntelligentOptimizationService : Service() {
 
     private suspend fun manageNetworkConnectivity(
         limitBackgroundData: Boolean,
-        optimizeWifi: Boolean
+        optimizeWifi: Boolean,
     ) {
         val prefs = getSharedPreferences("optimization_settings", Context.MODE_PRIVATE)
         prefs.edit()
@@ -603,7 +622,10 @@ class IntelligentOptimizationService : Service() {
 
     // Broadcast receivers
     private inner class BatteryReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
+        override fun onReceive(
+            context: Context?,
+            intent: Intent?,
+        ) {
             when (intent?.action) {
                 Intent.ACTION_BATTERY_CHANGED -> {
                     serviceScope.launch {
@@ -628,7 +650,10 @@ class IntelligentOptimizationService : Service() {
     }
 
     private inner class ThermalReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
+        override fun onReceive(
+            context: Context?,
+            intent: Intent?,
+        ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
                 intent?.action == "android.os.action.THERMAL_EVENT"
             ) {
@@ -646,7 +671,8 @@ class IntelligentOptimizationService : Service() {
                 PowerManager.THERMAL_STATUS_SEVERE,
                 PowerManager.THERMAL_STATUS_CRITICAL,
                 PowerManager.THERMAL_STATUS_EMERGENCY,
-                PowerManager.THERMAL_STATUS_SHUTDOWN -> {
+                PowerManager.THERMAL_STATUS_SHUTDOWN,
+                -> {
                     activateEmergencyMode()
                 }
                 PowerManager.THERMAL_STATUS_MODERATE -> {
@@ -734,7 +760,7 @@ class IntelligentOptimizationService : Service() {
 
     private fun storeDisplayOptimizationRecommendation(
         brightnessReduction: Float,
-        enableAdaptiveBrightness: Boolean
+        enableAdaptiveBrightness: Boolean,
     ) {
         // Store display optimization recommendation for user
         val prefs = getSharedPreferences("optimization_recommendations", Context.MODE_PRIVATE)

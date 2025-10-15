@@ -37,19 +37,21 @@ import kotlin.math.sqrt
  * Collects comprehensive battery, system, and usage metrics
  */
 @Singleton
-class BatteryDataCollector @Inject constructor(
+class BatteryDataCollector
+@Inject
+constructor(
     @ApplicationContext private val context: Context,
-    private val repository: BatteryRepository
+    private val repository: BatteryRepository,
 ) : SensorEventListener {
-
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
     private val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-    private val usageStatsManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-    } else {
-        null
-    }
+    private val usageStatsManager =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+        } else {
+            null
+        }
 
     // Sensor data
     private var currentAcceleration = FloatArray(3)
@@ -96,126 +98,133 @@ class BatteryDataCollector @Inject constructor(
     /**
      * Collect comprehensive battery data
      */
-    suspend fun collectBatteryData(): BatteryReading = withContext(Dispatchers.IO) {
-        val intentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-        val batteryStatus = context.registerReceiver(null, intentFilter)
+    suspend fun collectBatteryData(): BatteryReading =
+        withContext(Dispatchers.IO) {
+            val intentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+            val batteryStatus = context.registerReceiver(null, intentFilter)
 
-        val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
-        val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
-        val batteryPercentage = if (level >= 0 && scale > 0) (level * 100) / scale else -1
+            val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+            val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+            val batteryPercentage = if (level >= 0 && scale > 0) (level * 100) / scale else -1
 
-        val status = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
-        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-            status == BatteryManager.BATTERY_STATUS_FULL
+            val status = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+            val isCharging =
+                status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL
 
-        val voltage = batteryStatus?.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1) ?: -1
-        val temperature = batteryStatus?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1) ?: -1
-        val health = batteryStatus?.getIntExtra(BatteryManager.EXTRA_HEALTH, -1) ?: -1
-        val technology = batteryStatus?.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY) ?: "Unknown"
-        val plugged = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
+            val voltage = batteryStatus?.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1) ?: -1
+            val temperature = batteryStatus?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1) ?: -1
+            val health = batteryStatus?.getIntExtra(BatteryManager.EXTRA_HEALTH, -1) ?: -1
+            val technology = batteryStatus?.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY) ?: "Unknown"
+            val plugged = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
 
-        BatteryReading(
-            batteryLevel = batteryPercentage,
-            isCharging = isCharging,
-            chargingType = getChargingType(plugged),
-            voltage = voltage / 1000.0, // Convert to volts
-            current = getCurrentCurrent(),
-            temperature = temperature / 10.0, // Convert to Celsius
-            capacity = getBatteryCapacity(),
-            health = mapBatteryHealth(health),
-            technology = technology,
-            plugType = getPlugType(plugged),
-            powerSource = getPowerSource(isCharging, plugged),
-            chargingSpeed = getChargingSpeed(isCharging),
-            estimatedTimeRemaining = getEstimatedTimeRemainingMillis(batteryPercentage, isCharging),
-            cycleCount = getBatteryCycleCount(),
-            wearLevel = getBatteryWearLevel()
-        )
-    }
+            BatteryReading(
+                batteryLevel = batteryPercentage,
+                isCharging = isCharging,
+                chargingType = getChargingType(plugged),
+                voltage = voltage / 1000.0, // Convert to volts
+                current = getCurrentCurrent(),
+                temperature = temperature / 10.0, // Convert to Celsius
+                capacity = getBatteryCapacity(),
+                health = mapBatteryHealth(health),
+                technology = technology,
+                plugType = getPlugType(plugged),
+                powerSource = getPowerSource(isCharging, plugged),
+                chargingSpeed = getChargingSpeed(isCharging),
+                estimatedTimeRemaining = getEstimatedTimeRemainingMillis(batteryPercentage, isCharging),
+                cycleCount = getBatteryCycleCount(),
+                wearLevel = getBatteryWearLevel(),
+            )
+        }
 
     /**
      * Collect comprehensive system metrics
      */
-    suspend fun collectSystemMetrics(): SystemMetrics = withContext(Dispatchers.IO) {
-        SystemMetrics(
-            cpuUsage = getCpuUsage(),
-            memoryUsage = getMemoryUsage(),
-            storageUsage = getStorageUsage(),
-            networkUsage = getNetworkUsage(),
-            thermalState = getThermalState(),
-            batteryTemperature = getCurrentBatteryTemperature(),
-            systemTemperature = getSystemTemperature(),
-            performanceScore = calculatePerformanceScore(),
-            stabilityScore = calculateStabilityScore(),
-            efficiencyScore = calculateEfficiencyScore(),
-            backgroundProcesses = getBackgroundProcessCount(),
-            foregroundApps = getForegroundAppCount(),
-            wakelocksActive = getActiveWakelocksCount(),
-            networkConnections = getNetworkConnectionsCount(),
-            locationRequests = getLocationRequestsCount()
-        )
-    }
+    suspend fun collectSystemMetrics(): SystemMetrics =
+        withContext(Dispatchers.IO) {
+            SystemMetrics(
+                cpuUsage = getCpuUsage(),
+                memoryUsage = getMemoryUsage(),
+                storageUsage = getStorageUsage(),
+                networkUsage = getNetworkUsage(),
+                thermalState = getThermalState(),
+                batteryTemperature = getCurrentBatteryTemperature(),
+                systemTemperature = getSystemTemperature(),
+                performanceScore = calculatePerformanceScore(),
+                stabilityScore = calculateStabilityScore(),
+                efficiencyScore = calculateEfficiencyScore(),
+                backgroundProcesses = getBackgroundProcessCount(),
+                foregroundApps = getForegroundAppCount(),
+                wakelocksActive = getActiveWakelocksCount(),
+                networkConnections = getNetworkConnectionsCount(),
+                locationRequests = getLocationRequestsCount(),
+            )
+        }
 
     /**
      * Collect app usage statistics
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    suspend fun collectAppUsageStats(): List<AppUsageStats> = withContext(Dispatchers.IO) {
-        if (usageStatsManager == null) return@withContext emptyList()
+    suspend fun collectAppUsageStats(): List<AppUsageStats> =
+        withContext(Dispatchers.IO) {
+            if (usageStatsManager == null) return@withContext emptyList()
 
-        val endTime = System.currentTimeMillis()
-        val startTime = endTime - (24 * 60 * 60 * 1000) // Last 24 hours
+            val endTime = System.currentTimeMillis()
+            val startTime = endTime - (24 * 60 * 60 * 1000) // Last 24 hours
 
-        val usageStats = usageStatsManager.queryUsageStats(
-            UsageStatsManager.INTERVAL_DAILY,
-            startTime,
-            endTime
-        )
+            val usageStats =
+                usageStatsManager.queryUsageStats(
+                    UsageStatsManager.INTERVAL_DAILY,
+                    startTime,
+                    endTime,
+                )
 
-        usageStats.map { stat ->
-            AppUsageStats(
-                packageName = stat.packageName,
-                appName = getAppName(stat.packageName),
-                category = getAppCategory(stat.packageName),
-                foregroundTime = stat.totalTimeInForeground,
-                backgroundTime = 0L, // Usage API doesn't provide background time directly
-                batteryUsage = estimateAppBatteryUsage(stat.packageName, stat.totalTimeInForeground),
-                cpuUsage = 0.0, // Placeholder - would need profiling APIs
-                memoryUsage = 0L, // Placeholder - would need ActivityManager
-                networkUsage = getAppDataUsage(stat.packageName).toLong(),
-                wakelocksHeld = 0, // Placeholder - would need system access
-                notificationCount = 0, // Placeholder - would need notification access
-                launchCount = 1, // Simplified - actual count would need usage events
-                crashCount = 0,
-                dataUsage = getAppDataUsage(stat.packageName).toLong(),
-                gpsUsage = 0L // Placeholder - would need location usage tracking
-            )
+            usageStats.map { stat ->
+                AppUsageStats(
+                    packageName = stat.packageName,
+                    appName = getAppName(stat.packageName),
+                    category = getAppCategory(stat.packageName),
+                    foregroundTime = stat.totalTimeInForeground,
+                    backgroundTime = 0L, // Usage API doesn't provide background time directly
+                    batteryUsage = estimateAppBatteryUsage(stat.packageName, stat.totalTimeInForeground),
+                    cpuUsage = 0.0, // Placeholder - would need profiling APIs
+                    memoryUsage = 0L, // Placeholder - would need ActivityManager
+                    networkUsage = getAppDataUsage(stat.packageName).toLong(),
+                    wakelocksHeld = 0, // Placeholder - would need system access
+                    notificationCount = 0, // Placeholder - would need notification access
+                    launchCount = 1, // Simplified - actual count would need usage events
+                    crashCount = 0,
+                    dataUsage = getAppDataUsage(stat.packageName).toLong(),
+                    gpsUsage = 0L, // Placeholder - would need location usage tracking
+                )
+            }
         }
-    }
 
     /**
      * Real-time battery monitoring flow
      */
-    fun getBatteryFlow(): Flow<BatteryReading> = flow {
-        while (true) {
-            val reading = collectBatteryData()
-            emit(reading)
-            repository.recordBatteryReading(reading)
-            kotlinx.coroutines.delay(5000) // Every 5 seconds
-        }
-    }.flowOn(Dispatchers.IO)
+    fun getBatteryFlow(): Flow<BatteryReading> =
+        flow {
+            while (true) {
+                val reading = collectBatteryData()
+                emit(reading)
+                repository.recordBatteryReading(reading)
+                kotlinx.coroutines.delay(5000) // Every 5 seconds
+            }
+        }.flowOn(Dispatchers.IO)
 
     /**
      * Real-time system metrics flow
      */
-    fun getSystemMetricsFlow(): Flow<SystemMetrics> = flow {
-        while (true) {
-            val metrics = collectSystemMetrics()
-            emit(metrics)
-            repository.recordSystemMetrics(metrics)
-            kotlinx.coroutines.delay(30000) // Every 30 seconds
-        }
-    }.flowOn(Dispatchers.IO)
+    fun getSystemMetricsFlow(): Flow<SystemMetrics> =
+        flow {
+            while (true) {
+                val metrics = collectSystemMetrics()
+                emit(metrics)
+                repository.recordSystemMetrics(metrics)
+                kotlinx.coroutines.delay(30000) // Every 30 seconds
+            }
+        }.flowOn(Dispatchers.IO)
 
     // Sensor event handling
     override fun onSensorChanged(event: SensorEvent?) {
@@ -243,7 +252,10 @@ class BatteryDataCollector @Inject constructor(
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+    override fun onAccuracyChanged(
+        sensor: Sensor?,
+        accuracy: Int,
+    ) {
         // Handle accuracy changes if needed
     }
 
@@ -260,48 +272,72 @@ class BatteryDataCollector @Inject constructor(
         }
     }
 
+    /**
+     * Gets current battery current in milliamps (mA)
+     * @return Current in mA. Negative values indicate charging, positive indicate discharging.
+     * NOTE: Returns fallback value of -500.0 mA if API unavailable (pre-Lollipop or on error)
+     */
     private fun getCurrentCurrent(): Double {
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
-                batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW) / 1000.0 // Convert to mA
+                val ua = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
+                if (ua == Int.MIN_VALUE) 0.0 else ua / 1000.0 // mA
             } else {
-                // Fallback estimation
-                -500.0 // Typical discharge current
+                // FALLBACK: Pre-Lollipop devices - typical discharge current estimate
+                -500.0
             }
         } catch (e: Exception) {
+            // FALLBACK: Default to typical discharge current on error
             -500.0
         }
     }
 
+    /**
+     * Gets battery capacity in mAh
+     * @return Battery capacity in mAh.
+     * NOTE: Returns fallback value of 4000.0 mAh if real capacity unavailable.
+     * This is a common battery capacity for modern smartphones but NOT device-specific.
+     */
     private fun getBatteryCapacity(): Double {
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
                 batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER) / 1000.0 // Convert to mAh
             } else {
-                // Read from system files (requires root)
+                // FALLBACK: Try reading from system files (usually requires root)
                 val capacityFile = File("/sys/class/power_supply/battery/capacity")
                 if (capacityFile.exists()) {
                     capacityFile.readText().trim().toDoubleOrNull() ?: 4000.0
                 } else {
-                    4000.0 // Default capacity
+                    // FALLBACK: Generic smartphone battery capacity estimate
+                    4000.0
                 }
             }
         } catch (e: Exception) {
+            // FALLBACK: Generic smartphone battery capacity estimate
             4000.0
         }
     }
 
+    /**
+     * Estimates charging speed in watts
+     * @param isCharging Whether device is currently charging
+     * @return Charging speed in watts, or 0.0 if not charging
+     * NOTE: Uses nominal voltage of 3.7V for estimation when real voltage unavailable.
+     * Falls back to 15W (typical fast charging) on error.
+     */
     private fun getChargingSpeed(isCharging: Boolean): Double {
         return if (isCharging) {
             try {
                 // Estimate charging speed based on current and voltage
                 val current = kotlin.math.abs(getCurrentCurrent())
-                val voltage = 3.7 // Nominal voltage
+                // HEURISTIC: Using nominal Li-ion voltage since real voltage may not be available
+                val voltage = 3.7
                 (current * voltage) / 1000.0 // Convert to watts
             } catch (e: Exception) {
-                15.0 // Default charging speed in watts
+                // FALLBACK: Typical fast charging speed
+                15.0
             }
         } else {
             0.0
@@ -326,7 +362,10 @@ class BatteryDataCollector @Inject constructor(
         }
     }
 
-    private fun getPowerSource(isCharging: Boolean, plugged: Int): String? {
+    private fun getPowerSource(
+        isCharging: Boolean,
+        plugged: Int,
+    ): String? {
         return if (isCharging) {
             when (plugged) {
                 BatteryManager.BATTERY_PLUGGED_AC -> "AC Adapter"
@@ -339,7 +378,10 @@ class BatteryDataCollector @Inject constructor(
         }
     }
 
-    private fun getEstimatedTimeRemainingMillis(batteryLevel: Int, isCharging: Boolean): Long? {
+    private fun getEstimatedTimeRemainingMillis(
+        batteryLevel: Int,
+        isCharging: Boolean,
+    ): Long? {
         return try {
             if (isCharging) {
                 val remainingCapacity = 100 - batteryLevel
@@ -378,9 +420,16 @@ class BatteryDataCollector @Inject constructor(
         }
     }
 
+    /**
+     * Calculates battery wear level as percentage
+     * @return Wear level (0-100%) or null if cannot be determined
+     * NOTE: Uses generic 4000 mAh design capacity - NOT device-specific.
+     * Results are estimates only until real design capacity is available.
+     */
     private fun getBatteryWearLevel(): Double? {
         return try {
-            val designCapacity = 4000.0 // mAh - would need to be device-specific
+            // HEURISTIC: Generic design capacity - should be replaced with device-specific value
+            val designCapacity = 4000.0 // mAh
             val currentCapacity = getBatteryCapacity()
             if (currentCapacity > 0) {
                 100.0 - (currentCapacity / designCapacity * 100.0)
@@ -423,7 +472,7 @@ class BatteryDataCollector @Inject constructor(
                     tokens[4].toLong(), // idle
                     tokens[5].toLongOrNull() ?: 0L, // iowait
                     tokens[6].toLongOrNull() ?: 0L, // irq
-                    tokens[7].toLongOrNull() ?: 0L // softirq
+                    tokens[7].toLongOrNull() ?: 0L, // softirq
                 )
             }
         } catch (e: Exception) {
@@ -502,13 +551,14 @@ class BatteryDataCollector @Inject constructor(
         return try {
             val cpuScore = (100 - getCpuUsage()).toInt()
             val memoryScore = (100 - getMemoryUsage()).toInt()
-            val thermalScore = when (getThermalState()) {
-                "Normal" -> 100
-                "Light" -> 80
-                "Moderate" -> 60
-                "Severe" -> 40
-                else -> 20
-            }
+            val thermalScore =
+                when (getThermalState()) {
+                    "Normal" -> 100
+                    "Light" -> 80
+                    "Moderate" -> 60
+                    "Severe" -> 40
+                    else -> 20
+                }
             (cpuScore + memoryScore + thermalScore) / 3
         } catch (e: Exception) {
             75 // Default score
@@ -517,11 +567,12 @@ class BatteryDataCollector @Inject constructor(
 
     private fun calculateStabilityScore(): Int {
         // Simplified stability calculation based on sensor data
-        val accelerationMagnitude = sqrt(
-            currentAcceleration[0].pow(2) +
-                currentAcceleration[1].pow(2) +
-                currentAcceleration[2].pow(2)
-        )
+        val accelerationMagnitude =
+            sqrt(
+                currentAcceleration[0].pow(2) +
+                    currentAcceleration[1].pow(2) +
+                    currentAcceleration[2].pow(2),
+            )
 
         return when {
             accelerationMagnitude < 10.5 -> 95 // Device is stable
@@ -536,13 +587,14 @@ class BatteryDataCollector @Inject constructor(
             val batteryTemp = getCurrentBatteryTemperature()
             val cpuUsage = getCpuUsage()
 
-            val tempScore = when {
-                batteryTemp < 30 -> 100
-                batteryTemp < 35 -> 90
-                batteryTemp < 40 -> 70
-                batteryTemp < 45 -> 50
-                else -> 30
-            }
+            val tempScore =
+                when {
+                    batteryTemp < 30 -> 100
+                    batteryTemp < 35 -> 90
+                    batteryTemp < 40 -> 70
+                    batteryTemp < 45 -> 50
+                    else -> 30
+                }
 
             val cpuScore = (100 - cpuUsage).toInt()
 
@@ -603,8 +655,21 @@ class BatteryDataCollector @Inject constructor(
         }
     }
 
-    private fun estimateAppBatteryUsage(packageName: String, timeUsed: Long): Double {
-        // Simplified battery usage estimation
+    /**
+     * Estimates app battery usage based on foreground time
+     * @param packageName App package name
+     * @param timeUsed Foreground time in milliseconds
+     * @return Estimated battery usage in percentage
+     * NOTE: Uses simplified heuristic of 0.05% per hour. This is a rough estimate
+     * and does not account for CPU intensity, network usage, or wake locks.
+     * Should be replaced with BatteryManager.BATTERY_PROPERTY_ENERGY_COUNTER on supported devices.
+     */
+    private fun estimateAppBatteryUsage(
+        packageName: String,
+        timeUsed: Long,
+    ): Double {
+        // HEURISTIC: Simplified linear estimation based on foreground time
+        // Real implementation should use BatteryStats API or BATTERY_PROPERTY_ENERGY_COUNTER
         return (timeUsed / (1000 * 60 * 60)) * 0.05 // 0.05% per hour of usage
     }
 

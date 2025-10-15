@@ -26,91 +26,73 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
 /**
- * Animation specifications for different types of animations
+ * Battery-efficient animation specifications with accessibility support
+ * @deprecated Use VoltAIMotion from Motion.kt instead for better accessibility and battery efficiency
  */
+@Deprecated("Use VoltAIMotion from Motion.kt", ReplaceWith("VoltAIMotion"))
 object AnimationSpecs {
+    // Battery Guru Style: 800ms EaseOutCubic for all major animations
+    val batteryGuru =
+        tween<Float>(
+            durationMillis = 800,
+            easing = EaseOutCubic,
+        )
 
-    // Spring animations for natural feel
-    val bouncy = spring<Float>(
-        dampingRatio = Spring.DampingRatioMediumBouncy,
-        stiffness = Spring.StiffnessLow
-    )
+    // Int-based tween for slide animations
+    val batteryGuruInt =
+        tween<Int>(
+            durationMillis = 800,
+            easing = EaseOutCubic,
+        )
 
-    val smooth = spring<Float>(
-        dampingRatio = Spring.DampingRatioNoBouncy,
-        stiffness = Spring.StiffnessMedium
-    )
+    // Quick interactions (200ms for immediate feedback)
+    val snappy =
+        tween<Float>(
+            durationMillis = 200,
+            easing = EaseOutCubic,
+        )
 
-    val snappy = spring<Float>(
-        dampingRatio = Spring.DampingRatioMediumBouncy,
-        stiffness = Spring.StiffnessHigh
-    )
+    // Standard Battery Guru timing for all main animations
+    val bouncy = batteryGuru
+    val smooth = batteryGuru
+    val quick = snappy // Keep quick for immediate feedback
+    val medium = batteryGuru
+    val slow = batteryGuru
 
-    // Tween animations for precise control
-    val quick = tween<Float>(
-        durationMillis = 200,
-        easing = FastOutSlowInEasing
-    )
+    // Battery Guru Style entrance animations
+    val slideInFromBottom =
+        slideInVertically(
+            initialOffsetY = { it },
+        )
 
-    val medium = tween<Float>(
-        durationMillis = 300,
-        easing = FastOutSlowInEasing
-    )
+    val scaleInAnimation =
+        scaleIn(
+            animationSpec = batteryGuru,
+            initialScale = 0.8f,
+        ) + fadeIn(animationSpec = batteryGuru)
 
-    val slow = tween<Float>(
-        durationMillis = 500,
-        easing = FastOutSlowInEasing
-    )
+    // Battery Guru Style exit animations (slightly faster for responsiveness)
+    val slideOutToBottom =
+        slideOutVertically(
+            targetOffsetY = { it },
+        )
 
-    // Entrance animations
-    val slideInFromBottom = slideInVertically(
-        animationSpec = tween(300, easing = FastOutSlowInEasing),
-        initialOffsetY = { it }
-    )
+    val scaleOutAnimation =
+        scaleOut(
+            animationSpec = tween(400, easing = EaseInCubic),
+            targetScale = 0.8f,
+        ) + fadeOut(animationSpec = tween(400, easing = EaseInCubic))
 
-    val scaleInAnimation = scaleIn(
-        animationSpec = tween(200, easing = FastOutSlowInEasing),
-        initialScale = 0.8f
-    ) + fadeIn(animationSpec = tween(200))
+    // Battery Guru Style - all premium animations use 800ms EaseOutCubic
+    val premium = batteryGuru
+    val elastic = batteryGuru
+    val superSmooth = batteryGuru
 
-    // Exit animations
-    val slideOutToBottom = slideOutVertically(
-        animationSpec = tween(250, easing = FastOutLinearInEasing),
-        targetOffsetY = { it }
-    )
+    // Card movement animations - Battery Guru style
+    val cardReorder = batteryGuru
 
-    val scaleOutAnimation = scaleOut(
-        animationSpec = tween(150, easing = FastOutLinearInEasing),
-        targetScale = 0.8f
-    ) + fadeOut(animationSpec = tween(150))
-
-    // Advanced animations for premium experience
-    val premium = spring<Float>(
-        dampingRatio = 0.75f,
-        stiffness = 400f
-    )
-
-    val elastic = spring<Float>(
-        dampingRatio = 0.6f,
-        stiffness = 600f
-    )
-
-    val superSmooth = spring<Float>(
-        dampingRatio = 1.0f,
-        stiffness = 350f
-    )
-
-    // Card movement animations
-    val cardReorder = spring<Float>(
-        dampingRatio = 0.8f,
-        stiffness = 500f
-    )
-
-    // Screen transitions
-    val screenTransition = tween<Float>(
-        durationMillis = 350,
-        easing = CubicBezierEasing(0.25f, 0.46f, 0.45f, 0.94f)
-    )
+    // Screen transitions - Battery Guru style
+    val screenTransition = batteryGuru
 }
 
 /**
@@ -120,31 +102,32 @@ fun Modifier.draggableCard(
     enabled: Boolean = true,
     onDragStart: () -> Unit = {},
     onDragEnd: () -> Unit = {},
-    onDrag: (Offset) -> Unit = {}
+    onDrag: (Offset) -> Unit = {},
 ) = composed {
     var offset by remember { mutableStateOf(Offset.Zero) }
     var isDragging by remember { mutableStateOf(false) }
 
     val animatedOffset by animateOffsetAsState(
         targetValue = if (isDragging) offset else Offset.Zero,
-        animationSpec = if (isDragging) {
+        animationSpec =
+        if (isDragging) {
             tween(16, easing = LinearEasing) // Smooth during drag
         } else {
-            spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
-                stiffness = Spring.StiffnessMedium
+            tween(
+                durationMillis = 200,
+                easing = FastOutSlowInEasing,
             )
-        }
+        },
     )
 
     val scale by animateFloatAsState(
         targetValue = if (isDragging) 1.05f else 1f,
-        animationSpec = AnimationSpecs.snappy
+        animationSpec = AnimationSpecs.snappy,
     )
 
     val elevation by animateDpAsState(
         targetValue = if (isDragging) 12.dp else 4.dp,
-        animationSpec = tween(200)
+        animationSpec = tween(200),
     )
 
     if (enabled) {
@@ -166,7 +149,7 @@ fun Modifier.draggableCard(
                     onDrag = { _, dragAmount ->
                         offset += dragAmount
                         onDrag(dragAmount)
-                    }
+                    },
                 )
             }
     } else {
@@ -180,14 +163,14 @@ fun Modifier.draggableCard(
 fun Modifier.pressableCard(
     enabled: Boolean = true,
     onClick: () -> Unit = {},
-    onLongPress: () -> Unit = {}
+    onLongPress: () -> Unit = {},
 ) = composed {
     var isPressed by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
 
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.95f else 1f,
-        animationSpec = AnimationSpecs.snappy
+        animationSpec = AnimationSpecs.snappy,
     )
 
     if (enabled) {
@@ -205,7 +188,7 @@ fun Modifier.pressableCard(
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         onClick()
                     },
-                    onDrag = { _, _ -> }
+                    onDrag = { _, _ -> },
                 )
             }
     } else {
@@ -214,38 +197,32 @@ fun Modifier.pressableCard(
 }
 
 /**
- * Shimmer effect for loading states
+ * Professional loading state with subtle Battery Guru animation
+ * Uses 800ms EaseOutCubic timing for consistency
  */
-fun Modifier.shimmerEffect(
-    enabled: Boolean = true,
-    duration: Int = 1200
-) = composed {
-    if (enabled) {
-        val transition = rememberInfiniteTransition()
-        val shimmerOffset by transition.animateFloat(
-            initialValue = -1f,
-            targetValue = 1f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(duration, easing = LinearEasing),
-                repeatMode = RepeatMode.Restart
-            )
+fun Modifier.loadingEffect(enabled: Boolean = true) =
+    composed {
+        val alpha by animateFloatAsState(
+            targetValue = if (enabled) 0.6f else 1f,
+            animationSpec = AnimationSpecs.batteryGuru,
         )
 
-        this.graphicsLayer {
-            translationX = shimmerOffset * size.width
-            alpha = 0.7f + 0.3f * (1f + shimmerOffset) / 2f
-        }
-    } else {
+        val scale by animateFloatAsState(
+            targetValue = if (enabled) 0.98f else 1f,
+            animationSpec = AnimationSpecs.batteryGuru,
+        )
+
         this
+            .scale(scale)
+            .graphicsLayer { this.alpha = alpha }
     }
-}
 
 /**
  * Parallax effect for background elements
  */
 fun Modifier.parallaxEffect(
     scrollOffset: Float,
-    parallaxRatio: Float = 0.5f
+    parallaxRatio: Float = 0.5f,
 ) = composed {
     this.graphicsLayer {
         translationY = scrollOffset * parallaxRatio
@@ -259,66 +236,84 @@ fun Modifier.parallaxEffect(
 fun AnimatedCardEntrance(
     visible: Boolean,
     delay: Int = 0,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
+    // Professional entrance animation with sophisticated easing
+    val dynamicDuration = (800 + (delay * 0.2f)).toInt().coerceAtMost(1000)
+
     AnimatedVisibility(
         visible = visible,
-        enter = scaleIn(
-            animationSpec = tween(
-                durationMillis = 400,
+        enter =
+        scaleIn(
+            animationSpec =
+            tween(
+                durationMillis = dynamicDuration, // Dynamic timing based on delay
                 delayMillis = delay,
-                easing = OvershootInterpolator(1.2f)::getInterpolation
+                easing = CubicBezierEasing(0.25f, 0.46f, 0.45f, 0.94f), // Custom premium easing
             ),
-            initialScale = 0f
-        ) + fadeIn(
-            animationSpec = tween(
-                durationMillis = 300,
-                delayMillis = delay
-            )
-        ),
-        exit = scaleOut(
-            animationSpec = tween(200),
-            targetScale = 0f
-        ) + fadeOut(animationSpec = tween(200))
+            initialScale = 0.7f, // Slightly larger initial scale for impact
+        ) +
+            fadeIn(
+                animationSpec =
+                tween(
+                    durationMillis = dynamicDuration,
+                    delayMillis = delay,
+                    easing = EaseOutCubic,
+                ),
+            ) +
+            slideInVertically(
+                animationSpec =
+                tween(
+                    durationMillis = dynamicDuration,
+                    delayMillis = delay,
+                    easing = EaseOutCubic,
+                ),
+                initialOffsetY = { it / 3 }, // More pronounced slide for elegance
+            ),
+        exit =
+        scaleOut(
+            animationSpec = tween(400, easing = EaseInOutCubic),
+            targetScale = 0.9f,
+        ) +
+            fadeOut(
+                animationSpec = tween(400, easing = EaseInOutCubic),
+            ) +
+            slideOutVertically(
+                animationSpec = tween(400, easing = EaseInOutCubic),
+                targetOffsetY = { -it / 6 }, // Subtle upward exit
+            ),
     ) {
         content()
     }
 }
 
 /**
- * Custom interpolator for overshoot animation
+ * @deprecated Custom interpolators consume unnecessary CPU. Use standard Material easing functions.
+ * Replace with FastOutSlowInEasing, LinearOutSlowInEasing, or other Material Design easing.
  */
+@Deprecated("Use Material Design standard easing functions", ReplaceWith("FastOutSlowInEasing"))
 class OvershootInterpolator(private val tension: Float = 2f) {
     fun getInterpolation(input: Float): Float {
-        return (input - 1) * (input - 1) * ((tension + 1) * (input - 1) + tension) + 1
+        // Simplified for better battery performance
+        return FastOutSlowInEasing.transform(input)
     }
 }
 
 /**
- * Haptic feedback helper functions
+ * Enhanced haptic feedback for Battery Guru professional feel
  */
-object HapticHelper {
-    fun HapticFeedback.performLightImpact() {
-        performHapticFeedback(HapticFeedbackType.TextHandleMove)
-    }
+object BatteryGuruHaptics {
+    fun HapticFeedback.cardClick() = performHapticFeedback(HapticFeedbackType.TextHandleMove)
 
-    fun HapticFeedback.performMediumImpact() {
-        performHapticFeedback(HapticFeedbackType.LongPress)
-    }
+    fun HapticFeedback.cardLongPress() = performHapticFeedback(HapticFeedbackType.LongPress)
 
-    fun HapticFeedback.performHeavyImpact() {
-        performHapticFeedback(HapticFeedbackType.LongPress)
-    }
+    fun HapticFeedback.dragStart() = performHapticFeedback(HapticFeedbackType.LongPress)
 
-    fun HapticFeedback.performSuccess() {
-        // Simulate success pattern with multiple quick feedbacks
-        performHapticFeedback(HapticFeedbackType.TextHandleMove)
-    }
+    fun HapticFeedback.dragDrop() = performHapticFeedback(HapticFeedbackType.TextHandleMove)
 
-    fun HapticFeedback.performError() {
-        // Simulate error pattern
-        performHapticFeedback(HapticFeedbackType.LongPress)
-    }
+    fun HapticFeedback.batteryAlert() = performHapticFeedback(HapticFeedbackType.LongPress)
+
+    fun HapticFeedback.success() = performHapticFeedback(HapticFeedbackType.TextHandleMove)
 }
 
 /**
@@ -327,15 +322,15 @@ object HapticHelper {
 @Composable
 fun animateCardSize(
     targetSize: androidx.compose.ui.unit.DpSize,
-    animationSpec: AnimationSpec<androidx.compose.ui.unit.Dp> = tween(300)
+    animationSpec: AnimationSpec<androidx.compose.ui.unit.Dp> = tween(300),
 ): androidx.compose.ui.unit.DpSize {
     val animatedWidth by animateDpAsState(
         targetValue = targetSize.width,
-        animationSpec = animationSpec
+        animationSpec = animationSpec,
     )
     val animatedHeight by animateDpAsState(
         targetValue = targetSize.height,
-        animationSpec = animationSpec
+        animationSpec = animationSpec,
     )
     return androidx.compose.ui.unit.DpSize(animatedWidth, animatedHeight)
 }
@@ -346,12 +341,12 @@ fun animateCardSize(
 @Composable
 fun animateOffsetAsState(
     targetValue: Offset,
-    animationSpec: AnimationSpec<Offset> = spring()
+    animationSpec: AnimationSpec<Offset> = spring(),
 ): State<Offset> {
     return animateValueAsState(
         targetValue = targetValue,
         typeConverter = Offset.VectorConverter,
-        animationSpec = animationSpec
+        animationSpec = animationSpec,
     )
 }
 
@@ -362,7 +357,7 @@ fun animateOffsetAsState(
 fun StaggeredAnimation(
     itemCount: Int,
     staggerDelay: Int = 50,
-    content: @Composable (index: Int, animationDelay: Int) -> Unit
+    content: @Composable (index: Int, animationDelay: Int) -> Unit,
 ) {
     repeat(itemCount) { index ->
         content(index, index * staggerDelay)
@@ -375,18 +370,18 @@ fun StaggeredAnimation(
 @Composable
 fun MorphingContainer(
     targetState: Boolean,
-    content: @Composable (Boolean) -> Unit
+    content: @Composable (Boolean) -> Unit,
 ) {
     val transition = updateTransition(targetState = targetState)
 
     val cornerRadius by transition.animateDp(
-        transitionSpec = { tween(300) }
+        transitionSpec = { tween(300) },
     ) { state ->
         if (state) 24.dp else 12.dp
     }
 
     val elevation by transition.animateDp(
-        transitionSpec = { tween(300) }
+        transitionSpec = { tween(300) },
     ) { state ->
         if (state) 8.dp else 2.dp
     }

@@ -14,13 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.voltai.smartbatteryguardian.ui.theme.extendedColors
 
 @Composable
 fun EnhancedPremiumGate(
@@ -30,25 +30,30 @@ fun EnhancedPremiumGate(
     onLearnMoreClick: () -> Unit,
     featureName: String,
     featureDescription: String,
-    featureIcon: String = "💎"
+    featureIcon: String = "💎",
 ) {
     AnimatedVisibility(
         visible = isVisible,
-        enter = fadeIn(animationSpec = tween(300)) + scaleIn(
-            animationSpec = tween(300),
-            initialScale = 0.8f
-        ),
-        exit = fadeOut(animationSpec = tween(200)) + scaleOut(
-            animationSpec = tween(200),
-            targetScale = 0.8f
-        )
+        enter =
+        fadeIn(animationSpec = tween(300)) +
+            scaleIn(
+                animationSpec = tween(300),
+                initialScale = 0.8f,
+            ),
+        exit =
+        fadeOut(animationSpec = tween(200)) +
+            scaleOut(
+                animationSpec = tween(200),
+                targetScale = 0.8f,
+            ),
     ) {
         Dialog(
             onDismissRequest = onDismiss,
-            properties = DialogProperties(
+            properties =
+            DialogProperties(
                 dismissOnBackPress = true,
-                dismissOnClickOutside = true
-            )
+                dismissOnClickOutside = true,
+            ),
         ) {
             PremiumGateContent(
                 onDismiss = onDismiss,
@@ -56,7 +61,7 @@ fun EnhancedPremiumGate(
                 onLearnMoreClick = onLearnMoreClick,
                 featureName = featureName,
                 featureDescription = featureDescription,
-                featureIcon = featureIcon
+                featureIcon = featureIcon,
             )
         }
     }
@@ -69,116 +74,96 @@ private fun PremiumGateContent(
     onLearnMoreClick: () -> Unit,
     featureName: String,
     featureDescription: String,
-    featureIcon: String
+    featureIcon: String,
 ) {
-    val shimmerAnimation = rememberInfiniteTransition(label = "shimmer")
-    val shimmerTranslateAnim by shimmerAnimation.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "shimmer_translate"
-    )
-
-    val pulseScale by shimmerAnimation.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.05f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = EaseInOutSine),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "pulse"
-    )
-
+    // Static, battery-efficient premium gate design
     Card(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .graphicsLayer {
-                scaleX = pulseScale
-                scaleY = pulseScale
-            },
+            .padding(16.dp),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
+        colors =
+        CardDefaults.cardColors(
+            containerColor = Color.White,
         ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 16.dp
-        )
+        elevation =
+        CardDefaults.cardElevation(
+            defaultElevation = 16.dp,
+        ),
     ) {
         Box {
             // Background gradient overlay
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .height(300.dp)
                     .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
+                        brush =
+                        Brush.verticalGradient(
+                            colors =
+                            listOf(
                                 Color(0xFF6366F1).copy(alpha = 0.1f),
-                                Color(0xFF8B5CF6).copy(alpha = 0.05f)
-                            )
-                        )
-                    )
+                                Color(0xFF8B5CF6).copy(alpha = 0.05f),
+                            ),
+                        ),
+                    ),
             )
 
-            // Shimmer overlay
+            // Static premium accent bar
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .height(4.dp)
-                    .offset(x = shimmerTranslateAnim.dp - 200.dp, y = 0.dp)
                     .background(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color(0xFFFFD700).copy(alpha = 0.6f),
-                                Color.Transparent
-                            )
-                        )
-                    )
+                        MaterialTheme.extendedColors.premiumGold.copy(alpha = 0.6f),
+                    ),
             )
 
             Column(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .padding(32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 // Close button
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.End,
                 ) {
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Close",
-                            tint = Color.Gray
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
 
                 // Premium icon with animation
                 Box(
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .size(80.dp)
                         .background(
-                            brush = Brush.radialGradient(
-                                colors = listOf(
-                                    Color(0xFFFFD700),
-                                    Color(0xFFFFA000)
-                                )
+                            brush =
+                            Brush.radialGradient(
+                                colors =
+                                listOf(
+                                    MaterialTheme.extendedColors.premiumGold,
+                                    MaterialTheme.extendedColors.premiumAmber,
+                                ),
                             ),
-                            CircleShape
+                            CircleShape,
                         ),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = featureIcon,
-                        fontSize = 32.sp
+                        fontSize = 32.sp,
                     )
                 }
 
@@ -188,7 +173,7 @@ private fun PremiumGateContent(
                     text = "Premium Feature",
                     fontSize = 14.sp,
                     color = Color(0xFF6366F1),
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -198,7 +183,7 @@ private fun PremiumGateContent(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -206,16 +191,16 @@ private fun PremiumGateContent(
                 Text(
                     text = featureDescription,
                     fontSize = 16.sp,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
-                    lineHeight = 24.sp
+                    lineHeight = 24.sp,
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Features preview
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     PremiumFeatureItem("🚀 Advanced AI Analytics")
                     PremiumFeatureItem("⚡ Smart Optimization")
@@ -228,19 +213,21 @@ private fun PremiumGateContent(
                 // Action buttons
                 Button(
                     onClick = onUpgradeClick,
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .fillMaxWidth()
                         .height(48.dp),
                     shape = RoundedCornerShape(24.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6366F1)
-                    )
+                    colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF6366F1),
+                    ),
                 ) {
                     Text(
                         text = "🚀 Upgrade to Premium",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = Color.White,
                     )
                 }
 
@@ -248,12 +235,12 @@ private fun PremiumGateContent(
 
                 TextButton(
                     onClick = onLearnMoreClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(
                         text = "Learn More About Premium",
                         fontSize = 14.sp,
-                        color = Color(0xFF6366F1)
+                        color = Color(0xFF6366F1),
                     )
                 }
             }
@@ -265,18 +252,18 @@ private fun PremiumGateContent(
 private fun PremiumFeatureItem(text: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Icon(
             imageVector = Icons.Default.CheckCircle,
             contentDescription = null,
             tint = Color(0xFF4CAF50),
-            modifier = Modifier.size(16.dp)
+            modifier = Modifier.size(16.dp),
         )
         Text(
             text = text,
             fontSize = 14.sp,
-            color = Color.Black.copy(alpha = 0.8f)
+            color = Color.Black.copy(alpha = 0.8f),
         )
     }
 }
@@ -287,73 +274,79 @@ fun PremiumFeatureBanner(
     onUpgradeClick: () -> Unit,
     onDismiss: () -> Unit,
     title: String = "Unlock Premium Features",
-    description: String = "Get AI-powered insights and advanced analytics"
+    description: String = "Get AI-powered insights and advanced analytics",
 ) {
     AnimatedVisibility(
         visible = isVisible,
-        enter = slideInVertically(
+        enter =
+        slideInVertically(
             initialOffsetY = { -it },
-            animationSpec = tween(300)
+            animationSpec = tween(300),
         ) + fadeIn(),
-        exit = slideOutVertically(
+        exit =
+        slideOutVertically(
             targetOffsetY = { -it },
-            animationSpec = tween(200)
-        ) + fadeOut()
+            animationSpec = tween(200),
+        ) + fadeOut(),
     ) {
         Card(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color(0xFF6366F1)
+            colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF6366F1),
             ),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
         ) {
             Row(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(
                         text = title,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = Color.White,
                     )
                     Text(
                         text = description,
                         fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.8f)
+                        color = Color.White.copy(alpha = 0.8f),
                     )
                 }
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     TextButton(
                         onClick = onUpgradeClick,
-                        colors = ButtonDefaults.textButtonColors(
-                            contentColor = Color.White
-                        )
+                        colors =
+                        ButtonDefaults.textButtonColors(
+                            contentColor = Color.White,
+                        ),
                     ) {
                         Text("Upgrade", fontWeight = FontWeight.Bold)
                     }
 
                     IconButton(
                         onClick = onDismiss,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Close",
                             tint = Color.White.copy(alpha = 0.7f),
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(16.dp),
                         )
                     }
                 }

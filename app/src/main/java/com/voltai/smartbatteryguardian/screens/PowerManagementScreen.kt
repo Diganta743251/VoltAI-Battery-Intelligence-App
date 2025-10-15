@@ -34,33 +34,34 @@ fun PowerManagementScreen() {
     var autoOptimizationEnabled by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         // Header
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = Icons.Default.Settings,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
                     text = "AI Power Management",
                     fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = "Intelligent battery optimization",
                     fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -71,46 +72,47 @@ fun PowerManagementScreen() {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-            )
+            colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
+            ),
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = "🤖 AI Optimization Score",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier.size(120.dp)
+                    modifier = Modifier.size(120.dp),
                 ) {
                     CircularProgressIndicator(
                         progress = optimizationScore / 100f,
                         modifier = Modifier.fillMaxSize(),
                         strokeWidth = 12.dp,
-                        color = getScoreColor(optimizationScore)
+                        color = getScoreColor(optimizationScore),
                     )
 
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
                             text = "${optimizationScore.toInt()}%",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-                            color = getScoreColor(optimizationScore)
+                            color = getScoreColor(optimizationScore),
                         )
                         Text(
                             text = getScoreLabel(optimizationScore),
                             fontSize = 10.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -121,7 +123,7 @@ fun PowerManagementScreen() {
                     text = "Your device is ${getOptimizationDescription(optimizationScore)}",
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
         }
@@ -131,32 +133,32 @@ fun PowerManagementScreen() {
         // Battery Prediction Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp)
+            shape = RoundedCornerShape(20.dp),
         ) {
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(20.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = "🔮 AI Battery Prediction",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
 
                     Surface(
                         shape = RoundedCornerShape(12.dp),
-                        color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f)
+                        color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f),
                     ) {
                         Text(
                             text = "${(prediction.confidenceLevel * 100).toInt()}% Confidence",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         )
                     }
                 }
@@ -165,18 +167,18 @@ fun PowerManagementScreen() {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     PredictionMetric(
                         icon = "⏰",
                         value = "${prediction.remainingHours.toInt()}h ${((prediction.remainingHours % 1) * 60).toInt()}m",
-                        label = "Remaining Time"
+                        label = "Remaining Time",
                     )
 
                     PredictionMetric(
                         icon = "🧠",
                         value = "${(prediction.learningProgress * 100).toInt()}%",
-                        label = "AI Learning"
+                        label = "AI Learning",
                     )
                 }
 
@@ -187,7 +189,7 @@ fun PowerManagementScreen() {
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
@@ -197,31 +199,32 @@ fun PowerManagementScreen() {
         // Power Modes
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp)
+            shape = RoundedCornerShape(20.dp),
         ) {
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(20.dp),
             ) {
                 Text(
                     text = "⚡ Intelligent Power Modes",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                val powerModes = listOf(
-                    PowerMode("🚀 Performance", "Maximum performance, faster battery drain", "Performance"),
-                    PowerMode("⚖️ Balanced", "Optimal balance of performance and efficiency", "Balanced"),
-                    PowerMode("🔋 Power Saver", "Extended battery life with reduced performance", "PowerSaver"),
-                    PowerMode("🧠 AI Adaptive", "AI learns and adapts to your usage patterns", "AI")
-                )
+                val powerModes =
+                    listOf(
+                        PowerMode("🚀 Performance", "Maximum performance, faster battery drain", "Performance"),
+                        PowerMode("⚖️ Balanced", "Optimal balance of performance and efficiency", "Balanced"),
+                        PowerMode("🔋 Power Saver", "Extended battery life with reduced performance", "PowerSaver"),
+                        PowerMode("🧠 AI Adaptive", "AI learns and adapts to your usage patterns", "AI"),
+                    )
 
                 powerModes.forEach { mode ->
                     PowerModeItem(
                         mode = mode,
                         isSelected = selectedPowerMode == mode.id,
-                        onSelect = { selectedPowerMode = mode.id }
+                        onSelect = { selectedPowerMode = mode.id },
                     )
                     if (mode != powerModes.last()) {
                         Spacer(modifier = Modifier.height(8.dp))
@@ -236,32 +239,35 @@ fun PowerManagementScreen() {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = if (autoOptimizationEnabled) {
+            colors =
+            CardDefaults.cardColors(
+                containerColor =
+                if (autoOptimizationEnabled) {
                     MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
                 } else {
                     MaterialTheme.colorScheme.surfaceVariant
-                }
-            )
+                },
+            ),
         ) {
             Row(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .padding(20.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "🤖 AI Auto-Optimization",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Text(
                         text = "Let AI automatically optimize your battery based on usage patterns",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        lineHeight = 16.sp
+                        lineHeight = 16.sp,
                     )
                 }
 
@@ -270,7 +276,7 @@ fun PowerManagementScreen() {
                     onCheckedChange = {
                         autoOptimizationEnabled = it
                         if (it) aiOptimizer.enableAutoOptimization()
-                    }
+                    },
                 )
             }
         }
@@ -280,15 +286,15 @@ fun PowerManagementScreen() {
         // AI Recommendations
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp)
+            shape = RoundedCornerShape(20.dp),
         ) {
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(20.dp),
             ) {
                 Text(
                     text = "💡 AI Optimization Recommendations",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -301,7 +307,7 @@ fun PowerManagementScreen() {
                             isApplied = true
                             // Simulate optimization action
                             recommendation.action()
-                        }
+                        },
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
@@ -309,7 +315,7 @@ fun PowerManagementScreen() {
                 if (recommendations.size > 3) {
                     TextButton(
                         onClick = { /* Show all recommendations */ },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text("View ${recommendations.size - 3} More Recommendations")
                     }
@@ -322,17 +328,17 @@ fun PowerManagementScreen() {
 data class PowerMode(
     val name: String,
     val description: String,
-    val id: String
+    val id: String,
 )
 
 @Composable
 fun PredictionMetric(
     icon: String,
     value: String,
-    label: String
+    label: String,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(text = icon, fontSize = 24.sp)
         Spacer(modifier = Modifier.height(4.dp))
@@ -340,12 +346,12 @@ fun PredictionMetric(
             text = value,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         Text(
             text = label,
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -354,45 +360,49 @@ fun PredictionMetric(
 fun PowerModeItem(
     mode: PowerMode,
     isSelected: Boolean,
-    onSelect: () -> Unit
+    onSelect: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .clickable { onSelect() },
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) {
+        colors =
+        CardDefaults.cardColors(
+            containerColor =
+            if (isSelected) {
                 MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
             } else {
                 MaterialTheme.colorScheme.surface
-            }
+            },
         ),
-        border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
+        border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
     ) {
         Row(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = mode.name,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     text = mode.description,
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = 16.sp
+                    lineHeight = 16.sp,
                 )
             }
 
             RadioButton(
                 selected = isSelected,
-                onClick = onSelect
+                onClick = onSelect,
             )
         }
     }
@@ -401,48 +411,49 @@ fun PowerModeItem(
 @Composable
 fun RecommendationItem(
     recommendation: OptimizationRecommendation,
-    onApply: () -> Unit
+    onApply: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = getImpactColor(recommendation.impact).copy(alpha = 0.1f)
-        )
+        colors =
+        CardDefaults.cardColors(
+            containerColor = getImpactColor(recommendation.impact).copy(alpha = 0.1f),
+        ),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top
+                verticalAlignment = Alignment.Top,
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = recommendation.title,
                         fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = recommendation.description,
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        lineHeight = 16.sp
+                        lineHeight = 16.sp,
                     )
                 }
 
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = getImpactColor(recommendation.impact)
+                    color = getImpactColor(recommendation.impact),
                 ) {
                     Text(
                         text = getImpactLabel(recommendation.impact),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        color = MaterialTheme.colorScheme.surface,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     )
                 }
             }
@@ -450,30 +461,37 @@ fun RecommendationItem(
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(
-                onClick = if (!recommendation.isApplied) onApply else { {} },
+                onClick =
+                if (!recommendation.isApplied) {
+                    onApply
+                } else {
+                    {}
+                },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (recommendation.isApplied) {
+                colors =
+                ButtonDefaults.buttonColors(
+                    containerColor =
+                    if (recommendation.isApplied) {
                         Color(
-                            0xFF4CAF50
+                            0xFF4CAF50,
                         )
                     } else {
                         getImpactColor(recommendation.impact)
-                    }
+                    },
                 ),
-                enabled = !recommendation.isApplied
+                enabled = !recommendation.isApplied,
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (recommendation.isApplied) {
                         Text("✓ ", fontSize = 14.sp)
                     }
                     Text(
                         if (recommendation.isApplied) "Optimization Applied" else "Apply Optimization",
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
                     )
                 }
             }
@@ -481,12 +499,13 @@ fun RecommendationItem(
     }
 }
 
+@Composable
 private fun getScoreColor(score: Float): Color {
     return when {
-        score >= 80 -> Color(0xFF4CAF50)
-        score >= 60 -> Color(0xFF8BC34A)
-        score >= 40 -> Color(0xFFFF9800)
-        else -> Color(0xFFF44336)
+        score >= 80 -> MaterialTheme.colorScheme.tertiary
+        score >= 60 -> MaterialTheme.colorScheme.tertiary
+        score >= 40 -> MaterialTheme.colorScheme.secondary
+        else -> MaterialTheme.colorScheme.error
     }
 }
 
@@ -508,12 +527,13 @@ private fun getOptimizationDescription(score: Float): String {
     }
 }
 
+@Composable
 private fun getImpactColor(impact: OptimizationImpact): Color {
     return when (impact) {
-        OptimizationImpact.LOW -> Color(0xFF2196F3)
-        OptimizationImpact.MEDIUM -> Color(0xFF8BC34A)
-        OptimizationImpact.HIGH -> Color(0xFFFF9800)
-        OptimizationImpact.CRITICAL -> Color(0xFFF44336)
+        OptimizationImpact.LOW -> MaterialTheme.colorScheme.primary
+        OptimizationImpact.MEDIUM -> MaterialTheme.colorScheme.tertiary
+        OptimizationImpact.HIGH -> MaterialTheme.colorScheme.secondary
+        OptimizationImpact.CRITICAL -> MaterialTheme.colorScheme.error
     }
 }
 

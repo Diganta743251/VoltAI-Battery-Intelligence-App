@@ -18,6 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.voltai.smartbatteryguardian.rememberBatteryData
+import java.text.DateFormat
 import java.util.*
 import kotlin.math.*
 
@@ -32,25 +34,39 @@ data class DiagnosticResult(
     val severity: DiagnosticSeverity,
     val icon: String,
     val normalRange: String,
-    val lastUpdated: Long
+    val lastUpdated: Long,
 )
 
 enum class DiagnosticCategory {
-    VOLTAGE, TEMPERATURE, CYCLE_COUNT, CAPACITY, CHARGING, PERFORMANCE, SAFETY
+    VOLTAGE,
+    TEMPERATURE,
+    CYCLE_COUNT,
+    CAPACITY,
+    CHARGING,
+    PERFORMANCE,
+    SAFETY,
 }
 
 enum class DiagnosticStatus {
-    OPTIMAL, GOOD, WARNING, CRITICAL, UNKNOWN
+    OPTIMAL,
+    GOOD,
+    WARNING,
+    CRITICAL,
+    UNKNOWN,
 }
 
 enum class DiagnosticSeverity {
-    INFO, WARNING, ERROR, CRITICAL
+    INFO,
+    WARNING,
+    ERROR,
+    CRITICAL,
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BatteryDiagnosticsScreen() {
     val context = LocalContext.current
+    val batteryData by rememberBatteryData(context)
 
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("🔬 Diagnostics", "📊 Voltage", "🌡️ Temperature", "🔄 Cycles", "🧪 Tests")
@@ -58,29 +74,31 @@ fun BatteryDiagnosticsScreen() {
     var isRunningDiagnostics by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFF3E5F5),
-                        Color(0xFFE1F5FE)
-                    )
-                )
-            )
+                    colors =
+                    listOf(
+                        MaterialTheme.colorScheme.surface,
+                        MaterialTheme.colorScheme.surfaceVariant,
+                    ),
+                ),
+            ),
     ) {
         // Premium Header
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = Color(0xFF1565C0),
-            shadowElevation = 12.dp
+            color = MaterialTheme.colorScheme.primary,
+            shadowElevation = 12.dp,
         ) {
             Column(
-                modifier = Modifier.padding(24.dp)
+                modifier = Modifier.padding(24.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     // Diagnostic Scanner Animation
                     DiagnosticScannerIcon(isScanning = isRunningDiagnostics)
@@ -92,12 +110,12 @@ fun BatteryDiagnosticsScreen() {
                             text = "Battery Diagnostics",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                         Text(
                             text = "Advanced battery analysis & health monitoring",
                             fontSize = 14.sp,
-                            color = Color.White.copy(alpha = 0.85f)
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
                         )
                     }
 
@@ -110,12 +128,25 @@ fun BatteryDiagnosticsScreen() {
                 // Quick Diagnostic Stats
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
-                    QuickStatCard("4.12V", "Voltage", "⚡", Color(0xFF4CAF50))
-                    QuickStatCard("32.1°C", "Temperature", "🌡️", Color(0xFFFF9800))
-                    QuickStatCard("847", "Cycles", "🔄", Color(0xFF2196F3))
-                    QuickStatCard("89%", "Health", "❤️", Color(0xFF9C27B0))
+                    val voltageText =
+                        if (batteryData.voltage > 0.0) {
+                            String.format(
+                                "%.2fV",
+                                batteryData.voltage,
+                            )
+                        } else {
+                            "—"
+                        }
+                    val tempText = if (batteryData.temperature > 0f) "${batteryData.temperature.toInt()}°C" else "—"
+                    val cyclesText = if (batteryData.cycleCount > 0) batteryData.cycleCount.toString() else "—"
+                    val healthText = if (batteryData.healthPercentage in 0..100) "${batteryData.healthPercentage}%" else "—"
+
+                    QuickStatCard(voltageText, "Voltage", "⚡", MaterialTheme.colorScheme.tertiary)
+                    QuickStatCard(tempText, "Temperature", "🌡️", MaterialTheme.colorScheme.secondary)
+                    QuickStatCard(cyclesText, "Cycles", "🔄", MaterialTheme.colorScheme.primary)
+                    QuickStatCard(healthText, "Health", "❤️", MaterialTheme.colorScheme.secondary)
                 }
             }
         }
@@ -124,19 +155,19 @@ fun BatteryDiagnosticsScreen() {
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color.Transparent,
-            contentColor = Color(0xFF1565C0),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            contentColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
                     selected = selectedTab == index,
                     onClick = { selectedTab = index },
-                    modifier = Modifier.padding(vertical = 12.dp)
+                    modifier = Modifier.padding(vertical = 12.dp),
                 ) {
                     Text(
                         text = title,
                         fontSize = 14.sp,
-                        fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium
+                        fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
                     )
                 }
             }
@@ -144,17 +175,18 @@ fun BatteryDiagnosticsScreen() {
 
         // Content
         LazyColumn(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             when (selectedTab) {
                 0 -> {
                     item {
                         DiagnosticsOverviewCard(
                             isRunningDiagnostics = isRunningDiagnostics,
-                            onStartDiagnostics = { isRunningDiagnostics = true }
+                            onStartDiagnostics = { isRunningDiagnostics = true },
                         )
                     }
                     item { GeneralDiagnosticResultsCard() }
@@ -181,76 +213,40 @@ fun BatteryDiagnosticsScreen() {
 
 @Composable
 fun DiagnosticScannerIcon(isScanning: Boolean) {
-    val rotation by animateFloatAsState(
-        targetValue = if (isScanning) 360f else 0f,
-        animationSpec = if (isScanning) {
-            infiniteRepeatable(
-                animation = tween(durationMillis = 2000, easing = LinearEasing),
-                repeatMode = RepeatMode.Restart
-            )
-        } else {
-            tween(500)
-        }
-    )
-
-    val pulseScale by animateFloatAsState(
-        targetValue = if (isScanning) 1.1f else 1.0f,
-        animationSpec = if (isScanning) {
-            infiniteRepeatable(
-                animation = tween(1000, easing = EaseInOutSine),
-                repeatMode = RepeatMode.Reverse
-            )
-        } else {
-            tween(300)
-        }
-    )
-
+    // Static, battery-efficient diagnostic scanner indicator
     Box(
-        modifier = Modifier
+        modifier =
+        Modifier
             .size(64.dp)
             .background(
-                Brush.radialGradient(
-                    colors = listOf(
-                        Color.White.copy(alpha = 0.3f),
-                        Color.White.copy(alpha = 0.1f)
-                    )
-                ),
-                CircleShape
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                CircleShape,
             )
-            .graphicsLayer {
-                scaleX = pulseScale
-                scaleY = pulseScale
-                rotationZ = rotation
-            },
-        contentAlignment = Alignment.Center
+            .border(
+                2.dp,
+                if (isScanning) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                },
+                CircleShape,
+            ),
+        contentAlignment = Alignment.Center,
     ) {
         Text(text = "🔬", fontSize = 32.sp)
 
         if (isScanning) {
-            // Scanning rings
+            // Static scanning rings indicating active state
             repeat(3) { index ->
-                val delay = index * 500
-                val ringScale by animateFloatAsState(
-                    targetValue = 1.5f,
-                    animationSpec = infiniteRepeatable(
-                        animation = tween(1500, delayMillis = delay, easing = EaseOut),
-                        repeatMode = RepeatMode.Restart
-                    )
-                )
-
                 Box(
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .size((40 + index * 8).dp)
-                        .graphicsLayer {
-                            scaleX = ringScale
-                            scaleY = ringScale
-                            alpha = 1f - ((ringScale - 1f) / 0.5f)
-                        }
                         .border(
-                            2.dp,
-                            Color.White.copy(alpha = 0.3f),
-                            CircleShape
-                        )
+                            1.dp,
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.3f - index * 0.1f),
+                            CircleShape,
+                        ),
                 )
             }
         }
@@ -259,62 +255,71 @@ fun DiagnosticScannerIcon(isScanning: Boolean) {
 
 @Composable
 fun DiagnosticStatusCard() {
+    val context = LocalContext.current
+    val batteryData by rememberBatteryData(context)
+    val updatedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(batteryData.lastUpdated))
     Surface(
         shape = RoundedCornerShape(16.dp),
-        color = Color.White.copy(alpha = 0.15f)
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .size(8.dp)
-                        .background(Color(0xFF4CAF50), CircleShape)
+                        .background(MaterialTheme.colorScheme.tertiary, CircleShape),
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "System Healthy",
+                    text = "Monitoring",
                     fontSize = 11.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Medium
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Medium,
                 )
             }
 
             Text(
-                text = "Last scan: 2m ago",
+                text = "Updated: $updatedTime",
                 fontSize = 9.sp,
-                color = Color.White.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
             )
         }
     }
 }
 
 @Composable
-fun QuickStatCard(value: String, label: String, icon: String, color: Color) {
+fun QuickStatCard(
+    value: String,
+    label: String,
+    icon: String,
+    color: Color,
+) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = Color.White.copy(alpha = 0.15f)
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(text = icon, fontSize = 16.sp)
             Text(
                 text = value,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = label,
                 fontSize = 10.sp,
-                color = Color.White.copy(alpha = 0.8f),
-                textAlign = TextAlign.Center
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -323,26 +328,26 @@ fun QuickStatCard(value: String, label: String, icon: String, color: Color) {
 @Composable
 fun DiagnosticsOverviewCard(
     isRunningDiagnostics: Boolean,
-    onStartDiagnostics: () -> Unit
+    onStartDiagnostics: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "🔬 Diagnostic Overview",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1565C0)
+                    color = MaterialTheme.colorScheme.primary,
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -350,15 +355,16 @@ fun DiagnosticsOverviewCard(
                 Button(
                     onClick = onStartDiagnostics,
                     enabled = !isRunningDiagnostics,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1565C0)
-                    )
+                    colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                    ),
                 ) {
                     if (isRunningDiagnostics) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(16.dp),
-                            color = Color.White,
-                            strokeWidth = 2.dp
+                            color = MaterialTheme.colorScheme.onSurface,
+                            strokeWidth = 2.dp,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Scanning...")
@@ -373,11 +379,11 @@ fun DiagnosticsOverviewCard(
             // Status Summary
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                StatusSummaryItem("Critical", 0, Color(0xFFF44336))
-                StatusSummaryItem("Warning", 1, Color(0xFFFF9800))
-                StatusSummaryItem("Optimal", 4, Color(0xFF4CAF50))
+                StatusSummaryItem("Critical", 0, MaterialTheme.colorScheme.error)
+                StatusSummaryItem("Warning", 1, MaterialTheme.colorScheme.secondary)
+                StatusSummaryItem("Optimal", 4, MaterialTheme.colorScheme.tertiary)
             }
 
             if (isRunningDiagnostics) {
@@ -385,7 +391,7 @@ fun DiagnosticsOverviewCard(
 
                 LinearProgressIndicator(
                     modifier = Modifier.fillMaxWidth(),
-                    color = Color(0xFF1565C0)
+                    color = MaterialTheme.colorScheme.primary,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -393,9 +399,9 @@ fun DiagnosticsOverviewCard(
                 Text(
                     text = "Running comprehensive battery analysis...",
                     fontSize = 12.sp,
-                    color = Color(0xFF666666),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
@@ -403,20 +409,24 @@ fun DiagnosticsOverviewCard(
 }
 
 @Composable
-fun StatusSummaryItem(label: String, count: Int, color: Color) {
+fun StatusSummaryItem(
+    label: String,
+    count: Int,
+    color: Color,
+) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = count.toString(),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = color
+            color = color,
         )
         Text(
             text = label,
             fontSize = 12.sp,
-            color = Color(0xFF666666)
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -426,28 +436,33 @@ fun GeneralDiagnosticResultsCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "🔍 Diagnostic Results",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Sample diagnostic results
+            val context = LocalContext.current
+            val batteryData by rememberBatteryData(context)
+            val voltageText = if (batteryData.voltage > 0.0) String.format("%.2fV", batteryData.voltage) else "—"
+            val tempText = if (batteryData.temperature > 0f) "${batteryData.temperature.toInt()}°C" else "—"
+            val cyclesText = if (batteryData.cycleCount > 0) batteryData.cycleCount.toString() else "—"
+
             DiagnosticItem(
                 icon = "⚡",
                 title = "Battery Voltage",
-                value = "4.12V",
-                status = "OPTIMAL",
-                statusColor = Color(0xFF4CAF50),
-                description = "Voltage levels are within optimal range"
+                value = voltageText,
+                status = "—",
+                statusColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                description = "",
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -455,10 +470,10 @@ fun GeneralDiagnosticResultsCard() {
             DiagnosticItem(
                 icon = "🌡️",
                 title = "Temperature",
-                value = "32.1°C",
-                status = "GOOD",
-                statusColor = Color(0xFF8BC34A),
-                description = "Temperature within safe operating range"
+                value = tempText,
+                status = "—",
+                statusColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                description = "",
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -466,10 +481,10 @@ fun GeneralDiagnosticResultsCard() {
             DiagnosticItem(
                 icon = "🔄",
                 title = "Charge Cycles",
-                value = "847",
-                status = "WARNING",
-                statusColor = Color(0xFFFF9800),
-                description = "Approaching recommended cycle limit"
+                value = cyclesText,
+                status = "—",
+                statusColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                description = "",
             )
         }
     }
@@ -482,11 +497,11 @@ fun DiagnosticItem(
     value: String,
     status: String,
     statusColor: Color,
-    description: String
+    description: String,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = icon, fontSize = 20.sp)
 
@@ -496,35 +511,35 @@ fun DiagnosticItem(
             Text(
                 text = title,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = description,
                 fontSize = 12.sp,
-                color = Color(0xFF666666)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
         Column(
-            horizontalAlignment = Alignment.End
+            horizontalAlignment = Alignment.End,
         ) {
             Text(
                 text = value,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = statusColor
+                color = statusColor,
             )
 
             Surface(
                 shape = RoundedCornerShape(6.dp),
-                color = statusColor.copy(alpha = 0.1f)
+                color = statusColor.copy(alpha = 0.1f),
             ) {
                 Text(
                     text = status,
                     fontSize = 10.sp,
                     color = statusColor,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                 )
             }
         }
@@ -536,41 +551,46 @@ fun VoltageAnalysisCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "⚡ Voltage Analysis",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            val context = LocalContext.current
+            val batteryData by rememberBatteryData(context)
+            val voltageText = if (batteryData.voltage > 0.0) String.format("%.2fV", batteryData.voltage) else "—"
+
             // Voltage gauge placeholder
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .height(120.dp)
-                    .background(Color(0xFFF5F5F5), RoundedCornerShape(12.dp)),
-                contentAlignment = Alignment.Center
+                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center,
             ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        text = "4.12V",
+                        text = voltageText,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF4CAF50)
+                        color = MaterialTheme.colorScheme.tertiary,
                     )
                     Text(
                         text = "Current Voltage",
                         fontSize = 14.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -580,11 +600,11 @@ fun VoltageAnalysisCard() {
             // Voltage metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.SpaceAround,
             ) {
-                MetricItem("Nominal", "3.7V", "🎯")
-                MetricItem("Max", "4.2V", "📊")
-                MetricItem("Stability", "94%", "📈")
+                MetricItem("Power Source", batteryData.powerSource, "🔌")
+                MetricItem("Status", batteryData.chargingStatus, "⚡")
+                MetricItem("Current", "${batteryData.current} mA", "🔋")
             }
         }
     }
@@ -595,41 +615,45 @@ fun TemperatureAnalysisCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "🌡️ Temperature Analysis",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             // Temperature gauge placeholder
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .height(120.dp)
-                    .background(Color(0xFFF5F5F5), RoundedCornerShape(12.dp)),
-                contentAlignment = Alignment.Center
+                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center,
             ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    val context = LocalContext.current
+                    val batteryData by rememberBatteryData(context)
+                    val tempText = if (batteryData.temperature > 0f) "${batteryData.temperature.toInt()}°C" else "—"
                     Text(
-                        text = "32°C",
+                        text = tempText,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFFF9800)
+                        color = MaterialTheme.colorScheme.secondary,
                     )
                     Text(
                         text = "Current Temperature",
                         fontSize = 14.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -639,11 +663,22 @@ fun TemperatureAnalysisCard() {
             // Temperature metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.SpaceAround,
             ) {
-                MetricItem("Average", "28°C", "📊")
-                MetricItem("Max Safe", "45°C", "🔥")
-                MetricItem("Heat Events", "3", "⚠️")
+                val context = LocalContext.current
+                val batteryData by rememberBatteryData(context)
+                val tempTextRow = if (batteryData.temperature > 0f) "${batteryData.temperature.toInt()}°C" else "—"
+                val stateTextRow =
+                    when {
+                        batteryData.temperature > 45f -> "Hot"
+                        batteryData.temperature > 35f -> "Warm"
+                        else -> "Normal"
+                    }
+                val healthTextRow = if (batteryData.healthPercentage in 0..100) "${batteryData.healthPercentage}%" else "—"
+
+                MetricItem("Current", tempTextRow, "🌡️")
+                MetricItem("State", stateTextRow, "📊")
+                MetricItem("Health", healthTextRow, "❤️")
             }
         }
     }
@@ -654,16 +689,16 @@ fun CycleAnalysisCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "🔄 Cycle Analysis",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -671,29 +706,33 @@ fun CycleAnalysisCard() {
             // Cycle progress indicator
             Box(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
+                val context = LocalContext.current
+                val batteryData by rememberBatteryData(context)
+                val progressNormalized = ((batteryData.cycleCount.coerceAtLeast(0)) / 1000f).coerceIn(0f, 1f)
                 CircularProgressIndicator(
-                    progress = 0.847f,
+                    progress = progressNormalized,
                     modifier = Modifier.size(120.dp),
                     strokeWidth = 12.dp,
                     strokeCap = StrokeCap.Round,
-                    color = Color(0xFFFF9800),
-                    trackColor = Color(0xFFE0E0E0)
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
 
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    val cyclesText = if (batteryData.cycleCount > 0) batteryData.cycleCount.toString() else "—"
                     Text(
-                        text = "847",
+                        text = cyclesText,
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Text(
                         text = "Cycles",
                         fontSize = 12.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -703,11 +742,15 @@ fun CycleAnalysisCard() {
             // Cycle metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.SpaceAround,
             ) {
-                MetricItem("Full", "224", "🔴")
-                MetricItem("Partial", "623", "🟡")
-                MetricItem("Health", "89%", "❤️")
+                val context = LocalContext.current
+                val batteryData by rememberBatteryData(context)
+                val cyclesTextRow = if (batteryData.cycleCount > 0) batteryData.cycleCount.toString() else "—"
+                val healthTextRow = if (batteryData.healthPercentage in 0..100) "${batteryData.healthPercentage}%" else "—"
+                MetricItem("Cycles", cyclesTextRow, "🔄")
+                MetricItem("Health", healthTextRow, "❤️")
+                MetricItem("Status", batteryData.chargingStatus, "⚡")
             }
         }
     }
@@ -718,37 +761,42 @@ fun DiagnosticTestsCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "🧪 Diagnostic Tests",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Sample diagnostic tests
-            TestItem("Voltage Stability Test", "COMPLETED", Color(0xFF4CAF50), "⚡")
+            TestItem("Voltage Stability Test", "—", MaterialTheme.colorScheme.onSurfaceVariant, "⚡")
             Spacer(modifier = Modifier.height(12.dp))
-            TestItem("Temperature Stress Test", "RUNNING", Color(0xFF2196F3), "🌡️")
+            TestItem("Temperature Stress Test", "—", MaterialTheme.colorScheme.onSurfaceVariant, "🌡️")
             Spacer(modifier = Modifier.height(12.dp))
-            TestItem("Capacity Calibration", "NOT STARTED", Color(0xFF666666), "🔋")
+            TestItem("Capacity Calibration", "—", MaterialTheme.colorScheme.onSurfaceVariant, "🔋")
             Spacer(modifier = Modifier.height(12.dp))
-            TestItem("Cell Balance Check", "FAILED", Color(0xFFF44336), "⚖️")
+            TestItem("Cell Balance Check", "—", MaterialTheme.colorScheme.onSurfaceVariant, "⚖️")
         }
     }
 }
 
 @Composable
-fun TestItem(name: String, status: String, statusColor: Color, icon: String) {
+fun TestItem(
+    name: String,
+    status: String,
+    statusColor: Color,
+    icon: String,
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = icon, fontSize = 16.sp)
         Spacer(modifier = Modifier.width(12.dp))
@@ -757,41 +805,45 @@ fun TestItem(name: String, status: String, statusColor: Color, icon: String) {
             Text(
                 text = name,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
 
         Surface(
             shape = RoundedCornerShape(6.dp),
-            color = statusColor.copy(alpha = 0.1f)
+            color = statusColor.copy(alpha = 0.1f),
         ) {
             Text(
                 text = status,
                 fontSize = 10.sp,
                 color = statusColor,
                 fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             )
         }
     }
 }
 
 @Composable
-fun MetricItem(label: String, value: String, icon: String) {
+fun MetricItem(
+    label: String,
+    value: String,
+    icon: String,
+) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(text = icon, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = value,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             text = label,
             fontSize = 11.sp,
-            color = Color(0xFF666666)
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -802,16 +854,16 @@ fun VoltageHistoryChart() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
                 text = "📈 Voltage History",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Voltage trend chart coming soon...", color = Color(0xFF666666))
+            Text("Voltage trend chart coming soon...", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -821,16 +873,16 @@ fun TemperatureHistoryChart() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
                 text = "📈 Temperature History",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Temperature trend chart coming soon...", color = Color(0xFF666666))
+            Text("Temperature trend chart coming soon...", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -840,16 +892,16 @@ fun CycleHistoryCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
                 text = "📋 Cycle History",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Recent cycle history coming soon...", color = Color(0xFF666666))
+            Text("Recent cycle history coming soon...", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

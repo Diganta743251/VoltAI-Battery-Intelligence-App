@@ -28,9 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlin.math.*
-import kotlin.random.Random
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * Advanced AI-Powered Battery Analytics
@@ -40,7 +37,7 @@ import java.util.*
 @Composable
 fun AdvancedAnalyticsScreen() {
     var selectedTab by remember { mutableIntStateOf(0) }
-    val analyticsData = remember { generateAdvancedAnalyticsData() }
+    val analyticsData = remember { defaultAdvancedAnalyticsData() }
     
     Column(
         modifier = Modifier
@@ -962,52 +959,43 @@ private fun getRecommendationColor(type: String): Color {
     }
 }
 
-// Mock data generator
-private fun generateAdvancedAnalyticsData(): AdvancedAnalyticsData {
+// Default analytics without mock/simulated values
+private fun defaultAdvancedAnalyticsData(): AdvancedAnalyticsData {
     return AdvancedAnalyticsData(
-        aiInsights = listOf(
-            AIInsight("🔋", "Optimal Charging Detected", "Your charging pattern is excellent for battery longevity", "Low", 0.95f),
-            AIInsight("🌡️", "Temperature Warning", "Battery runs hot during gaming sessions", "High", 0.88f),
-            AIInsight("📱", "App Impact Analysis", "Social media apps are consuming 35% more power than expected", "Medium", 0.76f)
-        ),
+        aiInsights = emptyList(),
         batteryScore = BatteryScore(
-            overall = 87,
-            capacity = 92,
-            temperature = 85,
-            voltage = 88,
-            cycles = 83
+            overall = 0,
+            capacity = 0,
+            temperature = 0,
+            voltage = 0,
+            cycles = 0
         ),
         chargingEfficiency = ChargingEfficiency(
-            speedRating = 8,
-            heatLevel = 2,
-            powerLoss = 12,
-            chargingPattern = listOf(0.1f, 0.3f, 0.6f, 0.8f, 0.95f, 1.0f)
+            speedRating = 0,
+            heatLevel = 0,
+            powerLoss = 0,
+            chargingPattern = emptyList()
         ),
         lifespanPrediction = LifespanPrediction(
-            remainingYears = 3,
-            remainingCycles = 1247,
-            healthPercentage = 87,
-            confidence = 0.82f
+            remainingYears = 0,
+            remainingCycles = 0,
+            healthPercentage = 0,
+            confidence = 0f
         ),
-        recommendations = listOf(
-            Recommendation("⚡", "Enable Smart Charging", "Reduce charging speed at night to minimize heat", "charging", true, "High"),
-            Recommendation("🌙", "Use Dark Mode", "Save up to 15% battery with dark themes", "usage", true, "Medium"),
-            Recommendation("📲", "Limit Background Refresh", "10 apps are refreshing unnecessarily", "apps", true, "Medium")
-        ),
-        // Add mock data for other fields...
-        chargingSpeed = ChargingSpeedAnalysis(1850, 2400, 89),
-        heatAnalysis = HeatAnalysis(32.5f, 43.2f, 3),
-        chargingCycles = ChargingCycles(457, 1543, 0.91f),
-        optimalCharging = OptimalCharging("20-80%", listOf("11:00 PM", "6:00 AM")),
-        capacityDegradation = CapacityDegradation(4140, 4500, 0.08f),
-        healthTrends = HealthTrends("Stable", "Good for 2+ years", listOf("Temperature", "Cycles", "Usage")),
-        maintenanceTips = MaintenanceTips(listOf("Avoid extreme temperatures", "Use official chargers"), "Medium"),
-        usagePattern = UsagePattern(listOf("8:00 AM", "1:00 PM", "9:00 PM"), listOf("3:00 AM", "11:00 AM")),
-        appConsumption = AppConsumption(listOf("Chrome", "YouTube", "Instagram"), mapOf("Chrome" to 25, "YouTube" to 20)),
-        screenTimeAnalysis = ScreenTimeAnalysis(6, "Evening", "Increasing"),
-        powerProfile = PowerProfile("Balanced", 78, listOf("Enable adaptive brightness", "Use power saver")),
-        performanceScore = PerformanceScore(84, 88, 82, 86),
-        benchmarkComparison = BenchmarkComparison(84, "Top 15%", mapOf("CPU" to 88, "GPU" to 82)),
-        optimizationSuggestions = OptimizationSuggestions(listOf("Close 5 background apps", "Enable battery saver"), "25% longer life")
+        recommendations = emptyList(),
+        chargingSpeed = ChargingSpeedAnalysis(averageSpeed = 0, peakSpeed = 0, efficiency = 0),
+        heatAnalysis = HeatAnalysis(averageTemp = 0f, peakTemp = 0f, heatEvents = 0),
+        chargingCycles = ChargingCycles(total = 0, remaining = 0, efficiency = 0f),
+        optimalCharging = OptimalCharging("", emptyList()),
+        capacityDegradation = CapacityDegradation(currentCapacity = 0, originalCapacity = 0, degradationRate = 0f),
+        healthTrends = HealthTrends("", "", emptyList()),
+        maintenanceTips = MaintenanceTips(emptyList(), ""),
+        usagePattern = UsagePattern(emptyList(), emptyList()),
+        appConsumption = AppConsumption(emptyList(), emptyMap()),
+        screenTimeAnalysis = ScreenTimeAnalysis(0, "", ""),
+        powerProfile = PowerProfile("", 0, emptyList()),
+        performanceScore = PerformanceScore(0, 0, 0, 0),
+        benchmarkComparison = BenchmarkComparison(0, "", emptyMap()),
+        optimizationSuggestions = OptimizationSuggestions(emptyList(), "")
     )
 }

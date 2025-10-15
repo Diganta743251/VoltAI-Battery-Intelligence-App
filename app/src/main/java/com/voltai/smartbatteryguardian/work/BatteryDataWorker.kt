@@ -19,42 +19,44 @@ import java.util.concurrent.TimeUnit
  * WorkManager worker for collecting battery data in background
  */
 @HiltWorker
-class BatteryDataWorker @AssistedInject constructor(
+class BatteryDataWorker
+@AssistedInject
+constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val batteryLogDao: BatteryLogDao,
-    private val chargingSessionDao: ChargingSessionDao
+    private val chargingSessionDao: ChargingSessionDao,
 ) : CoroutineWorker(context, workerParams) {
-
     companion object {
         const val WORK_NAME = "battery_data_collection"
-        private const val TAG = "BatteryDataWorker"
 
         fun enqueueWork(context: Context) {
-            val constraints = Constraints.Builder()
-                .setRequiresBatteryNotLow(false) // We want to monitor even when battery is low
-                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
-                .build()
+            val constraints =
+                Constraints.Builder()
+                    .setRequiresBatteryNotLow(false) // We want to monitor even when battery is low
+                    .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+                    .build()
 
-            val workRequest = PeriodicWorkRequestBuilder<BatteryDataWorker>(
-                repeatInterval = 15, // Every 15 minutes
-                repeatIntervalTimeUnit = TimeUnit.MINUTES,
-                flexTimeInterval = 5, // 5 minute flex window
-                flexTimeIntervalUnit = TimeUnit.MINUTES
-            )
-                .setConstraints(constraints)
-                .addTag(WORK_NAME)
-                .setBackoffCriteria(
-                    BackoffPolicy.LINEAR,
-                    WorkRequest.MIN_BACKOFF_MILLIS,
-                    TimeUnit.MILLISECONDS
+            val workRequest =
+                PeriodicWorkRequestBuilder<BatteryDataWorker>(
+                    repeatInterval = 15, // Every 15 minutes
+                    repeatIntervalTimeUnit = TimeUnit.MINUTES,
+                    flexTimeInterval = 5, // 5 minute flex window
+                    flexTimeIntervalUnit = TimeUnit.MINUTES,
                 )
-                .build()
+                    .setConstraints(constraints)
+                    .addTag(WORK_NAME)
+                    .setBackoffCriteria(
+                        BackoffPolicy.LINEAR,
+                        WorkRequest.MIN_BACKOFF_MILLIS,
+                        TimeUnit.MILLISECONDS,
+                    )
+                    .build()
 
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                 WORK_NAME,
                 ExistingPeriodicWorkPolicy.UPDATE,
-                workRequest
+                workRequest,
             )
         }
 
@@ -79,141 +81,157 @@ class BatteryDataWorker @AssistedInject constructor(
     }
 
     private suspend fun collectBatteryData() {
-        val batteryIntent = applicationContext.registerReceiver(
-            null,
-            IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-        ) ?: return
+        val batteryIntent =
+            applicationContext.registerReceiver(
+                null,
+                IntentFilter(Intent.ACTION_BATTERY_CHANGED),
+            ) ?: return
 
         val batteryManager = applicationContext.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
 
         // Extract battery information
         val level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
         val scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-        val batteryPercentage = if (level != -1 && scale != -1) {
-            (level * 100 / scale.toFloat()).toInt()
-        } else {
-            return
-        }
+        val batteryPercentage =
+            if (level != -1 && scale != -1) {
+                (level * 100 / scale.toFloat()).toInt()
+            } else {
+                return
+            }
 
         val status = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-            status == BatteryManager.BATTERY_STATUS_FULL
+        val isCharging =
+            status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                status == BatteryManager.BATTERY_STATUS_FULL
 
         val temperature = batteryIntent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10.0f
         val voltage = batteryIntent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0) / 1000.0
 
-        val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            try {
-                batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
-            } catch (e: Exception) {
+        val current =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                try {
+                    val ua = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
+                    if (ua == Int.MIN_VALUE) 0 else ua / 1000 // mA (signed)
+                } catch (e: Exception) {
+                    0
+                }
+            } else {
                 0
             }
-        } else {
-            0
-        }
 
         val health = batteryIntent.getIntExtra(BatteryManager.EXTRA_HEALTH, BatteryManager.BATTERY_HEALTH_UNKNOWN)
-        val healthPercentage = when (health) {
-            BatteryManager.BATTERY_HEALTH_GOOD -> 100
-            BatteryManager.BATTERY_HEALTH_OVERHEAT -> 85
-            BatteryManager.BATTERY_HEALTH_DEAD -> 0
-            BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> 75
-            BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE -> 60
-            BatteryManager.BATTERY_HEALTH_COLD -> 90
-            else -> 80
-        }
+        val healthPercentage =
+            when (health) {
+                BatteryManager.BATTERY_HEALTH_GOOD -> 100
+                BatteryManager.BATTERY_HEALTH_OVERHEAT -> 85
+                BatteryManager.BATTERY_HEALTH_DEAD -> 0
+                BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> 75
+                BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE -> 60
+                BatteryManager.BATTERY_HEALTH_COLD -> 90
+                else -> 80
+            }
 
         val plugged = batteryIntent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
-        val powerSource = when (plugged) {
-            BatteryManager.BATTERY_PLUGGED_AC -> "AC Adapter"
-            BatteryManager.BATTERY_PLUGGED_USB -> "USB"
-            BatteryManager.BATTERY_PLUGGED_WIRELESS -> "Wireless"
-            else -> "Battery"
-        }
+        val powerSource =
+            when (plugged) {
+                BatteryManager.BATTERY_PLUGGED_AC -> "AC Adapter"
+                BatteryManager.BATTERY_PLUGGED_USB -> "USB"
+                BatteryManager.BATTERY_PLUGGED_WIRELESS -> "Wireless"
+                else -> "Battery"
+            }
 
         val chargingSpeed = determineChargingSpeed(current)
 
         // Create and insert battery log
-        val batteryLog = BatteryLogEntity(
-            id = 0, // Auto-generate
-            timestamp = System.currentTimeMillis(),
-            batteryLevel = batteryPercentage,
-            isCharging = isCharging,
-            temperature = temperature,
-            voltage = voltage,
-            current = current,
-            healthPercentage = healthPercentage,
-            chargingSpeed = chargingSpeed,
-            powerSource = powerSource
-        )
+        val batteryLog =
+            BatteryLogEntity(
+                id = 0, // Auto-generate
+                timestamp = System.currentTimeMillis(),
+                batteryLevel = batteryPercentage,
+                isCharging = isCharging,
+                temperature = temperature,
+                voltage = voltage,
+                current = current,
+                healthPercentage = healthPercentage,
+                chargingSpeed = chargingSpeed,
+                powerSource = powerSource,
+            )
 
         batteryLogDao.insertLog(batteryLog)
     }
 
     private suspend fun manageChargingSessions() {
-        val batteryIntent = applicationContext.registerReceiver(
-            null,
-            IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-        ) ?: return
+        val batteryIntent =
+            applicationContext.registerReceiver(
+                null,
+                IntentFilter(Intent.ACTION_BATTERY_CHANGED),
+            ) ?: return
 
         val level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
         val scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-        val batteryPercentage = if (level != -1 && scale != -1) {
-            (level * 100 / scale.toFloat()).toInt()
-        } else {
-            return
-        }
+        val batteryPercentage =
+            if (level != -1 && scale != -1) {
+                (level * 100 / scale.toFloat()).toInt()
+            } else {
+                return
+            }
 
         val status = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-            status == BatteryManager.BATTERY_STATUS_FULL
+        val isCharging =
+            status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                status == BatteryManager.BATTERY_STATUS_FULL
 
         val temperature = batteryIntent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10.0f
         val plugged = batteryIntent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
-        val powerSource = when (plugged) {
-            BatteryManager.BATTERY_PLUGGED_AC -> "AC Adapter"
-            BatteryManager.BATTERY_PLUGGED_USB -> "USB"
-            BatteryManager.BATTERY_PLUGGED_WIRELESS -> "Wireless"
-            else -> "Battery"
-        }
+        val powerSource =
+            when (plugged) {
+                BatteryManager.BATTERY_PLUGGED_AC -> "AC Adapter"
+                BatteryManager.BATTERY_PLUGGED_USB -> "USB"
+                BatteryManager.BATTERY_PLUGGED_WIRELESS -> "Wireless"
+                else -> "Battery"
+            }
 
         val currentSession = chargingSessionDao.getCurrentSession()
 
         if (isCharging && currentSession == null) {
             // Start new charging session
-            val newSession = ChargingSessionEntity(
-                id = 0, // Auto-generate
-                startTime = System.currentTimeMillis(),
-                endTime = null,
-                startLevel = batteryPercentage,
-                endLevel = null,
-                chargingSpeed = determineChargingSpeed(0), // Will be updated
-                powerSource = powerSource,
-                averageTemperature = temperature,
-                isComplete = false
-            )
+            val newSession =
+                ChargingSessionEntity(
+                    id = 0, // Auto-generate
+                    startTime = System.currentTimeMillis(),
+                    endTime = null,
+                    startLevel = batteryPercentage,
+                    endLevel = null,
+                    chargingSpeed = determineChargingSpeed(0), // Will be updated
+                    powerSource = powerSource,
+                    averageTemperature = temperature,
+                    isComplete = false,
+                )
             chargingSessionDao.insertSession(newSession)
         } else if (!isCharging && currentSession != null) {
             // End current charging session
-            val updatedSession = currentSession.copy(
-                endTime = System.currentTimeMillis(),
-                endLevel = batteryPercentage,
-                isComplete = true
-            )
+            val updatedSession =
+                currentSession.copy(
+                    endTime = System.currentTimeMillis(),
+                    endLevel = batteryPercentage,
+                    isComplete = true,
+                )
             chargingSessionDao.updateSession(updatedSession)
         } else if (isCharging && currentSession != null) {
             // Update ongoing session with latest temperature
             val duration = System.currentTimeMillis() - currentSession.startTime
             val sessionHours = duration / (1000 * 60 * 60f)
-            val avgTemp = if (sessionHours > 0) {
-                (currentSession.averageTemperature + temperature) / 2
-            } else {
-                temperature
-            }
+            val avgTemp =
+                if (sessionHours > 0) {
+                    (currentSession.averageTemperature + temperature) / 2
+                } else {
+                    temperature
+                }
 
-            val updatedSession = currentSession.copy(
-                averageTemperature = avgTemp
-            )
+            val updatedSession =
+                currentSession.copy(
+                    averageTemperature = avgTemp,
+                )
             chargingSessionDao.updateSession(updatedSession)
         }
     }
@@ -245,31 +263,34 @@ class BatteryDataWorker @AssistedInject constructor(
  * Worker for app usage data collection (requires usage access permission)
  */
 @HiltWorker
-class AppUsageWorker @AssistedInject constructor(
+class AppUsageWorker
+@AssistedInject
+constructor(
     @Assisted context: Context,
-    @Assisted workerParams: WorkerParameters
+    @Assisted workerParams: WorkerParameters,
 ) : CoroutineWorker(context, workerParams) {
-
     companion object {
         const val WORK_NAME = "app_usage_collection"
 
         fun enqueueWork(context: Context) {
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
-                .build()
+            val constraints =
+                Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+                    .build()
 
-            val workRequest = PeriodicWorkRequestBuilder<AppUsageWorker>(
-                repeatInterval = 1, // Every hour
-                repeatIntervalTimeUnit = TimeUnit.HOURS
-            )
-                .setConstraints(constraints)
-                .addTag(WORK_NAME)
-                .build()
+            val workRequest =
+                PeriodicWorkRequestBuilder<AppUsageWorker>(
+                    repeatInterval = 1, // Every hour
+                    repeatIntervalTimeUnit = TimeUnit.HOURS,
+                )
+                    .setConstraints(constraints)
+                    .addTag(WORK_NAME)
+                    .build()
 
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                 WORK_NAME,
                 ExistingPeriodicWorkPolicy.UPDATE,
-                workRequest
+                workRequest,
             )
         }
     }

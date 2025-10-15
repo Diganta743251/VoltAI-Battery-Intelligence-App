@@ -16,11 +16,12 @@ import javax.inject.Singleton
  * Manages premium features and billing for VoltAI Smart Battery Guardian
  */
 @Singleton
-class PremiumManager @Inject constructor(
+class PremiumManager
+@Inject
+constructor(
     private val context: Context,
-    private val scope: CoroutineScope = GlobalScope
+    private val scope: CoroutineScope = GlobalScope,
 ) {
-
     companion object {
         private const val PREFS_NAME = "premium_prefs"
         private const val KEY_PREMIUM_STATUS = "premium_status"
@@ -46,14 +47,14 @@ class PremiumManager @Inject constructor(
         FREE,
         PREMIUM_MONTHLY,
         PREMIUM_YEARLY,
-        PREMIUM_LIFETIME
+        PREMIUM_LIFETIME,
     }
 
     enum class BillingState {
         DISCONNECTED,
         CONNECTING,
         CONNECTED,
-        ERROR
+        ERROR,
     }
 
     data class PremiumFeature(
@@ -61,7 +62,7 @@ class PremiumManager @Inject constructor(
         val title: String,
         val description: String,
         val isPremium: Boolean,
-        val category: FeatureCategory
+        val category: FeatureCategory,
     )
 
     enum class FeatureCategory {
@@ -70,7 +71,7 @@ class PremiumManager @Inject constructor(
         CUSTOMIZATION,
         BACKUP,
         ALERTS,
-        WIDGETS
+        WIDGETS,
     }
 
     data class PricingPlan(
@@ -81,141 +82,146 @@ class PremiumManager @Inject constructor(
         val originalPrice: String? = null,
         val discount: Int? = null,
         val features: List<String>,
-        val isPopular: Boolean = false
+        val isPopular: Boolean = false,
     )
 
     // Premium Features Definition
-    val premiumFeatures = listOf(
-        PremiumFeature(
-            id = "advanced_analytics",
-            title = "Advanced Analytics",
-            description = "Detailed battery analytics with 6-month history and predictive modeling",
-            isPremium = true,
-            category = FeatureCategory.ANALYTICS
-        ),
-        PremiumFeature(
-            id = "thermal_management",
-            title = "Thermal Management",
-            description = "Real-time temperature monitoring and automatic cooling recommendations",
-            isPremium = true,
-            category = FeatureCategory.OPTIMIZATION
-        ),
-        PremiumFeature(
-            id = "custom_themes",
-            title = "Custom Themes",
-            description = "12+ premium themes and customizable color schemes",
-            isPremium = true,
-            category = FeatureCategory.CUSTOMIZATION
-        ),
-        PremiumFeature(
-            id = "cloud_backup",
-            title = "Cloud Backup",
-            description = "Automatic encrypted backup to Google Drive with sync across devices",
-            isPremium = true,
-            category = FeatureCategory.BACKUP
-        ),
-        PremiumFeature(
-            id = "smart_alerts",
-            title = "Smart Alerts",
-            description = "AI-powered battery alerts and health notifications",
-            isPremium = true,
-            category = FeatureCategory.ALERTS
-        ),
-        PremiumFeature(
-            id = "premium_widgets",
-            title = "Premium Widgets",
-            description = "Advanced home screen widgets with customizable layouts",
-            isPremium = true,
-            category = FeatureCategory.WIDGETS
-        ),
-        PremiumFeature(
-            id = "unlimited_history",
-            title = "Unlimited History",
-            description = "Store unlimited battery history (Free: 7 days)",
-            isPremium = true,
-            category = FeatureCategory.ANALYTICS
-        ),
-        PremiumFeature(
-            id = "export_data",
-            title = "Export Data",
-            description = "Export battery data to CSV/JSON formats",
-            isPremium = true,
-            category = FeatureCategory.ANALYTICS
-        ),
-        // Free Features
-        PremiumFeature(
-            id = "basic_monitoring",
-            title = "Basic Battery Monitoring",
-            description = "Real-time battery level, temperature, and charging status",
-            isPremium = false,
-            category = FeatureCategory.ANALYTICS
-        ),
-        PremiumFeature(
-            id = "basic_notifications",
-            title = "Basic Notifications",
-            description = "Low battery and charging complete notifications",
-            isPremium = false,
-            category = FeatureCategory.ALERTS
-        ),
-        PremiumFeature(
-            id = "home_cards",
-            title = "Customizable Cards",
-            description = "Drag-and-drop home screen cards with basic customization",
-            isPremium = false,
-            category = FeatureCategory.CUSTOMIZATION
+    val premiumFeatures =
+        listOf(
+            PremiumFeature(
+                id = "advanced_analytics",
+                title = "Advanced Analytics",
+                description = "Detailed battery analytics with 6-month history and predictive modeling",
+                isPremium = true,
+                category = FeatureCategory.ANALYTICS,
+            ),
+            PremiumFeature(
+                id = "thermal_management",
+                title = "Thermal Management",
+                description = "Real-time temperature monitoring and automatic cooling recommendations",
+                isPremium = true,
+                category = FeatureCategory.OPTIMIZATION,
+            ),
+            PremiumFeature(
+                id = "custom_themes",
+                title = "Custom Themes",
+                description = "12+ premium themes and customizable color schemes",
+                isPremium = true,
+                category = FeatureCategory.CUSTOMIZATION,
+            ),
+            PremiumFeature(
+                id = "cloud_backup",
+                title = "Cloud Backup",
+                description = "Automatic encrypted backup to Google Drive with sync across devices",
+                isPremium = true,
+                category = FeatureCategory.BACKUP,
+            ),
+            PremiumFeature(
+                id = "smart_alerts",
+                title = "Smart Alerts",
+                description = "AI-powered battery alerts and health notifications",
+                isPremium = true,
+                category = FeatureCategory.ALERTS,
+            ),
+            PremiumFeature(
+                id = "premium_widgets",
+                title = "Premium Widgets",
+                description = "Advanced home screen widgets with customizable layouts",
+                isPremium = true,
+                category = FeatureCategory.WIDGETS,
+            ),
+            PremiumFeature(
+                id = "unlimited_history",
+                title = "Unlimited History",
+                description = "Store unlimited battery history (Free: 7 days)",
+                isPremium = true,
+                category = FeatureCategory.ANALYTICS,
+            ),
+            PremiumFeature(
+                id = "export_data",
+                title = "Export Data",
+                description = "Export battery data to CSV/JSON formats",
+                isPremium = true,
+                category = FeatureCategory.ANALYTICS,
+            ),
+            // Free Features
+            PremiumFeature(
+                id = "basic_monitoring",
+                title = "Basic Battery Monitoring",
+                description = "Real-time battery level, temperature, and charging status",
+                isPremium = false,
+                category = FeatureCategory.ANALYTICS,
+            ),
+            PremiumFeature(
+                id = "basic_notifications",
+                title = "Basic Notifications",
+                description = "Low battery and charging complete notifications",
+                isPremium = false,
+                category = FeatureCategory.ALERTS,
+            ),
+            PremiumFeature(
+                id = "home_cards",
+                title = "Customizable Cards",
+                description = "Drag-and-drop home screen cards with basic customization",
+                isPremium = false,
+                category = FeatureCategory.CUSTOMIZATION,
+            ),
         )
-    )
 
     // Pricing Plans
-    val pricingPlans = listOf(
-        PricingPlan(
-            sku = "premium_monthly",
-            title = "Premium Monthly",
-            description = "Full access to all premium features",
-            price = "$2.99",
-            features = listOf(
-                "Advanced Analytics",
-                "Thermal Management",
-                "Cloud Backup",
-                "Smart Alerts",
-                "Premium Themes",
-                "Premium Widgets",
-                "Unlimited History",
-                "Data Export",
-                "Priority Support"
-            )
-        ),
-        PricingPlan(
-            sku = "premium_yearly",
-            title = "Premium Yearly",
-            description = "Best value - Save 50%",
-            price = "$17.99",
-            originalPrice = "$35.88",
-            discount = 50,
-            features = listOf(
-                "All Premium Monthly features",
-                "50% savings",
-                "Priority support",
-                "Early access to new features"
+    val pricingPlans =
+        listOf(
+            PricingPlan(
+                sku = "premium_monthly",
+                title = "Premium Monthly",
+                description = "Full access to all premium features",
+                price = "$2.99",
+                features =
+                listOf(
+                    "Advanced Analytics",
+                    "Thermal Management",
+                    "Cloud Backup",
+                    "Smart Alerts",
+                    "Premium Themes",
+                    "Premium Widgets",
+                    "Unlimited History",
+                    "Data Export",
+                    "Priority Support",
+                ),
             ),
-            isPopular = true
-        ),
-        PricingPlan(
-            sku = "premium_lifetime",
-            title = "Lifetime Premium",
-            description = "One-time purchase, lifetime access",
-            price = "$49.99",
-            originalPrice = "$99.99",
-            discount = 50,
-            features = listOf(
-                "All premium features forever",
-                "Future updates included",
-                "VIP support",
-                "Early beta access",
-                "One-time payment"
-            )
+            PricingPlan(
+                sku = "premium_yearly",
+                title = "Premium Yearly",
+                description = "Best value - Save 50%",
+                price = "$17.99",
+                originalPrice = "$35.88",
+                discount = 50,
+                features =
+                listOf(
+                    "All Premium Monthly features",
+                    "50% savings",
+                    "Priority support",
+                    "Early access to new features",
+                ),
+                isPopular = true,
+            ),
+            PricingPlan(
+                sku = "premium_lifetime",
+                title = "Lifetime Premium",
+                description = "One-time purchase, lifetime access",
+                price = "$49.99",
+                originalPrice = "$99.99",
+                discount = 50,
+                features =
+                listOf(
+                    "All premium features forever",
+                    "Future updates included",
+                    "VIP support",
+                    "Early beta access",
+                    "One-time payment",
+                ),
+            ),
         )
-    )
 
     init {
         // Initialize billing connection
@@ -229,27 +235,29 @@ class PremiumManager @Inject constructor(
         scope.launch {
             // Monitor billing state
             billingManager.billingState.collect { state ->
-                _billingState.value = when (state) {
-                    GooglePlayBillingManager.BillingConnectionState.DISCONNECTED -> BillingState.DISCONNECTED
-                    GooglePlayBillingManager.BillingConnectionState.CONNECTING -> BillingState.CONNECTING
-                    GooglePlayBillingManager.BillingConnectionState.CONNECTED -> {
-                        checkPremiumStatus()
-                        BillingState.CONNECTED
+                _billingState.value =
+                    when (state) {
+                        GooglePlayBillingManager.BillingConnectionState.DISCONNECTED -> BillingState.DISCONNECTED
+                        GooglePlayBillingManager.BillingConnectionState.CONNECTING -> BillingState.CONNECTING
+                        GooglePlayBillingManager.BillingConnectionState.CONNECTED -> {
+                            checkPremiumStatus()
+                            BillingState.CONNECTED
+                        }
+                        GooglePlayBillingManager.BillingConnectionState.ERROR -> BillingState.ERROR
                     }
-                    GooglePlayBillingManager.BillingConnectionState.ERROR -> BillingState.ERROR
-                }
             }
         }
     }
 
     private suspend fun checkPremiumStatus() {
         // Check actual purchases from Google Play Billing
-        val premiumStatus = when (billingManager.getPremiumStatus()) {
-            GooglePlayBillingManager.PremiumStatusType.MONTHLY -> PremiumStatus.PREMIUM_MONTHLY
-            GooglePlayBillingManager.PremiumStatusType.YEARLY -> PremiumStatus.PREMIUM_YEARLY
-            GooglePlayBillingManager.PremiumStatusType.LIFETIME -> PremiumStatus.PREMIUM_LIFETIME
-            GooglePlayBillingManager.PremiumStatusType.FREE -> PremiumStatus.FREE
-        }
+        val premiumStatus =
+            when (billingManager.getPremiumStatus()) {
+                GooglePlayBillingManager.PremiumStatusType.MONTHLY -> PremiumStatus.PREMIUM_MONTHLY
+                GooglePlayBillingManager.PremiumStatusType.YEARLY -> PremiumStatus.PREMIUM_YEARLY
+                GooglePlayBillingManager.PremiumStatusType.LIFETIME -> PremiumStatus.PREMIUM_LIFETIME
+                GooglePlayBillingManager.PremiumStatusType.FREE -> PremiumStatus.FREE
+            }
         _premiumStatus.value = premiumStatus
         updatePremiumState()
     }
@@ -296,7 +304,11 @@ class PremiumManager @Inject constructor(
     /**
      * Launch purchase flow
      */
-    fun purchasePremium(activity: Activity, sku: String, callback: (PurchaseResult) -> Unit) {
+    fun purchasePremium(
+        activity: Activity,
+        sku: String,
+        callback: (PurchaseResult) -> Unit,
+    ) {
         scope.launch {
             try {
                 // Check if it's a subscription or in-app purchase
@@ -339,14 +351,15 @@ class PremiumManager @Inject constructor(
         scope.launch {
             try {
                 val result = billingManager.restorePurchases()
-                val mappedResult = when (result) {
-                    GooglePlayBillingManager.RestoreResult.SUCCESS -> {
-                        checkPremiumStatus()
-                        RestoreResult.SUCCESS
+                val mappedResult =
+                    when (result) {
+                        GooglePlayBillingManager.RestoreResult.SUCCESS -> {
+                            checkPremiumStatus()
+                            RestoreResult.SUCCESS
+                        }
+                        GooglePlayBillingManager.RestoreResult.NO_PURCHASES -> RestoreResult.NO_PURCHASES
+                        GooglePlayBillingManager.RestoreResult.ERROR -> RestoreResult.ERROR
                     }
-                    GooglePlayBillingManager.RestoreResult.NO_PURCHASES -> RestoreResult.NO_PURCHASES
-                    GooglePlayBillingManager.RestoreResult.ERROR -> RestoreResult.ERROR
-                }
                 callback(mappedResult)
             } catch (e: Exception) {
                 callback(RestoreResult.ERROR)
@@ -372,7 +385,7 @@ class PremiumManager @Inject constructor(
             title = "Unlock ${feature?.title ?: "Premium Feature"}",
             description = feature?.description ?: "This feature requires premium access",
             benefits = getPremiumBenefits(),
-            recommendedPlan = pricingPlans.find { it.isPopular } ?: pricingPlans[1]
+            recommendedPlan = pricingPlans.find { it.isPopular } ?: pricingPlans[1],
         )
     }
 
@@ -386,7 +399,7 @@ class PremiumManager @Inject constructor(
             "Smart charging optimization",
             "Export data to CSV/JSON",
             "Priority customer support",
-            "Early access to new features"
+            "Early access to new features",
         )
     }
 
@@ -394,20 +407,20 @@ class PremiumManager @Inject constructor(
         SUCCESS,
         CANCELLED,
         ERROR,
-        ALREADY_OWNED
+        ALREADY_OWNED,
     }
 
     enum class RestoreResult {
         SUCCESS,
         NO_PURCHASES,
-        ERROR
+        ERROR,
     }
 
     data class PremiumPaywallData(
         val title: String,
         val description: String,
         val benefits: List<String>,
-        val recommendedPlan: PricingPlan
+        val recommendedPlan: PricingPlan,
     )
 
     /**
@@ -419,7 +432,7 @@ class PremiumManager @Inject constructor(
                 totalFeatures = premiumFeatures.size,
                 premiumFeaturesUsed = 6,
                 mostUsedFeature = "advanced_analytics",
-                usageScore = 85
+                usageScore = 85,
             )
         } else {
             null
@@ -430,7 +443,7 @@ class PremiumManager @Inject constructor(
         val totalFeatures: Int,
         val premiumFeaturesUsed: Int,
         val mostUsedFeature: String,
-        val usageScore: Int
+        val usageScore: Int,
     )
 
     /**
@@ -448,7 +461,7 @@ class PremiumManager @Inject constructor(
                 TrialStatus(
                     isTrialActive = false,
                     daysRemaining = TRIAL_PERIOD_DAYS,
-                    trialUsed = false
+                    trialUsed = false,
                 )
             }
             trialUsed && currentTime < trialEndTime -> {
@@ -458,7 +471,7 @@ class PremiumManager @Inject constructor(
                 TrialStatus(
                     isTrialActive = true,
                     daysRemaining = maxOf(0, daysRemaining),
-                    trialUsed = true
+                    trialUsed = true,
                 )
             }
             trialUsed && currentTime >= trialEndTime -> {
@@ -466,7 +479,7 @@ class PremiumManager @Inject constructor(
                 TrialStatus(
                     isTrialActive = false,
                     daysRemaining = 0,
-                    trialUsed = true
+                    trialUsed = true,
                 )
             }
             else -> {
@@ -474,7 +487,7 @@ class PremiumManager @Inject constructor(
                 TrialStatus(
                     isTrialActive = false,
                     daysRemaining = 0,
-                    trialUsed = false
+                    trialUsed = false,
                 )
             }
         }
@@ -483,7 +496,7 @@ class PremiumManager @Inject constructor(
     data class TrialStatus(
         val isTrialActive: Boolean,
         val daysRemaining: Int,
-        val trialUsed: Boolean
+        val trialUsed: Boolean,
     )
 
     /**
@@ -530,14 +543,14 @@ class PremiumManager @Inject constructor(
                 featureId = "advanced_analytics",
                 title = "Unlock Advanced Analytics",
                 description = "Get detailed battery insights and predictions",
-                urgency = SuggestionUrgency.HIGH
+                urgency = SuggestionUrgency.HIGH,
             ),
             UpgradeSuggestion(
                 featureId = "cloud_backup",
                 title = "Enable Cloud Backup",
                 description = "Keep your battery data safe and synced across devices",
-                urgency = SuggestionUrgency.MEDIUM
-            )
+                urgency = SuggestionUrgency.MEDIUM,
+            ),
         )
     }
 
@@ -545,11 +558,13 @@ class PremiumManager @Inject constructor(
         val featureId: String,
         val title: String,
         val description: String,
-        val urgency: SuggestionUrgency
+        val urgency: SuggestionUrgency,
     )
 
     enum class SuggestionUrgency {
-        LOW, MEDIUM, HIGH
+        LOW,
+        MEDIUM,
+        HIGH,
     }
 
     fun cleanup() {

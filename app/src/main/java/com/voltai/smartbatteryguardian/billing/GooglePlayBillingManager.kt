@@ -18,10 +18,11 @@ import kotlin.coroutines.resume
  * Handles subscriptions, one-time purchases, and billing state management
  */
 @Singleton
-class GooglePlayBillingManager @Inject constructor(
-    private val context: Context
+class GooglePlayBillingManager
+@Inject
+constructor(
+    private val context: Context,
 ) : PurchasesUpdatedListener, BillingClientStateListener {
-
     companion object {
         private const val TAG = "GooglePlayBillingManager"
 
@@ -36,10 +37,11 @@ class GooglePlayBillingManager @Inject constructor(
         const val PREMIUM_THEMES_SKU = "premium_themes"
     }
 
-    private val billingClient: BillingClient = BillingClient.newBuilder(context)
-        .setListener(this)
-        .enablePendingPurchases()
-        .build()
+    private val billingClient: BillingClient =
+        BillingClient.newBuilder(context)
+            .setListener(this)
+            .enablePendingPurchases()
+            .build()
 
     // Billing State Management
     private val _billingState = MutableStateFlow(BillingConnectionState.DISCONNECTED)
@@ -61,7 +63,7 @@ class GooglePlayBillingManager @Inject constructor(
         DISCONNECTED,
         CONNECTING,
         CONNECTED,
-        ERROR
+        ERROR,
     }
 
     enum class PurchaseResult {
@@ -69,7 +71,7 @@ class GooglePlayBillingManager @Inject constructor(
         USER_CANCELLED,
         ERROR,
         ALREADY_PURCHASED,
-        PENDING
+        PENDING,
     }
 
     init {
@@ -112,7 +114,10 @@ class GooglePlayBillingManager @Inject constructor(
     }
 
     // PurchasesUpdatedListener Implementation
-    override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
+    override fun onPurchasesUpdated(
+        billingResult: BillingResult,
+        purchases: MutableList<Purchase>?,
+    ) {
         when (billingResult.responseCode) {
             BillingResponseCode.OK -> {
                 purchases?.let { processPurchases(it) }
@@ -139,19 +144,20 @@ class GooglePlayBillingManager @Inject constructor(
      */
     private fun queryProducts() {
         // Query subscriptions
-        val subscriptionParams = QueryProductDetailsParams.newBuilder()
-            .setProductList(
-                listOf(
-                    QueryProductDetailsParams.Product.newBuilder()
-                        .setProductId(PREMIUM_MONTHLY_SKU)
-                        .setProductType(BillingClient.ProductType.SUBS)
-                        .build(),
-                    QueryProductDetailsParams.Product.newBuilder()
-                        .setProductId(PREMIUM_YEARLY_SKU)
-                        .setProductType(BillingClient.ProductType.SUBS)
-                        .build()
-                )
-            ).build()
+        val subscriptionParams =
+            QueryProductDetailsParams.newBuilder()
+                .setProductList(
+                    listOf(
+                        QueryProductDetailsParams.Product.newBuilder()
+                            .setProductId(PREMIUM_MONTHLY_SKU)
+                            .setProductType(BillingClient.ProductType.SUBS)
+                            .build(),
+                        QueryProductDetailsParams.Product.newBuilder()
+                            .setProductId(PREMIUM_YEARLY_SKU)
+                            .setProductType(BillingClient.ProductType.SUBS)
+                            .build(),
+                    ),
+                ).build()
 
         billingClient.queryProductDetailsAsync(subscriptionParams) { billingResult, productDetailsList ->
             if (billingResult.responseCode == BillingResponseCode.OK) {
@@ -161,27 +167,28 @@ class GooglePlayBillingManager @Inject constructor(
         }
 
         // Query in-app purchases
-        val inAppParams = QueryProductDetailsParams.newBuilder()
-            .setProductList(
-                listOf(
-                    QueryProductDetailsParams.Product.newBuilder()
-                        .setProductId(PREMIUM_LIFETIME_SKU)
-                        .setProductType(BillingClient.ProductType.INAPP)
-                        .build(),
-                    QueryProductDetailsParams.Product.newBuilder()
-                        .setProductId(ADVANCED_ANALYTICS_SKU)
-                        .setProductType(BillingClient.ProductType.INAPP)
-                        .build(),
-                    QueryProductDetailsParams.Product.newBuilder()
-                        .setProductId(CLOUD_BACKUP_SKU)
-                        .setProductType(BillingClient.ProductType.INAPP)
-                        .build(),
-                    QueryProductDetailsParams.Product.newBuilder()
-                        .setProductId(PREMIUM_THEMES_SKU)
-                        .setProductType(BillingClient.ProductType.INAPP)
-                        .build()
-                )
-            ).build()
+        val inAppParams =
+            QueryProductDetailsParams.newBuilder()
+                .setProductList(
+                    listOf(
+                        QueryProductDetailsParams.Product.newBuilder()
+                            .setProductId(PREMIUM_LIFETIME_SKU)
+                            .setProductType(BillingClient.ProductType.INAPP)
+                            .build(),
+                        QueryProductDetailsParams.Product.newBuilder()
+                            .setProductId(ADVANCED_ANALYTICS_SKU)
+                            .setProductType(BillingClient.ProductType.INAPP)
+                            .build(),
+                        QueryProductDetailsParams.Product.newBuilder()
+                            .setProductId(CLOUD_BACKUP_SKU)
+                            .setProductType(BillingClient.ProductType.INAPP)
+                            .build(),
+                        QueryProductDetailsParams.Product.newBuilder()
+                            .setProductId(PREMIUM_THEMES_SKU)
+                            .setProductType(BillingClient.ProductType.INAPP)
+                            .build(),
+                    ),
+                ).build()
 
         billingClient.queryProductDetailsAsync(inAppParams) { billingResult, productDetailsList ->
             if (billingResult.responseCode == BillingResponseCode.OK) {
@@ -199,7 +206,7 @@ class GooglePlayBillingManager @Inject constructor(
         billingClient.queryPurchasesAsync(
             QueryPurchasesParams.newBuilder()
                 .setProductType(BillingClient.ProductType.SUBS)
-                .build()
+                .build(),
         ) { billingResult, purchasesList ->
             if (billingResult.responseCode == BillingResponseCode.OK) {
                 processPurchases(purchasesList)
@@ -210,7 +217,7 @@ class GooglePlayBillingManager @Inject constructor(
         billingClient.queryPurchasesAsync(
             QueryPurchasesParams.newBuilder()
                 .setProductType(BillingClient.ProductType.INAPP)
-                .build()
+                .build(),
         ) { billingResult, purchasesList ->
             if (billingResult.responseCode == BillingResponseCode.OK) {
                 processPurchases(purchasesList)
@@ -245,9 +252,10 @@ class GooglePlayBillingManager @Inject constructor(
      * Acknowledge a purchase
      */
     private fun acknowledgePurchase(purchase: Purchase) {
-        val params = AcknowledgePurchaseParams.newBuilder()
-            .setPurchaseToken(purchase.purchaseToken)
-            .build()
+        val params =
+            AcknowledgePurchaseParams.newBuilder()
+                .setPurchaseToken(purchase.purchaseToken)
+                .build()
 
         billingClient.acknowledgePurchase(params) { billingResult ->
             if (billingResult.responseCode == BillingResponseCode.OK) {
@@ -264,7 +272,7 @@ class GooglePlayBillingManager @Inject constructor(
     fun purchaseSubscription(
         activity: Activity,
         productDetails: ProductDetails,
-        callback: (PurchaseResult) -> Unit
+        callback: (PurchaseResult) -> Unit,
     ) {
         purchaseCallback = callback
 
@@ -274,15 +282,16 @@ class GooglePlayBillingManager @Inject constructor(
             return
         }
 
-        val billingFlowParams = BillingFlowParams.newBuilder()
-            .setProductDetailsParamsList(
-                listOf(
-                    BillingFlowParams.ProductDetailsParams.newBuilder()
-                        .setProductDetails(productDetails)
-                        .setOfferToken(offerDetails.offerToken)
-                        .build()
-                )
-            ).build()
+        val billingFlowParams =
+            BillingFlowParams.newBuilder()
+                .setProductDetailsParamsList(
+                    listOf(
+                        BillingFlowParams.ProductDetailsParams.newBuilder()
+                            .setProductDetails(productDetails)
+                            .setOfferToken(offerDetails.offerToken)
+                            .build(),
+                    ),
+                ).build()
 
         billingClient.launchBillingFlow(activity, billingFlowParams)
     }
@@ -293,18 +302,19 @@ class GooglePlayBillingManager @Inject constructor(
     fun purchaseInApp(
         activity: Activity,
         productDetails: ProductDetails,
-        callback: (PurchaseResult) -> Unit
+        callback: (PurchaseResult) -> Unit,
     ) {
         purchaseCallback = callback
 
-        val billingFlowParams = BillingFlowParams.newBuilder()
-            .setProductDetailsParamsList(
-                listOf(
-                    BillingFlowParams.ProductDetailsParams.newBuilder()
-                        .setProductDetails(productDetails)
-                        .build()
-                )
-            ).build()
+        val billingFlowParams =
+            BillingFlowParams.newBuilder()
+                .setProductDetailsParamsList(
+                    listOf(
+                        BillingFlowParams.ProductDetailsParams.newBuilder()
+                            .setProductDetails(productDetails)
+                            .build(),
+                    ),
+                ).build()
 
         billingClient.launchBillingFlow(activity, billingFlowParams)
     }
@@ -366,62 +376,64 @@ class GooglePlayBillingManager @Inject constructor(
     /**
      * Restore purchases (re-query from Google Play)
      */
-    suspend fun restorePurchases(): RestoreResult = suspendCancellableCoroutine { continuation ->
-        if (!billingClient.isReady) {
-            continuation.resume(RestoreResult.ERROR)
-            return@suspendCancellableCoroutine
-        }
-
-        var subscriptionsProcessed = false
-        var inAppProcessed = false
-        val restoredProducts = mutableSetOf<String>()
-
-        fun checkCompletion() {
-            if (subscriptionsProcessed && inAppProcessed) {
-                val result = if (restoredProducts.isNotEmpty()) {
-                    _purchasedProducts.value = restoredProducts
-                    RestoreResult.SUCCESS
-                } else {
-                    RestoreResult.NO_PURCHASES
-                }
-                continuation.resume(result)
+    suspend fun restorePurchases(): RestoreResult =
+        suspendCancellableCoroutine { continuation ->
+            if (!billingClient.isReady) {
+                continuation.resume(RestoreResult.ERROR)
+                return@suspendCancellableCoroutine
             }
-        }
 
-        // Restore subscriptions
-        billingClient.queryPurchasesAsync(
-            QueryPurchasesParams.newBuilder()
-                .setProductType(BillingClient.ProductType.SUBS)
-                .build()
-        ) { billingResult, purchasesList ->
-            if (billingResult.responseCode == BillingResponseCode.OK) {
-                purchasesList.forEach { purchase ->
-                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-                        restoredProducts.addAll(purchase.products)
+            var subscriptionsProcessed = false
+            var inAppProcessed = false
+            val restoredProducts = mutableSetOf<String>()
+
+            fun checkCompletion() {
+                if (subscriptionsProcessed && inAppProcessed) {
+                    val result =
+                        if (restoredProducts.isNotEmpty()) {
+                            _purchasedProducts.value = restoredProducts
+                            RestoreResult.SUCCESS
+                        } else {
+                            RestoreResult.NO_PURCHASES
+                        }
+                    continuation.resume(result)
+                }
+            }
+
+            // Restore subscriptions
+            billingClient.queryPurchasesAsync(
+                QueryPurchasesParams.newBuilder()
+                    .setProductType(BillingClient.ProductType.SUBS)
+                    .build(),
+            ) { billingResult, purchasesList ->
+                if (billingResult.responseCode == BillingResponseCode.OK) {
+                    purchasesList.forEach { purchase ->
+                        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                            restoredProducts.addAll(purchase.products)
+                        }
                     }
                 }
+                subscriptionsProcessed = true
+                checkCompletion()
             }
-            subscriptionsProcessed = true
-            checkCompletion()
-        }
 
-        // Restore in-app purchases
-        billingClient.queryPurchasesAsync(
-            QueryPurchasesParams.newBuilder()
-                .setProductType(BillingClient.ProductType.INAPP)
-                .build()
-        ) { billingResult, purchasesList ->
-            if (billingResult.responseCode == BillingResponseCode.OK) {
-                purchasesList.forEach { purchase ->
-                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-                        restoredProducts.addAll(purchase.products)
+            // Restore in-app purchases
+            billingClient.queryPurchasesAsync(
+                QueryPurchasesParams.newBuilder()
+                    .setProductType(BillingClient.ProductType.INAPP)
+                    .build(),
+            ) { billingResult, purchasesList ->
+                if (billingResult.responseCode == BillingResponseCode.OK) {
+                    purchasesList.forEach { purchase ->
+                        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                            restoredProducts.addAll(purchase.products)
+                        }
                     }
                 }
+                inAppProcessed = true
+                checkCompletion()
             }
-            inAppProcessed = true
-            checkCompletion()
         }
-    }
 
     /**
      * Cleanup billing client
@@ -432,10 +444,15 @@ class GooglePlayBillingManager @Inject constructor(
     }
 
     enum class PremiumStatusType {
-        FREE, MONTHLY, YEARLY, LIFETIME
+        FREE,
+        MONTHLY,
+        YEARLY,
+        LIFETIME,
     }
 
     enum class RestoreResult {
-        SUCCESS, NO_PURCHASES, ERROR
+        SUCCESS,
+        NO_PURCHASES,
+        ERROR,
     }
 }

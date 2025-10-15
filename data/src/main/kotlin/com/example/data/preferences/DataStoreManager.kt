@@ -41,6 +41,12 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
         val CUSTOM_API_URL = stringPreferencesKey("custom_api_url")
         val AI_RECOMMENDATIONS_ENABLED = booleanPreferencesKey("ai_recommendations_enabled")
         val AI_ANALYSIS_FREQUENCY = stringPreferencesKey("ai_analysis_frequency")
+
+        // Motion/Animation
+        val REDUCE_MOTION = booleanPreferencesKey("reduce_motion")
+
+        // UI Theme
+        val SELECTED_THEME = stringPreferencesKey("selected_theme")
     }
 
     val powerProfile: Flow<PowerProfile> = context.dataStore.data
@@ -61,6 +67,14 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
                 it[PreferencesKeys.OPTIMAL_CHARGING_LIMIT_PERCENTAGE] ?: 80
             )
         }
+
+    // Reduce Motion preference flow
+    val reduceMotionFlow: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.REDUCE_MOTION] ?: false }
+
+    // Selected Theme preference flow (supports premium themes like "e_paper")
+    val selectedThemeFlow: Flow<String> = context.dataStore.data
+        .map { it[PreferencesKeys.SELECTED_THEME] ?: "electric_blue" }
 
     suspend fun saveOptimalChargingSettings(enabled: Boolean, percentage: Int) {
         context.dataStore.edit { settings ->
@@ -172,6 +186,32 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
     suspend fun getAIAnalysisFrequency(): String {
         return context.dataStore.data.map { preferences ->
             preferences[PreferencesKeys.AI_ANALYSIS_FREQUENCY] ?: "daily"
+        }.first()
+    }
+
+    // Reduce Motion setters/getters
+    suspend fun setReduceMotion(enabled: Boolean) {
+        context.dataStore.edit { settings ->
+            settings[PreferencesKeys.REDUCE_MOTION] = enabled
+        }
+    }
+
+    suspend fun isReduceMotion(): Boolean {
+        return context.dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.REDUCE_MOTION] ?: false
+        }.first()
+    }
+
+    // Theme setters/getters
+    suspend fun setSelectedTheme(themeId: String) {
+        context.dataStore.edit { settings ->
+            settings[PreferencesKeys.SELECTED_THEME] = themeId
+        }
+    }
+
+    suspend fun getSelectedTheme(): String {
+        return context.dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.SELECTED_THEME] ?: "electric_blue"
         }.first()
     }
 }

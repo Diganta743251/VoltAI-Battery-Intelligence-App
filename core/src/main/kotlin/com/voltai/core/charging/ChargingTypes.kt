@@ -46,10 +46,12 @@ data class ChargingWindow(
 )
 
 data class ChargingTimeWindow(
+    val id: String,
     val startTime: LocalTime,
     val endTime: LocalTime,
     val priority: ChargingPriority,
-    val enabled: Boolean = true
+    val enabled: Boolean = true,
+    val name: String = ""
 )
 
 data class ChargingUserPreferences(
@@ -62,7 +64,10 @@ data class ChargingUserPreferences(
     val enableImmediateCharging: Boolean = true,
     val chargingTimeWindows: List<ChargingTimeWindow> = emptyList(),
     val enableThermalProtection: Boolean = true,
-    val enableHealthOptimization: Boolean = true
+    val enableHealthOptimization: Boolean = true,
+    val adaptiveChargingEnabled: Boolean = true,
+    val overnightChargingLimit: Boolean = true,
+    val weekendChargingSchedule: Boolean = false
 )
 
 data class ChargingRecommendation(

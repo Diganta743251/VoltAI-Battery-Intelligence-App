@@ -103,9 +103,10 @@ class BatteryDataCollector @Inject constructor(
         val temperature = batteryStatus?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) ?: 0
         val voltage = batteryStatus?.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0) ?: 0
         
-        // Get current using BatteryManager (API 21+)
+        // Get current using BatteryManager (API 21+) in mA with sentinel guard
         val currentNow = try {
-            batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW) / 1000f // Convert to mA
+            val ua = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
+            if (ua == Int.MIN_VALUE) 0f else ua / 1000f
         } catch (e: Exception) {
             0f
         }

@@ -43,32 +43,33 @@ fun BatteryStatsScreen() {
     val optimizationTips = remember { analyticsEngine.getOptimizationRecommendations() }
 
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         // Header
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = Icons.Default.DateRange,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
                     text = "Battery Analytics",
                     fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = "Advanced battery insights & statistics",
                     fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -82,9 +83,9 @@ fun BatteryStatsScreen() {
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
                     Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
-            }
+            },
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
@@ -94,31 +95,41 @@ fun BatteryStatsScreen() {
                         Text(
                             text = title,
                             fontSize = 14.sp,
-                            fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium
+                            fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
                         )
-                    }
+                    },
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Tab Content with Animation
+        // Tab Content with Battery Guru style Animation
         AnimatedContent(
             targetState = selectedTab,
             transitionSpec = {
                 slideInHorizontally(
                     initialOffsetX = { if (targetState > initialState) it else -it },
-                    animationSpec = tween(400)
-                ) + fadeIn(animationSpec = tween(200, delayMillis = 100)) with
-                    slideOutHorizontally(
+                    animationSpec = tween(durationMillis = 300, easing = EaseInOutCubic),
+                ) +
+                    fadeIn(
+                        animationSpec = tween(durationMillis = 300, easing = EaseInOutCubic),
+                    ) with slideOutHorizontally(
                         targetOffsetX = { if (targetState > initialState) -it else it },
-                        animationSpec = tween(200)
-                    ) + fadeOut(animationSpec = tween(150))
-            }
+                        animationSpec = tween(durationMillis = 300, easing = EaseInOutCubic),
+                    ) +
+                    fadeOut(
+                        animationSpec = tween(durationMillis = 200, easing = EaseInOutCubic),
+                    )
+            },
         ) { tab ->
             when (tab) {
-                0 -> OverviewTab(dailyStats, weeklyAnalysis.first(), chargingAnalysis)
+                0 ->
+                    OverviewTab(
+                        dailyStats,
+                        weeklyAnalysis.firstOrNull() ?: defaultWeeklyAnalysis(),
+                        chargingAnalysis,
+                    )
                 1 -> AnalyticsTab(dailyStats, weeklyAnalysis)
                 2 -> InsightsTab(insights)
                 3 -> ConsumptionTab(powerConsumption, optimizationTips)
@@ -131,47 +142,50 @@ fun BatteryStatsScreen() {
 fun OverviewTab(
     dailyStats: List<DailyBatteryStats>,
     weeklyAnalysis: com.voltai.smartbatteryguardian.analytics.WeeklyAnalysis,
-    chargingAnalysis: com.voltai.smartbatteryguardian.analytics.ChargingAnalysis
+    chargingAnalysis: com.voltai.smartbatteryguardian.analytics.ChargingAnalysis,
 ) {
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
     ) {
         // Quick Stats Cards with Staggered Animation
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AnimatedVisibility(
                 visible = true,
-                enter = slideInVertically(
+                enter =
+                slideInVertically(
                     initialOffsetY = { it },
-                    animationSpec = tween(400)
-                ) + fadeIn(animationSpec = tween(300))
+                    animationSpec = tween(durationMillis = 800, easing = EaseOutCubic),
+                ) + fadeIn(animationSpec = tween(durationMillis = 800, easing = EaseOutCubic)),
             ) {
                 QuickStatCard(
                     title = "Avg Screen Time",
                     value = "${weeklyAnalysis.averageScreenTime / 60}h ${weeklyAnalysis.averageScreenTime % 60}m",
                     icon = "📱",
-                    color = Color(0xFF2196F3),
-                    modifier = Modifier.weight(1f)
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.weight(1f),
                 )
             }
 
             AnimatedVisibility(
                 visible = true,
-                enter = slideInVertically(
+                enter =
+                slideInVertically(
                     initialOffsetY = { it },
-                    animationSpec = tween(400)
-                ) + fadeIn(animationSpec = tween(300, delayMillis = 100))
+                    animationSpec = tween(400),
+                ) + fadeIn(animationSpec = tween(300, delayMillis = 100)),
             ) {
                 QuickStatCard(
                     title = "Charging Cycles",
                     value = String.format("%.1f", weeklyAnalysis.averageChargingCycles),
                     icon = "🔋",
-                    color = Color(0xFF4CAF50),
-                    modifier = Modifier.weight(1f)
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -180,40 +194,42 @@ fun OverviewTab(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AnimatedVisibility(
                 visible = true,
-                enter = slideInVertically(
+                enter =
+                slideInVertically(
                     initialOffsetY = { it },
-                    animationSpec = tween(400)
-                ) + fadeIn(animationSpec = tween(300, delayMillis = 200))
+                    animationSpec = tween(400),
+                ) + fadeIn(animationSpec = tween(300, delayMillis = 200)),
             ) {
                 QuickStatCard(
                     title = "Efficiency Trend",
                     value = "${if (weeklyAnalysis.powerEfficiencyTrend > 0) "+" else ""}${String.format(
                         "%.1f",
-                        weeklyAnalysis.powerEfficiencyTrend * 100
+                        weeklyAnalysis.powerEfficiencyTrend * 100,
                     )}%",
                     icon = if (weeklyAnalysis.powerEfficiencyTrend > 0) "📈" else "📉",
-                    color = if (weeklyAnalysis.powerEfficiencyTrend > 0) Color(0xFF4CAF50) else Color(0xFFFF5722),
-                    modifier = Modifier.weight(1f)
+                    color = if (weeklyAnalysis.powerEfficiencyTrend > 0) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error,
+                    modifier = Modifier.weight(1f),
                 )
             }
 
             AnimatedVisibility(
                 visible = true,
-                enter = slideInVertically(
+                enter =
+                slideInVertically(
                     initialOffsetY = { it },
-                    animationSpec = tween(400)
-                ) + fadeIn(animationSpec = tween(300, delayMillis = 300))
+                    animationSpec = tween(400),
+                ) + fadeIn(animationSpec = tween(300, delayMillis = 300)),
             ) {
                 QuickStatCard(
                     title = "Avg Temperature",
                     value = "${String.format("%.1f", dailyStats.map { it.averageTemperature }.average())}°C",
                     icon = "🌡️",
-                    color = Color(0xFFFF9800),
-                    modifier = Modifier.weight(1f)
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -223,15 +239,15 @@ fun OverviewTab(
         // Daily Usage Chart Placeholder
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp)
+            shape = RoundedCornerShape(20.dp),
         ) {
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(20.dp),
             ) {
                 Text(
                     text = "📊 Daily Battery Usage Trend",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -250,39 +266,40 @@ fun OverviewTab(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-            )
+            colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
+            ),
         ) {
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(20.dp),
             ) {
                 Text(
                     text = "⚡ Charging Pattern Analysis",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     ChargingMetric(
                         label = "Avg Speed",
                         value = "${chargingAnalysis.averageChargingSpeed}W",
-                        icon = "⚡"
+                        icon = "⚡",
                     )
                     ChargingMetric(
                         label = "Efficiency",
                         value = "${chargingAnalysis.chargingEfficiency.toInt()}%",
-                        icon = "✅"
+                        icon = "✅",
                     )
                     ChargingMetric(
                         label = "Heat Risk",
                         value = getRiskLabel(chargingAnalysis.heatGenerationRisk),
-                        icon = "🌡️"
+                        icon = "🌡️",
                     )
                 }
 
@@ -293,7 +310,7 @@ fun OverviewTab(
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
@@ -303,26 +320,27 @@ fun OverviewTab(
 @Composable
 fun AnalyticsTab(
     dailyStats: List<DailyBatteryStats>,
-    weeklyAnalysis: List<com.voltai.smartbatteryguardian.analytics.WeeklyAnalysis>
+    weeklyAnalysis: List<com.voltai.smartbatteryguardian.analytics.WeeklyAnalysis>,
 ) {
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
     ) {
         // Weekly Comparison
         weeklyAnalysis.forEach { week ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(16.dp),
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
                 ) {
                     Text(
                         text = "📅 ${week.week} Analysis",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -330,7 +348,7 @@ fun AnalyticsTab(
                     Text(
                         text = "Top Power Consumers:",
                         fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -338,27 +356,28 @@ fun AnalyticsTab(
                     week.topPowerConsumers.take(3).forEach { (component, percentage) ->
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
                             Text(
                                 text = component,
                                 fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                             Text(
                                 text = "${percentage.toInt()}%",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.colorScheme.primary,
                             )
                         }
                         LinearProgressIndicator(
-                            progress = percentage / 50f, // Normalized to 50% max for display
-                            modifier = Modifier
+                            progress = (percentage / 50f).coerceIn(0f, 1f), // Normalized & clamped
+                            modifier =
+                            Modifier
                                 .fillMaxWidth()
                                 .height(4.dp),
                             color = MaterialTheme.colorScheme.primary,
-                            trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                            trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                     }
@@ -385,25 +404,26 @@ fun InsightsTab(insights: List<BatteryInsight>) {
 @Composable
 fun ConsumptionTab(
     powerConsumption: List<PowerConsumption>,
-    optimizationTips: List<OptimizationTip>
+    optimizationTips: List<OptimizationTip>,
 ) {
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
     ) {
         // Power Consumption Breakdown
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp)
+            shape = RoundedCornerShape(20.dp),
         ) {
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(20.dp),
             ) {
                 Text(
                     text = "🔋 Power Consumption Breakdown",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -421,17 +441,18 @@ fun ConsumptionTab(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
-            )
+            colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+            ),
         ) {
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(20.dp),
             ) {
                 Text(
                     text = "💡 Optimization Recommendations",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -451,20 +472,22 @@ fun QuickStatCard(
     value: String,
     icon: String,
     color: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = color.copy(alpha = 0.1f)
-        )
+        colors =
+        CardDefaults.cardColors(
+            containerColor = color.copy(alpha = 0.1f),
+        ),
     ) {
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(text = icon, fontSize = 24.sp)
             Spacer(modifier = Modifier.height(8.dp))
@@ -473,13 +496,13 @@ fun QuickStatCard(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = color,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
             Text(
                 text = title,
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -490,18 +513,18 @@ fun DailyUsageItem(stat: DailyBatteryStats) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
             Text(
                 text = stat.date,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
             Text(
                 text = "${stat.screenOnTime / 60}h ${stat.screenOnTime % 60}m screen",
                 fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
@@ -510,24 +533,25 @@ fun DailyUsageItem(stat: DailyBatteryStats) {
                 text = "${stat.totalUsage.toInt()}%",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = getUsageColor(stat.totalUsage)
+                color = getUsageColor(stat.totalUsage),
             )
             Text(
                 text = "${stat.efficiencyScore.toInt()}% efficient",
                 fontSize = 10.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
 
     LinearProgressIndicator(
-        progress = stat.totalUsage / 100f,
-        modifier = Modifier
+        progress = (stat.totalUsage / 100f).coerceIn(0f, 1f),
+        modifier =
+        Modifier
             .fillMaxWidth()
             .height(6.dp)
             .clip(RoundedCornerShape(3.dp)),
         color = getUsageColor(stat.totalUsage),
-        trackColor = getUsageColor(stat.totalUsage).copy(alpha = 0.2f)
+        trackColor = getUsageColor(stat.totalUsage).copy(alpha = 0.2f),
     )
 }
 
@@ -535,10 +559,10 @@ fun DailyUsageItem(stat: DailyBatteryStats) {
 fun ChargingMetric(
     label: String,
     value: String,
-    icon: String
+    icon: String,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(text = icon, fontSize = 20.sp)
         Spacer(modifier = Modifier.height(4.dp))
@@ -546,12 +570,12 @@ fun ChargingMetric(
             text = value,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         Text(
             text = label,
             fontSize = 10.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -561,43 +585,44 @@ fun InsightCard(insight: BatteryInsight) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = getSeverityColor(insight.severity).copy(alpha = 0.1f)
-        )
+        colors =
+        CardDefaults.cardColors(
+            containerColor = getSeverityColor(insight.severity).copy(alpha = 0.1f),
+        ),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top
+                verticalAlignment = Alignment.Top,
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = insight.title,
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = insight.description,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface,
-                        lineHeight = 20.sp
+                        lineHeight = 20.sp,
                     )
                 }
 
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = getSeverityColor(insight.severity)
+                    color = getSeverityColor(insight.severity),
                 ) {
                     Text(
                         text = "${(insight.confidence * 100).toInt()}%",
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     )
                 }
             }
@@ -606,16 +631,17 @@ fun InsightCard(insight: BatteryInsight) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Card(
                     shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                    )
+                    colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                    ),
                 ) {
                     Text(
                         text = "💡 $improvement",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(12.dp),
-                        lineHeight = 16.sp
+                        lineHeight = 16.sp,
                     )
                 }
             }
@@ -628,18 +654,18 @@ fun PowerConsumptionItem(consumption: PowerConsumption) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = consumption.component,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
             Text(
                 text = consumption.description,
                 fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
@@ -647,17 +673,18 @@ fun PowerConsumptionItem(consumption: PowerConsumption) {
             text = "${consumption.percentage.toInt()}%",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
     }
 
     LinearProgressIndicator(
-        progress = consumption.percentage / 50f, // Normalized for display
-        modifier = Modifier
+        progress = (consumption.percentage / 50f).coerceIn(0f, 1f), // Normalized & clamped
+        modifier =
+        Modifier
             .fillMaxWidth()
             .height(4.dp),
         color = MaterialTheme.colorScheme.primary,
-        trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+        trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
     )
 }
 
@@ -666,77 +693,82 @@ fun OptimizationTipItem(tip: OptimizationTip) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = getPriorityColor(tip.priority).copy(alpha = 0.1f)
-        )
+        colors =
+        CardDefaults.cardColors(
+            containerColor = getPriorityColor(tip.priority).copy(alpha = 0.1f),
+        ),
     ) {
         Row(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = tip.title,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     text = tip.description,
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = 16.sp
+                    lineHeight = 16.sp,
                 )
             }
 
             Column(horizontalAlignment = Alignment.End) {
                 Surface(
                     shape = RoundedCornerShape(6.dp),
-                    color = getPriorityColor(tip.priority)
+                    color = getPriorityColor(tip.priority),
                 ) {
                     Text(
                         text = tip.estimatedSavings,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     )
                 }
                 Text(
                     text = "${tip.priority} Priority",
                     fontSize = 10.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
     }
 }
 
+@Composable
 private fun getUsageColor(usage: Float): Color {
     return when {
-        usage <= 30 -> Color(0xFF4CAF50)
-        usage <= 60 -> Color(0xFF8BC34A)
-        usage <= 80 -> Color(0xFFFF9800)
-        else -> Color(0xFFF44336)
+        usage <= 30 -> MaterialTheme.colorScheme.tertiary
+        usage <= 60 -> MaterialTheme.colorScheme.tertiary
+        usage <= 80 -> MaterialTheme.colorScheme.secondary
+        else -> MaterialTheme.colorScheme.error
     }
 }
 
+@Composable
 private fun getSeverityColor(severity: InsightSeverity): Color {
     return when (severity) {
-        InsightSeverity.INFO -> Color(0xFF2196F3)
-        InsightSeverity.WARNING -> Color(0xFFFF9800)
-        InsightSeverity.CRITICAL -> Color(0xFFF44336)
+        InsightSeverity.INFO -> MaterialTheme.colorScheme.primary
+        InsightSeverity.WARNING -> MaterialTheme.colorScheme.secondary
+        InsightSeverity.CRITICAL -> MaterialTheme.colorScheme.error
     }
 }
 
+@Composable
 private fun getPriorityColor(priority: String): Color {
     return when (priority.lowercase()) {
-        "high" -> Color(0xFFF44336)
-        "medium" -> Color(0xFFFF9800)
-        "low" -> Color(0xFF4CAF50)
-        else -> Color(0xFF757575)
+        "high" -> MaterialTheme.colorScheme.error
+        "medium" -> MaterialTheme.colorScheme.secondary
+        "low" -> MaterialTheme.colorScheme.tertiary
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
     }
 }
 
@@ -746,4 +778,15 @@ private fun getRiskLabel(risk: Float): String {
         risk <= 0.6 -> "Medium"
         else -> "High"
     }
+}
+
+private fun defaultWeeklyAnalysis(): com.voltai.smartbatteryguardian.analytics.WeeklyAnalysis {
+    return com.voltai.smartbatteryguardian.analytics.WeeklyAnalysis(
+        week = "This Week",
+        averageScreenTime = 0,
+        averageChargingCycles = 0f,
+        powerEfficiencyTrend = 0f,
+        healthTrend = 0f,
+        topPowerConsumers = emptyList(),
+    )
 }

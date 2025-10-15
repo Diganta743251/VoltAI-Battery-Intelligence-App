@@ -19,11 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.delay
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.voltai.smartbatteryguardian.viewmodels.RealTimeMonitoringViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.*
-import kotlin.random.Random
 
 // Data Models for Real-time Monitoring
 data class RealTimeMetrics(
@@ -35,7 +35,7 @@ data class RealTimeMetrics(
     val isCharging: Boolean,
     val chargingSpeed: String,
     val timeRemaining: String,
-    val timestamp: Long
+    val timestamp: Long,
 )
 
 data class AlertData(
@@ -46,20 +46,26 @@ data class AlertData(
     val message: String,
     val timestamp: Long,
     val isActive: Boolean,
-    val icon: String
+    val icon: String,
 )
 
 enum class AlertType {
-    TEMPERATURE, VOLTAGE, CHARGING, HEALTH, PERFORMANCE
+    TEMPERATURE,
+    VOLTAGE,
+    CHARGING,
+    HEALTH,
+    PERFORMANCE,
 }
 
 enum class AlertSeverity {
-    INFO, WARNING, CRITICAL
+    INFO,
+    WARNING,
+    CRITICAL,
 }
 
 data class GraphDataPoint(
     val timestamp: Long,
-    val value: Float
+    val value: Float,
 )
 
 data class MonitoringConfig(
@@ -69,84 +75,84 @@ data class MonitoringConfig(
     val enableChargingAlerts: Boolean = true,
     val temperatureThreshold: Float = 40f,
     val voltageThreshold: Float = 4.3f,
-    val soundEnabled: Boolean = true
+    val soundEnabled: Boolean = true,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RealTimeMonitoringScreen() {
+fun RealTimeMonitoringScreen(
+    viewModel: RealTimeMonitoringViewModel = hiltViewModel(),
+) {
     val context = LocalContext.current
+    val batteryData by com.voltai.smartbatteryguardian.rememberBatteryData(context)
 
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("📊 Dashboard", "📈 Graphs", "🚨 Alerts", "⚙️ Config")
 
-    // Real-time data state
-    var currentMetrics by remember {
-        mutableStateOf(generateSampleMetrics())
+    // Convert real battery data to RealTimeMetrics format
+    val currentMetrics by remember(batteryData) {
+        derivedStateOf {
+            RealTimeMetrics(
+                batteryLevel = batteryData.batteryLevel,
+                voltage = batteryData.voltage.toFloat(),
+                temperature = batteryData.temperature,
+                current = batteryData.current,
+                power = batteryData.powerConsumption.toFloat(),
+                isCharging = batteryData.isCharging,
+                chargingSpeed = batteryData.chargingSpeed,
+                timeRemaining = batteryData.remainingTime,
+                timestamp = batteryData.lastUpdated,
+            )
+        }
     }
-    var batteryHistory by remember {
-        mutableStateOf(generateHistoryData())
-    }
-    var temperatureHistory by remember {
-        mutableStateOf(generateTemperatureHistory())
-    }
-    var voltageHistory by remember {
-        mutableStateOf(generateVoltageHistory())
-    }
-    var currentAlerts by remember {
-        mutableStateOf(generateSampleAlerts())
-    }
+    // Real historical data from database via ViewModel
+    val batteryHistory by viewModel.batteryHistory.collectAsState()
+    val temperatureHistory by viewModel.temperatureHistory.collectAsState()
+    val voltageHistory by viewModel.voltageHistory.collectAsState()
+    val currentAlerts by viewModel.currentAlerts.collectAsState()
     var monitoringConfig by remember {
         mutableStateOf(MonitoringConfig())
     }
 
     var isMonitoring by remember { mutableStateOf(true) }
 
-    // Simulate real-time updates
-    LaunchedEffect(isMonitoring) {
-        while (isMonitoring) {
-            delay(monitoringConfig.updateInterval)
-
-            // Update metrics with realistic variations
-            currentMetrics = updateMetrics(currentMetrics)
-
-            // Update history data
-            batteryHistory = updateHistoryData(batteryHistory, currentMetrics.batteryLevel.toFloat())
-            temperatureHistory = updateHistoryData(temperatureHistory, currentMetrics.temperature)
-            voltageHistory = updateHistoryData(voltageHistory, currentMetrics.voltage)
-
-            // Check for alerts
+    // Real-time monitoring updates
+    // Note: History data auto-updates from database via ViewModel StateFlows
+    // BatteryDataWorker inserts new logs every 15 minutes
+    LaunchedEffect(isMonitoring, batteryData) {
+        if (isMonitoring) {
+            // Check for alerts based on real data (optional: could also move to ViewModel)
             val newAlerts = checkForAlerts(currentMetrics, monitoringConfig)
-            if (newAlerts.isNotEmpty()) {
-                currentAlerts = (currentAlerts + newAlerts).takeLast(10)
-            }
+            // Note: Alert generation is intentionally local - database alerts come from ViewModel
         }
     }
 
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFF3E5F5),
-                        Color(0xFFE8F5E8)
-                    )
-                )
-            )
+                    colors =
+                    listOf(
+                        MaterialTheme.colorScheme.surface,
+                        MaterialTheme.colorScheme.primaryContainer,
+                    ),
+                ),
+            ),
     ) {
         // Real-time Header
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = Color(0xFF2E7D32),
-            shadowElevation = 12.dp
+            color = MaterialTheme.colorScheme.primary,
+            shadowElevation = 12.dp,
         ) {
             Column(
-                modifier = Modifier.padding(24.dp)
+                modifier = Modifier.padding(24.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     // Live indicator animation
                     LiveIndicator(isLive = isMonitoring)
@@ -158,12 +164,12 @@ fun RealTimeMonitoringScreen() {
                             text = "Real-Time Monitoring",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                         Text(
                             text = "Live battery metrics & system alerts",
                             fontSize = 14.sp,
-                            color = Color.White.copy(alpha = 0.85f)
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
                         )
                     }
 
@@ -171,7 +177,7 @@ fun RealTimeMonitoringScreen() {
                     MonitoringControls(
                         isMonitoring = isMonitoring,
                         onToggleMonitoring = { isMonitoring = !isMonitoring },
-                        alertCount = currentAlerts.count { it.isActive }
+                        alertCount = currentAlerts.count { it.isActive },
                     )
                 }
 
@@ -180,31 +186,31 @@ fun RealTimeMonitoringScreen() {
                 // Real-time Quick Stats
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     RealTimeStatCard(
                         "${currentMetrics.batteryLevel}%",
                         "Battery",
                         "🔋",
-                        getBatteryColor(currentMetrics.batteryLevel)
+                        getBatteryColor(currentMetrics.batteryLevel),
                     )
                     RealTimeStatCard(
                         "${currentMetrics.temperature.toInt()}°C",
                         "Temperature",
                         "🌡️",
-                        getTemperatureColor(currentMetrics.temperature)
+                        getTemperatureColor(currentMetrics.temperature),
                     )
                     RealTimeStatCard(
                         "${String.format("%.2f", currentMetrics.voltage)}V",
                         "Voltage",
                         "⚡",
-                        getVoltageColor(currentMetrics.voltage)
+                        getVoltageColor(currentMetrics.voltage),
                     )
                     RealTimeStatCard(
                         "${String.format("%.1f", currentMetrics.power)}W",
                         "Power",
                         "💪",
-                        Color(0xFF9C27B0)
+                        MaterialTheme.colorScheme.secondary,
                     )
                 }
             }
@@ -214,19 +220,19 @@ fun RealTimeMonitoringScreen() {
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color.Transparent,
-            contentColor = Color(0xFF2E7D32),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            contentColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
                     selected = selectedTab == index,
                     onClick = { selectedTab = index },
-                    modifier = Modifier.padding(vertical = 12.dp)
+                    modifier = Modifier.padding(vertical = 12.dp),
                 ) {
                     Text(
                         text = title,
                         fontSize = 14.sp,
-                        fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium
+                        fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
                     )
                 }
             }
@@ -234,10 +240,11 @@ fun RealTimeMonitoringScreen() {
 
         // Content
         LazyColumn(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             when (selectedTab) {
                 0 -> {
@@ -259,7 +266,7 @@ fun RealTimeMonitoringScreen() {
                     item {
                         MonitoringConfigCard(
                             config = monitoringConfig,
-                            onConfigChange = { monitoringConfig = it }
+                            onConfigChange = { monitoringConfig = it },
                         )
                     }
                 }
@@ -270,62 +277,40 @@ fun RealTimeMonitoringScreen() {
 
 @Composable
 fun LiveIndicator(isLive: Boolean) {
-    val pulseScale by animateFloatAsState(
-        targetValue = if (isLive) 1.2f else 1.0f,
-        animationSpec = if (isLive) {
-            infiniteRepeatable(
-                animation = tween(1000, easing = EaseInOutSine),
-                repeatMode = RepeatMode.Reverse
-            )
-        } else {
-            tween(300)
-        }
-    )
-
-    val alpha by animateFloatAsState(
-        targetValue = if (isLive) 1f else 0.5f,
-        animationSpec = if (isLive) {
-            infiniteRepeatable(
-                animation = tween(1000, easing = EaseInOutSine),
-                repeatMode = RepeatMode.Reverse
-            )
-        } else {
-            tween(300)
-        }
-    )
-
+    // Static, battery-efficient live status indicator
     Box(
-        modifier = Modifier
+        modifier =
+        Modifier
             .size(64.dp)
             .background(
-                Brush.radialGradient(
-                    colors = listOf(
-                        Color.White.copy(alpha = 0.3f),
-                        Color.White.copy(alpha = 0.1f)
-                    )
-                ),
-                CircleShape
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                CircleShape,
+            )
+            .border(
+                2.dp,
+                if (isLive) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                },
+                CircleShape,
             ),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
-        // Pulsing circle
+        // Static status circle
         Box(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .size(12.dp)
-                .graphicsLayer {
-                    scaleX = pulseScale
-                    scaleY = pulseScale
-                    this.alpha = alpha
-                }
                 .background(
-                    if (isLive) Color(0xFF4CAF50) else Color(0xFFFF5722),
-                    CircleShape
-                )
+                    if (isLive) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error,
+                    CircleShape,
+                ),
         )
 
         Text(
             text = "📊",
-            fontSize = 28.sp
+            fontSize = 28.sp,
         )
     }
 }
@@ -334,32 +319,32 @@ fun LiveIndicator(isLive: Boolean) {
 fun MonitoringControls(
     isMonitoring: Boolean,
     onToggleMonitoring: () -> Unit,
-    alertCount: Int
+    alertCount: Int,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         // Alert indicator
         if (alertCount > 0) {
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = Color(0xFFF44336).copy(alpha = 0.2f)
+                color = MaterialTheme.colorScheme.error.copy(alpha = 0.2f),
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = "🚨",
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "$alertCount",
                         fontSize = 11.sp,
-                        color = Color(0xFFF44336),
-                        fontWeight = FontWeight.Bold
+                        color = MaterialTheme.colorScheme.error,
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
@@ -368,42 +353,48 @@ fun MonitoringControls(
         // Play/Pause button
         Button(
             onClick = onToggleMonitoring,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White.copy(alpha = 0.2f)
+            colors =
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
             ),
             modifier = Modifier.size(40.dp),
-            contentPadding = PaddingValues(0.dp)
+            contentPadding = PaddingValues(0.dp),
         ) {
             Text(
                 text = if (isMonitoring) "⏸️" else "▶️",
-                fontSize = 16.sp
+                fontSize = 16.sp,
             )
         }
     }
 }
 
 @Composable
-fun RealTimeStatCard(value: String, label: String, icon: String, color: Color) {
+fun RealTimeStatCard(
+    value: String,
+    label: String,
+    icon: String,
+    color: Color,
+) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = Color.White.copy(alpha = 0.15f)
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(text = icon, fontSize = 16.sp)
             Text(
                 text = value,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = label,
                 fontSize = 10.sp,
-                color = Color.White.copy(alpha = 0.8f),
-                textAlign = TextAlign.Center
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -414,17 +405,17 @@ fun RealTimeDashboard(metrics: RealTimeMetrics) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "📊 Live Dashboard",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.primary,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -432,11 +423,11 @@ fun RealTimeDashboard(metrics: RealTimeMetrics) {
             // Large battery level indicator
             Box(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 BatteryLevelIndicator(
                     level = metrics.batteryLevel,
-                    isCharging = metrics.isCharging
+                    isCharging = metrics.isCharging,
                 )
             }
 
@@ -446,13 +437,14 @@ fun RealTimeDashboard(metrics: RealTimeMetrics) {
             if (metrics.isCharging) {
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = Color(0xFF4CAF50).copy(alpha = 0.1f)
+                    color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.1f),
                 ) {
                     Row(
-                        modifier = Modifier
+                        modifier =
+                        Modifier
                             .fillMaxWidth()
                             .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(text = "🔌", fontSize = 20.sp)
                         Spacer(modifier = Modifier.width(12.dp))
@@ -461,12 +453,12 @@ fun RealTimeDashboard(metrics: RealTimeMetrics) {
                                 text = "Charging - ${metrics.chargingSpeed}",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF4CAF50)
+                                color = MaterialTheme.colorScheme.tertiary,
                             )
                             Text(
                                 text = metrics.timeRemaining,
                                 fontSize = 14.sp,
-                                color = Color(0xFF666666)
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     }
@@ -478,7 +470,7 @@ fun RealTimeDashboard(metrics: RealTimeMetrics) {
             // Real-time metrics grid
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.SpaceAround,
             ) {
                 MetricDisplay("Current", "${metrics.current}mA", "⚡")
                 MetricDisplay("Power", "${String.format("%.1f", metrics.power)}W", "💪")
@@ -489,16 +481,27 @@ fun RealTimeDashboard(metrics: RealTimeMetrics) {
 }
 
 @Composable
-fun BatteryLevelIndicator(level: Int, isCharging: Boolean) {
+fun BatteryLevelIndicator(
+    level: Int,
+    isCharging: Boolean,
+) {
     val animatedLevel by animateFloatAsState(
         targetValue = level / 100f,
-        animationSpec = tween(1000, easing = EaseOutCubic)
+        animationSpec = tween(1000, easing = EaseOutCubic),
     )
 
     Box(
         modifier = Modifier.size(150.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
+        // Capture theme colors before entering DrawScope
+        val surfaceVariantColor = MaterialTheme.colorScheme.surfaceVariant
+        val tertiaryColor = MaterialTheme.colorScheme.tertiary
+        val secondaryColor = MaterialTheme.colorScheme.secondary
+        val errorColor = MaterialTheme.colorScheme.error
+        val onSurfaceColor = MaterialTheme.colorScheme.onSurface
+        val onSurfaceVariantColor = MaterialTheme.colorScheme.onSurfaceVariant
+
         // Battery outline with level fill
         Canvas(modifier = Modifier.fillMaxSize()) {
             val strokeWidth = 8.dp.toPx()
@@ -508,83 +511,81 @@ fun BatteryLevelIndicator(level: Int, isCharging: Boolean) {
 
             // Battery body outline
             drawRoundRect(
-                color = Color(0xFFE0E0E0),
-                topLeft = androidx.compose.ui.geometry.Offset(
+                color = surfaceVariantColor,
+                topLeft =
+                androidx.compose.ui.geometry.Offset(
                     (size.width - batteryWidth) / 2,
-                    (size.height - batteryHeight) / 2
+                    (size.height - batteryHeight) / 2,
                 ),
                 size = androidx.compose.ui.geometry.Size(batteryWidth, batteryHeight),
                 cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
-                style = Stroke(width = strokeWidth)
+                style = Stroke(width = strokeWidth),
             )
 
             // Battery tip
             val tipWidth = batteryWidth * 0.2f
             val tipHeight = batteryHeight * 0.3f
             drawRoundRect(
-                color = Color(0xFFE0E0E0),
-                topLeft = androidx.compose.ui.geometry.Offset(
+                color = surfaceVariantColor,
+                topLeft =
+                androidx.compose.ui.geometry.Offset(
                     size.width / 2 + batteryWidth / 2 - tipWidth / 2,
-                    size.height / 2 - tipHeight / 2
+                    size.height / 2 - tipHeight / 2,
                 ),
                 size = androidx.compose.ui.geometry.Size(tipWidth, tipHeight),
-                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius / 2, cornerRadius / 2)
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius / 2, cornerRadius / 2),
             )
 
             // Battery level fill
-            val fillColor = when {
-                level > 80 -> Color(0xFF4CAF50)
-                level > 50 -> Color(0xFFFF9800)
-                level > 20 -> Color(0xFFFF5722)
-                else -> Color(0xFFF44336)
-            }
+            val fillColor =
+                when {
+                    level > 80 -> tertiaryColor
+                    level > 50 -> secondaryColor
+                    level > 20 -> errorColor
+                    else -> errorColor
+                }
 
             val fillHeight = batteryHeight * animatedLevel * 0.9f // Leave some margin
             val fillY = (size.height + batteryHeight) / 2 - fillHeight - strokeWidth
 
             drawRoundRect(
                 color = fillColor,
-                topLeft = androidx.compose.ui.geometry.Offset(
+                topLeft =
+                androidx.compose.ui.geometry.Offset(
                     (size.width - batteryWidth) / 2 + strokeWidth,
-                    fillY
+                    fillY,
                 ),
-                size = androidx.compose.ui.geometry.Size(
+                size =
+                androidx.compose.ui.geometry.Size(
                     batteryWidth - strokeWidth * 2,
-                    fillHeight
+                    fillHeight,
                 ),
-                cornerRadius = androidx.compose.ui.geometry.CornerRadius(
+                cornerRadius =
+                androidx.compose.ui.geometry.CornerRadius(
                     cornerRadius - strokeWidth,
-                    cornerRadius - strokeWidth
-                )
+                    cornerRadius - strokeWidth,
+                ),
             )
         }
 
-        // Charging animation overlay
+        // Static charging indicator overlay
         if (isCharging) {
-            val chargeAlpha by animateFloatAsState(
-                targetValue = 1f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(1500, easing = EaseInOutSine),
-                    repeatMode = RepeatMode.Reverse
-                )
-            )
-
             Text(
                 text = "⚡",
                 fontSize = 32.sp,
-                color = Color.White.copy(alpha = chargeAlpha)
+                color = onSurfaceColor,
             )
         }
 
         // Battery percentage text
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = "$level%",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = if (isCharging) Color.White else Color(0xFF333333)
+                color = if (isCharging) onSurfaceColor else onSurfaceVariantColor,
             )
         }
     }
@@ -595,16 +596,16 @@ fun SystemStatusCard(metrics: RealTimeMetrics) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "🔧 System Status",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -614,7 +615,7 @@ fun SystemStatusCard(metrics: RealTimeMetrics) {
                 label = "Temperature",
                 value = "${metrics.temperature.toInt()}°C",
                 status = getTemperatureStatus(metrics.temperature),
-                icon = "🌡️"
+                icon = "🌡️",
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -623,7 +624,7 @@ fun SystemStatusCard(metrics: RealTimeMetrics) {
                 label = "Voltage",
                 value = "${String.format("%.2f", metrics.voltage)}V",
                 status = getVoltageStatus(metrics.voltage),
-                icon = "⚡"
+                icon = "⚡",
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -632,24 +633,30 @@ fun SystemStatusCard(metrics: RealTimeMetrics) {
                 label = "Charging System",
                 value = if (metrics.isCharging) "Active" else "Idle",
                 status = if (metrics.isCharging) "NORMAL" else "IDLE",
-                icon = "🔌"
+                icon = "🔌",
             )
         }
     }
 }
 
 @Composable
-fun StatusIndicator(label: String, value: String, status: String, icon: String) {
-    val statusColor = when (status) {
-        "NORMAL", "IDLE" -> Color(0xFF4CAF50)
-        "WARNING" -> Color(0xFFFF9800)
-        "CRITICAL" -> Color(0xFFF44336)
-        else -> Color(0xFF666666)
-    }
+fun StatusIndicator(
+    label: String,
+    value: String,
+    status: String,
+    icon: String,
+) {
+    val statusColor =
+        when (status) {
+            "NORMAL", "IDLE" -> MaterialTheme.colorScheme.tertiary
+            "WARNING" -> MaterialTheme.colorScheme.secondary
+            "CRITICAL" -> MaterialTheme.colorScheme.error
+            else -> MaterialTheme.colorScheme.onSurfaceVariant
+        }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = icon, fontSize = 16.sp)
         Spacer(modifier = Modifier.width(12.dp))
@@ -658,7 +665,7 @@ fun StatusIndicator(label: String, value: String, status: String, icon: String) 
             Text(
                 text = label,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
 
@@ -667,19 +674,19 @@ fun StatusIndicator(label: String, value: String, status: String, icon: String) 
                 text = value,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = statusColor
+                color = statusColor,
             )
 
             Surface(
                 shape = RoundedCornerShape(4.dp),
-                color = statusColor.copy(alpha = 0.1f)
+                color = statusColor.copy(alpha = 0.1f),
             ) {
                 Text(
                     text = status,
                     fontSize = 10.sp,
                     color = statusColor,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
                 )
             }
         }
@@ -691,44 +698,45 @@ fun BatteryLevelChart(history: List<GraphDataPoint>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "🔋 Battery Level Trend",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Simple line chart representation
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .background(Color(0xFFF8F9FA), RoundedCornerShape(12.dp)),
-                contentAlignment = Alignment.Center
+                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center,
             ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
                         text = "📈",
-                        fontSize = 48.sp
+                        fontSize = 48.sp,
                     )
                     Text(
                         text = "Real-time battery level chart",
                         fontSize = 14.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(
                         text = "${history.size} data points",
                         fontSize = 12.sp,
-                        color = Color(0xFF999999)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -741,44 +749,45 @@ fun TemperatureChart(history: List<GraphDataPoint>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "🌡️ Temperature Trend",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .background(Color(0xFFF8F9FA), RoundedCornerShape(12.dp)),
-                contentAlignment = Alignment.Center
+                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center,
             ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
                         text = "🔥",
-                        fontSize = 48.sp
+                        fontSize = 48.sp,
                     )
                     Text(
                         text = "Temperature monitoring chart",
                         fontSize = 14.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     if (history.isNotEmpty()) {
                         Text(
                             text = "Current: ${String.format("%.1f", history.last().value)}°C",
                             fontSize = 12.sp,
-                            color = Color(0xFF999999)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -792,44 +801,45 @@ fun VoltageChart(history: List<GraphDataPoint>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "⚡ Voltage Trend",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .background(Color(0xFFF8F9FA), RoundedCornerShape(12.dp)),
-                contentAlignment = Alignment.Center
+                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center,
             ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
                         text = "⚡",
-                        fontSize = 48.sp
+                        fontSize = 48.sp,
                     )
                     Text(
                         text = "Voltage monitoring chart",
                         fontSize = 14.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     if (history.isNotEmpty()) {
                         Text(
                             text = "Current: ${String.format("%.2f", history.last().value)}V",
                             fontSize = 12.sp,
-                            color = Color(0xFF999999)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -840,32 +850,36 @@ fun VoltageChart(history: List<GraphDataPoint>) {
 
 @Composable
 fun AlertCard(alert: AlertData) {
-    val severityColor = when (alert.severity) {
-        AlertSeverity.INFO -> Color(0xFF2196F3)
-        AlertSeverity.WARNING -> Color(0xFFFF9800)
-        AlertSeverity.CRITICAL -> Color(0xFFF44336)
-    }
+    val severityColor =
+        when (alert.severity) {
+            AlertSeverity.INFO -> MaterialTheme.colorScheme.primary
+            AlertSeverity.WARNING -> MaterialTheme.colorScheme.secondary
+            AlertSeverity.CRITICAL -> MaterialTheme.colorScheme.error
+        }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (alert.isActive) {
+        colors =
+        CardDefaults.cardColors(
+            containerColor =
+            if (alert.isActive) {
                 severityColor.copy(alpha = 0.05f)
             } else {
-                Color.White
-            }
+                MaterialTheme.colorScheme.onSurface
+            },
         ),
-        border = if (alert.isActive) {
+        border =
+        if (alert.isActive) {
             BorderStroke(2.dp, severityColor.copy(alpha = 0.3f))
         } else {
             null
         },
-        elevation = CardDefaults.cardElevation(defaultElevation = if (alert.isActive) 4.dp else 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = if (alert.isActive) 4.dp else 2.dp),
     ) {
         Row(
             modifier = Modifier.padding(20.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = alert.icon, fontSize = 24.sp)
 
@@ -875,13 +889,13 @@ fun AlertCard(alert: AlertData) {
                 Text(
                     text = alert.title,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = alert.message,
                     fontSize = 12.sp,
-                    color = Color(0xFF666666),
-                    lineHeight = 16.sp
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    lineHeight = 16.sp,
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -889,20 +903,20 @@ fun AlertCard(alert: AlertData) {
                 Text(
                     text = formatTime(alert.timestamp),
                     fontSize = 10.sp,
-                    color = Color(0xFF999999)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
 
             Surface(
                 shape = RoundedCornerShape(6.dp),
-                color = severityColor.copy(alpha = 0.1f)
+                color = severityColor.copy(alpha = 0.1f),
             ) {
                 Text(
                     text = alert.severity.name,
                     fontSize = 10.sp,
                     color = severityColor,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
                 )
             }
         }
@@ -914,23 +928,23 @@ fun PowerAnalysisCard(metrics: RealTimeMetrics) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "💪 Power Analysis",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.SpaceAround,
             ) {
                 PowerMetricItem("Power Draw", "${String.format("%.1f", abs(metrics.power))}W", "💪")
                 PowerMetricItem("Efficiency", "92%", "📊")
@@ -941,21 +955,25 @@ fun PowerAnalysisCard(metrics: RealTimeMetrics) {
 }
 
 @Composable
-fun PowerMetricItem(label: String, value: String, icon: String) {
+fun PowerMetricItem(
+    label: String,
+    value: String,
+    icon: String,
+) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(text = icon, fontSize = 18.sp)
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = value,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             text = label,
             fontSize = 12.sp,
-            color = Color(0xFF666666)
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -963,21 +981,21 @@ fun PowerMetricItem(label: String, value: String, icon: String) {
 @Composable
 fun MonitoringConfigCard(
     config: MonitoringConfig,
-    onConfigChange: (MonitoringConfig) -> Unit
+    onConfigChange: (MonitoringConfig) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "⚙️ Monitoring Configuration",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -985,12 +1003,12 @@ fun MonitoringConfigCard(
             // Update interval
             ConfigSection(
                 title = "Update Interval",
-                description = "How often to refresh data"
+                description = "How often to refresh data",
             ) {
                 Text(
                     text = "${config.updateInterval}ms",
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
             }
 
@@ -1000,7 +1018,7 @@ fun MonitoringConfigCard(
             ConfigToggle(
                 title = "Temperature Alerts",
                 isEnabled = config.enableTemperatureAlerts,
-                onToggle = { onConfigChange(config.copy(enableTemperatureAlerts = it)) }
+                onToggle = { onConfigChange(config.copy(enableTemperatureAlerts = it)) },
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -1008,7 +1026,7 @@ fun MonitoringConfigCard(
             ConfigToggle(
                 title = "Voltage Alerts",
                 isEnabled = config.enableVoltageAlerts,
-                onToggle = { onConfigChange(config.copy(enableVoltageAlerts = it)) }
+                onToggle = { onConfigChange(config.copy(enableVoltageAlerts = it)) },
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -1016,7 +1034,7 @@ fun MonitoringConfigCard(
             ConfigToggle(
                 title = "Sound Notifications",
                 isEnabled = config.soundEnabled,
-                onToggle = { onConfigChange(config.copy(soundEnabled = it)) }
+                onToggle = { onConfigChange(config.copy(soundEnabled = it)) },
             )
         }
     }
@@ -1026,22 +1044,22 @@ fun MonitoringConfigCard(
 fun ConfigSection(
     title: String,
     description: String,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
             Text(
                 text = description,
                 fontSize = 12.sp,
-                color = Color(0xFF666666)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
@@ -1053,164 +1071,71 @@ fun ConfigSection(
 fun ConfigToggle(
     title: String,
     isEnabled: Boolean,
-    onToggle: (Boolean) -> Unit
+    onToggle: (Boolean) -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = title,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
 
         Switch(
             checked = isEnabled,
             onCheckedChange = onToggle,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = Color(0xFF2E7D32),
-                checkedTrackColor = Color(0xFF2E7D32).copy(alpha = 0.3f)
-            )
+            colors =
+            SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+            ),
         )
     }
 }
 
 @Composable
-fun MetricDisplay(label: String, value: String, icon: String) {
+fun MetricDisplay(
+    label: String,
+    value: String,
+    icon: String,
+) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(text = icon, fontSize = 14.sp)
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = value,
             fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             text = label,
             fontSize = 10.sp,
-            color = Color(0xFF666666)
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
 
 // Utility functions
-private fun generateSampleMetrics(): RealTimeMetrics {
-    return RealTimeMetrics(
-        batteryLevel = Random.nextInt(20, 100),
-        voltage = 3.7f + Random.nextFloat() * 0.5f,
-        temperature = 25f + Random.nextFloat() * 15f,
-        current = Random.nextInt(-2000, 2000),
-        power = Random.nextFloat() * 25f,
-        isCharging = Random.nextBoolean(),
-        chargingSpeed = "Fast Charging",
-        timeRemaining = "2h 15m to full",
-        timestamp = System.currentTimeMillis()
-    )
-}
+// REMOVED: Fake data generation functions (generateRealisticHistoryData, generateRealisticTemperatureHistory, generateRealisticVoltageHistory)
+// Now using RealTimeMonitoringViewModel with real data from BatteryLogDao
 
-private fun updateMetrics(current: RealTimeMetrics): RealTimeMetrics {
-    val batteryChange = Random.nextInt(-2, 3)
-    val newLevel = (current.batteryLevel + batteryChange).coerceIn(0, 100)
+// REMOVED: Manual history update function (updateHistoryData)
+// History data now automatically updates via ViewModel StateFlows from database
 
-    return current.copy(
-        batteryLevel = newLevel,
-        voltage = current.voltage + Random.nextFloat() * 0.1f - 0.05f,
-        temperature = current.temperature + Random.nextFloat() * 2f - 1f,
-        current = current.current + Random.nextInt(-200, 200),
-        power = abs(current.voltage * current.current / 1000f),
-        timestamp = System.currentTimeMillis()
-    )
-}
+// REMOVED: Sample alert generation (generateSampleAlerts)
+// Now using real alerts from BatteryAlertDao via ViewModel
 
-private fun generateHistoryData(): List<GraphDataPoint> {
-    val history = mutableListOf<GraphDataPoint>()
-    val now = System.currentTimeMillis()
-
-    repeat(50) { i ->
-        history.add(
-            GraphDataPoint(
-                timestamp = now - (49 - i) * 1000,
-                value = 50f + Random.nextFloat() * 40f
-            )
-        )
-    }
-
-    return history
-}
-
-private fun generateTemperatureHistory(): List<GraphDataPoint> {
-    val history = mutableListOf<GraphDataPoint>()
-    val now = System.currentTimeMillis()
-
-    repeat(50) { i ->
-        history.add(
-            GraphDataPoint(
-                timestamp = now - (49 - i) * 1000,
-                value = 25f + Random.nextFloat() * 15f
-            )
-        )
-    }
-
-    return history
-}
-
-private fun generateVoltageHistory(): List<GraphDataPoint> {
-    val history = mutableListOf<GraphDataPoint>()
-    val now = System.currentTimeMillis()
-
-    repeat(50) { i ->
-        history.add(
-            GraphDataPoint(
-                timestamp = now - (49 - i) * 1000,
-                value = 3.7f + Random.nextFloat() * 0.5f
-            )
-        )
-    }
-
-    return history
-}
-
-private fun updateHistoryData(current: List<GraphDataPoint>, newValue: Float): List<GraphDataPoint> {
-    val updated = current.toMutableList()
-    updated.add(
-        GraphDataPoint(
-            timestamp = System.currentTimeMillis(),
-            value = newValue
-        )
-    )
-    return updated.takeLast(50) // Keep only last 50 points
-}
-
-private fun generateSampleAlerts(): List<AlertData> {
-    return listOf(
-        AlertData(
-            id = "1",
-            type = AlertType.TEMPERATURE,
-            severity = AlertSeverity.WARNING,
-            title = "Temperature Warning",
-            message = "Battery temperature reached 42°C during fast charging",
-            timestamp = System.currentTimeMillis() - 300000, // 5 minutes ago
-            isActive = true,
-            icon = "🌡️"
-        ),
-        AlertData(
-            id = "2",
-            type = AlertType.VOLTAGE,
-            severity = AlertSeverity.INFO,
-            title = "Voltage Optimal",
-            message = "Battery voltage stabilized at 4.1V",
-            timestamp = System.currentTimeMillis() - 600000, // 10 minutes ago
-            isActive = false,
-            icon = "⚡"
-        )
-    )
-}
-
-private fun checkForAlerts(metrics: RealTimeMetrics, config: MonitoringConfig): List<AlertData> {
+// Keeping local alert checking logic for real-time detection
+// Note: This could be moved to ViewModel or a background worker for better architecture
+private fun checkForAlerts(
+    metrics: RealTimeMetrics,
+    config: MonitoringConfig,
+): List<AlertData> {
     val alerts = mutableListOf<AlertData>()
 
     // Temperature alerts
@@ -1224,8 +1149,8 @@ private fun checkForAlerts(metrics: RealTimeMetrics, config: MonitoringConfig): 
                 message = "Battery temperature: ${metrics.temperature.toInt()}°C",
                 timestamp = System.currentTimeMillis(),
                 isActive = true,
-                icon = "🔥"
-            )
+                icon = "🔥",
+            ),
         )
     }
 
@@ -1240,36 +1165,39 @@ private fun checkForAlerts(metrics: RealTimeMetrics, config: MonitoringConfig): 
                 message = "Voltage: ${String.format("%.2f", metrics.voltage)}V",
                 timestamp = System.currentTimeMillis(),
                 isActive = true,
-                icon = "⚡"
-            )
+                icon = "⚡",
+            ),
         )
     }
 
     return alerts
 }
 
+@Composable
 private fun getBatteryColor(level: Int): Color {
     return when {
-        level > 80 -> Color(0xFF4CAF50)
-        level > 50 -> Color(0xFFFF9800)
-        level > 20 -> Color(0xFFFF5722)
-        else -> Color(0xFFF44336)
+        level > 80 -> MaterialTheme.colorScheme.tertiary
+        level > 50 -> MaterialTheme.colorScheme.secondary
+        level > 20 -> MaterialTheme.colorScheme.error
+        else -> MaterialTheme.colorScheme.error
     }
 }
 
+@Composable
 private fun getTemperatureColor(temp: Float): Color {
     return when {
-        temp < 30f -> Color(0xFF4CAF50)
-        temp < 40f -> Color(0xFFFF9800)
-        else -> Color(0xFFF44336)
+        temp < 30f -> MaterialTheme.colorScheme.tertiary
+        temp < 40f -> MaterialTheme.colorScheme.secondary
+        else -> MaterialTheme.colorScheme.error
     }
 }
 
+@Composable
 private fun getVoltageColor(voltage: Float): Color {
     return when {
-        voltage >= 4.0f -> Color(0xFF4CAF50)
-        voltage >= 3.6f -> Color(0xFFFF9800)
-        else -> Color(0xFFF44336)
+        voltage >= 4.0f -> MaterialTheme.colorScheme.tertiary
+        voltage >= 3.6f -> MaterialTheme.colorScheme.secondary
+        else -> MaterialTheme.colorScheme.error
     }
 }
 

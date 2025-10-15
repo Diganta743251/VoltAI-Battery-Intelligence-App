@@ -17,7 +17,7 @@ data class BatteryLogEntity(
     val current: Int,
     val healthPercentage: Int,
     val chargingSpeed: String,
-    val powerSource: String
+    val powerSource: String,
 )
 
 @Entity(tableName = "app_usage")
@@ -28,7 +28,7 @@ data class AppUsageEntity(
     val usageTime: Long,
     val batteryUsage: Double,
     val date: String,
-    val timestamp: Long
+    val timestamp: Long,
 )
 
 @Entity(tableName = "charging_sessions")
@@ -41,7 +41,7 @@ data class ChargingSessionEntity(
     val chargingSpeed: String,
     val powerSource: String,
     val averageTemperature: Float,
-    val isComplete: Boolean = false
+    val isComplete: Boolean = false,
 )
 
 @Entity(tableName = "battery_alerts")
@@ -52,7 +52,7 @@ data class BatteryAlertEntity(
     val severity: Int, // 1-5 scale
     val timestamp: Long,
     val isRead: Boolean = false,
-    val actionTaken: String? = null
+    val actionTaken: String? = null,
 )
 
 @Entity(tableName = "optimization_settings")
@@ -65,7 +65,7 @@ data class OptimizationSettingsEntity(
     val notificationsEnabled: Boolean = true,
     val autoBackupEnabled: Boolean = false,
     val premiumFeaturesEnabled: Boolean = false,
-    val lastModified: Long = System.currentTimeMillis()
+    val lastModified: Long = System.currentTimeMillis(),
 )
 
 // Room DAOs
@@ -77,8 +77,11 @@ interface BatteryLogDao {
     @Query("SELECT * FROM battery_logs WHERE timestamp >= :startTime ORDER BY timestamp DESC")
     fun getLogsSince(startTime: Long): Flow<List<BatteryLogEntity>>
 
-    @Query("SELECT * FROM battery_logs WHERE timestamp BETWEEN :startTime AND :endTime ORDER BY timestamp DESC")
-    suspend fun getLogsBetween(startTime: Long, endTime: Long): List<BatteryLogEntity>
+    @Query("SELECT * FROM battery_logs WHERE timestamp BETWEEN :startTime AND :endTime ORDER BY timestamp ASC")
+    suspend fun getLogsBetween(
+        startTime: Long,
+        endTime: Long,
+    ): List<BatteryLogEntity>
 
     @Query("SELECT AVG(batteryLevel) FROM battery_logs WHERE timestamp >= :startTime")
     suspend fun getAverageBatteryLevel(startTime: Long): Double?
@@ -150,7 +153,10 @@ interface BatteryAlertDao {
     fun getUnreadAlerts(): Flow<List<BatteryAlertEntity>>
 
     @Query("SELECT * FROM battery_alerts WHERE severity >= :minSeverity ORDER BY timestamp DESC LIMIT :limit")
-    suspend fun getHighPriorityAlerts(minSeverity: Int = 3, limit: Int = 20): List<BatteryAlertEntity>
+    suspend fun getHighPriorityAlerts(
+        minSeverity: Int = 3,
+        limit: Int = 20,
+    ): List<BatteryAlertEntity>
 
     @Insert
     suspend fun insertAlert(alert: BatteryAlertEntity)
@@ -177,29 +183,37 @@ interface OptimizationSettingsDao {
     suspend fun saveSettings(settings: OptimizationSettingsEntity)
 
     @Query(
-        "UPDATE optimization_settings SET batteryOptimizationEnabled = :enabled, lastModified = :timestamp WHERE id = 1"
+        "UPDATE optimization_settings SET batteryOptimizationEnabled = :enabled, lastModified = :timestamp WHERE id = 1",
     )
-    suspend fun updateBatteryOptimization(enabled: Boolean, timestamp: Long = System.currentTimeMillis())
+    suspend fun updateBatteryOptimization(
+        enabled: Boolean,
+        timestamp: Long = System.currentTimeMillis(),
+    )
 
     @Query("UPDATE optimization_settings SET premiumFeaturesEnabled = :enabled, lastModified = :timestamp WHERE id = 1")
-    suspend fun updatePremiumStatus(enabled: Boolean, timestamp: Long = System.currentTimeMillis())
+    suspend fun updatePremiumStatus(
+        enabled: Boolean,
+        timestamp: Long = System.currentTimeMillis(),
+    )
 }
 
 // Database Migrations
-val MIGRATION_1_2 = object : Migration(1, 2) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL(
-            """
+val MIGRATION_1_2 =
+    object : Migration(1, 2) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL(
+                """
             ALTER TABLE battery_logs ADD COLUMN powerSource TEXT NOT NULL DEFAULT 'Battery'
-        """
-        )
+        """,
+            )
+        }
     }
-}
 
-val MIGRATION_2_3 = object : Migration(2, 3) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL(
-            """
+val MIGRATION_2_3 =
+    object : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL(
+                """
             CREATE TABLE IF NOT EXISTS battery_alerts (
                 id INTEGER PRIMARY KEY NOT NULL,
                 alertType TEXT NOT NULL,
@@ -209,10 +223,10 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
                 isRead INTEGER NOT NULL DEFAULT 0,
                 actionTaken TEXT
             )
-        """
-        )
+        """,
+            )
+        }
     }
-}
 
 // Main Database
 @Database(
@@ -221,21 +235,41 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
         AppUsageEntity::class,
         ChargingSessionEntity::class,
         BatteryAlertEntity::class,
-        OptimizationSettingsEntity::class
+        OptimizationSettingsEntity::class,
     ],
     version = 3,
-    exportSchema = true
+    exportSchema = true,
 )
 @TypeConverters(Converters::class)
 abstract class BatteryDatabase : RoomDatabase() {
     abstract fun batteryLogDao(): BatteryLogDao
+
     abstract fun appUsageDao(): AppUsageDao
+
     abstract fun chargingSessionDao(): ChargingSessionDao
+
     abstract fun batteryAlertDao(): BatteryAlertDao
+
     abstract fun optimizationSettingsDao(): OptimizationSettingsDao
 
     companion object {
         const val DATABASE_NAME = "voltai_battery_database"
+
+        @Volatile
+        private var INSTANCE: BatteryDatabase? = null
+
+        fun getInstance(context: android.content.Context): BatteryDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = androidx.room.Room.databaseBuilder(
+                    context.applicationContext,
+                    BatteryDatabase::class.java,
+                    DATABASE_NAME,
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .build()
+                INSTANCE = instance
+                instance
+            }
+        }
     }
 }
 

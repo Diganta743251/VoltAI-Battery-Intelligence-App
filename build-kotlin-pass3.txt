@@ -1,0 +1,338 @@
+
+> Configure project :app
+No release keystore found. Building unsigned release bundle locally.
+
+> Task :domain:compileKotlin UP-TO-DATE
+> Task :domain:compileJava NO-SOURCE
+> Task :domain:processResources NO-SOURCE
+> Task :domain:classes UP-TO-DATE
+> Task :domain:jar UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :core:preBuild UP-TO-DATE
+> Task :core:preDebugBuild UP-TO-DATE
+> Task :core:writeDebugAarMetadata UP-TO-DATE
+> Task :data:preBuild UP-TO-DATE
+> Task :data:preDebugBuild UP-TO-DATE
+> Task :data:writeDebugAarMetadata UP-TO-DATE
+> Task :ui:preBuild UP-TO-DATE
+> Task :ui:preDebugBuild UP-TO-DATE
+> Task :ui:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :core:generateDebugResValues UP-TO-DATE
+> Task :core:generateDebugResources UP-TO-DATE
+> Task :core:packageDebugResources UP-TO-DATE
+> Task :data:generateDebugResValues UP-TO-DATE
+> Task :data:generateDebugResources UP-TO-DATE
+> Task :data:packageDebugResources UP-TO-DATE
+> Task :ui:generateDebugResValues UP-TO-DATE
+> Task :ui:generateDebugResources UP-TO-DATE
+> Task :ui:packageDebugResources UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :core:extractDeepLinksDebug UP-TO-DATE
+> Task :core:processDebugManifest UP-TO-DATE
+> Task :data:extractDeepLinksDebug UP-TO-DATE
+> Task :data:processDebugManifest UP-TO-DATE
+> Task :ui:extractDeepLinksDebug UP-TO-DATE
+> Task :ui:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :core:compileDebugLibraryResources UP-TO-DATE
+> Task :core:parseDebugLocalResources UP-TO-DATE
+> Task :core:generateDebugRFile UP-TO-DATE
+> Task :data:compileDebugLibraryResources UP-TO-DATE
+> Task :data:parseDebugLocalResources UP-TO-DATE
+> Task :data:generateDebugRFile UP-TO-DATE
+> Task :ui:compileDebugLibraryResources UP-TO-DATE
+> Task :ui:parseDebugLocalResources UP-TO-DATE
+> Task :ui:generateDebugRFile UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :core:kaptGenerateStubsDebugKotlin UP-TO-DATE
+> Task :core:kaptDebugKotlin UP-TO-DATE
+> Task :core:compileDebugKotlin UP-TO-DATE
+> Task :core:javaPreCompileDebug UP-TO-DATE
+> Task :core:compileDebugJavaWithJavac UP-TO-DATE
+> Task :core:transformDebugClassesWithAsm UP-TO-DATE
+> Task :core:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :core:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :data:kaptGenerateStubsDebugKotlin UP-TO-DATE
+> Task :data:kaptDebugKotlin UP-TO-DATE
+> Task :data:compileDebugKotlin UP-TO-DATE
+> Task :data:javaPreCompileDebug UP-TO-DATE
+> Task :data:compileDebugJavaWithJavac UP-TO-DATE
+> Task :data:transformDebugClassesWithAsm UP-TO-DATE
+> Task :data:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :ui:compileDebugKotlin UP-TO-DATE
+> Task :ui:javaPreCompileDebug UP-TO-DATE
+> Task :ui:compileDebugJavaWithJavac NO-SOURCE
+> Task :ui:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:kaptGenerateStubsDebugKotlin
+> Task :app:kaptDebugKotlin UP-TO-DATE
+> Task :app:compileDebugKotlin
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/BatteryDataProviderImpl.kt:319:42 Parameter 'level' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/DataLayerListenerService.kt:18:21 Variable 'path' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/MainActivityNew.kt:53:9 Parameter 'result' is never used, could be renamed to _
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ProfessionalMainActivity.kt:41:9 Parameter 'permissions' is never used, could be renamed to _
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ai/AIBatteryOptimizer.kt:230:59 This operation has led to an overflow
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ai/AIBatteryOptimizer.kt:249:44 Parameter 'dataPoint' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ai/BatteryAnalyticsEngine.kt:306:9 Parameter 'weekAgo' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ai/BatteryAnalyticsEngine.kt:459:19 Parameter 'sessions' is never used, could be renamed to _
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/analytics/AdvancedAnalyticsEngine.kt:68:9 Parameter 'userId' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/analytics/AdvancedAnalyticsEngine.kt:69:9 Parameter 'batteryReadings' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/analytics/AdvancedAnalyticsEngine.kt:97:64 Unnecessary safe call on a non-null receiver of type Double
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/analytics/AdvancedAnalyticsEngine.kt:98:66 Unnecessary safe call on a non-null receiver of type Double
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/analytics/AdvancedAnalyticsEngine.kt:109:9 Parameter 'appUsage' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/analytics/AdvancedAnalyticsEngine.kt:114:59 Unnecessary safe call on a non-null receiver of type Double
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/analytics/AdvancedAnalyticsEngine.kt:130:39 Parameter 'readings' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/analytics/AdvancedAnalyticsEngine.kt:147:33 Parameter 'readings' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/analytics/AdvancedAnalyticsEngine.kt:161:64 Unnecessary safe call on a non-null receiver of type Double
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:79:43 Unchecked cast: Result.Error to Result<R>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:81:26 Unchecked cast: Result<T> to Result<R>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:82:31 Unchecked cast: Result.Loading to Result<R>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:83:27 Unchecked cast: Result.Empty to Result<R>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:93:43 Unchecked cast: Result.Error to Result<R>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:95:26 Unchecked cast: Result<T> to Result<R>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:96:31 Unchecked cast: Result.Loading to Result<R>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:97:27 Unchecked cast: Result.Empty to Result<R>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:145:7 Unchecked cast: Result.Error to Result<T>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:154:13 Redundant 'suspend' modifier: lambda parameters of suspend function type uses existing continuation.
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:162:7 Unchecked cast: Result.Error to Result<T>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:170:36 Unchecked cast: Result.Loading to Result<T>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:176:15 Unchecked cast: Result.Error to Result<T>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:291:34 Unchecked cast: Result<T> to Result<S>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:292:36 Unchecked cast: Result<R> to Result<S>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:293:73 Unchecked cast: Result.Loading to Result<S>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:294:26 Unchecked cast: Result.Empty to Result<S>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:311:26 Parameter 'attemptNumber' is never used, could be renamed to _
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/core/Result.kt:336:7 Unchecked cast: Result.Error to Result<T>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/BatteryDataCollector.kt:607:41 Parameter 'packageName' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/HomeScreenRepository.kt:82:22 Parameter 'exception' is never used, could be renamed to _
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/cloud/CloudBackupManager.kt:92:17 Variable 'gso' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/cloud/CloudBackupManager.kt:254:39 Elvis operator (?:) always returns the left operand of non-nullable type Int
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/cloud/CloudBackupManager.kt:284:34 Parameter 'intervalHours' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/cloud/CloudBackupManager.kt:292:33 Parameter 'enabled' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/cloud/CloudBackupManager.kt:362:50 Parameter 'description' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/cloud/CloudBackupManager.kt:367:50 Parameter 'description' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/cloud/CloudBackupManager.kt:386:43 Elvis operator (?:) always returns the left operand of non-nullable type Int
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/database/VoltAIDatabase.kt:37:34 The corresponding parameter in the supertype 'Migration' is named 'db'. This may cause problems when calling this function with named arguments.
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/database/VoltAIDatabase.kt:44:34 The corresponding parameter in the supertype 'Migration' is named 'db'. This may cause problems when calling this function with named arguments.
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/export/DataExportManager.kt:321:40 Parameter 'config' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/export/DataExportManager.kt:350:44 Parameter 'dateRange' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/export/DataExportManager.kt:355:45 Parameter 'dateRange' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/export/DataExportManager.kt:360:42 Parameter 'dateRange' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/export/DataExportManager.kt:365:49 Parameter 'dateRange' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/export/DataExportManager.kt:370:42 Parameter 'dateRange' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/export/DataExportManager.kt:375:42 Parameter 'dateRange' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/import/DataImportManager.kt:242:54 Unchecked cast: Any? to Map<String, String>
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/import/DataImportManager.kt:427:9 Parameter 'conflictResolution' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/import/DataImportManager.kt:434:63 Parameter 'conflictResolution' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/import/DataImportManager.kt:439:60 Parameter 'conflictResolution' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/import/DataImportManager.kt:444:60 Parameter 'conflictResolution' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/import/DataImportManager.kt:449:60 Parameter 'conflictResolution' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/import/DataImportManager.kt:454:43 Parameter 'section' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/import/DataImportManager.kt:454:60 Parameter 'headers' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/import/DataImportManager.kt:454:109 Parameter 'conflictResolution' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/import/DataImportManager.kt:463:13 Variable 'backupFile' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/data/import/DataImportManager.kt:467:36 Parameter 'data' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/database/BatteryDatabase.kt:190:26 The corresponding parameter in the supertype 'Migration' is named 'db'. This may cause problems when calling this function with named arguments.
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/database/BatteryDatabase.kt:200:26 The corresponding parameter in the supertype 'Migration' is named 'db'. This may cause problems when calling this function with named arguments.
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ml/BatteryHealthPredictor.kt:226:9 Parameter 'batteryLevel' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/navigation/AppNavHost.kt:31:9 Variable 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/notifications/AdvancedNotificationManager.kt:197:9 Parameter 'temperature' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/notifications/AdvancedNotificationManager.kt:619:32 Parameter 'batteryLevel' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/notifications/AdvancedNotificationManager.kt:619:51 Parameter 'isCharging' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/premium/PremiumManager.kt:21:41 This is a delicate API and its use requires care. Make sure you fully read and understand documentation of the declaration that is marked as a delicate API.
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:874:52 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1063:53 Parameter 'thermalData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:56:9 Variable 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:405:48 Parameter 'categories' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryChemistryLabScreen.kt:515:36 Parameter 'profile' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryChemistryLabScreen.kt:517:40 Parameter 'profile' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryChemistryLabScreen.kt:519:35 Parameter 'molecularData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryChemistryLabScreen.kt:521:39 Parameter 'molecularData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryChemistryLabScreen.kt:523:43 Parameter 'data' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryChemistryLabScreen.kt:525:39 Parameter 'data' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryChemistryLabScreen.kt:527:43 Parameter 'data' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryDiagnosticsScreen.kt:270:63 Parameter 'color' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryHealthAnalyticsScreen.kt:70:9 Variable 'analyticsEngine' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryHealthAnalyticsScreen.kt:334:65 Parameter 'color' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryOptimizationScreen.kt:86:9 Variable 'context' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryOptimizationScreen.kt:304:70 Parameter 'color' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryOptimizationScreen.kt:857:23 Parameter 'score' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:82:27 Parameter 'tabPositions' is never used, could be renamed to _
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:115:19 'with(ExitTransition): ContentTransform' is deprecated. Infix fun EnterTransition.with(ExitTransition) has been renamed to togetherWith
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:312:5 Parameter 'dailyStats' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/DataExportImportScreen.kt:43:9 Variable 'context' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/DataExportImportScreen.kt:112:47 Parameter 'config' is never used, could be renamed to _
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/DataExportImportScreen.kt:285:38 'List: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.List
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/DeviceLogScreen.kt:67:57 'List: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.List
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/DeviceLogScreen.kt:115:57 'List: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.List
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/DeviceLogScreen.kt:163:57 'List: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.List
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/ElectricCurrentDetailScreen.kt:500:5 Parameter 'seriesColor' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/ElectricCurrentDetailScreen.kt:501:5 Parameter 'zeroLineColor' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1605:13 Variable 'labels' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1883:27 Parameter 'predictions' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/FocusedHealthScreen.kt:195:50 'ArrowForwardIos: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowForwardIos
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/FocusedHealthScreen.kt:314:134 Unnecessary non-null assertion (!!) on a non-null receiver of type Int
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HealthTipsScreen.kt:35:44 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HistoryScreen.kt:34:5 Parameter 'onBackClick' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HistoryScreen.kt:38:9 Variable 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HistoryScreen.kt:39:9 Variable 'scrollState' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HistoryScreen.kt:153:5 Parameter 'totalSessions' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HistoryScreen.kt:154:5 Parameter 'carbonSaved' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HomeScreen.kt:37:5 Parameter 'onShowWelcome' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HomeScreen.kt:362:5 Parameter 'current' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/OngoingDetailScreen.kt:482:5 Parameter 'screenOnTime' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/OngoingDetailScreen.kt:483:5 Parameter 'screenOffTime' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/OverlaysScreen.kt:47:5 Parameter 'onBackClick' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PerformanceBenchmarksScreen.kt:650:17 Variable 'color' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PerformanceBenchmarksScreen.kt:800:33 Parameter 'suites' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PerformanceBenchmarksScreen.kt:802:35 Parameter 'analysis' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PerformanceBenchmarksScreen.kt:806:41 Parameter 'profile' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PowerManagementScreen.kt:296:58 Parameter 'index' is never used, could be renamed to _
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PremiumPaywallScreen.kt:43:9 Variable 'premiumState' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PremiumPaywallScreen.kt:508:5 Parameter 'selectedPlan' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PremiumSettingsScreen.kt:47:9 Variable 'context' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PremiumSettingsScreen.kt:291:49 'KeyboardArrowRight: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.KeyboardArrowRight
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:368:66 Parameter 'color' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SettingsAboutScreen.kt:26:44 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SettingsAdvancedScreen.kt:27:44 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SettingsAiOptimizationScreen.kt:28:44 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SettingsAppearanceScreen.kt:34:44 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SettingsNotificationsScreen.kt:27:44 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SettingsPremiumScreen.kt:32:44 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SettingsScreen.kt:25:9 Variable 'context' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SmartChargingScreen.kt:91:9 Variable 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SmartChargingScreen.kt:291:66 Parameter 'color' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SmartChargingScreen.kt:372:25 Name shadowed: context
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SmartChargingScreen.kt:373:25 Name shadowed: batteryData
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SystemOptimizationCenterScreen.kt:798:40 Parameter 'batteryOptimization' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SystemOptimizationCenterScreen.kt:800:48 Parameter 'benchmark' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:457:25 Variable 'eveningTemp' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/WelcomeScreen.kt:37:9 Variable 'context' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/WelcomeScreen.kt:270:5 Parameter 'onPageClick' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/BatteryMonitoringService.kt:457:54 Parameter 'level' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/BatteryMonitoringService.kt:464:61 Parameter 'level' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/BatteryMonitoringService.kt:492:45 Parameter 'optimization' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/BatteryMonitoringService.kt:493:48 Parameter 'optimization' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/BatteryMonitoringService.kt:493:70 Parameter 'error' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/IntelligentOptimizationService.kt:301:13 Variable 'packageManager' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/IntelligentOptimizationService.kt:352:21 Variable 'usageStatsManager' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/IntelligentOptimizationService.kt:444:17 Variable 'appUsageData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/IntelligentOptimizationService.kt:635:42 Unnecessary safe call on a non-null receiver of type Intent?
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/IntelligentOptimizationService.kt:663:51 Parameter 'packageName' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/IntelligentOptimizationService.kt:667:44 Parameter 'packageName' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/IntelligentOptimizationService.kt:719:50 Parameter 'recommendation' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/IntelligentOptimizationService.kt:723:54 Parameter 'recommendation' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/IntelligentOptimizationService.kt:727:46 Parameter 'recommendation' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/services/IntelligentOptimizationService.kt:731:45 Parameter 'recommendation' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/tiles/BatteryOptimizationTile.kt:207:46 Parameter 'enabled' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/CardComponents.kt:734:34 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/CardComponents.kt:752:29 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/CardComponents.kt:770:35 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/CardComponents.kt:788:38 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/animation/AnimationUtils.kt:118:25 'AnimationSpecs' is deprecated. Use VoltAIMotion from Motion.kt
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/animation/AnimationUtils.kt:166:25 'AnimationSpecs' is deprecated. Use VoltAIMotion from Motion.kt
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/animation/AnimationUtils.kt:201:25 'AnimationSpecs' is deprecated. Use VoltAIMotion from Motion.kt
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/animation/AnimationUtils.kt:206:25 'AnimationSpecs' is deprecated. Use VoltAIMotion from Motion.kt
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/animation/AnimationUtils.kt:357:9 Variable 'cornerRadius' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/animation/AnimationUtils.kt:363:9 Variable 'elevation' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/components/MaterialCardContent.kt:441:55 Parameter 'reduceMotion' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/components/MaterialCardContent.kt:455:9 Variable 'tempIcon' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/components/MaterialCardContent.kt:560:9 Variable 'healthIcon' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/components/MaterialCardContent.kt:894:28 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/components/MaterialCardContent.kt:939:30 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/components/MaterialCardContent.kt:1047:26 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/components/MaterialCardsGrid.kt:300:27 Parameter 'cardType' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:84:63 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:207:62 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:277:57 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:337:65 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:381:61 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:486:61 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:552:59 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:682:66 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:731:35 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:731:61 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:777:37 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:777:63 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:817:67 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:857:64 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:945:36 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:945:62 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:963:5 Parameter 'batteryLevel' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1087:50 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1097:45 'List: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.List
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1179:25 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1179:51 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1235:42 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1235:68 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1286:37 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1286:63 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1337:43 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1337:69 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1388:46 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1388:72 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1439:33 Parameter 'batteryData' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CardContent.kt:1439:59 Parameter 'isEditMode' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableCardsGrid.kt:40:53 'AnimationSpecs' is deprecated. Use VoltAIMotion from Motion.kt
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableCardsGrid.kt:76:9 Variable 'haptic' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableCardsGrid.kt:332:5 Parameter 'isDragActive' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableCardsGrid.kt:334:5 Parameter 'cellWidthPx' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableCardsGrid.kt:341:5 Parameter 'canFitSize' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableCardsGrid.kt:350:5 Parameter 'onInvalidDrop' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableCardsGrid.kt:360:9 Variable 'scope' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableCardsGrid.kt:373:25 'AnimationSpecs' is deprecated. Use VoltAIMotion from Motion.kt
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableCardsGrid.kt:475:45 Parameter 'offset' is never used, could be renamed to _
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableCardsGrid.kt:514:33 Variable 'down' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableCardsGrid.kt:794:27 Parameter 'cardType' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableHomeState.kt:81:23 'List: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.List
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableHomeState.kt:163:23 'List: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.List
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableHomeViewModel.kt:510:21 Parameter 'cardId' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableTopBar.kt:33:5 Parameter 'onSettingsClick' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/CustomizableTopBar.kt:81:31 'with(ExitTransition): ContentTransform' is deprecated. Infix fun EnterTransition.with(ExitTransition) has been renamed to togetherWith
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:27:53 'AnimationSpecs' is deprecated. Use VoltAIMotion from Motion.kt
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:38:5 Parameter 'gridColumns' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:39:5 Parameter 'onUpdateGridColumns' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:40:5 Parameter 'onDone' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:41:5 Parameter 'onAddCard' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:42:5 Parameter 'onReset' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:43:5 Parameter 'onResetKeepPremium' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:44:5 Parameter 'modifier' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:46:9 Variable 'haptic' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:50:5 Unreachable code
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:188:5 Parameter 'gridColumns' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:189:5 Parameter 'onUpdateGridColumns' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:277:25 'AnimationSpecs' is deprecated. Use VoltAIMotion from Motion.kt
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/home/EditModeComponents.kt:460:25 'AnimationSpecs' is deprecated. Use VoltAIMotion from Motion.kt
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/theme/AccessibilityHelpers.kt:86:16 Unnecessary safe call on a non-null receiver of type (() -> Unit)?
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/theme/AccessibilityHelpers.kt:119:13 Extension is shadowed by a member: public abstract val fontScale: Float
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/theme/AccessibilityHelpers.kt:247:9 Parameter 'usePattern' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/ui/theme/AccessibilityPreferences.kt:62:9 Parameter 'normalDuration' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/viewmodels/DataExportImportViewModel.kt:65:21 Parameter 'uri' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/viewmodels/DataExportImportViewModel.kt:90:23 Parameter 'uri' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/viewmodels/DataExportImportViewModel.kt:150:28 Parameter 'backupId' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/widgets/BatteryWidget.kt:356:13 Variable 'batteryManager' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/widgets/BatteryWidget.kt:463:9 Parameter 'context' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/widgets/BatteryWidget.kt:480:39 Parameter 'context' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/widgets/BatteryWidget.kt:485:42 Parameter 'context' is never used
+w: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/widgets/BatteryWidget.kt:490:42 Parameter 'context' is never used
+
+[Incubating] Problems report is available at: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 3m 4s
+63 actionable tasks: 2 executed, 61 up-to-date

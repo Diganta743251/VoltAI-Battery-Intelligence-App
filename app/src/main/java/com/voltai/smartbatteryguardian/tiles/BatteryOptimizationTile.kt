@@ -16,7 +16,6 @@ import javax.inject.Inject
  */
 @RequiresApi(24)
 class BatteryOptimizationTile : TileService() {
-
     @Inject
     lateinit var premiumManager: PremiumManager
 
@@ -80,39 +79,41 @@ class BatteryOptimizationTile : TileService() {
         }
     }
 
-    private suspend fun enableOptimization() = withContext(Dispatchers.IO) {
-        // Implement optimization logic
-        try {
-            // Enable background app restrictions
-            enableBackgroundRestrictions()
+    private suspend fun enableOptimization() =
+        withContext(Dispatchers.IO) {
+            // Implement optimization logic
+            try {
+                // Enable background app restrictions
+                enableBackgroundRestrictions()
 
-            // Activate power saving mode
-            activatePowerSavingMode()
+                // Activate power saving mode
+                activatePowerSavingMode()
 
-            // Optimize system settings
-            optimizeSystemSettings()
+                // Optimize system settings
+                optimizeSystemSettings()
 
-            // Update notification
-            showOptimizationNotification(true)
-        } catch (e: Exception) {
-            throw Exception("Failed to enable optimization: ${e.message}")
+                // Update notification
+                showOptimizationNotification(true)
+            } catch (e: Exception) {
+                throw Exception("Failed to enable optimization: ${e.message}")
+            }
         }
-    }
 
-    private suspend fun disableOptimization() = withContext(Dispatchers.IO) {
-        // Implement optimization disabling logic
-        try {
-            // Restore normal operation
-            disableBackgroundRestrictions()
-            deactivatePowerSavingMode()
-            restoreSystemSettings()
+    private suspend fun disableOptimization() =
+        withContext(Dispatchers.IO) {
+            // Implement optimization disabling logic
+            try {
+                // Restore normal operation
+                disableBackgroundRestrictions()
+                deactivatePowerSavingMode()
+                restoreSystemSettings()
 
-            // Clear optimization notification
-            clearOptimizationNotification()
-        } catch (e: Exception) {
-            throw Exception("Failed to disable optimization: ${e.message}")
+                // Clear optimization notification
+                clearOptimizationNotification()
+            } catch (e: Exception) {
+                throw Exception("Failed to disable optimization: ${e.message}")
+            }
         }
-    }
 
     private fun enableBackgroundRestrictions() {
         // Implement background app management
@@ -151,16 +152,18 @@ class BatteryOptimizationTile : TileService() {
 
             label = if (optimizationActive) "Optimized" else "Battery Optimizer"
 
-            contentDescription = if (optimizationActive) {
-                "Battery optimization is active. Tap to disable."
-            } else {
-                "Battery optimization is inactive. Tap to enable."
-            }
+            contentDescription =
+                if (optimizationActive) {
+                    "Battery optimization is active. Tap to disable."
+                } else {
+                    "Battery optimization is inactive. Tap to enable."
+                }
 
-            icon = Icon.createWithResource(
-                this@BatteryOptimizationTile,
-                if (optimizationActive) R.drawable.ic_optimization_active else R.drawable.ic_optimization_inactive
-            )
+            icon =
+                Icon.createWithResource(
+                    this@BatteryOptimizationTile,
+                    if (optimizationActive) R.drawable.ic_optimization_active else R.drawable.ic_optimization_inactive,
+                )
 
             updateTile()
         }
@@ -219,7 +222,6 @@ class BatteryOptimizationTile : TileService() {
  */
 @RequiresApi(24)
 class PowerSaverTile : TileService() {
-
     private var powerSaverActive = false
 
     override fun onStartListening() {
@@ -273,10 +275,11 @@ class PowerSaverTile : TileService() {
         qsTile?.apply {
             state = if (powerSaverActive) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
             label = if (powerSaverActive) "Power Saver On" else "Power Saver Off"
-            icon = Icon.createWithResource(
-                this@PowerSaverTile,
-                if (powerSaverActive) R.drawable.ic_power_saver_on else R.drawable.ic_power_saver_off
-            )
+            icon =
+                Icon.createWithResource(
+                    this@PowerSaverTile,
+                    if (powerSaverActive) R.drawable.ic_power_saver_on else R.drawable.ic_power_saver_off,
+                )
             updateTile()
         }
     }
@@ -303,11 +306,13 @@ class PowerSaverTile : TileService() {
  */
 @RequiresApi(24)
 class ChargingModeTile : TileService() {
-
     private var chargingMode = ChargingMode.NORMAL
 
     enum class ChargingMode {
-        NORMAL, FAST, SLOW, OPTIMIZED
+        NORMAL,
+        FAST,
+        SLOW,
+        OPTIMIZED,
     }
 
     override fun onStartListening() {
@@ -322,12 +327,13 @@ class ChargingModeTile : TileService() {
     }
 
     private fun cycleChargingMode() {
-        chargingMode = when (chargingMode) {
-            ChargingMode.NORMAL -> ChargingMode.FAST
-            ChargingMode.FAST -> ChargingMode.SLOW
-            ChargingMode.SLOW -> ChargingMode.OPTIMIZED
-            ChargingMode.OPTIMIZED -> ChargingMode.NORMAL
-        }
+        chargingMode =
+            when (chargingMode) {
+                ChargingMode.NORMAL -> ChargingMode.FAST
+                ChargingMode.FAST -> ChargingMode.SLOW
+                ChargingMode.SLOW -> ChargingMode.OPTIMIZED
+                ChargingMode.OPTIMIZED -> ChargingMode.NORMAL
+            }
 
         updateTileState()
         saveChargingMode()
@@ -358,22 +364,24 @@ class ChargingModeTile : TileService() {
     private fun updateTileState() {
         qsTile?.apply {
             state = Tile.STATE_ACTIVE
-            label = when (chargingMode) {
-                ChargingMode.NORMAL -> "Normal"
-                ChargingMode.FAST -> "Fast"
-                ChargingMode.SLOW -> "Slow"
-                ChargingMode.OPTIMIZED -> "Optimized"
-            }
-
-            icon = Icon.createWithResource(
-                this@ChargingModeTile,
+            label =
                 when (chargingMode) {
-                    ChargingMode.NORMAL -> R.drawable.ic_charging_normal
-                    ChargingMode.FAST -> R.drawable.ic_charging_fast
-                    ChargingMode.SLOW -> R.drawable.ic_charging_slow
-                    ChargingMode.OPTIMIZED -> R.drawable.ic_charging_optimized
+                    ChargingMode.NORMAL -> "Normal"
+                    ChargingMode.FAST -> "Fast"
+                    ChargingMode.SLOW -> "Slow"
+                    ChargingMode.OPTIMIZED -> "Optimized"
                 }
-            )
+
+            icon =
+                Icon.createWithResource(
+                    this@ChargingModeTile,
+                    when (chargingMode) {
+                        ChargingMode.NORMAL -> R.drawable.ic_charging_normal
+                        ChargingMode.FAST -> R.drawable.ic_charging_fast
+                        ChargingMode.SLOW -> R.drawable.ic_charging_slow
+                        ChargingMode.OPTIMIZED -> R.drawable.ic_charging_optimized
+                    },
+                )
 
             updateTile()
         }

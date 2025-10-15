@@ -1,0 +1,249 @@
+
+> Configure project :app
+No release keystore found. Building unsigned release bundle locally.
+
+> Task :domain:compileKotlin UP-TO-DATE
+> Task :domain:compileJava NO-SOURCE
+> Task :domain:processResources NO-SOURCE
+> Task :domain:classes UP-TO-DATE
+> Task :domain:jar UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :core:preBuild UP-TO-DATE
+> Task :core:preDebugBuild UP-TO-DATE
+> Task :core:writeDebugAarMetadata UP-TO-DATE
+> Task :data:preBuild UP-TO-DATE
+> Task :data:preDebugBuild UP-TO-DATE
+> Task :data:writeDebugAarMetadata UP-TO-DATE
+> Task :ui:preBuild UP-TO-DATE
+> Task :ui:preDebugBuild UP-TO-DATE
+> Task :ui:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :core:generateDebugResValues UP-TO-DATE
+> Task :core:generateDebugResources UP-TO-DATE
+> Task :core:packageDebugResources UP-TO-DATE
+> Task :data:generateDebugResValues UP-TO-DATE
+> Task :data:generateDebugResources UP-TO-DATE
+> Task :data:packageDebugResources UP-TO-DATE
+> Task :ui:generateDebugResValues UP-TO-DATE
+> Task :ui:generateDebugResources UP-TO-DATE
+> Task :ui:packageDebugResources UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :core:extractDeepLinksDebug UP-TO-DATE
+> Task :core:processDebugManifest UP-TO-DATE
+> Task :data:extractDeepLinksDebug UP-TO-DATE
+> Task :data:processDebugManifest UP-TO-DATE
+> Task :ui:extractDeepLinksDebug UP-TO-DATE
+> Task :ui:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :core:compileDebugLibraryResources UP-TO-DATE
+> Task :core:parseDebugLocalResources UP-TO-DATE
+> Task :core:generateDebugRFile UP-TO-DATE
+> Task :data:compileDebugLibraryResources UP-TO-DATE
+> Task :data:parseDebugLocalResources UP-TO-DATE
+> Task :data:generateDebugRFile UP-TO-DATE
+> Task :ui:compileDebugLibraryResources UP-TO-DATE
+> Task :ui:parseDebugLocalResources UP-TO-DATE
+> Task :ui:generateDebugRFile UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :core:kaptGenerateStubsDebugKotlin UP-TO-DATE
+> Task :core:kaptDebugKotlin UP-TO-DATE
+> Task :core:compileDebugKotlin UP-TO-DATE
+> Task :core:javaPreCompileDebug UP-TO-DATE
+> Task :core:compileDebugJavaWithJavac UP-TO-DATE
+> Task :core:transformDebugClassesWithAsm UP-TO-DATE
+> Task :core:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :core:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :data:kaptGenerateStubsDebugKotlin UP-TO-DATE
+> Task :data:kaptDebugKotlin UP-TO-DATE
+> Task :data:compileDebugKotlin UP-TO-DATE
+> Task :data:javaPreCompileDebug UP-TO-DATE
+> Task :data:compileDebugJavaWithJavac UP-TO-DATE
+> Task :data:transformDebugClassesWithAsm UP-TO-DATE
+> Task :data:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :ui:compileDebugKotlin UP-TO-DATE
+> Task :ui:javaPreCompileDebug UP-TO-DATE
+> Task :ui:compileDebugJavaWithJavac NO-SOURCE
+> Task :ui:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:kaptGenerateStubsDebugKotlin UP-TO-DATE
+> Task :app:kaptDebugKotlin UP-TO-DATE
+> Task :app:compileDebugKotlin
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:269:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:270:48 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:271:57 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:272:85 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:273:27 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1562:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1736:5 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1738:44 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1739:46 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1740:44 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1741:47 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1742:43 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1743:48 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1781:5 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1783:38 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1784:38 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1785:38 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AIPoweredPowerManagementScreen.kt:1786:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1229:5 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1231:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1232:42 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1233:42 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1234:41 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1235:42 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1236:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1240:5 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1242:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1243:42 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1244:42 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1245:41 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1246:42 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/AdvancedAppUsageScreen.kt:1247:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryHealthScreen.kt:496:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryHealthScreen.kt:498:39 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryHealthScreen.kt:499:39 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryHealthScreen.kt:500:39 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryHealthScreen.kt:501:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryHealthScreen.kt:535:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryHealthScreen.kt:537:37 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryHealthScreen.kt:538:37 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryHealthScreen.kt:539:37 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryHealthScreen.kt:540:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryInfoDetailScreen.kt:428:58 Unresolved reference: MaterialTheme
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryInfoDetailScreen.kt:429:58 Unresolved reference: MaterialTheme
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryInfoDetailScreen.kt:430:58 Unresolved reference: MaterialTheme
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryInfoDetailScreen.kt:431:58 Unresolved reference: MaterialTheme
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryInfoDetailScreen.kt:432:54 Unresolved reference: MaterialTheme
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:724:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:726:38 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:727:38 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:728:38 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:729:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:733:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:735:47 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:736:50 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:737:51 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:741:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:743:33 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:744:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:745:32 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/BatteryStatsScreen.kt:746:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/ElectricCurrentDetailScreen.kt:498:23 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/ElectricCurrentDetailScreen.kt:517:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1140:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1153:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1169:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1182:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1198:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1211:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1326:39 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1337:39 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1342:39 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1605:43 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1605:76 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1605:112 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1625:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1772:36 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1780:36 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1835:36 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1839:27 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1860:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/EnhancedBatteryHealthScreen.kt:1867:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HealthDetailScreen.kt:537:23 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HealthDetailScreen.kt:573:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HealthDetailScreen.kt:589:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HealthDetailScreen.kt:591:49 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HealthDetailScreen.kt:592:49 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HealthDetailScreen.kt:593:49 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HealthDetailScreen.kt:594:49 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/HealthDetailScreen.kt:595:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/OngoingDetailScreen.kt:443:46 Unresolved reference: MaterialTheme
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/OngoingDetailScreen.kt:453:46 Unresolved reference: MaterialTheme
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/OngoingDetailScreen.kt:479:69 Unresolved reference: MaterialTheme
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/OngoingDetailScreen.kt:479:139 Unresolved reference: MaterialTheme
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PowerManagementScreen.kt:484:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PowerManagementScreen.kt:486:38 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PowerManagementScreen.kt:487:38 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PowerManagementScreen.kt:488:38 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PowerManagementScreen.kt:489:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PowerManagementScreen.kt:511:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PowerManagementScreen.kt:513:49 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PowerManagementScreen.kt:514:52 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PowerManagementScreen.kt:515:50 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PowerManagementScreen.kt:516:54 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PremiumOnboardingScreen.kt:392:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PremiumOnboardingScreen.kt:398:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PremiumOnboardingScreen.kt:410:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PremiumOnboardingScreen.kt:422:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/PremiumOnboardingScreen.kt:434:35 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:493:39 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:507:39 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:518:45 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:519:45 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:520:45 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:521:39 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1213:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1215:37 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1216:37 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1217:37 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1218:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1222:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1224:37 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1225:37 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1226:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1230:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1232:42 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1233:42 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/RealTimeMonitoringScreen.kt:1234:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SmartChargingScreen.kt:494:45 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SmartChargingScreen.kt:495:45 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/SmartChargingScreen.kt:496:39 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:430:23 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:475:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:484:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:491:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:498:23 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:513:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:521:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:528:31 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:545:13 Functions which invoke @Composable functions must be marked with the @Composable annotation
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:547:43 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:548:43 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:549:43 @Composable invocations can only happen from the context of a @Composable function
+e: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/app/src/main/java/com/voltai/smartbatteryguardian/screens/TemperatureDetailScreen.kt:550:31 @Composable invocations can only happen from the context of a @Composable function
+
+> Task :app:compileDebugKotlin FAILED
+
+[Incubating] Problems report is available at: file:///C:/Users/Diganta1/AndroidStudioProjects/VoltAI-SmartBatteryGuardian/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 59s
+63 actionable tasks: 1 executed, 62 up-to-date

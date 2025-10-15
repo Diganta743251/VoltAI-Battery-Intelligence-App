@@ -16,13 +16,16 @@ import javax.inject.Inject
  * Using basic types to avoid kapt issues with nested classes
  */
 @HiltViewModel
-class DataExportImportViewModel @Inject constructor(
-    application: Application
+class DataExportImportViewModel
+@Inject
+constructor(
+    application: Application,
 ) : AndroidViewModel(application) {
-
     // Simple state enums to avoid kapt issues
     enum class ExportState { IDLE, PREPARING, EXPORTING, COMPLETED, ERROR }
+
     enum class ImportState { IDLE, VALIDATING, IMPORTING, COMPLETED, ERROR }
+
     enum class BackupState { IDLE, AUTHENTICATING, PREPARING, UPLOADING, DOWNLOADING, COMPLETED, ERROR }
 
     // Export state flows
@@ -57,9 +60,7 @@ class DataExportImportViewModel @Inject constructor(
     private val _successMessage = MutableStateFlow<String?>(null)
     val successMessage: StateFlow<String?> = _successMessage.asStateFlow()
 
-    init {
-        loadMockData()
-    }
+    // No mock data preloaded; Cloud backups list starts empty and will be populated by real backups when integrated.
 
     /**
      * Export data to the specified URI
@@ -132,12 +133,15 @@ class DataExportImportViewModel @Inject constructor(
                 _successMessage.value = "Cloud backup created successfully!"
 
                 // Add new backup to list
-                val newBackup = CloudBackupItem(
-                    id = "backup_${System.currentTimeMillis()}",
-                    name = "VoltAI Backup ${java.text.SimpleDateFormat("MMM dd, yyyy HH:mm").format(java.util.Date())}",
-                    modifiedTime = System.currentTimeMillis(),
-                    size = (1024 * 1024 * 3.5).toLong() // 3.5 MB
-                )
+                val newBackup =
+                    CloudBackupItem(
+                        id = "backup_${System.currentTimeMillis()}",
+                        name = "VoltAI Backup ${java.text.SimpleDateFormat(
+                            "MMM dd, yyyy HH:mm",
+                        ).format(java.util.Date())}",
+                        modifiedTime = System.currentTimeMillis(),
+                        size = (1024 * 1024 * 3.5).toLong(), // 3.5 MB
+                    )
                 _cloudBackups.value = _cloudBackups.value + newBackup
             } catch (e: Exception) {
                 _cloudBackupState.value = BackupState.ERROR
@@ -198,29 +202,7 @@ class DataExportImportViewModel @Inject constructor(
         _successMessage.value = null
     }
 
-    private fun loadMockData() {
-        // Load some mock cloud backups
-        _cloudBackups.value = listOf(
-            CloudBackupItem(
-                id = "backup_1",
-                name = "VoltAI Backup Dec 07, 2024 15:30",
-                modifiedTime = System.currentTimeMillis() - (24 * 60 * 60 * 1000), // 1 day ago
-                size = (1024 * 1024 * 2.8).toLong() // 2.8 MB
-            ),
-            CloudBackupItem(
-                id = "backup_2",
-                name = "VoltAI Backup Dec 06, 2024 09:15",
-                modifiedTime = System.currentTimeMillis() - (2 * 24 * 60 * 60 * 1000), // 2 days ago
-                size = (1024 * 1024 * 3.1).toLong() // 3.1 MB
-            ),
-            CloudBackupItem(
-                id = "backup_3",
-                name = "VoltAI Backup Dec 05, 2024 18:45",
-                modifiedTime = System.currentTimeMillis() - (3 * 24 * 60 * 60 * 1000), // 3 days ago
-                size = (1024 * 1024 * 2.7).toLong() // 2.7 MB
-            )
-        )
-    }
+    // Removed loadMockData() to avoid simulated data
 
     /**
      * Simple data class for cloud backup items
@@ -229,6 +211,6 @@ class DataExportImportViewModel @Inject constructor(
         val id: String,
         val name: String,
         val modifiedTime: Long,
-        val size: Long
+        val size: Long,
     )
 }

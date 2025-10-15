@@ -16,11 +16,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object PremiumModule {
-
     @Provides
     @Singleton
     fun provideGooglePlayBillingManager(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): GooglePlayBillingManager {
         return GooglePlayBillingManager(context)
     }
@@ -28,7 +27,7 @@ object PremiumModule {
     @Provides
     @Singleton
     fun providePremiumManager(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): PremiumManager {
         return PremiumManager(context)
     }

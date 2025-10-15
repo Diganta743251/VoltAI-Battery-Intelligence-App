@@ -29,7 +29,7 @@ data class BenchmarkSuite(
     val duration: String,
     val tests: List<BenchmarkTest>,
     val lastRun: String,
-    val status: BenchmarkStatus
+    val status: BenchmarkStatus,
 )
 
 data class BenchmarkTest(
@@ -38,7 +38,7 @@ data class BenchmarkTest(
     val maxScore: Int,
     val unit: String,
     val performance: PerformanceLevel,
-    val details: TestDetails
+    val details: TestDetails,
 )
 
 data class CompetitiveAnalysis(
@@ -47,7 +47,7 @@ data class CompetitiveAnalysis(
     val chipset: String,
     val scores: Map<String, Int>,
     val ranking: Int,
-    val percentile: Float
+    val percentile: Float,
 )
 
 data class BatteryStressTest(
@@ -58,7 +58,7 @@ data class BatteryStressTest(
     val endLevel: Int,
     val drainRate: Float,
     val temperature: Float,
-    val efficiency: Float
+    val efficiency: Float,
 )
 
 data class PerformanceProfile(
@@ -67,16 +67,20 @@ data class PerformanceProfile(
     val scores: List<Score>,
     val overallRating: Float,
     val strengths: List<String>,
-    val weaknesses: List<String>
+    val weaknesses: List<String>,
 )
 
 // Extensible enums for future benchmarking capabilities
 enum class BenchmarkCategory { BATTERY_LIFE, CHARGING_SPEED, THERMAL_PERFORMANCE, POWER_EFFICIENCY, OVERALL }
+
 enum class BenchmarkStatus { READY, RUNNING, COMPLETED, FAILED }
+
 enum class PerformanceLevel { EXCELLENT, GOOD, AVERAGE, BELOW_AVERAGE, POOR }
+
 enum class StressScenario { GAMING, VIDEO_STREAMING, INTENSIVE_APPS, MIXED_USAGE, STANDBY }
 
 data class TestDetails(val metrics: Map<String, Float>)
+
 data class Score(val category: String, val value: Int, val maxValue: Int)
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,44 +97,48 @@ fun PerformanceBenchmarksScreen() {
     var isBenchmarking by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFF8F9FA),
-                        Color(0xFFFEF3E8),
-                        Color(0xFFFEF2F2)
-                    )
-                )
-            )
+                    colors =
+                    listOf(
+                        MaterialTheme.colorScheme.surface,
+                        MaterialTheme.colorScheme.primaryContainer,
+                        MaterialTheme.colorScheme.errorContainer,
+                    ),
+                ),
+            ),
     ) {
         // Benchmark Header
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = Color(0xFFEF4444),
-            shadowElevation = 16.dp
+            color = MaterialTheme.colorScheme.error,
+            shadowElevation = 16.dp,
         ) {
             Column(
-                modifier = Modifier.padding(24.dp)
+                modifier = Modifier.padding(24.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(
-                        modifier = Modifier
+                        modifier =
+                        Modifier
                             .size(64.dp)
                             .background(
                                 Brush.radialGradient(
-                                    colors = listOf(
-                                        Color.White.copy(alpha = 0.3f),
-                                        Color.White.copy(alpha = 0.1f)
-                                    )
+                                    colors =
+                                    listOf(
+                                        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.3f),
+                                        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.1f),
+                                    ),
                                 ),
-                                CircleShape
+                                CircleShape,
                             ),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         BenchmarkAnimation(isBenchmarking)
                     }
@@ -142,12 +150,12 @@ fun PerformanceBenchmarksScreen() {
                             text = "Performance Benchmarks",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onPrimary,
                         )
                         Text(
                             text = "Comprehensive battery & system testing",
                             fontSize = 14.sp,
-                            color = Color.White.copy(alpha = 0.85f)
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.85f),
                         )
                     }
 
@@ -159,27 +167,27 @@ fun PerformanceBenchmarksScreen() {
                 // Quick Stats Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     BenchmarkQuickStatCard(
                         "🔋",
                         "${performanceProfile.scores.find { it.category == "Battery" }?.value ?: 0}",
-                        "Battery"
+                        "Battery",
                     )
                     BenchmarkQuickStatCard(
                         "⚡",
                         "${performanceProfile.scores.find { it.category == "Charging" }?.value ?: 0}",
-                        "Charging"
+                        "Charging",
                     )
                     BenchmarkQuickStatCard(
                         "🌡️",
                         "${performanceProfile.scores.find { it.category == "Thermal" }?.value ?: 0}",
-                        "Thermal"
+                        "Thermal",
                     )
                     BenchmarkQuickStatCard(
                         "⚙️",
                         "${performanceProfile.scores.find { it.category == "Efficiency" }?.value ?: 0}",
-                        "Efficiency"
+                        "Efficiency",
                     )
                 }
             }
@@ -189,19 +197,19 @@ fun PerformanceBenchmarksScreen() {
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color.Transparent,
-            contentColor = Color(0xFFEF4444),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            contentColor = MaterialTheme.colorScheme.error,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
                     selected = selectedTab == index,
                     onClick = { selectedTab = index },
-                    modifier = Modifier.padding(vertical = 12.dp)
+                    modifier = Modifier.padding(vertical = 12.dp),
                 ) {
                     Text(
                         text = title,
                         fontSize = 14.sp,
-                        fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium
+                        fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
                     )
                 }
             }
@@ -209,10 +217,11 @@ fun PerformanceBenchmarksScreen() {
 
         // Benchmark Content
         LazyColumn(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             when (selectedTab) {
                 0 -> {
@@ -229,12 +238,12 @@ fun PerformanceBenchmarksScreen() {
                     items(stressTests.chunked(2)) { testPair ->
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             testPair.forEach { test ->
                                 StressTestCard(
                                     test = test,
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.weight(1f),
                                 )
                             }
                             if (testPair.size == 1) {
@@ -259,57 +268,57 @@ fun PerformanceBenchmarksScreen() {
 
 @Composable
 fun BenchmarkAnimation(isBenchmarking: Boolean) {
-    val scale by animateFloatAsState(
-        targetValue = if (isBenchmarking) 1.2f else 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(800),
-            repeatMode = RepeatMode.Reverse
+    // Static, battery-efficient benchmark indicator
+    Box(
+        modifier =
+        Modifier
+            .size(40.dp)
+            .background(
+                if (isBenchmarking) {
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                } else {
+                    Color.Transparent
+                },
+                CircleShape,
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = if (isBenchmarking) "⚡" else "📊",
+            fontSize = 28.sp,
+            color = MaterialTheme.colorScheme.onPrimary,
         )
-    )
-
-    val alpha by animateFloatAsState(
-        targetValue = if (isBenchmarking) 0.7f else 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(600),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
-    Text(
-        text = if (isBenchmarking) "⚡" else "📊",
-        fontSize = (28 * scale).sp,
-        color = Color.White.copy(alpha = alpha)
-    )
+    }
 }
 
 @Composable
 fun OverallScoreCard(overallRating: Float) {
     Surface(
         shape = RoundedCornerShape(16.dp),
-        color = Color.White.copy(alpha = 0.2f)
+        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = "${(overallRating * 100).toInt()}",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.colorScheme.onPrimary,
             )
             Text(
                 text = "Overall Score",
                 fontSize = 11.sp,
-                color = Color.White.copy(alpha = 0.8f),
-                textAlign = TextAlign.Center
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                textAlign = TextAlign.Center,
             )
             // Rating stars
             Row {
                 repeat(5) { index ->
                     Text(
                         text = if (index < (overallRating * 5).toInt()) "⭐" else "☆",
-                        fontSize = 10.sp
+                        fontSize = 10.sp,
                     )
                 }
             }
@@ -318,26 +327,30 @@ fun OverallScoreCard(overallRating: Float) {
 }
 
 @Composable
-fun BenchmarkQuickStatCard(icon: String, value: String, label: String) {
+fun BenchmarkQuickStatCard(
+    icon: String,
+    value: String,
+    label: String,
+) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = Color.White.copy(alpha = 0.15f)
+        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.15f),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(text = icon, fontSize = 14.sp)
             Text(
                 text = value,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.colorScheme.onPrimary,
             )
             Text(
                 text = label,
                 fontSize = 10.sp,
-                color = Color.White.copy(alpha = 0.8f)
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
             )
         }
     }
@@ -348,16 +361,16 @@ fun PerformanceOverviewCard(profile: PerformanceProfile) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "📊 Performance Overview",
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -374,20 +387,20 @@ fun PerformanceOverviewCard(profile: PerformanceProfile) {
             // Strengths and Weaknesses
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "💪 Strengths",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF10B981)
+                        color = MaterialTheme.colorScheme.primary,
                     )
                     profile.strengths.take(3).forEach { strength ->
                         Text(
                             text = "• $strength",
                             fontSize = 12.sp,
-                            color = Color(0xFF666666)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -397,13 +410,13 @@ fun PerformanceOverviewCard(profile: PerformanceProfile) {
                         text = "⚠️ Areas to Improve",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFEF4444)
+                        color = MaterialTheme.colorScheme.error,
                     )
                     profile.weaknesses.take(3).forEach { weakness ->
                         Text(
                             text = "• $weakness",
                             fontSize = 12.sp,
-                            color = Color(0xFF666666)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -417,33 +430,35 @@ fun ScoreProgressBar(score: Score) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = score.category,
             fontSize = 14.sp,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             LinearProgressIndicator(
                 progress = score.value.toFloat() / score.maxValue.toFloat(),
-                modifier = Modifier
+                modifier =
+                Modifier
                     .width(120.dp)
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
-                color = when {
-                    score.value >= score.maxValue * 0.8f -> Color(0xFF10B981)
-                    score.value >= score.maxValue * 0.6f -> Color(0xFFFF9800)
-                    else -> Color(0xFFEF4444)
+                color =
+                when {
+                    score.value >= score.maxValue * 0.8f -> MaterialTheme.colorScheme.primary
+                    score.value >= score.maxValue * 0.6f -> MaterialTheme.colorScheme.tertiary
+                    else -> MaterialTheme.colorScheme.error
                 },
-                trackColor = Color(0xFFE5E5E5)
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "${score.value}/${score.maxValue}",
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }
@@ -454,20 +469,21 @@ fun QuickBenchmarkCard(onBenchmark: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFEF4444).copy(alpha = 0.1f)
+        colors =
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.1f),
         ),
-        border = BorderStroke(2.dp, Color(0xFFEF4444))
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.error),
     ) {
         Column(
             modifier = Modifier.padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = "🚀 Quick Benchmark",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFFEF4444)
+                color = MaterialTheme.colorScheme.error,
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -476,14 +492,14 @@ fun QuickBenchmarkCard(onBenchmark: () -> Unit) {
                 text = "Run comprehensive battery and performance tests",
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
-                color = Color(0xFF666666)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 BenchmarkOptionButton("⚡ Quick", "2 min") { onBenchmark() }
                 BenchmarkOptionButton("🔋 Full", "15 min") { onBenchmark() }
@@ -494,28 +510,33 @@ fun QuickBenchmarkCard(onBenchmark: () -> Unit) {
 }
 
 @Composable
-fun BenchmarkOptionButton(title: String, duration: String, onClick: () -> Unit) {
+fun BenchmarkOptionButton(
+    title: String,
+    duration: String,
+    onClick: () -> Unit,
+) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFEF4444)
+        colors =
+        ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.error,
         ),
         shape = RoundedCornerShape(12.dp),
-        modifier = Modifier.width(80.dp)
+        modifier = Modifier.width(80.dp),
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = title,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.colorScheme.onPrimary,
             )
             Text(
                 text = duration,
                 fontSize = 10.sp,
-                color = Color.White.copy(alpha = 0.8f)
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
             )
         }
     }
@@ -526,15 +547,15 @@ fun BenchmarkSuiteCard(suite: BenchmarkSuite) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = suite.icon, fontSize = 24.sp)
@@ -543,12 +564,12 @@ fun BenchmarkSuiteCard(suite: BenchmarkSuite) {
                         Text(
                             text = suite.name,
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
                             text = suite.description,
                             fontSize = 14.sp,
-                            color = Color(0xFF666666)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -568,22 +589,23 @@ fun BenchmarkSuiteCard(suite: BenchmarkSuite) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "Duration: ${suite.duration} • Last run: ${suite.lastRun}",
                     fontSize = 12.sp,
-                    color = Color(0xFF666666)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
 
                 Button(
                     onClick = { /* Run benchmark */ },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFEF4444)
+                    colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error,
                     ),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
                 ) {
-                    Text("Run Test", fontSize = 12.sp, color = Color.White)
+                    Text("Run Test", fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary)
                 }
             }
         }
@@ -592,23 +614,24 @@ fun BenchmarkSuiteCard(suite: BenchmarkSuite) {
 
 @Composable
 fun BenchmarkStatusBadge(status: BenchmarkStatus) {
-    val (color, text) = when (status) {
-        BenchmarkStatus.READY -> Color(0xFF10B981) to "READY"
-        BenchmarkStatus.RUNNING -> Color(0xFFFF9800) to "RUNNING"
-        BenchmarkStatus.COMPLETED -> Color(0xFF3B82F6) to "DONE"
-        BenchmarkStatus.FAILED -> Color(0xFFEF4444) to "FAILED"
-    }
+    val (color, text) =
+        when (status) {
+            BenchmarkStatus.READY -> MaterialTheme.colorScheme.primary to "READY"
+            BenchmarkStatus.RUNNING -> MaterialTheme.colorScheme.tertiary to "RUNNING"
+            BenchmarkStatus.COMPLETED -> MaterialTheme.colorScheme.primary to "DONE"
+            BenchmarkStatus.FAILED -> MaterialTheme.colorScheme.error to "FAILED"
+        }
 
     Surface(
         shape = RoundedCornerShape(6.dp),
-        color = color.copy(alpha = 0.1f)
+        color = color.copy(alpha = 0.1f),
     ) {
         Text(
             text = text,
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
             color = color,
-            modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
         )
     }
 }
@@ -616,16 +639,17 @@ fun BenchmarkStatusBadge(status: BenchmarkStatus) {
 @Composable
 fun BenchmarkTestResult(test: BenchmarkTest) {
     Row(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = test.name,
             fontSize = 14.sp,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -633,12 +657,13 @@ fun BenchmarkTestResult(test: BenchmarkTest) {
                 text = "${test.score}${test.unit}",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = when (test.performance) {
-                    PerformanceLevel.EXCELLENT -> Color(0xFF10B981)
-                    PerformanceLevel.GOOD -> Color(0xFF3B82F6)
-                    PerformanceLevel.AVERAGE -> Color(0xFFFF9800)
-                    else -> Color(0xFFEF4444)
-                }
+                color =
+                when (test.performance) {
+                    PerformanceLevel.EXCELLENT -> MaterialTheme.colorScheme.primary
+                    PerformanceLevel.GOOD -> MaterialTheme.colorScheme.primary
+                    PerformanceLevel.AVERAGE -> MaterialTheme.colorScheme.tertiary
+                    else -> MaterialTheme.colorScheme.error
+                },
             )
             Spacer(modifier = Modifier.width(8.dp))
             PerformanceLevelIndicator(test.performance)
@@ -648,34 +673,38 @@ fun BenchmarkTestResult(test: BenchmarkTest) {
 
 @Composable
 fun PerformanceLevelIndicator(level: PerformanceLevel) {
-    val (emoji, color) = when (level) {
-        PerformanceLevel.EXCELLENT -> "🏆" to Color(0xFF10B981)
-        PerformanceLevel.GOOD -> "👍" to Color(0xFF3B82F6)
-        PerformanceLevel.AVERAGE -> "😐" to Color(0xFFFF9800)
-        PerformanceLevel.BELOW_AVERAGE -> "👎" to Color(0xFFEF4444)
-        PerformanceLevel.POOR -> "💀" to Color(0xFFDC2626)
-    }
+    val (emoji, color) =
+        when (level) {
+            PerformanceLevel.EXCELLENT -> "🏆" to MaterialTheme.colorScheme.primary
+            PerformanceLevel.GOOD -> "👍" to MaterialTheme.colorScheme.primary
+            PerformanceLevel.AVERAGE -> "😐" to MaterialTheme.colorScheme.tertiary
+            PerformanceLevel.BELOW_AVERAGE -> "👎" to MaterialTheme.colorScheme.error
+            PerformanceLevel.POOR -> "💀" to MaterialTheme.colorScheme.error
+        }
 
     Text(
         text = emoji,
-        fontSize = 16.sp
+        fontSize = 16.sp,
     )
 }
 
 @Composable
-fun StressTestCard(test: BatteryStressTest, modifier: Modifier = Modifier) {
+fun StressTestCard(
+    test: BatteryStressTest,
+    modifier: Modifier = Modifier,
+) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = test.testName,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -683,7 +712,7 @@ fun StressTestCard(test: BatteryStressTest, modifier: Modifier = Modifier) {
             Text(
                 text = test.scenario.name.replace("_", " "),
                 fontSize = 12.sp,
-                color = Color(0xFF666666)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -699,32 +728,36 @@ fun StressTestCard(test: BatteryStressTest, modifier: Modifier = Modifier) {
             Button(
                 onClick = { /* Run stress test */ },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFEF4444)
+                colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
                 ),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(8.dp),
             ) {
-                Text("Run Stress Test", fontSize = 12.sp, color = Color.White)
+                Text("Run Stress Test", fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary)
             }
         }
     }
 }
 
 @Composable
-fun StressTestMetric(label: String, value: String) {
+fun StressTestMetric(
+    label: String,
+    value: String,
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = label,
             fontSize = 12.sp,
-            color = Color(0xFF666666)
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
             text = value,
             fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
     }
 }
@@ -740,10 +773,10 @@ fun getBenchmarkSuites(): List<BenchmarkSuite> {
             "15 min",
             listOf(
                 BenchmarkTest("Screen On Time", 8, 10, "h", PerformanceLevel.GOOD, TestDetails(mapOf())),
-                BenchmarkTest("Standby Time", 72, 96, "h", PerformanceLevel.AVERAGE, TestDetails(mapOf()))
+                BenchmarkTest("Standby Time", 72, 96, "h", PerformanceLevel.AVERAGE, TestDetails(mapOf())),
             ),
             "2 hours ago",
-            BenchmarkStatus.COMPLETED
+            BenchmarkStatus.COMPLETED,
         ),
         BenchmarkSuite(
             "Charging Speed",
@@ -753,11 +786,11 @@ fun getBenchmarkSuites(): List<BenchmarkSuite> {
             "5 min",
             listOf(
                 BenchmarkTest("0-50% Time", 28, 30, "min", PerformanceLevel.EXCELLENT, TestDetails(mapOf())),
-                BenchmarkTest("50-100% Time", 45, 60, "min", PerformanceLevel.GOOD, TestDetails(mapOf()))
+                BenchmarkTest("50-100% Time", 45, 60, "min", PerformanceLevel.GOOD, TestDetails(mapOf())),
             ),
             "1 day ago",
-            BenchmarkStatus.READY
-        )
+            BenchmarkStatus.READY,
+        ),
     )
 }
 
@@ -766,7 +799,7 @@ fun getStressTests(): List<BatteryStressTest> {
         BatteryStressTest("Gaming Marathon", StressScenario.GAMING, 4.5f, 100, 25, 16.7f, 42.5f, 78.3f),
         BatteryStressTest("Video Streaming", StressScenario.VIDEO_STREAMING, 6.2f, 100, 15, 13.7f, 38.1f, 82.1f),
         BatteryStressTest("Mixed Usage", StressScenario.MIXED_USAGE, 8.1f, 100, 8, 11.4f, 35.2f, 85.6f),
-        BatteryStressTest("Standby Test", StressScenario.STANDBY, 24.0f, 100, 85, 0.63f, 28.5f, 94.2f)
+        BatteryStressTest("Standby Test", StressScenario.STANDBY, 24.0f, 100, 85, 0.63f, 28.5f, 94.2f),
     )
 }
 
@@ -777,7 +810,7 @@ fun getCompetitiveAnalysis(): CompetitiveAnalysis {
         "Snapdragon 8 Gen 2",
         mapOf("Battery" to 87, "Charging" to 92, "Efficiency" to 79),
         12,
-        85.3f
+        85.3f,
     )
 }
 
@@ -789,11 +822,11 @@ fun getPerformanceProfile(): PerformanceProfile {
             Score("Battery", 87, 100),
             Score("Charging", 92, 100),
             Score("Thermal", 76, 100),
-            Score("Efficiency", 83, 100)
+            Score("Efficiency", 83, 100),
         ),
         0.845f,
         listOf("Fast charging", "Good efficiency", "Stable performance"),
-        listOf("Thermal management", "Standby optimization", "Heavy load endurance")
+        listOf("Thermal management", "Standby optimization", "Heavy load endurance"),
     )
 }
 

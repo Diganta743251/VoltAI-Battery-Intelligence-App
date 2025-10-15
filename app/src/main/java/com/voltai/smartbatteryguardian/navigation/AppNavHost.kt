@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.voltai.smartbatteryguardian.BatteryDataProvider
 import com.voltai.smartbatteryguardian.screens.HomeScreen
+import com.voltai.smartbatteryguardian.screens.WelcomeScreen
 
 @Composable
 fun placeholderScreen(screenName: String) {
@@ -25,14 +26,38 @@ fun placeholderScreen(screenName: String) {
 fun AppNavHost(
     navController: NavHostController,
     batteryDataProvider: BatteryDataProvider,
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
 ) {
     val batteryData by batteryDataProvider.batteryData.collectAsState()
 
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
             com.voltai.smartbatteryguardian.screens.HomeScreen(
-                onNavigateToSettings = onNavigateToSettings
+                onNavigateToSettings = onNavigateToSettings,
+                onNavigateToCard = { cardRoute ->
+                    navController.navigate(cardRoute)
+                },
+                onNavigateToPremiumOnboarding = {
+                    navController.navigate("premium_onboarding")
+                },
+                onShowWelcome = {
+                    navController.navigate("welcome")
+                },
+            )
+        }
+
+        composable("welcome") {
+            WelcomeScreen(
+                onGetStarted = {
+                    navController.navigate("home") {
+                        popUpTo("welcome") { inclusive = true }
+                    }
+                },
+                onSkip = {
+                    navController.navigate("home") {
+                        popUpTo("welcome") { inclusive = true }
+                    }
+                },
             )
         }
 
@@ -49,7 +74,7 @@ fun AppNavHost(
         }
         composable("battery_info") {
             com.voltai.smartbatteryguardian.screens.BatteryInfoDetailScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable("current") {
@@ -82,6 +107,37 @@ fun AppNavHost(
         composable("wakelocks") {
             com.voltai.smartbatteryguardian.screens.WakelocksScreen()
         }
+        // Advanced/premium routes used by Home cards
+        composable("charging_analytics") {
+            com.voltai.smartbatteryguardian.screens.ChargingAnalyticsScreen()
+        }
+        composable("chemistry_lab") {
+            com.voltai.smartbatteryguardian.screens.BatteryChemistryLabScreen()
+        }
+        composable("system_optimization") {
+            com.voltai.smartbatteryguardian.screens.SystemOptimizationCenterScreen()
+        }
+        composable("performance_benchmarks") {
+            com.voltai.smartbatteryguardian.screens.PerformanceBenchmarksScreen()
+        }
+        composable("data_export_import") {
+            com.voltai.smartbatteryguardian.screens.DataExportImportScreen()
+        }
+        composable("battery_health_analytics") {
+            com.voltai.smartbatteryguardian.screens.BatteryHealthAnalyticsScreen()
+        }
+        composable("smart_charging") {
+            com.voltai.smartbatteryguardian.screens.SmartChargingScreen()
+        }
+        composable("battery_diagnostics") {
+            com.voltai.smartbatteryguardian.screens.BatteryDiagnosticsScreen()
+        }
+        composable("real_time_monitoring") {
+            com.voltai.smartbatteryguardian.screens.RealTimeMonitoringScreen()
+        }
+        composable("battery_optimization") {
+            com.voltai.smartbatteryguardian.screens.BatteryOptimizationScreen()
+        }
     }
 }
 
@@ -102,7 +158,7 @@ fun appNavHost(navController: NavHostController) {
         }
         composable("battery_info") {
             com.voltai.smartbatteryguardian.screens.BatteryInfoDetailScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable("current") {

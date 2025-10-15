@@ -21,16 +21,21 @@ data class AppUsageData(
     val openCount: Int,
     val avgSessionTime: Long,
     val peakUsageHour: Int,
-    val categoryColor: Color
+    val categoryColor: Color,
 )
 
 // Optimization Models
 enum class OptimizationCategory {
-    BATTERY, CPU, MEMORY, NETWORK
+    BATTERY,
+    CPU,
+    MEMORY,
+    NETWORK,
 }
 
 enum class OptimizationImpact {
-    HIGH, MEDIUM, LOW
+    HIGH,
+    MEDIUM,
+    LOW,
 }
 
 data class OptimizationSuggestion(
@@ -38,12 +43,16 @@ data class OptimizationSuggestion(
     val description: String,
     val category: OptimizationCategory,
     val impact: OptimizationImpact,
-    val estimatedSavings: String
+    val estimatedSavings: String,
 )
 
 // Charging Models
 enum class RecommendationPriority {
-    URGENT, HIGH, MEDIUM, LOW, INFO
+    URGENT,
+    HIGH,
+    MEDIUM,
+    LOW,
+    INFO,
 }
 
 data class ChargingProfile(
@@ -51,7 +60,7 @@ data class ChargingProfile(
     val sessions: Int,
     val avgTime: Long,
     val avgSpeed: Double,
-    val efficiency: Double
+    val efficiency: Double,
 )
 
 // Battery Health Models
@@ -62,7 +71,7 @@ data class BatteryHealthData(
     val voltageData: List<Double>,
     val temperatureData: List<Double>,
     val capacity: Double,
-    val designCapacity: Double
+    val designCapacity: Double,
 )
 
 // Charging Analytics Models
@@ -73,7 +82,7 @@ data class ChargingSession(
     val endPercentage: Int,
     val chargingSpeed: Double,
     val temperature: Double,
-    val efficiency: Double
+    val efficiency: Double,
 )
 
 // Smart Charging Models
@@ -82,7 +91,7 @@ data class SmartChargingRecommendation(
     val description: String,
     val priority: RecommendationPriority,
     val estimatedSavings: String,
-    val nextOptimalTime: Long?
+    val nextOptimalTime: Long?,
 )
 
 // Diagnostics Models
@@ -90,15 +99,24 @@ data class DiagnosticResult(
     val testName: String,
     val status: DiagnosticStatus,
     val details: String,
-    val severity: DiagnosticSeverity
+    val severity: DiagnosticSeverity,
 )
 
 enum class DiagnosticStatus {
-    PASSED, FAILED, WARNING, RUNNING
+    PASSED,
+    FAILED,
+    WARNING,
+    RUNNING,
 }
 
 enum class DiagnosticSeverity {
-    CRITICAL, HIGH, MEDIUM, LOW, INFO, WARNING, POSITIVE
+    CRITICAL,
+    HIGH,
+    MEDIUM,
+    LOW,
+    INFO,
+    WARNING,
+    POSITIVE,
 }
 
 // Real-time Monitoring Models
@@ -109,7 +127,7 @@ data class RealTimeMetrics(
     val current: Double,
     val temperature: Double,
     val power: Double,
-    val isCharging: Boolean
+    val isCharging: Boolean,
 )
 
 // Performance Benchmark Models
@@ -118,11 +136,16 @@ data class BenchmarkResult(
     val score: Double,
     val unit: String,
     val category: BenchmarkCategory,
-    val timestamp: Long
+    val timestamp: Long,
 )
 
 enum class BenchmarkCategory {
-    CPU, GPU, MEMORY, STORAGE, BATTERY, OVERALL
+    CPU,
+    GPU,
+    MEMORY,
+    STORAGE,
+    BATTERY,
+    OVERALL,
 }
 
 // Battery Health Analytics Models
@@ -132,11 +155,15 @@ data class HealthMetric(
     val percentage: Float,
     val status: HealthStatus,
     val icon: String,
-    val description: String
+    val description: String,
 )
 
 enum class HealthStatus {
-    EXCELLENT, GOOD, FAIR, POOR, CRITICAL
+    EXCELLENT,
+    GOOD,
+    FAIR,
+    POOR,
+    CRITICAL,
 }
 
 // Common Insight Severity (alias to DiagnosticSeverity for consistency)

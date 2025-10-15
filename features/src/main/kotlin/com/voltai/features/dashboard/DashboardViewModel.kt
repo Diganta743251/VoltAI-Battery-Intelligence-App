@@ -262,14 +262,76 @@ class DashboardViewModel @Inject constructor(
     }
     
     private fun updateBatteryForecast(status: BatteryStatus) {
-        val level = status.level
-        val charging = status.isCharging
-        val forecast = when {
-            charging -> "Fully charged in ${Random.nextInt(30, 120)} minutes"
-            level > 50 -> "Battery will last ${Random.nextInt(4, 8)} hours"
-            level > 20 -> "Battery will last ${Random.nextInt(2, 4)} hours"
-            else -> "Battery critically low - charge soon"
+        viewModelScope.launch {
+            val level = status.level
+            val charging = status.isCharging
+            
+            val forecast = if (charging) {
+                // Calculate charging time based on current
+                val current = kotlin.math.abs(status.current)
+                if (current > 0) {
+                    val remainingCapacity = (100 - level) * (_batteryHealth.value.currentCapacity / 100)
+                    val hoursToFull = remainingCapacity / current
+                    val minutesToFull = (hoursToFull * 60).toInt().coerceAtLeast(1)
+                    "Fully charged in $minutesToFull minutes"
+                } else {
+                    // Fallback to historical average if current is unavailable
+                    val avgChargingTime = 90 // Default estimate
+                    "Fully charged in ~$avgChargingTime minutes"
+                }
+            } else {
+                // Calculate discharge time based on recent logs
+                batteryRepository.getAllBatteryLogs()
+                    .firstOrNull()
+                    ?.let { logs ->
+                        val recentLogs = logs.takeLast(20)
+                        if (recentLogs.size >= 2) {
+                            val dischargeEvents = recentLogs.windowed(2)
+                                .filter { (prev, current) -> !prev.isCharging && !current.isCharging && prev.batteryLevel > current.batteryLevel }
+                            
+                            if (dischargeEvents.isNotEmpty()) {
+                                val avgDropPerHour = dischargeEvents.map { (prev, current) ->
+                                    val hoursDiff = (current.timestamp - prev.timestamp) / (1000.0 * 60 * 60)
+                                    val levelDrop = prev.batteryLevel - current.batteryLevel
+                                    if (hoursDiff > 0) levelDrop / hoursDiff else 0.0
+                                }.filter { it > 0 }.average()
+                                
+                                if (avgDropPerHour > 0) {
+                                    val hoursRemaining = (level / avgDropPerHour).toInt().coerceIn(0, 24)
+                                    when {
+                                        hoursRemaining > 4 -> "Battery will last $hoursRemaining hours"
+                                        hoursRemaining > 1 -> "Battery will last ~$hoursRemaining hours"
+                                        else -> "Less than 1 hour remaining"
+                                    }
+                                } else {
+                                    when {
+                                        level > 50 -> "Battery will last 5-7 hours (estimated)"
+                                        level > 20 -> "Battery will last 2-3 hours (estimated)"
+                                        else -> "Battery critically low - charge soon"
+                                    }
+                                }
+                            } else {
+                                when {
+                                    level > 50 -> "Battery will last 5-7 hours (estimated)"
+                                    level > 20 -> "Battery will last 2-3 hours (estimated)"
+                                    else -> "Battery critically low - charge soon"
+                                }
+                            }
+                        } else {
+                            when {
+                                level > 50 -> "Battery will last 5-7 hours (estimated)"
+                                level > 20 -> "Battery will last 2-3 hours (estimated)"
+                                else -> "Battery critically low - charge soon"
+                            }
+                        }
+                    } ?: when {
+                        level > 50 -> "Battery will last 5-7 hours (estimated)"
+                        level > 20 -> "Battery will last 2-3 hours (estimated)"
+                        else -> "Battery critically low - charge soon"
+                    }
+            }
+            
+            _batteryForecast.value = forecast
         }
-        _batteryForecast.value = forecast
     }
 }

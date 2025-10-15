@@ -16,11 +16,29 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Analytics Dashboard for battery data visualization and insights
+ *
+ * INTEGRATION REQUIRED:
+ * This class currently returns placeholder data (zeros/empty lists).
+ * To wire real data, inject the following DAOs from app module:
+ * - BatteryLogDao: For battery history (averageBatteryLevel, dailyUsageData, temperatureTrends)
+ * - ChargingSessionDao: For charging history (totalChargingCycles, chargingHistory, chargingPatternScore)
+ * - AppUsageDao: For screen time and usage patterns (screenOnTime, usagePatternScore)
+ * - BatteryDao: For health metrics (batteryHealthScore, estimatedBatteryLife)
+ *
+ * See RealTimeMonitoringViewModel for reference on DAO integration pattern.
+ */
 @Singleton
 class AnalyticsDashboard @Inject constructor(
     private val context: Context,
     private val dataExporter: DataExporter,
-    private val chartGenerator: ChartGenerator
+    private val chartGenerator: ChartGenerator,
+    // TODO: Inject DAOs here when wiring real data:
+    // private val batteryLogDao: BatteryLogDao,
+    // private val chargingSessionDao: ChargingSessionDao,
+    // private val appUsageDao: AppUsageDao,
+    // private val batteryDao: BatteryDao
 ) {
     
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -59,22 +77,29 @@ class AnalyticsDashboard @Inject constructor(
     }
     
     private suspend fun calculateAnalytics(timeRange: TimeRange): BatteryAnalytics {
-        // In a real implementation, this would query the battery log database
+        // PLACEHOLDER DATA - Returns zeros/empty until DAOs are injected
+        // When ready, calculate from database:
+        // val startTime = calculateStartTime(timeRange)
+        // val logs = batteryLogDao.getLogsBetween(startTime, System.currentTimeMillis())
+        // val sessions = chargingSessionDao.getCompletedSessions(limit)
+        // val appUsage = appUsageDao.getUsageForDate(date)
+        // val healthRecord = batteryDao.getLatestHealthRecord()
+        
         return BatteryAnalytics(
-            averageBatteryLevel = 75.5f,
-            averageTemperature = 32.1f,
-            averageVoltage = 3.85f,
-            totalChargingCycles = 45,
-            screenOnTime = "6h 32m",
-            batteryHealthScore = 94,
-            estimatedBatteryLife = "2.5 years",
-            powerEfficiencyScore = 87,
-            chargingPatternScore = 92,
-            usagePatternScore = 78,
-            dailyUsageData = generateMockDailyData(),
-            hourlyUsageData = generateMockHourlyData(),
-            temperatureTrends = generateMockTemperatureData(),
-            chargingHistory = generateMockChargingData()
+            averageBatteryLevel = 0f, // Calculate from logs.map { it.batteryLevel }.average()
+            averageTemperature = 0f, // Calculate from logs.map { it.temperature }.average()
+            averageVoltage = 0f, // Calculate from logs.map { it.voltage }.average()
+            totalChargingCycles = 0, // Query chargingSessionDao.getCompletedSessions().size
+            screenOnTime = "", // Sum appUsageDao.getTotalScreenTime()
+            batteryHealthScore = 0, // Get from healthRecord.healthPercentage
+            estimatedBatteryLife = "", // Calculate from healthRecord and charge cycles
+            powerEfficiencyScore = 0, // Calculate from usage patterns
+            chargingPatternScore = 0, // Analyze charging session patterns
+            usagePatternScore = 0, // Analyze app usage patterns
+            dailyUsageData = emptyList(), // Map logs to daily aggregates
+            hourlyUsageData = emptyList(), // Map logs to hourly averages
+            temperatureTrends = emptyList(), // Map logs to TemperatureData
+            chargingHistory = emptyList() // Map sessions to ChargingData
         )
     }
     
@@ -228,63 +253,7 @@ class AnalyticsDashboard @Inject constructor(
         context.startActivity(chooserIntent)
     }
     
-    private fun generateMockDailyData(): List<DailyUsageData> {
-        return (0..6).map { dayOffset ->
-            val date = LocalDateTime.now().minusDays(dayOffset.toLong())
-            DailyUsageData(
-                timestamp = date.toEpochSecond(java.time.ZoneOffset.UTC),
-                batteryLevel = (70..95).random().toFloat(),
-                screenOnTime = (4..8).random(),
-                chargingCycles = if ((0..2).random() == 0) 1 else 0
-            )
-        }
-    }
-    
-    private fun generateMockHourlyData(): List<HourlyUsageData> {
-        return (0..23).map { hour ->
-            val usage = when (hour) {
-                in 0..6 -> (5..15).random() // Low usage during sleep
-                in 7..9, in 17..20 -> (40..80).random() // High usage during commute/evening
-                in 10..16 -> (20..40).random() // Moderate usage during work
-                in 21..23 -> (25..50).random() // Evening usage
-                else -> (10..30).random()
-            }
-            
-            HourlyUsageData(
-                hour = hour,
-                usagePercentage = usage.toFloat()
-            )
-        }
-    }
-    
-    private fun generateMockTemperatureData(): List<TemperatureData> {
-        return (0..23).map { hourOffset ->
-            val timestamp = LocalDateTime.now().minusHours(hourOffset.toLong())
-            TemperatureData(
-                timestamp = timestamp.toEpochSecond(java.time.ZoneOffset.UTC),
-                temperature = (28f..38f).random()
-            )
-        }
-    }
-    
-    private fun generateMockChargingData(): List<ChargingData> {
-        return listOf(
-            ChargingData(
-                startTime = LocalDateTime.now().minusHours(2).toEpochSecond(java.time.ZoneOffset.UTC),
-                endTime = LocalDateTime.now().minusHours(1).toEpochSecond(java.time.ZoneOffset.UTC),
-                startLevel = 25,
-                endLevel = 85,
-                chargingType = "AC"
-            ),
-            ChargingData(
-                startTime = LocalDateTime.now().minusHours(8).toEpochSecond(java.time.ZoneOffset.UTC),
-                endTime = LocalDateTime.now().minusHours(6).toEpochSecond(java.time.ZoneOffset.UTC),
-                startLevel = 15,
-                endLevel = 90,
-                chargingType = "USB"
-            )
-        )
-    }
+    // Mock generators removed. Data will be provided by repositories in a future integration.
     
     fun refreshData() {
         loadDashboardData(_dashboardState.value.timeRange)

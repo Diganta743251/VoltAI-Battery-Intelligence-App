@@ -21,11 +21,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.voltai.smartbatteryguardian.ui.theme.extendedColors
 
 data class SettingsSection(
     val title: String,
     val icon: String,
-    val items: List<SettingsItem>
+    val items: List<SettingsItem>,
 )
 
 data class SettingsItem(
@@ -35,7 +36,7 @@ data class SettingsItem(
     val type: SettingsType,
     val value: Any? = null,
     val isPremium: Boolean = false,
-    val action: () -> Unit = {}
+    val action: () -> Unit = {},
 )
 
 enum class SettingsType { SWITCH, NAVIGATION, SLIDER, DROPDOWN, ACTION }
@@ -51,38 +52,41 @@ fun PremiumSettingsScreen() {
     val settingsSections = remember { generateSettingsSections() }
 
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFF8F9FA),
-                        Color(0xFFE8F5E8)
-                    )
-                )
-            )
+                    colors =
+                    listOf(
+                        MaterialTheme.colorScheme.surface,
+                        MaterialTheme.colorScheme.primaryContainer,
+                    ),
+                ),
+            ),
     ) {
         // Premium Header
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = Color(0xFF4CAF50),
-            shadowElevation = 8.dp
+            color = MaterialTheme.colorScheme.tertiary,
+            shadowElevation = 8.dp,
         ) {
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(20.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(
-                        modifier = Modifier
+                        modifier =
+                        Modifier
                             .size(48.dp)
                             .background(
-                                Color.White.copy(alpha = 0.2f),
-                                CircleShape
+                                MaterialTheme.colorScheme.surface.copy(alpha = 0.2f),
+                                CircleShape,
                             ),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         Text(text = "⚙️", fontSize = 24.sp)
                     }
@@ -94,25 +98,25 @@ fun PremiumSettingsScreen() {
                             text = "VoltAI Settings",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.surface,
                         )
                         Text(
                             text = "Professional battery management",
                             fontSize = 14.sp,
-                            color = Color.White.copy(alpha = 0.8f)
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
                         )
                     }
 
                     Surface(
                         shape = RoundedCornerShape(12.dp),
-                        color = Color.White.copy(alpha = 0.2f)
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.2f),
                     ) {
                         Text(
                             text = "💎 Pro",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                            color = MaterialTheme.colorScheme.surface,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                         )
                     }
                 }
@@ -123,20 +127,20 @@ fun PremiumSettingsScreen() {
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color.Transparent,
-            contentColor = Color(0xFF4CAF50),
-            modifier = Modifier.padding(horizontal = 16.dp)
+            contentColor = MaterialTheme.colorScheme.tertiary,
+            modifier = Modifier.padding(horizontal = 16.dp),
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
                     selected = selectedTab == index,
                     onClick = { selectedTab = index },
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(vertical = 8.dp),
                 ) {
                     Text(
                         text = title,
                         fontSize = 13.sp,
                         fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp),
                     )
                 }
             }
@@ -144,32 +148,37 @@ fun PremiumSettingsScreen() {
 
         // Content
         LazyColumn(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             when (selectedTab) {
-                0 -> items(
-                    settingsSections.filter { it.title in listOf("General", "Notifications", "Data & Storage") }
-                ) { section ->
-                    SettingsSectionCard(section)
-                }
-                1 -> items(
-                    settingsSections.filter { it.title in listOf("Battery Monitoring", "Power Optimization", "Charging") }
-                ) { section ->
-                    SettingsSectionCard(section)
-                }
-                2 -> items(
-                    settingsSections.filter { it.title in listOf("Appearance", "Home Screen", "Charts & Graphs") }
-                ) { section ->
-                    SettingsSectionCard(section)
-                }
-                3 -> items(
-                    settingsSections.filter { it.title in listOf("Privacy & Security", "Data Collection", "Permissions") }
-                ) { section ->
-                    SettingsSectionCard(section)
-                }
+                0 ->
+                    items(
+                        settingsSections.filter { it.title in listOf("General", "Notifications", "Data & Storage") },
+                    ) { section ->
+                        SettingsSectionCard(section)
+                    }
+                1 ->
+                    items(
+                        settingsSections.filter { it.title in listOf("Battery Monitoring", "Power Optimization", "Charging") },
+                    ) { section ->
+                        SettingsSectionCard(section)
+                    }
+                2 ->
+                    items(
+                        settingsSections.filter { it.title in listOf("Appearance", "Home Screen", "Charts & Graphs") },
+                    ) { section ->
+                        SettingsSectionCard(section)
+                    }
+                3 ->
+                    items(
+                        settingsSections.filter { it.title in listOf("Privacy & Security", "Data Collection", "Permissions") },
+                    ) { section ->
+                        SettingsSectionCard(section)
+                    }
                 4 -> item { PremiumFeaturesCard() }
             }
 
@@ -186,24 +195,24 @@ fun SettingsSectionCard(section: SettingsSection) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = section.icon,
-                    fontSize = 24.sp
+                    fontSize = 24.sp,
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = section.title,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
 
@@ -222,41 +231,42 @@ fun SettingsSectionCard(section: SettingsSection) {
 @Composable
 fun SettingsItemRow(item: SettingsItem) {
     Row(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .clickable { if (item.type != SettingsType.SWITCH) item.action() },
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = item.icon,
             contentDescription = null,
-            tint = if (item.isPremium) Color(0xFFFFD700) else Color(0xFF666666),
-            modifier = Modifier.size(20.dp)
+            tint = if (item.isPremium) MaterialTheme.extendedColors.premiumGold else MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(20.dp),
         )
 
         Spacer(modifier = Modifier.width(12.dp))
 
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = item.title,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 if (item.isPremium) {
                     Spacer(modifier = Modifier.width(6.dp))
                     Surface(
                         shape = RoundedCornerShape(6.dp),
-                        color = Color(0xFFFFD700).copy(alpha = 0.1f)
+                        color = MaterialTheme.extendedColors.premiumGoldContainer,
                     ) {
                         Text(
                             text = "💎",
                             fontSize = 8.sp,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
                         )
                     }
                 }
@@ -265,7 +275,7 @@ fun SettingsItemRow(item: SettingsItem) {
                 Text(
                     text = item.subtitle,
                     fontSize = 12.sp,
-                    color = Color(0xFF666666)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -279,18 +289,19 @@ fun SettingsItemRow(item: SettingsItem) {
                         isChecked = it
                         item.action()
                     },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color(0xFF4CAF50),
-                        checkedTrackColor = Color(0xFF4CAF50).copy(alpha = 0.3f)
-                    )
+                    colors =
+                    SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.tertiary,
+                        checkedTrackColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f),
+                    ),
                 )
             }
             SettingsType.NAVIGATION -> {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowRight,
                     contentDescription = null,
-                    tint = Color(0xFF999999),
-                    modifier = Modifier.size(20.dp)
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(20.dp),
                 )
             }
             SettingsType.ACTION -> {
@@ -298,8 +309,8 @@ fun SettingsItemRow(item: SettingsItem) {
                     Text(
                         text = item.value.toString(),
                         fontSize = 12.sp,
-                        color = Color(0xFF2196F3),
-                        fontWeight = FontWeight.Medium
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Medium,
                     )
                 }
             }
@@ -313,18 +324,17 @@ fun PremiumFeaturesCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Brush.linearGradient(
-                colors = listOf(Color(0xFFFFD700), Color(0xFFFFA000))
-            ).run { Color(0xFFFFD700).copy(alpha = 0.1f) }
+        colors =
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.extendedColors.premiumGold.copy(alpha = 0.1f),
         ),
-        border = BorderStroke(2.dp, Color(0xFFFFD700))
+        border = BorderStroke(2.dp, MaterialTheme.extendedColors.premiumGold),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = "💎", fontSize = 32.sp)
                 Spacer(modifier = Modifier.width(16.dp))
@@ -333,12 +343,12 @@ fun PremiumFeaturesCard() {
                         text = "Premium Features",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFB8860B)
+                        color = MaterialTheme.colorScheme.tertiary,
                     )
                     Text(
                         text = "Unlock advanced battery management",
                         fontSize = 14.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -353,20 +363,20 @@ fun PremiumFeaturesCard() {
                 "🌡️ Thermal management controls",
                 "📤 Data export (CSV/PDF)",
                 "🎨 Premium themes and customization",
-                "⚡ Background monitoring"
+                "⚡ Background monitoring",
             ).forEach { feature ->
                 Row(
                     modifier = Modifier.padding(vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = "✨",
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = feature,
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
                 }
             }
@@ -376,15 +386,17 @@ fun PremiumFeaturesCard() {
             Button(
                 onClick = { /* Open premium purchase */ },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFFD700)
+                colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.extendedColors.premiumGold,
+                    contentColor = MaterialTheme.extendedColors.onPremiumGold,
                 ),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Text(
                     text = "Upgrade to Premium",
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
+                    color = MaterialTheme.extendedColors.onPremiumGold,
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }
@@ -396,15 +408,15 @@ fun AboutCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = "🔋",
-                fontSize = 48.sp
+                fontSize = 48.sp,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -412,13 +424,14 @@ fun AboutCard() {
             Text(
                 text = "VoltAI Battery Guardian",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Text(
                 text = "Version 2.1.0 Professional",
                 fontSize = 14.sp,
-                color = Color(0xFF666666)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -426,8 +439,8 @@ fun AboutCard() {
             Text(
                 text = "Advanced AI-powered battery management for Android",
                 fontSize = 12.sp,
-                color = Color(0xFF999999),
-                textAlign = TextAlign.Center
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -438,7 +451,8 @@ fun generateSettingsSections(): List<SettingsSection> {
         SettingsSection(
             title = "General",
             icon = "⚙️",
-            items = listOf(
+            items =
+            listOf(
                 SettingsItem("Language", "English", Icons.Default.Settings, SettingsType.NAVIGATION),
                 SettingsItem("Units", "Metric", Icons.Default.Settings, SettingsType.NAVIGATION),
                 SettingsItem("Auto-start", "Launch on boot", Icons.Default.PlayArrow, SettingsType.SWITCH, true),
@@ -448,34 +462,35 @@ fun generateSettingsSections(): List<SettingsSection> {
                     Icons.Default.Settings,
                     SettingsType.SWITCH,
                     true,
-                    true
-                )
-            )
+                    true,
+                ),
+            ),
         ),
         SettingsSection(
             title = "Notifications",
             icon = "🔔",
-            items = listOf(
+            items =
+            listOf(
                 SettingsItem(
                     "Battery alerts",
                     "Low battery warnings",
                     Icons.Default.Notifications,
                     SettingsType.SWITCH,
-                    true
+                    true,
                 ),
                 SettingsItem(
                     "Health notifications",
                     "Battery health updates",
                     Icons.Default.Favorite,
                     SettingsType.SWITCH,
-                    true
+                    true,
                 ),
                 SettingsItem(
                     "Charging complete",
                     "Full charge alerts",
                     Icons.Default.Build,
                     SettingsType.SWITCH,
-                    false
+                    false,
                 ),
                 SettingsItem(
                     "AI recommendations",
@@ -483,21 +498,22 @@ fun generateSettingsSections(): List<SettingsSection> {
                     Icons.Default.Star,
                     SettingsType.SWITCH,
                     true,
-                    true
-                )
-            )
+                    true,
+                ),
+            ),
         ),
         SettingsSection(
             title = "Data & Storage",
             icon = "💾",
-            items = listOf(
+            items =
+            listOf(
                 SettingsItem(
                     "Export data",
                     "CSV/PDF reports",
                     Icons.Default.Share,
                     SettingsType.ACTION,
                     "Export",
-                    true
+                    true,
                 ),
                 SettingsItem(
                     "Import settings",
@@ -505,7 +521,7 @@ fun generateSettingsSections(): List<SettingsSection> {
                     Icons.Default.Settings,
                     SettingsType.ACTION,
                     "Import",
-                    true
+                    true,
                 ),
                 SettingsItem("Clear cache", "Free up storage", Icons.Default.Delete, SettingsType.ACTION, "Clear"),
                 SettingsItem(
@@ -513,20 +529,21 @@ fun generateSettingsSections(): List<SettingsSection> {
                     "30 days",
                     Icons.Default.Settings,
                     SettingsType.NAVIGATION,
-                    isPremium = true
-                )
-            )
+                    isPremium = true,
+                ),
+            ),
         ),
         SettingsSection(
             title = "Battery Monitoring",
             icon = "🔋",
-            items = listOf(
+            items =
+            listOf(
                 SettingsItem(
                     "Real-time tracking",
                     "Continuous monitoring",
                     Icons.Default.Build,
                     SettingsType.SWITCH,
-                    true
+                    true,
                 ),
                 SettingsItem(
                     "Health analysis",
@@ -534,14 +551,14 @@ fun generateSettingsSections(): List<SettingsSection> {
                     Icons.Default.Info,
                     SettingsType.SWITCH,
                     true,
-                    true
+                    true,
                 ),
                 SettingsItem(
                     "Temperature alerts",
                     "Thermal warnings",
                     Icons.Default.Warning,
                     SettingsType.SWITCH,
-                    true
+                    true,
                 ),
                 SettingsItem(
                     "Calibration reminders",
@@ -549,38 +566,45 @@ fun generateSettingsSections(): List<SettingsSection> {
                     Icons.Default.Settings,
                     SettingsType.SWITCH,
                     false,
-                    true
-                )
-            )
+                    true,
+                ),
+            ),
         ),
         SettingsSection(
             title = "Privacy & Security",
             icon = "🔒",
-            items = listOf(
+            items =
+            listOf(
                 SettingsItem(
                     "Data encryption",
                     "Secure local storage",
                     Icons.Default.Lock,
                     SettingsType.SWITCH,
                     true,
-                    true
+                    true,
                 ),
                 SettingsItem(
                     "Analytics sharing",
                     "Help improve VoltAI",
                     Icons.Default.Share,
                     SettingsType.SWITCH,
-                    false
+                    false,
                 ),
                 SettingsItem(
                     "Crash reports",
                     "Automatic bug reporting",
                     Icons.Default.Warning,
                     SettingsType.SWITCH,
-                    true
+                    true,
                 ),
-                SettingsItem("Reset all data", "Factory reset", Icons.Default.Refresh, SettingsType.ACTION, "Reset")
-            )
-        )
+                SettingsItem(
+                    "Reset all data",
+                    "Factory reset",
+                    Icons.Default.Refresh,
+                    SettingsType.ACTION,
+                    "Reset",
+                ),
+            ),
+        ),
     )
 }

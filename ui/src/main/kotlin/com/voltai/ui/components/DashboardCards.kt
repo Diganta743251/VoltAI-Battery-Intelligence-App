@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Locale
 
 @Composable
 fun ModernBatteryInfoCard(
@@ -93,7 +94,7 @@ fun ModernBatteryInfoCard(
                     )
                     StatItem(
                         label = "Voltage",
-                        value = "${String.format("%.2f", voltage)}V",
+                        value = "${String.format(Locale.US, "%.2f", voltage)}V",
                         icon = { FlashIcon(tint = MaterialTheme.colorScheme.primary) },
                         color = MaterialTheme.colorScheme.primary
                     )

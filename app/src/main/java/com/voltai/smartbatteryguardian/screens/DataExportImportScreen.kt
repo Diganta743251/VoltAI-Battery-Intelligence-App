@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -36,7 +38,7 @@ import java.util.*
 fun DataExportImportScreen(
     onBackClick: () -> Unit = {},
     onUpgradeClick: () -> Unit = {},
-    viewModel: DataExportImportViewModel = hiltViewModel()
+    viewModel: DataExportImportViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
 
@@ -50,29 +52,33 @@ fun DataExportImportScreen(
     val tabs = listOf("Export", "Import", "Cloud Backup")
 
     // File picker launchers
-    val exportLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.CreateDocument("application/*")
-    ) { uri ->
-        uri?.let { viewModel.exportToUri(it) }
-    }
+    val exportLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.CreateDocument("application/*"),
+        ) { uri ->
+            uri?.let { viewModel.exportToUri(it) }
+        }
 
-    val importLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri ->
-        uri?.let { viewModel.importFromUri(it) }
-    }
+    val importLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.OpenDocument(),
+        ) { uri ->
+            uri?.let { viewModel.importFromUri(it) }
+        }
 
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFF8F9FA),
-                        Color(0xFFE8F5E8)
-                    )
-                )
-            )
+                    colors =
+                    listOf(
+                        MaterialTheme.colorScheme.surface,
+                        MaterialTheme.colorScheme.primaryContainer,
+                    ),
+                ),
+            ),
     ) {
         // Header
         DataExportImportHeader(onBackClick = onBackClick)
@@ -81,7 +87,7 @@ fun DataExportImportScreen(
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color.Transparent,
-            contentColor = Color(0xFF4CAF50)
+            contentColor = MaterialTheme.colorScheme.primary,
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
@@ -91,60 +97,63 @@ fun DataExportImportScreen(
                         Text(
                             text = title,
                             fontSize = 14.sp,
-                            fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium
+                            fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
                         )
-                    }
+                    },
                 )
             }
         }
 
         // Content based on selected tab
         when (selectedTab) {
-            0 -> PremiumGate(
-                featureId = "export_data",
-                onUpgradeClick = onUpgradeClick
-            ) {
-                ExportTab(
-                    exportState = exportState,
-                    exportProgress = exportProgress,
-                    onExportClick = { format, config ->
-                        when (format) {
-                            "CSV" -> {
-                                exportLauncher.launch("voltai_battery_data.csv")
+            0 ->
+                PremiumGate(
+                    featureId = "export_data",
+                    onUpgradeClick = onUpgradeClick,
+                ) {
+                    ExportTab(
+                        exportState = exportState,
+                        exportProgress = exportProgress,
+                        onExportClick = { format, config ->
+                            when (format) {
+                                "CSV" -> {
+                                    exportLauncher.launch("voltai_battery_data.csv")
+                                }
+                                "JSON" -> {
+                                    exportLauncher.launch("voltai_battery_data.json")
+                                }
+                                "BACKUP" -> {
+                                    exportLauncher.launch("voltai_backup.json")
+                                }
                             }
-                            "JSON" -> {
-                                exportLauncher.launch("voltai_battery_data.json")
-                            }
-                            "BACKUP" -> {
-                                exportLauncher.launch("voltai_backup.json")
-                            }
-                        }
-                    }
-                )
-            }
-            1 -> PremiumGate(
-                featureId = "export_data",
-                onUpgradeClick = onUpgradeClick
-            ) {
-                ImportTab(
-                    importState = importState,
-                    importProgress = importProgress,
-                    onImportClick = {
-                        importLauncher.launch(arrayOf("application/json", "text/csv"))
-                    }
-                )
-            }
-            2 -> PremiumGate(
-                featureId = "cloud_backup",
-                onUpgradeClick = onUpgradeClick
-            ) {
-                CloudBackupTab(
-                    cloudBackups = cloudBackups,
-                    onCreateBackup = { viewModel.createCloudBackup() },
-                    onRestoreBackup = { backupId -> viewModel.restoreCloudBackup(backupId) },
-                    onDeleteBackup = { backupId -> viewModel.deleteCloudBackup(backupId) }
-                )
-            }
+                        },
+                    )
+                }
+            1 ->
+                PremiumGate(
+                    featureId = "export_data",
+                    onUpgradeClick = onUpgradeClick,
+                ) {
+                    ImportTab(
+                        importState = importState,
+                        importProgress = importProgress,
+                        onImportClick = {
+                            importLauncher.launch(arrayOf("application/json", "text/csv"))
+                        },
+                    )
+                }
+            2 ->
+                PremiumGate(
+                    featureId = "cloud_backup",
+                    onUpgradeClick = onUpgradeClick,
+                ) {
+                    CloudBackupTab(
+                        cloudBackups = cloudBackups,
+                        onCreateBackup = { viewModel.createCloudBackup() },
+                        onRestoreBackup = { backupId -> viewModel.restoreCloudBackup(backupId) },
+                        onDeleteBackup = { backupId -> viewModel.deleteCloudBackup(backupId) },
+                    )
+                }
         }
     }
 }
@@ -153,20 +162,21 @@ fun DataExportImportScreen(
 private fun DataExportImportHeader(onBackClick: () -> Unit) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = Color(0xFF4CAF50),
-        shadowElevation = 8.dp
+        color = MaterialTheme.colorScheme.primary,
+        shadowElevation = 8.dp,
     ) {
         Row(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onBackClick) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
-                    tint = Color.White
+                    tint = MaterialTheme.colorScheme.onPrimary,
                 )
             }
 
@@ -177,25 +187,25 @@ private fun DataExportImportHeader(onBackClick: () -> Unit) {
                     text = "Data Export & Import",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onPrimary,
                 )
                 Text(
                     text = "Backup and restore your battery data",
                     fontSize = 12.sp,
-                    color = Color.White.copy(alpha = 0.8f)
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                 )
             }
 
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = Color.White.copy(alpha = 0.2f)
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f),
             ) {
                 Text(
                     text = "💎 Premium",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                 )
             }
         }
@@ -206,26 +216,27 @@ private fun DataExportImportHeader(onBackClick: () -> Unit) {
 private fun ExportTab(
     exportState: DataExportImportViewModel.ExportState,
     exportProgress: Float,
-    onExportClick: (String, String) -> Unit
+    onExportClick: (String, String) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
             Text(
                 text = "Export Your Data",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = "Export your battery data in various formats for analysis or backup purposes.",
                 fontSize = 14.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(top = 4.dp)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 4.dp),
             )
         }
 
@@ -244,7 +255,7 @@ private fun ExportTab(
             item {
                 ExportProgressSection(
                     exportState = exportState,
-                    progress = exportProgress
+                    progress = exportProgress,
                 )
             }
         }
@@ -257,23 +268,21 @@ private fun ExportTab(
 }
 
 @Composable
-private fun ExportFormatSection(
-    onExportClick: (String, String) -> Unit
-) {
+private fun ExportFormatSection(onExportClick: (String, String) -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Export Formats",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -286,7 +295,7 @@ private fun ExportFormatSection(
                 fileSize = "~2-5 MB",
                 onClick = {
                     onExportClick("CSV", "csv_config")
-                }
+                },
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -299,7 +308,7 @@ private fun ExportFormatSection(
                 fileSize = "~1-3 MB",
                 onClick = {
                     onExportClick("JSON", "json_config")
-                }
+                },
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -312,7 +321,7 @@ private fun ExportFormatSection(
                 fileSize = "~3-8 MB",
                 onClick = {
                     onExportClick("BACKUP", "backup_config")
-                }
+                },
             )
         }
     }
@@ -324,29 +333,32 @@ private fun ExportFormatCard(
     title: String,
     description: String,
     fileSize: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFF1F8E9)
+        colors =
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Row(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = title,
-                tint = Color(0xFF4CAF50),
-                modifier = Modifier.size(32.dp)
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(32.dp),
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -356,28 +368,28 @@ private fun ExportFormatCard(
                     text = title,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF2E7D32)
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
                     text = description,
                     fontSize = 12.sp,
-                    color = Color.Gray,
-                    lineHeight = 16.sp
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    lineHeight = 16.sp,
                 )
                 Text(
                     text = "Size: $fileSize",
                     fontSize = 11.sp,
-                    color = Color(0xFF4CAF50),
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(top = 4.dp)
+                    modifier = Modifier.padding(top = 4.dp),
                 )
             }
 
             Icon(
-                imageVector = Icons.Default.ArrowForward,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Export",
-                tint = Color(0xFF4CAF50),
-                modifier = Modifier.size(20.dp)
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp),
             )
         }
     }
@@ -388,17 +400,17 @@ private fun ExportOptionsSection() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Export Options",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -414,42 +426,42 @@ private fun ExportOptionsSection() {
                 checked = includeBatteryReadings,
                 onCheckedChange = { includeBatteryReadings = it },
                 title = "Battery Readings",
-                description = "Real-time battery level, voltage, temperature data"
+                description = "Real-time battery level, voltage, temperature data",
             )
 
             ExportOptionCheckbox(
                 checked = includeChargingSessions,
                 onCheckedChange = { includeChargingSessions = it },
                 title = "Charging Sessions",
-                description = "Complete charging session history and analytics"
+                description = "Complete charging session history and analytics",
             )
 
             ExportOptionCheckbox(
                 checked = includeAppUsage,
                 onCheckedChange = { includeAppUsage = it },
                 title = "App Usage Stats",
-                description = "Battery usage by app and usage patterns"
+                description = "Battery usage by app and usage patterns",
             )
 
             ExportOptionCheckbox(
                 checked = includeHealthRecords,
                 onCheckedChange = { includeHealthRecords = it },
                 title = "Health Records",
-                description = "Battery health trends and degradation data"
+                description = "Battery health trends and degradation data",
             )
 
             ExportOptionCheckbox(
                 checked = includePredictions,
                 onCheckedChange = { includePredictions = it },
                 title = "AI Predictions",
-                description = "Machine learning predictions and recommendations"
+                description = "Machine learning predictions and recommendations",
             )
 
             ExportOptionCheckbox(
                 checked = includeSystemMetrics,
                 onCheckedChange = { includeSystemMetrics = it },
                 title = "System Metrics",
-                description = "Detailed system performance data (large file size)"
+                description = "Detailed system performance data (large file size)",
             )
         }
     }
@@ -460,20 +472,22 @@ private fun ExportOptionCheckbox(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     title: String,
-    description: String
+    description: String,
 ) {
     Row(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            colors = CheckboxDefaults.colors(
-                checkedColor = Color(0xFF4CAF50)
-            )
+            colors =
+            CheckboxDefaults.colors(
+                checkedColor = MaterialTheme.colorScheme.primary,
+            ),
         )
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -483,12 +497,12 @@ private fun ExportOptionCheckbox(
                 text = title,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = description,
                 fontSize = 11.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -497,76 +511,76 @@ private fun ExportOptionCheckbox(
 @Composable
 private fun ExportProgressSection(
     exportState: DataExportImportViewModel.ExportState,
-    progress: Float
+    progress: Float,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 when (exportState) {
                     DataExportImportViewModel.ExportState.PREPARING -> {
                         CircularProgressIndicator(
                             modifier = Modifier.size(20.dp),
-                            color = Color(0xFF4CAF50),
-                            strokeWidth = 2.dp
+                            color = MaterialTheme.colorScheme.primary,
+                            strokeWidth = 2.dp,
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = "Preparing export...",
                             fontSize = 16.sp,
-                            color = Color(0xFF2E7D32)
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                     DataExportImportViewModel.ExportState.EXPORTING -> {
                         CircularProgressIndicator(
                             progress = progress,
                             modifier = Modifier.size(20.dp),
-                            color = Color(0xFF4CAF50),
-                            strokeWidth = 2.dp
+                            color = MaterialTheme.colorScheme.primary,
+                            strokeWidth = 2.dp,
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = "Exporting data... ${(progress * 100).toInt()}%",
                             fontSize = 16.sp,
-                            color = Color(0xFF2E7D32)
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                     DataExportImportViewModel.ExportState.COMPLETED -> {
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = "Complete",
-                            tint = Color(0xFF4CAF50),
-                            modifier = Modifier.size(20.dp)
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = "Export completed successfully!",
                             fontSize = 16.sp,
-                            color = Color(0xFF4CAF50),
-                            fontWeight = FontWeight.Bold
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                     DataExportImportViewModel.ExportState.ERROR -> {
                         Icon(
                             imageVector = Icons.Default.Warning,
                             contentDescription = "Error",
-                            tint = Color(0xFFD32F2F),
-                            modifier = Modifier.size(20.dp)
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = "Export failed",
                             fontSize = 16.sp,
-                            color = Color(0xFFD32F2F),
-                            fontWeight = FontWeight.Bold
+                            color = MaterialTheme.colorScheme.error,
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                     else -> {}
@@ -578,7 +592,7 @@ private fun ExportProgressSection(
                 LinearProgressIndicator(
                     progress = progress,
                     modifier = Modifier.fillMaxWidth(),
-                    color = Color(0xFF4CAF50)
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
         }
@@ -590,40 +604,40 @@ private fun ExportStatisticsSection() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Data Summary",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 StatisticItem(
                     value = "12,843",
-                    label = "Battery\nReadings"
+                    label = "Battery\nReadings",
                 )
                 StatisticItem(
                     value = "387",
-                    label = "Charging\nSessions"
+                    label = "Charging\nSessions",
                 )
                 StatisticItem(
                     value = "2,156",
-                    label = "App Usage\nRecords"
+                    label = "App Usage\nRecords",
                 )
                 StatisticItem(
                     value = "94.2%",
-                    label = "Health\nScore"
+                    label = "Health\nScore",
                 )
             }
         }
@@ -633,23 +647,23 @@ private fun ExportStatisticsSection() {
 @Composable
 private fun StatisticItem(
     value: String,
-    label: String
+    label: String,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF4CAF50)
+            color = MaterialTheme.colorScheme.primary,
         )
         Text(
             text = label,
             fontSize = 11.sp,
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
-            lineHeight = 14.sp
+            lineHeight = 14.sp,
         )
     }
 }
@@ -658,26 +672,27 @@ private fun StatisticItem(
 private fun ImportTab(
     importState: DataExportImportViewModel.ImportState,
     importProgress: Float,
-    onImportClick: () -> Unit
+    onImportClick: () -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
             Text(
                 text = "Import Data",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = "Import battery data from previous exports or other devices.",
                 fontSize = 14.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(top = 4.dp)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 4.dp),
             )
         }
 
@@ -689,7 +704,7 @@ private fun ImportTab(
             item {
                 ImportProgressSection(
                     importState = importState,
-                    progress = importProgress
+                    progress = importProgress,
                 )
             }
         }
@@ -705,41 +720,43 @@ private fun ImportOptionsSection(onImportClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Import Options",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = onImportClick,
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF4CAF50)
-                )
+                colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                ),
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Import",
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "Select File to Import",
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
 
@@ -749,22 +766,22 @@ private fun ImportOptionsSection(onImportClick: () -> Unit) {
                 text = "Supported formats:",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.tertiary,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             SupportedFormatItem(
                 format = "JSON Files (.json)",
-                description = "VoltAI exported JSON data files"
+                description = "VoltAI exported JSON data files",
             )
             SupportedFormatItem(
                 format = "CSV Files (.csv)",
-                description = "Spreadsheet-compatible data files"
+                description = "Spreadsheet-compatible data files",
             )
             SupportedFormatItem(
                 format = "Backup Files (.json)",
-                description = "Complete VoltAI backup files"
+                description = "Complete VoltAI backup files",
             )
         }
     }
@@ -773,19 +790,20 @@ private fun ImportOptionsSection(onImportClick: () -> Unit) {
 @Composable
 private fun SupportedFormatItem(
     format: String,
-    description: String
+    description: String,
 ) {
     Row(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = Icons.Default.CheckCircle,
             contentDescription = "Supported",
-            tint = Color(0xFF4CAF50),
-            modifier = Modifier.size(16.dp)
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(16.dp),
         )
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -795,12 +813,12 @@ private fun SupportedFormatItem(
                 text = format,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = description,
                 fontSize = 11.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -809,76 +827,76 @@ private fun SupportedFormatItem(
 @Composable
 private fun ImportProgressSection(
     importState: DataExportImportViewModel.ImportState,
-    progress: Float
+    progress: Float,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 when (importState) {
                     DataExportImportViewModel.ImportState.VALIDATING -> {
                         CircularProgressIndicator(
                             modifier = Modifier.size(20.dp),
-                            color = Color(0xFF4CAF50),
-                            strokeWidth = 2.dp
+                            color = MaterialTheme.colorScheme.primary,
+                            strokeWidth = 2.dp,
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = "Validating import file...",
                             fontSize = 16.sp,
-                            color = Color(0xFF2E7D32)
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                     DataExportImportViewModel.ImportState.IMPORTING -> {
                         CircularProgressIndicator(
                             progress = progress,
                             modifier = Modifier.size(20.dp),
-                            color = Color(0xFF4CAF50),
-                            strokeWidth = 2.dp
+                            color = MaterialTheme.colorScheme.primary,
+                            strokeWidth = 2.dp,
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = "Importing data... ${(progress * 100).toInt()}%",
                             fontSize = 16.sp,
-                            color = Color(0xFF2E7D32)
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                     DataExportImportViewModel.ImportState.COMPLETED -> {
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = "Complete",
-                            tint = Color(0xFF4CAF50),
-                            modifier = Modifier.size(20.dp)
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = "Import completed successfully!",
                             fontSize = 16.sp,
-                            color = Color(0xFF4CAF50),
-                            fontWeight = FontWeight.Bold
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                     DataExportImportViewModel.ImportState.ERROR -> {
                         Icon(
                             imageVector = Icons.Default.Warning,
                             contentDescription = "Error",
-                            tint = Color(0xFFD32F2F),
-                            modifier = Modifier.size(20.dp)
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = "Import failed",
                             fontSize = 16.sp,
-                            color = Color(0xFFD32F2F),
-                            fontWeight = FontWeight.Bold
+                            color = MaterialTheme.colorScheme.error,
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                     else -> {}
@@ -890,7 +908,7 @@ private fun ImportProgressSection(
                 LinearProgressIndicator(
                     progress = progress,
                     modifier = Modifier.fillMaxWidth(),
-                    color = Color(0xFF4CAF50)
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
         }
@@ -902,43 +920,45 @@ private fun ImportGuidelinesSection() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFFFF3E0)
+        colors =
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = "Info",
-                    tint = Color(0xFFFF9800),
-                    modifier = Modifier.size(20.dp)
+                    tint = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.size(20.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "Import Guidelines",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFFE65100)
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "• Only import files exported from VoltAI Smart Battery Guardian\n" +
+                text =
+                "• Only import files exported from VoltAI Smart Battery Guardian\n" +
                     "• Large files may take several minutes to import\n" +
                     "• A backup will be created automatically before importing\n" +
                     "• Duplicate data will be handled according to your settings\n" +
                     "• Import process cannot be undone once completed",
                 fontSize = 12.sp,
-                color = Color(0xFFBF360C),
-                lineHeight = 18.sp
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                lineHeight = 18.sp,
             )
         }
     }
@@ -949,26 +969,27 @@ private fun CloudBackupTab(
     cloudBackups: List<DataExportImportViewModel.CloudBackupItem>,
     onCreateBackup: () -> Unit,
     onRestoreBackup: (String) -> Unit,
-    onDeleteBackup: (String) -> Unit
+    onDeleteBackup: (String) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
             Text(
                 text = "Cloud Backup",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = "Automatically backup your data to Google Drive and sync across devices.",
                 fontSize = 14.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(top = 4.dp)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 4.dp),
             )
         }
 
@@ -980,7 +1001,7 @@ private fun CloudBackupTab(
             CloudBackupListSection(
                 backups = cloudBackups,
                 onRestoreBackup = onRestoreBackup,
-                onDeleteBackup = onDeleteBackup
+                onDeleteBackup = onDeleteBackup,
             )
         }
     }
@@ -991,41 +1012,43 @@ private fun CloudBackupActionsSection(onCreateBackup: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Backup Actions",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = onCreateBackup,
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF4CAF50)
-                )
+                colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                ),
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Create Backup",
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "Create Cloud Backup",
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
 
@@ -1034,8 +1057,8 @@ private fun CloudBackupActionsSection(onCreateBackup: () -> Unit) {
             Text(
                 text = "Creates an encrypted backup of all your battery data and settings in Google Drive.",
                 fontSize = 12.sp,
-                color = Color.Gray,
-                textAlign = TextAlign.Center
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -1045,22 +1068,22 @@ private fun CloudBackupActionsSection(onCreateBackup: () -> Unit) {
 private fun CloudBackupListSection(
     backups: List<DataExportImportViewModel.CloudBackupItem>,
     onRestoreBackup: (String) -> Unit,
-    onDeleteBackup: (String) -> Unit
+    onDeleteBackup: (String) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Cloud Backups",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -1068,26 +1091,26 @@ private fun CloudBackupListSection(
             if (backups.isEmpty()) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "No backups",
-                        tint = Color.Gray,
-                        modifier = Modifier.size(48.dp)
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(48.dp),
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "No cloud backups found",
                         fontSize = 16.sp,
-                        color = Color.Gray,
-                        textAlign = TextAlign.Center
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
                     )
                     Text(
                         text = "Create your first backup to get started",
                         fontSize = 12.sp,
-                        color = Color.Gray,
-                        textAlign = TextAlign.Center
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
                     )
                 }
             } else {
@@ -1095,7 +1118,7 @@ private fun CloudBackupListSection(
                     CloudBackupItem(
                         backup = backup,
                         onRestore = { onRestoreBackup(backup.id) },
-                        onDelete = { onDeleteBackup(backup.id) }
+                        onDelete = { onDeleteBackup(backup.id) },
                     )
 
                     if (backup != backups.last()) {
@@ -1111,65 +1134,67 @@ private fun CloudBackupListSection(
 private fun CloudBackupItem(
     backup: DataExportImportViewModel.CloudBackupItem,
     onRestore: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFF1F8E9)
+        colors =
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top
+                verticalAlignment = Alignment.Top,
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = backup.name,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF2E7D32)
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                     Text(
-                        text = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault())
+                        text =
+                        SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault())
                             .format(java.util.Date(backup.modifiedTime)),
                         fontSize = 11.sp,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(
                         text = "Size: ${formatFileSize(backup.size)}",
                         fontSize = 11.sp,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
 
                 Row {
                     IconButton(
                         onClick = onRestore,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     ) {
                         Icon(
-                            imageVector = Icons.Default.ArrowForward,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                             contentDescription = "Restore",
-                            tint = Color(0xFF4CAF50),
-                            modifier = Modifier.size(16.dp)
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(16.dp),
                         )
                     }
                     IconButton(
                         onClick = onDelete,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Delete",
-                            tint = Color(0xFFD32F2F),
-                            modifier = Modifier.size(16.dp)
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(16.dp),
                         )
                     }
                 }

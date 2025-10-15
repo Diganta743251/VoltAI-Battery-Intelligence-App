@@ -22,14 +22,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): VoltAIDatabase {
+    fun provideDatabase(
+        @ApplicationContext context: Context,
+    ): VoltAIDatabase {
         return Room.databaseBuilder(
             context.applicationContext,
             VoltAIDatabase::class.java,
-            "voltai_database"
+            "voltai_database",
         )
             .addMigrations(VoltAIDatabase.MIGRATION_1_2, VoltAIDatabase.MIGRATION_2_3)
             .fallbackToDestructiveMigration() // For development only
@@ -52,10 +53,7 @@ object DatabaseModule {
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataModule {
-
     @Binds
     @Singleton
-    abstract fun bindBatteryDataProvider(
-        batteryDataProviderImpl: BatteryDataProviderImpl
-    ): BatteryDataProvider
+    abstract fun bindBatteryDataProvider(batteryDataProviderImpl: BatteryDataProviderImpl): BatteryDataProvider
 }

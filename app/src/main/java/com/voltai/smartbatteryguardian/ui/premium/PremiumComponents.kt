@@ -9,13 +9,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.voltai.smartbatteryguardian.premium.PremiumManager
+import com.voltai.smartbatteryguardian.ui.theme.extendedColors
 import com.voltai.smartbatteryguardian.viewmodels.PremiumViewModel
 
 /**
@@ -35,7 +36,7 @@ fun PremiumGate(
     modifier: Modifier = Modifier,
     premiumViewModel: PremiumViewModel = hiltViewModel(),
     onUpgradeClick: () -> Unit = {},
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val isFeatureAvailable = premiumViewModel.isFeatureAvailable(featureId)
 
@@ -46,7 +47,7 @@ fun PremiumGate(
             featureId = featureId,
             modifier = modifier,
             onUpgradeClick = onUpgradeClick,
-            premiumViewModel = premiumViewModel
+            premiumViewModel = premiumViewModel,
         ) {
             Box(modifier = Modifier.blur(8.dp)) {
                 content()
@@ -64,28 +65,29 @@ fun PremiumLockedContent(
     modifier: Modifier = Modifier,
     premiumViewModel: PremiumViewModel = hiltViewModel(),
     onUpgradeClick: () -> Unit = {},
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val paywallData = premiumViewModel.showPremiumPaywall(featureId)
 
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         // Blurred background content
         content()
 
         // Premium overlay
         Box(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .background(
-                    Color.Black.copy(alpha = 0.7f)
+                    MaterialTheme.colorScheme.scrim.copy(alpha = 0.6f),
                 ),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             PremiumUpgradeCard(
                 paywallData = paywallData,
-                onUpgradeClick = onUpgradeClick
+                onUpgradeClick = onUpgradeClick,
             )
         }
     }
@@ -97,23 +99,26 @@ fun PremiumLockedContent(
 @Composable
 fun PremiumUpgradeCard(
     paywallData: PremiumManager.PremiumPaywallData,
-    onUpgradeClick: () -> Unit = {}
+    onUpgradeClick: () -> Unit = {},
 ) {
     Card(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .padding(24.dp),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
+        colors =
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
     ) {
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // Premium badge
             PremiumBadge()
@@ -124,8 +129,8 @@ fun PremiumUpgradeCard(
                 text = paywallData.title,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                textAlign = TextAlign.Center
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -133,8 +138,8 @@ fun PremiumUpgradeCard(
             Text(
                 text = paywallData.description,
                 fontSize = 14.sp,
-                color = Color.Gray,
-                textAlign = TextAlign.Center
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -150,19 +155,22 @@ fun PremiumUpgradeCard(
             // Upgrade button
             Button(
                 onClick = onUpgradeClick,
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .height(50.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFFD700)
-                )
+                colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
             ) {
                 Text(
                     text = "Upgrade to Premium",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onPrimary,
                 )
             }
 
@@ -171,7 +179,7 @@ fun PremiumUpgradeCard(
             Text(
                 text = "Starting from ${paywallData.recommendedPlan.price}",
                 fontSize = 12.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -183,36 +191,28 @@ fun PremiumUpgradeCard(
 @Composable
 fun PremiumBadge(
     modifier: Modifier = Modifier,
-    size: Int = 64
+    size: Int = 64,
 ) {
-    val infiniteTransition = rememberInfiniteTransition()
-    val rotation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(3000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        )
-    )
-
+    // Static, battery-efficient premium badge
     Box(
-        modifier = modifier
+        modifier =
+        modifier
             .size(size.dp)
             .background(
-                Brush.radialGradient(
-                    colors = listOf(
-                        Color(0xFFFFD700),
-                        Color(0xFFFFA000)
-                    )
-                ),
-                shape = CircleShape
+                MaterialTheme.extendedColors.premiumGold,
+                shape = CircleShape,
+            )
+            .border(
+                2.dp,
+                MaterialTheme.extendedColors.premiumGold.copy(alpha = 0.85f),
+                CircleShape,
             ),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "💎",
             fontSize = (size * 0.4).sp,
-            color = Color.White
+            color = Color.White,
         )
     }
 }
@@ -223,17 +223,17 @@ fun PremiumBadge(
 @Composable
 fun PremiumBenefitItem(
     benefit: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = Icons.Default.CheckCircle,
             contentDescription = "Benefit",
-            tint = Color(0xFF4CAF50),
-            modifier = Modifier.size(20.dp)
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(20.dp),
         )
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -241,8 +241,8 @@ fun PremiumBenefitItem(
         Text(
             text = benefit,
             fontSize = 14.sp,
-            color = Color.Black.copy(alpha = 0.8f),
-            modifier = Modifier.weight(1f)
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.weight(1f),
         )
     }
 }
@@ -253,7 +253,7 @@ fun PremiumBenefitItem(
 @Composable
 fun PremiumStatusIndicator(
     premiumViewModel: PremiumViewModel = hiltViewModel(),
-    onPremiumClick: () -> Unit = {}
+    onPremiumClick: () -> Unit = {},
 ) {
     val premiumStatus by premiumViewModel.premiumState.collectAsState()
     val isPremium = premiumStatus != PremiumManager.PremiumStatus.FREE
@@ -261,19 +261,20 @@ fun PremiumStatusIndicator(
     Surface(
         modifier = Modifier.clickable { onPremiumClick() },
         shape = RoundedCornerShape(16.dp),
-        color = if (isPremium) {
-            Color(0xFFFFD700).copy(alpha = 0.2f)
+        color =
+        if (isPremium) {
+            MaterialTheme.extendedColors.premiumGoldContainer
         } else {
-            Color.Gray.copy(alpha = 0.2f)
-        }
+            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        },
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = if (isPremium) "💎" else "⭐",
-                fontSize = 14.sp
+                fontSize = 14.sp,
             )
 
             Spacer(modifier = Modifier.width(4.dp))
@@ -282,7 +283,7 @@ fun PremiumStatusIndicator(
                 text = if (isPremium) "Pro" else "Free",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
-                color = if (isPremium) Color(0xFFFFD700) else Color.Gray
+                color = if (isPremium) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -297,65 +298,69 @@ fun PremiumFeatureBanner(
     description: String,
     icon: ImageVector = Icons.Default.Star,
     onUpgradeClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
+        modifier =
+        modifier
             .fillMaxWidth()
             .clickable { onUpgradeClick() },
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF1A1A2E)
+        colors =
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Row(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .size(48.dp)
                     .background(
-                        Color(0xFFFFD700).copy(alpha = 0.2f),
-                        CircleShape
+                        MaterialTheme.extendedColors.premiumGoldContainer,
+                        CircleShape,
                     ),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = title,
-                    tint = Color(0xFFFFD700),
-                    modifier = Modifier.size(24.dp)
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp),
                 )
             }
 
             Spacer(modifier = Modifier.width(16.dp))
 
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = title,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
 
                 Text(
                     text = description,
                     fontSize = 12.sp,
-                    color = Color.White.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                 )
             }
 
             Icon(
-                imageVector = Icons.Default.ArrowForward,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Upgrade",
-                tint = Color.White.copy(alpha = 0.7f),
-                modifier = Modifier.size(20.dp)
+                tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
+                modifier = Modifier.size(20.dp),
             )
         }
     }
@@ -368,22 +373,22 @@ fun PremiumFeatureBanner(
 fun PremiumFeaturesShowcase(
     features: List<PremiumManager.PremiumFeature>,
     onFeatureClick: (String) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(features.chunked(2)) { rowFeatures ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 rowFeatures.forEach { feature ->
                     PremiumFeatureShowcaseCard(
                         feature = feature,
                         onClick = { onFeatureClick(feature.id) },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                 }
                 // Fill remaining space if odd number of items
@@ -402,49 +407,55 @@ fun PremiumFeaturesShowcase(
 fun PremiumFeatureShowcaseCard(
     feature: PremiumManager.PremiumFeature,
     onClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val categoryColor = when (feature.category) {
-        PremiumManager.FeatureCategory.ANALYTICS -> Color(0xFF4CAF50)
-        PremiumManager.FeatureCategory.OPTIMIZATION -> Color(0xFF2196F3)
-        PremiumManager.FeatureCategory.CUSTOMIZATION -> Color(0xFF9C27B0)
-        PremiumManager.FeatureCategory.BACKUP -> Color(0xFFFF9800)
-        PremiumManager.FeatureCategory.ALERTS -> Color(0xFFE91E63)
-        PremiumManager.FeatureCategory.WIDGETS -> Color(0xFF607D8B)
-    }
+    val categoryColor =
+        when (feature.category) {
+            PremiumManager.FeatureCategory.ANALYTICS -> Color(0xFF4CAF50)
+            PremiumManager.FeatureCategory.OPTIMIZATION -> Color(0xFF2196F3)
+            PremiumManager.FeatureCategory.CUSTOMIZATION -> Color(0xFF9C27B0)
+            PremiumManager.FeatureCategory.BACKUP -> Color(0xFFFF9800)
+            PremiumManager.FeatureCategory.ALERTS -> Color(0xFFE91E63)
+            PremiumManager.FeatureCategory.WIDGETS -> Color(0xFF607D8B)
+        }
 
     Card(
-        modifier = modifier
+        modifier =
+        modifier
             .height(140.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
+        colors =
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top
+                verticalAlignment = Alignment.Top,
             ) {
                 Box(
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .size(40.dp)
                         .background(
                             categoryColor.copy(alpha = 0.2f),
-                            CircleShape
+                            CircleShape,
                         ),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = when (feature.category) {
+                        text =
+                        when (feature.category) {
                             PremiumManager.FeatureCategory.ANALYTICS -> "📊"
                             PremiumManager.FeatureCategory.OPTIMIZATION -> "⚡"
                             PremiumManager.FeatureCategory.CUSTOMIZATION -> "🎨"
@@ -452,21 +463,21 @@ fun PremiumFeatureShowcaseCard(
                             PremiumManager.FeatureCategory.ALERTS -> "🔔"
                             PremiumManager.FeatureCategory.WIDGETS -> "📱"
                         },
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
                     )
                 }
 
                 if (feature.isPremium) {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        color = Color(0xFFFFD700).copy(alpha = 0.2f)
+                        color = MaterialTheme.extendedColors.premiumGoldContainer,
                     ) {
                         Text(
                             text = "PRO",
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFB8860B),
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            color = MaterialTheme.colorScheme.tertiary,
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                         )
                     }
                 }
@@ -477,14 +488,14 @@ fun PremiumFeatureShowcaseCard(
                     text = feature.title,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
 
                 Text(
                     text = feature.description,
                     fontSize = 11.sp,
-                    color = Color.Gray,
-                    maxLines = 2
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
                 )
             }
         }
@@ -497,7 +508,7 @@ fun PremiumFeatureShowcaseCard(
 @Composable
 fun IfPremium(
     premiumViewModel: PremiumViewModel = hiltViewModel(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     if (premiumViewModel.isPremium()) {
         content()
@@ -510,7 +521,7 @@ fun IfPremium(
 @Composable
 fun IfFree(
     premiumViewModel: PremiumViewModel = hiltViewModel(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     if (!premiumViewModel.isPremium()) {
         content()

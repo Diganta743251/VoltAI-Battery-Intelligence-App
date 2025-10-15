@@ -13,13 +13,14 @@ import kotlin.math.*
  * Advanced battery analytics engine with predictive capabilities
  */
 @Singleton
-class BatteryAnalyticsEngine @Inject constructor(
+class BatteryAnalyticsEngine
+@Inject
+constructor(
     private val context: Context,
     private val batteryLogDao: BatteryLogDao,
     private val chargingSessionDao: ChargingSessionDao,
-    private val appUsageDao: AppUsageDao
+    private val appUsageDao: AppUsageDao,
 ) {
-
     data class BatteryInsights(
         val batteryScore: Int,
         val healthTrend: HealthTrend,
@@ -27,40 +28,40 @@ class BatteryAnalyticsEngine @Inject constructor(
         val temperatureAnalysis: TemperatureAnalysis,
         val usagePatterns: UsagePatterns,
         val recommendations: List<Recommendation>,
-        val predictions: BatteryPredictions
+        val predictions: BatteryPredictions,
     )
 
     data class HealthTrend(
         val currentHealth: Int,
         val weeklyChange: Double,
         val monthlyChange: Double,
-        val trend: TrendDirection
+        val trend: TrendDirection,
     )
 
     data class TemperatureAnalysis(
         val averageTemp: Float,
         val maxTemp: Float,
         val overheatingEvents: Int,
-        val thermalRisk: RiskLevel
+        val thermalRisk: RiskLevel,
     )
 
     data class UsagePatterns(
         val dailyPattern: List<Float>,
         val chargingHabits: ChargingHabits,
-        val heavyUsagePeriods: List<UsagePeriod>
+        val heavyUsagePeriods: List<UsagePeriod>,
     )
 
     data class ChargingHabits(
         val averageSessionDuration: Long,
         val preferredChargingHours: List<Int>,
         val overchargingRisk: RiskLevel,
-        val chargingEfficiencyScore: Int
+        val chargingEfficiencyScore: Int,
     )
 
     data class UsagePeriod(
         val startHour: Int,
         val endHour: Int,
-        val intensityLevel: Int // 1-5
+        val intensityLevel: Int, // 1-5
     )
 
     data class Recommendation(
@@ -70,46 +71,54 @@ class BatteryAnalyticsEngine @Inject constructor(
         val priority: Priority,
         val category: RecommendationCategory,
         val estimatedImpact: String,
-        val actionRequired: Boolean = false
+        val actionRequired: Boolean = false,
     )
 
     data class BatteryPredictions(
         val estimatedLifespan: EstimatedLifespan,
         val nextChargingRecommendation: String,
         val capacityDegradation: CapacityDegradation,
-        val optimalChargingSchedule: List<ChargingWindow>
+        val optimalChargingSchedule: List<ChargingWindow>,
     )
 
     data class EstimatedLifespan(
         val remainingMonths: Int,
         val confidence: Double,
-        val factors: List<LifespanFactor>
+        val factors: List<LifespanFactor>,
     )
 
     data class CapacityDegradation(
         val currentCapacityPercent: Double,
         val monthlyDegradationRate: Double,
-        val projectedCapacityIn6Months: Double
+        val projectedCapacityIn6Months: Double,
     )
 
     data class ChargingWindow(
         val startHour: Int,
         val endHour: Int,
         val priority: Priority,
-        val reason: String
+        val reason: String,
     )
 
     data class LifespanFactor(
         val factor: String,
         val impact: Double, // -1.0 to 1.0
-        val description: String
+        val description: String,
     )
 
     enum class TrendDirection { IMPROVING, STABLE, DECLINING, CRITICAL }
+
     enum class RiskLevel { LOW, MEDIUM, HIGH, CRITICAL }
+
     enum class Priority { LOW, MEDIUM, HIGH, URGENT }
+
     enum class RecommendationCategory {
-        CHARGING, TEMPERATURE, USAGE, HEALTH, PERFORMANCE, SETTINGS
+        CHARGING,
+        TEMPERATURE,
+        USAGE,
+        HEALTH,
+        PERFORMANCE,
+        SETTINGS,
     }
 
     suspend fun generateInsights(currentBatteryData: BatteryData): BatteryInsights {
@@ -124,7 +133,7 @@ class BatteryAnalyticsEngine @Inject constructor(
             temperatureAnalysis = analyzeTemperaturePatterns(weekAgo),
             usagePatterns = analyzeUsagePatterns(weekAgo),
             recommendations = generateRecommendations(currentBatteryData, weekAgo),
-            predictions = generatePredictions(currentBatteryData, monthAgo)
+            predictions = generatePredictions(currentBatteryData, monthAgo),
         )
     }
 
@@ -136,34 +145,40 @@ class BatteryAnalyticsEngine @Inject constructor(
         score = minOf(score, (score * healthScore / 100.0).toInt())
 
         // Temperature factor (25% weight)
-        val tempScore = when {
-            batteryData.temperature > 45f -> 60
-            batteryData.temperature > 40f -> 80
-            batteryData.temperature > 35f -> 90
-            else -> 100
-        }
+        val tempScore =
+            when {
+                batteryData.temperature > 45f -> 60
+                batteryData.temperature > 40f -> 80
+                batteryData.temperature > 35f -> 90
+                else -> 100
+            }
         score = (score * (1.0 - 0.25) + tempScore * 0.25).toInt()
 
         // Charging behavior factor (20% weight)
-        val chargingScore = when {
-            batteryData.batteryLevel > 95 && batteryData.isCharging -> 85 // Overcharging penalty
-            batteryData.batteryLevel < 10 -> 90 // Deep discharge penalty
-            else -> 100
-        }
+        val chargingScore =
+            when {
+                batteryData.batteryLevel > 95 && batteryData.isCharging -> 85 // Overcharging penalty
+                batteryData.batteryLevel < 10 -> 90 // Deep discharge penalty
+                else -> 100
+            }
         score = (score * 0.8 + chargingScore * 0.2).toInt()
 
         // Usage intensity factor (15% weight)
-        val currentScore = when {
-            abs(batteryData.current) > 3000 -> 80 // High current draw
-            abs(batteryData.current) > 2000 -> 90
-            else -> 100
-        }
+        val currentScore =
+            when {
+                abs(batteryData.current) > 3000 -> 80 // High current draw
+                abs(batteryData.current) > 2000 -> 90
+                else -> 100
+            }
         score = (score * 0.85 + currentScore * 0.15).toInt()
 
         return score.coerceIn(0, 100)
     }
 
-    private suspend fun analyzeHealthTrend(weekAgo: Long, monthAgo: Long): HealthTrend {
+    private suspend fun analyzeHealthTrend(
+        weekAgo: Long,
+        monthAgo: Long,
+    ): HealthTrend {
         val recentLogs = batteryLogDao.getLogsBetween(weekAgo, System.currentTimeMillis())
         val monthlyLogs = batteryLogDao.getLogsBetween(monthAgo, System.currentTimeMillis())
 
@@ -174,12 +189,13 @@ class BatteryAnalyticsEngine @Inject constructor(
         val weeklyChange = currentHealth - weekOldHealth.toDouble()
         val monthlyChange = currentHealth - monthOldHealth.toDouble()
 
-        val trend = when {
-            monthlyChange < -5 -> TrendDirection.CRITICAL
-            monthlyChange < -2 -> TrendDirection.DECLINING
-            monthlyChange > 1 -> TrendDirection.IMPROVING
-            else -> TrendDirection.STABLE
-        }
+        val trend =
+            when {
+                monthlyChange < -5 -> TrendDirection.CRITICAL
+                monthlyChange < -2 -> TrendDirection.DECLINING
+                monthlyChange > 1 -> TrendDirection.IMPROVING
+                else -> TrendDirection.STABLE
+            }
 
         return HealthTrend(currentHealth, weeklyChange, monthlyChange, trend)
     }
@@ -188,21 +204,22 @@ class BatteryAnalyticsEngine @Inject constructor(
         val sessions = chargingSessionDao.getCompletedSessions(20)
         if (sessions.isEmpty()) return 0.85 // Default efficiency
 
-        val efficiencies = sessions.mapNotNull { session ->
-            session.endLevel?.let { endLevel ->
-                val chargeGain = endLevel - session.startLevel
-                val duration = (session.endTime ?: 0) - session.startTime
-                val hours = duration / (1000.0 * 60 * 60)
+        val efficiencies =
+            sessions.mapNotNull { session ->
+                session.endLevel?.let { endLevel ->
+                    val chargeGain = endLevel - session.startLevel
+                    val duration = (session.endTime ?: 0) - session.startTime
+                    val hours = duration / (1000.0 * 60 * 60)
 
-                if (hours > 0 && chargeGain > 0) {
-                    // Efficiency = charge gained per hour, normalized
-                    val efficiency = chargeGain / hours
-                    minOf(efficiency / 50.0, 1.0) // Normalize to 0-1 scale
-                } else {
-                    null
+                    if (hours > 0 && chargeGain > 0) {
+                        // Efficiency = charge gained per hour, normalized
+                        val efficiency = chargeGain / hours
+                        minOf(efficiency / 50.0, 1.0) // Normalize to 0-1 scale
+                    } else {
+                        null
+                    }
                 }
             }
-        }
 
         return efficiencies.average().coerceIn(0.0, 1.0)
     }
@@ -219,12 +236,13 @@ class BatteryAnalyticsEngine @Inject constructor(
         val maxTemp = temperatures.maxOrNull() ?: 25f
         val overheatingEvents = temperatures.count { it > 45f }
 
-        val thermalRisk = when {
-            maxTemp > 50f || overheatingEvents > 10 -> RiskLevel.CRITICAL
-            maxTemp > 45f || overheatingEvents > 5 -> RiskLevel.HIGH
-            maxTemp > 40f || overheatingEvents > 0 -> RiskLevel.MEDIUM
-            else -> RiskLevel.LOW
-        }
+        val thermalRisk =
+            when {
+                maxTemp > 50f || overheatingEvents > 10 -> RiskLevel.CRITICAL
+                maxTemp > 45f || overheatingEvents > 5 -> RiskLevel.HIGH
+                maxTemp > 40f || overheatingEvents > 0 -> RiskLevel.MEDIUM
+                else -> RiskLevel.LOW
+            }
 
         return TemperatureAnalysis(averageTemp, maxTemp, overheatingEvents, thermalRisk)
     }
@@ -239,8 +257,9 @@ class BatteryAnalyticsEngine @Inject constructor(
 
         logs.windowed(2).forEach { (prev, current) ->
             if (!prev.isCharging && !current.isCharging) {
-                val hour = java.time.Instant.ofEpochMilli(current.timestamp)
-                    .atZone(java.time.ZoneId.systemDefault()).hour
+                val hour =
+                    java.time.Instant.ofEpochMilli(current.timestamp)
+                        .atZone(java.time.ZoneId.systemDefault()).hour
                 val discharge = prev.batteryLevel - current.batteryLevel
                 if (discharge > 0 && hour in 0..23) {
                     hourlyDischarge[hour] = hourlyDischarge[hour] + discharge
@@ -249,61 +268,68 @@ class BatteryAnalyticsEngine @Inject constructor(
             }
         }
 
-        val dailyPattern = hourlyDischarge.mapIndexed { index, total ->
-            if (hourlyCounts[index] > 0) total / hourlyCounts[index] else 0f
-        }
+        val dailyPattern =
+            hourlyDischarge.mapIndexed { index, total ->
+                if (hourlyCounts[index] > 0) total / hourlyCounts[index] else 0f
+            }
 
         // Analyze charging habits
-        val chargingHabits = if (sessions.isNotEmpty()) {
-            val avgDuration = sessions.mapNotNull { session ->
-                session.endTime?.let { endTime ->
-                    endTime - session.startTime
-                }
-            }.average().toLong()
+        val chargingHabits =
+            if (sessions.isNotEmpty()) {
+                val avgDuration =
+                    sessions.mapNotNull { session ->
+                        session.endTime?.let { endTime ->
+                            endTime - session.startTime
+                        }
+                    }.average().toLong()
 
-            val chargingHours = sessions.map { session ->
-                java.time.Instant.ofEpochMilli(session.startTime)
-                    .atZone(java.time.ZoneId.systemDefault()).hour
-            }.groupingBy { it }.eachCount()
+                val chargingHours =
+                    sessions.map { session ->
+                        java.time.Instant.ofEpochMilli(session.startTime)
+                            .atZone(java.time.ZoneId.systemDefault()).hour
+                    }.groupingBy { it }.eachCount()
 
-            val preferredHours = chargingHours.entries
-                .sortedByDescending { it.value }
-                .take(3)
-                .map { it.key }
+                val preferredHours =
+                    chargingHours.entries
+                        .sortedByDescending { it.value }
+                        .take(3)
+                        .map { it.key }
 
-            val overchargingRisk = if (sessions.any {
-                    (it.endLevel ?: 0) > 95 &&
-                        ((it.endTime ?: 0) - it.startTime) > 2 * 60 * 60 * 1000
-                }
-            ) {
-                RiskLevel.HIGH
+                val overchargingRisk =
+                    if (sessions.any {
+                            (it.endLevel ?: 0) > 95 &&
+                                ((it.endTime ?: 0) - it.startTime) > 2 * 60 * 60 * 1000
+                        }
+                    ) {
+                        RiskLevel.HIGH
+                    } else {
+                        RiskLevel.LOW
+                    }
+
+                val efficiencyScore = (calculateChargingEfficiency() * 100).toInt()
+
+                ChargingHabits(avgDuration, preferredHours, overchargingRisk, efficiencyScore)
             } else {
-                RiskLevel.LOW
+                ChargingHabits(0L, emptyList(), RiskLevel.LOW, 85)
             }
-
-            val efficiencyScore = (calculateChargingEfficiency() * 100).toInt()
-
-            ChargingHabits(avgDuration, preferredHours, overchargingRisk, efficiencyScore)
-        } else {
-            ChargingHabits(0L, emptyList(), RiskLevel.LOW, 85)
-        }
 
         // Identify heavy usage periods
-        val heavyUsagePeriods = dailyPattern.mapIndexedNotNull { hour, discharge ->
-            if (discharge > 3f) { // More than 3% per hour
-                val intensity = minOf(5, (discharge / 2).toInt() + 1)
-                UsagePeriod(hour, hour + 1, intensity)
-            } else {
-                null
+        val heavyUsagePeriods =
+            dailyPattern.mapIndexedNotNull { hour, discharge ->
+                if (discharge > 3f) { // More than 3% per hour
+                    val intensity = minOf(5, (discharge / 2).toInt() + 1)
+                    UsagePeriod(hour, hour + 1, intensity)
+                } else {
+                    null
+                }
             }
-        }
 
         return UsagePatterns(dailyPattern, chargingHabits, heavyUsagePeriods)
     }
 
     private suspend fun generateRecommendations(
         batteryData: BatteryData,
-        weekAgo: Long
+        weekAgo: Long,
     ): List<Recommendation> {
         val recommendations = mutableListOf<Recommendation>()
 
@@ -317,8 +343,8 @@ class BatteryAnalyticsEngine @Inject constructor(
                     priority = Priority.URGENT,
                     category = RecommendationCategory.TEMPERATURE,
                     estimatedImpact = "+15% battery lifespan",
-                    actionRequired = true
-                )
+                    actionRequired = true,
+                ),
             )
         }
 
@@ -332,8 +358,8 @@ class BatteryAnalyticsEngine @Inject constructor(
                     priority = Priority.HIGH,
                     category = RecommendationCategory.CHARGING,
                     estimatedImpact = "+20% battery lifespan",
-                    actionRequired = true
-                )
+                    actionRequired = true,
+                ),
             )
         }
 
@@ -347,8 +373,8 @@ class BatteryAnalyticsEngine @Inject constructor(
                     priority = Priority.HIGH,
                     category = RecommendationCategory.HEALTH,
                     estimatedImpact = "Restore full performance",
-                    actionRequired = false
-                )
+                    actionRequired = false,
+                ),
             )
         }
 
@@ -363,8 +389,8 @@ class BatteryAnalyticsEngine @Inject constructor(
                     priority = Priority.MEDIUM,
                     category = RecommendationCategory.CHARGING,
                     estimatedImpact = "+10% charging efficiency",
-                    actionRequired = false
-                )
+                    actionRequired = false,
+                ),
             )
         }
 
@@ -373,79 +399,85 @@ class BatteryAnalyticsEngine @Inject constructor(
 
     private suspend fun generatePredictions(
         batteryData: BatteryData,
-        monthAgo: Long
+        monthAgo: Long,
     ): BatteryPredictions {
         val logs = batteryLogDao.getLogsBetween(monthAgo, System.currentTimeMillis())
 
         // Estimate battery lifespan
-        val healthDegradation = if (logs.size > 100) {
-            val oldestHealth = logs.first().healthPercentage
-            val latestHealth = logs.last().healthPercentage
-            val monthlyDegradation = (oldestHealth - latestHealth).toDouble()
-            kotlin.math.max(monthlyDegradation, 0.5) // Minimum 0.5% per month
-        } else {
-            1.0
-        }
+        val healthDegradation =
+            if (logs.size > 100) {
+                val oldestHealth = logs.first().healthPercentage
+                val latestHealth = logs.last().healthPercentage
+                val monthlyDegradation = (oldestHealth - latestHealth).toDouble()
+                kotlin.math.max(monthlyDegradation, 0.5) // Minimum 0.5% per month
+            } else {
+                1.0
+            }
 
         val remainingMonths = ((batteryData.healthPercentage - 60) / healthDegradation).toInt()
         val confidence = if (logs.size > 200) 0.85 else 0.65
 
-        val lifespanFactors = listOf(
-            LifespanFactor(
-                "Temperature Management",
-                if (batteryData.temperature > 40f) -0.3 else 0.1,
-                "High temperatures accelerate battery degradation"
-            ),
-            LifespanFactor(
-                "Charging Habits",
-                if (batteryData.batteryLevel > 90 && batteryData.isCharging) -0.2 else 0.1,
-                "Optimal charging range is 20-80%"
-            ),
-            LifespanFactor(
-                "Usage Intensity",
-                if (abs(batteryData.current) > 2000) -0.1 else 0.05,
-                "High current draw affects battery longevity"
+        val lifespanFactors =
+            listOf(
+                LifespanFactor(
+                    "Temperature Management",
+                    if (batteryData.temperature > 40f) -0.3 else 0.1,
+                    "High temperatures accelerate battery degradation",
+                ),
+                LifespanFactor(
+                    "Charging Habits",
+                    if (batteryData.batteryLevel > 90 && batteryData.isCharging) -0.2 else 0.1,
+                    "Optimal charging range is 20-80%",
+                ),
+                LifespanFactor(
+                    "Usage Intensity",
+                    if (abs(batteryData.current) > 2000) -0.1 else 0.05,
+                    "High current draw affects battery longevity",
+                ),
             )
-        )
 
-        val estimatedLifespan = EstimatedLifespan(
-            remainingMonths = maxOf(remainingMonths, 1),
-            confidence = confidence,
-            factors = lifespanFactors
-        )
+        val estimatedLifespan =
+            EstimatedLifespan(
+                remainingMonths = maxOf(remainingMonths, 1),
+                confidence = confidence,
+                factors = lifespanFactors,
+            )
 
         // Capacity degradation prediction
         val currentCapacity = batteryData.healthPercentage / 100.0
         val degradationRate = healthDegradation / 100.0
         val projectedCapacity = currentCapacity - (degradationRate * 6)
 
-        val capacityDegradation = CapacityDegradation(
-            currentCapacityPercent = currentCapacity,
-            monthlyDegradationRate = degradationRate,
-            projectedCapacityIn6Months = kotlin.math.max(projectedCapacity, 0.6)
-        )
+        val capacityDegradation =
+            CapacityDegradation(
+                currentCapacityPercent = currentCapacity,
+                monthlyDegradationRate = degradationRate,
+                projectedCapacityIn6Months = kotlin.math.max(projectedCapacity, 0.6),
+            )
 
         // Next charging recommendation
-        val nextChargingRecommendation = when {
-            batteryData.batteryLevel < 20 -> "Charge now to prevent deep discharge"
-            batteryData.batteryLevel > 80 && batteryData.isCharging -> "Unplug to prevent overcharging"
-            batteryData.batteryLevel in 20..80 -> "Battery level optimal"
-            else -> "Consider charging soon"
-        }
+        val nextChargingRecommendation =
+            when {
+                batteryData.batteryLevel < 20 -> "Charge now to prevent deep discharge"
+                batteryData.batteryLevel > 80 && batteryData.isCharging -> "Unplug to prevent overcharging"
+                batteryData.batteryLevel in 20..80 -> "Battery level optimal"
+                else -> "Consider charging soon"
+            }
 
         // Optimal charging schedule
         val currentHour = java.time.LocalDateTime.now().hour
-        val chargingWindows = listOf(
-            ChargingWindow(22, 6, Priority.HIGH, "Overnight slow charging"),
-            ChargingWindow(12, 14, Priority.MEDIUM, "Midday top-up if needed"),
-            ChargingWindow(18, 20, Priority.LOW, "Evening preparation")
-        ).filter { it.startHour != currentHour }
+        val chargingWindows =
+            listOf(
+                ChargingWindow(22, 6, Priority.HIGH, "Overnight slow charging"),
+                ChargingWindow(12, 14, Priority.MEDIUM, "Midday top-up if needed"),
+                ChargingWindow(18, 20, Priority.LOW, "Evening preparation"),
+            ).filter { it.startHour != currentHour }
 
         return BatteryPredictions(
             estimatedLifespan = estimatedLifespan,
             nextChargingRecommendation = nextChargingRecommendation,
             capacityDegradation = capacityDegradation,
-            optimalChargingSchedule = chargingWindows
+            optimalChargingSchedule = chargingWindows,
         )
     }
 
@@ -458,14 +490,15 @@ class BatteryAnalyticsEngine @Inject constructor(
             chargingSessionDao.getRecentSessions(1),
         ) { logs, sessions ->
             logs.firstOrNull()?.let { latestLog ->
-                val batteryData = BatteryData(
-                    batteryLevel = latestLog.batteryLevel,
-                    isCharging = latestLog.isCharging,
-                    temperature = latestLog.temperature,
-                    voltage = latestLog.voltage,
-                    current = latestLog.current,
-                    healthPercentage = latestLog.healthPercentage
-                )
+                val batteryData =
+                    BatteryData(
+                        batteryLevel = latestLog.batteryLevel,
+                        isCharging = latestLog.isCharging,
+                        temperature = latestLog.temperature,
+                        voltage = latestLog.voltage,
+                        current = latestLog.current,
+                        healthPercentage = latestLog.healthPercentage,
+                    )
                 generateInsights(batteryData)
             }
         }

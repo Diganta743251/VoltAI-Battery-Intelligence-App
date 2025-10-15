@@ -3,13 +3,12 @@ package com.voltai.smartbatteryguardian.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -30,11 +29,16 @@ fun DeviceLogScreen(onBackClick: () -> Unit = {}) {
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             },
+            colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         )
 
         LazyColumn(
@@ -61,8 +65,8 @@ fun DeviceLogScreen(onBackClick: () -> Unit = {}) {
                     ) {
                         Icon(
                             imageVector = Icons.Default.List,
-                            contentDescription = null,
-                            tint = Color(0xFF4CAF50),
+                            contentDescription = "Battery optimization event",
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp),
                         )
 
@@ -109,8 +113,8 @@ fun DeviceLogScreen(onBackClick: () -> Unit = {}) {
                     ) {
                         Icon(
                             imageVector = Icons.Default.List,
-                            contentDescription = null,
-                            tint = Color(0xFFFF9800),
+                            contentDescription = "Charging started event",
+                            tint = MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier.size(24.dp),
                         )
 
@@ -157,8 +161,8 @@ fun DeviceLogScreen(onBackClick: () -> Unit = {}) {
                     ) {
                         Icon(
                             imageVector = Icons.Default.List,
-                            contentDescription = null,
-                            tint = Color(0xFFF44336),
+                            contentDescription = "High temperature warning",
+                            tint = MaterialTheme.colorScheme.error,
                             modifier = Modifier.size(24.dp),
                         )
 

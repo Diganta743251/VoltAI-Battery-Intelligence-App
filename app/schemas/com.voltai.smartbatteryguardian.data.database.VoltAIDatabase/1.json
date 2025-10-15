@@ -1,0 +1,1404 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "f3889fd64181e4667032bf1b1ee96c33",
+    "entities": [
+      {
+        "tableName": "battery_readings",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `batteryLevel` INTEGER NOT NULL, `isCharging` INTEGER NOT NULL, `chargingType` TEXT, `voltage` REAL NOT NULL, `current` REAL NOT NULL, `temperature` REAL NOT NULL, `capacity` REAL NOT NULL, `health` TEXT NOT NULL, `technology` TEXT NOT NULL, `plugType` TEXT, `powerSource` TEXT, `chargingSpeed` REAL NOT NULL, `estimatedTimeRemaining` INTEGER, `cycleCount` INTEGER, `wearLevel` REAL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "batteryLevel",
+            "columnName": "batteryLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCharging",
+            "columnName": "isCharging",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "chargingType",
+            "columnName": "chargingType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "voltage",
+            "columnName": "voltage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "current",
+            "columnName": "current",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "temperature",
+            "columnName": "temperature",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "capacity",
+            "columnName": "capacity",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "health",
+            "columnName": "health",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "technology",
+            "columnName": "technology",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "plugType",
+            "columnName": "plugType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "powerSource",
+            "columnName": "powerSource",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "chargingSpeed",
+            "columnName": "chargingSpeed",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "estimatedTimeRemaining",
+            "columnName": "estimatedTimeRemaining",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cycleCount",
+            "columnName": "cycleCount",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wearLevel",
+            "columnName": "wearLevel",
+            "affinity": "REAL",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "charging_sessions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `startTime` INTEGER NOT NULL, `endTime` INTEGER, `startLevel` INTEGER NOT NULL, `endLevel` INTEGER, `chargerType` TEXT NOT NULL, `maxPower` REAL NOT NULL, `avgPower` REAL NOT NULL, `maxTemperature` REAL NOT NULL, `avgTemperature` REAL NOT NULL, `efficiency` REAL NOT NULL, `energyConsumed` REAL NOT NULL, `location` TEXT, `duration` INTEGER NOT NULL, `interruptionCount` INTEGER NOT NULL, `peakChargingSpeed` REAL NOT NULL, `thermalThrottling` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startTime",
+            "columnName": "startTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endTime",
+            "columnName": "endTime",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startLevel",
+            "columnName": "startLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endLevel",
+            "columnName": "endLevel",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "chargerType",
+            "columnName": "chargerType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxPower",
+            "columnName": "maxPower",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgPower",
+            "columnName": "avgPower",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxTemperature",
+            "columnName": "maxTemperature",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgTemperature",
+            "columnName": "avgTemperature",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "efficiency",
+            "columnName": "efficiency",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "energyConsumed",
+            "columnName": "energyConsumed",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "location",
+            "columnName": "location",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interruptionCount",
+            "columnName": "interruptionCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "peakChargingSpeed",
+            "columnName": "peakChargingSpeed",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "thermalThrottling",
+            "columnName": "thermalThrottling",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "app_usage_stats",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `packageName` TEXT NOT NULL, `appName` TEXT NOT NULL, `category` TEXT NOT NULL, `foregroundTime` INTEGER NOT NULL, `backgroundTime` INTEGER NOT NULL, `batteryUsage` REAL NOT NULL, `cpuUsage` REAL NOT NULL, `memoryUsage` INTEGER NOT NULL, `networkUsage` INTEGER NOT NULL, `wakelocksHeld` INTEGER NOT NULL, `notificationCount` INTEGER NOT NULL, `launchCount` INTEGER NOT NULL, `crashCount` INTEGER NOT NULL, `dataUsage` INTEGER NOT NULL, `gpsUsage` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "packageName",
+            "columnName": "packageName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "appName",
+            "columnName": "appName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "foregroundTime",
+            "columnName": "foregroundTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "backgroundTime",
+            "columnName": "backgroundTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "batteryUsage",
+            "columnName": "batteryUsage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cpuUsage",
+            "columnName": "cpuUsage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "memoryUsage",
+            "columnName": "memoryUsage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "networkUsage",
+            "columnName": "networkUsage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wakelocksHeld",
+            "columnName": "wakelocksHeld",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notificationCount",
+            "columnName": "notificationCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "launchCount",
+            "columnName": "launchCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "crashCount",
+            "columnName": "crashCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataUsage",
+            "columnName": "dataUsage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gpsUsage",
+            "columnName": "gpsUsage",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "battery_health_history",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `healthPercentage` REAL NOT NULL, `capacityRetained` REAL NOT NULL, `cycleCount` INTEGER NOT NULL, `degradationRate` REAL NOT NULL, `impedance` REAL, `voltageStability` REAL, `temperatureStress` REAL, `chargingStress` REAL, `ageInDays` INTEGER NOT NULL, `predictedLifespan` INTEGER, `recommendationScore` REAL NOT NULL, `calibrationNeeded` INTEGER NOT NULL, `criticalIssues` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "healthPercentage",
+            "columnName": "healthPercentage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "capacityRetained",
+            "columnName": "capacityRetained",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cycleCount",
+            "columnName": "cycleCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "degradationRate",
+            "columnName": "degradationRate",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "impedance",
+            "columnName": "impedance",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "voltageStability",
+            "columnName": "voltageStability",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "temperatureStress",
+            "columnName": "temperatureStress",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "chargingStress",
+            "columnName": "chargingStress",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ageInDays",
+            "columnName": "ageInDays",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "predictedLifespan",
+            "columnName": "predictedLifespan",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recommendationScore",
+            "columnName": "recommendationScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "calibrationNeeded",
+            "columnName": "calibrationNeeded",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "criticalIssues",
+            "columnName": "criticalIssues",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "power_profiles",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `isActive` INTEGER NOT NULL, `isCustom` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `cpuGovernor` TEXT, `maxCpuFreq` INTEGER, `screenBrightness` INTEGER, `screenTimeout` INTEGER, `wifiEnabled` INTEGER NOT NULL, `bluetoothEnabled` INTEGER NOT NULL, `locationEnabled` INTEGER NOT NULL, `syncEnabled` INTEGER NOT NULL, `backgroundAppLimits` TEXT, `notificationFilters` TEXT, `thermalThreshold` REAL, `batteryThreshold` INTEGER, `automationRules` TEXT, `estimatedSavings` REAL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "isActive",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCustom",
+            "columnName": "isCustom",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cpuGovernor",
+            "columnName": "cpuGovernor",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "maxCpuFreq",
+            "columnName": "maxCpuFreq",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "screenBrightness",
+            "columnName": "screenBrightness",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "screenTimeout",
+            "columnName": "screenTimeout",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wifiEnabled",
+            "columnName": "wifiEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bluetoothEnabled",
+            "columnName": "bluetoothEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "locationEnabled",
+            "columnName": "locationEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncEnabled",
+            "columnName": "syncEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "backgroundAppLimits",
+            "columnName": "backgroundAppLimits",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notificationFilters",
+            "columnName": "notificationFilters",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thermalThreshold",
+            "columnName": "thermalThreshold",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "batteryThreshold",
+            "columnName": "batteryThreshold",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "automationRules",
+            "columnName": "automationRules",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "estimatedSavings",
+            "columnName": "estimatedSavings",
+            "affinity": "REAL",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "optimization_logs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `optimizationType` TEXT NOT NULL, `action` TEXT NOT NULL, `targetApp` TEXT, `beforeValue` TEXT, `afterValue` TEXT, `impactScore` REAL NOT NULL, `success` INTEGER NOT NULL, `errorMessage` TEXT, `userTriggered` INTEGER NOT NULL, `aiConfidence` REAL, `batteryImpact` REAL, `performanceImpact` REAL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "optimizationType",
+            "columnName": "optimizationType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "action",
+            "columnName": "action",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "targetApp",
+            "columnName": "targetApp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "beforeValue",
+            "columnName": "beforeValue",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "afterValue",
+            "columnName": "afterValue",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "impactScore",
+            "columnName": "impactScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "success",
+            "columnName": "success",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "errorMessage",
+            "columnName": "errorMessage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userTriggered",
+            "columnName": "userTriggered",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "aiConfidence",
+            "columnName": "aiConfidence",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "batteryImpact",
+            "columnName": "batteryImpact",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "performanceImpact",
+            "columnName": "performanceImpact",
+            "affinity": "REAL",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "system_metrics",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `cpuUsage` REAL NOT NULL, `memoryUsage` REAL NOT NULL, `storageUsage` REAL NOT NULL, `networkUsage` REAL NOT NULL, `thermalState` TEXT NOT NULL, `batteryTemperature` REAL NOT NULL, `systemTemperature` REAL, `performanceScore` INTEGER NOT NULL, `stabilityScore` INTEGER NOT NULL, `efficiencyScore` INTEGER NOT NULL, `backgroundProcesses` INTEGER NOT NULL, `foregroundApps` INTEGER NOT NULL, `wakelocksActive` INTEGER NOT NULL, `networkConnections` INTEGER NOT NULL, `locationRequests` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cpuUsage",
+            "columnName": "cpuUsage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "memoryUsage",
+            "columnName": "memoryUsage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storageUsage",
+            "columnName": "storageUsage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "networkUsage",
+            "columnName": "networkUsage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "thermalState",
+            "columnName": "thermalState",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "batteryTemperature",
+            "columnName": "batteryTemperature",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "systemTemperature",
+            "columnName": "systemTemperature",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "performanceScore",
+            "columnName": "performanceScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stabilityScore",
+            "columnName": "stabilityScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "efficiencyScore",
+            "columnName": "efficiencyScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "backgroundProcesses",
+            "columnName": "backgroundProcesses",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "foregroundApps",
+            "columnName": "foregroundApps",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wakelocksActive",
+            "columnName": "wakelocksActive",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "networkConnections",
+            "columnName": "networkConnections",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "locationRequests",
+            "columnName": "locationRequests",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "benchmark_results",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `benchmarkType` TEXT NOT NULL, `testName` TEXT NOT NULL, `score` INTEGER NOT NULL, `maxPossibleScore` INTEGER NOT NULL, `duration` INTEGER NOT NULL, `deviceInfo` TEXT NOT NULL, `androidVersion` TEXT NOT NULL, `appVersion` TEXT NOT NULL, `batteryLevelStart` INTEGER NOT NULL, `batteryLevelEnd` INTEGER NOT NULL, `temperatureStart` REAL NOT NULL, `temperatureEnd` REAL NOT NULL, `cpuScore` INTEGER, `memoryScore` INTEGER, `storageScore` INTEGER, `batteryScore` INTEGER, `thermalScore` INTEGER, `notes` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "benchmarkType",
+            "columnName": "benchmarkType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "testName",
+            "columnName": "testName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "score",
+            "columnName": "score",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxPossibleScore",
+            "columnName": "maxPossibleScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deviceInfo",
+            "columnName": "deviceInfo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "androidVersion",
+            "columnName": "androidVersion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "appVersion",
+            "columnName": "appVersion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "batteryLevelStart",
+            "columnName": "batteryLevelStart",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "batteryLevelEnd",
+            "columnName": "batteryLevelEnd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "temperatureStart",
+            "columnName": "temperatureStart",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "temperatureEnd",
+            "columnName": "temperatureEnd",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cpuScore",
+            "columnName": "cpuScore",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "memoryScore",
+            "columnName": "memoryScore",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storageScore",
+            "columnName": "storageScore",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "batteryScore",
+            "columnName": "batteryScore",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thermalScore",
+            "columnName": "thermalScore",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ai_predictions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `predictionType` TEXT NOT NULL, `targetVariable` TEXT NOT NULL, `predictedValue` REAL NOT NULL, `confidence` REAL NOT NULL, `timeHorizon` INTEGER NOT NULL, `inputFeatures` TEXT NOT NULL, `modelVersion` TEXT NOT NULL, `accuracy` REAL, `actualValue` REAL, `errorRate` REAL, `lastUpdated` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `userId` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "predictionType",
+            "columnName": "predictionType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "targetVariable",
+            "columnName": "targetVariable",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "predictedValue",
+            "columnName": "predictedValue",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "confidence",
+            "columnName": "confidence",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timeHorizon",
+            "columnName": "timeHorizon",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "inputFeatures",
+            "columnName": "inputFeatures",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modelVersion",
+            "columnName": "modelVersion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "accuracy",
+            "columnName": "accuracy",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "actualValue",
+            "columnName": "actualValue",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "errorRate",
+            "columnName": "errorRate",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastUpdated",
+            "columnName": "lastUpdated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "isActive",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "user_preferences",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `theme` TEXT NOT NULL, `language` TEXT NOT NULL, `units` TEXT NOT NULL, `notificationsEnabled` INTEGER NOT NULL, `batteryAlertsEnabled` INTEGER NOT NULL, `healthNotificationsEnabled` INTEGER NOT NULL, `aiRecommendationsEnabled` INTEGER NOT NULL, `backgroundMonitoringEnabled` INTEGER NOT NULL, `dataCollectionEnabled` INTEGER NOT NULL, `analyticsEnabled` INTEGER NOT NULL, `crashReportingEnabled` INTEGER NOT NULL, `autoOptimizationEnabled` INTEGER NOT NULL, `thermalProtectionEnabled` INTEGER NOT NULL, `chargingAlertsEnabled` INTEGER NOT NULL, `darkModeScheduled` INTEGER NOT NULL, `premiumUnlocked` INTEGER NOT NULL, `dataRetentionDays` INTEGER NOT NULL, `exportFormat` TEXT NOT NULL, `backupEnabled` INTEGER NOT NULL, `lastBackupTime` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "theme",
+            "columnName": "theme",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "language",
+            "columnName": "language",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "units",
+            "columnName": "units",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notificationsEnabled",
+            "columnName": "notificationsEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "batteryAlertsEnabled",
+            "columnName": "batteryAlertsEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "healthNotificationsEnabled",
+            "columnName": "healthNotificationsEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "aiRecommendationsEnabled",
+            "columnName": "aiRecommendationsEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "backgroundMonitoringEnabled",
+            "columnName": "backgroundMonitoringEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataCollectionEnabled",
+            "columnName": "dataCollectionEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "analyticsEnabled",
+            "columnName": "analyticsEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "crashReportingEnabled",
+            "columnName": "crashReportingEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "autoOptimizationEnabled",
+            "columnName": "autoOptimizationEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "thermalProtectionEnabled",
+            "columnName": "thermalProtectionEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "chargingAlertsEnabled",
+            "columnName": "chargingAlertsEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "darkModeScheduled",
+            "columnName": "darkModeScheduled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "premiumUnlocked",
+            "columnName": "premiumUnlocked",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataRetentionDays",
+            "columnName": "dataRetentionDays",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exportFormat",
+            "columnName": "exportFormat",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "backupEnabled",
+            "columnName": "backupEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastBackupTime",
+            "columnName": "lastBackupTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "app_battery_impact",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `appUsageId` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, `batteryDrainRate` REAL NOT NULL, `screenOnContribution` REAL NOT NULL, `backgroundContribution` REAL NOT NULL, `networkContribution` REAL NOT NULL, `locationContribution` REAL NOT NULL, `wakelockContribution` REAL NOT NULL, `cpuContribution` REAL NOT NULL, `totalImpactScore` REAL NOT NULL, `efficiency` REAL NOT NULL, `recommendation` TEXT, FOREIGN KEY(`appUsageId`) REFERENCES `app_usage_stats`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "appUsageId",
+            "columnName": "appUsageId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "batteryDrainRate",
+            "columnName": "batteryDrainRate",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "screenOnContribution",
+            "columnName": "screenOnContribution",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "backgroundContribution",
+            "columnName": "backgroundContribution",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "networkContribution",
+            "columnName": "networkContribution",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "locationContribution",
+            "columnName": "locationContribution",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wakelockContribution",
+            "columnName": "wakelockContribution",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cpuContribution",
+            "columnName": "cpuContribution",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalImpactScore",
+            "columnName": "totalImpactScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "efficiency",
+            "columnName": "efficiency",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recommendation",
+            "columnName": "recommendation",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_app_battery_impact_appUsageId",
+            "unique": false,
+            "columnNames": [
+              "appUsageId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_app_battery_impact_appUsageId` ON `${TABLE_NAME}` (`appUsageId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "app_usage_stats",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "appUsageId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "charging_analytics",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `dailyChargingSessions` INTEGER NOT NULL, `totalChargingTime` INTEGER NOT NULL, `avgChargingSpeed` REAL NOT NULL, `maxChargingSpeed` REAL NOT NULL, `chargingEfficiency` REAL NOT NULL, `batteryHealthImpact` REAL NOT NULL, `thermalImpact` REAL NOT NULL, `costEstimate` REAL, `carbonFootprint` REAL, `optimalChargingHours` TEXT, `chargingPatternScore` REAL NOT NULL, `recommendations` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dailyChargingSessions",
+            "columnName": "dailyChargingSessions",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalChargingTime",
+            "columnName": "totalChargingTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgChargingSpeed",
+            "columnName": "avgChargingSpeed",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxChargingSpeed",
+            "columnName": "maxChargingSpeed",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "chargingEfficiency",
+            "columnName": "chargingEfficiency",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "batteryHealthImpact",
+            "columnName": "batteryHealthImpact",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "thermalImpact",
+            "columnName": "thermalImpact",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "costEstimate",
+            "columnName": "costEstimate",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "carbonFootprint",
+            "columnName": "carbonFootprint",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "optimalChargingHours",
+            "columnName": "optimalChargingHours",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "chargingPatternScore",
+            "columnName": "chargingPatternScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recommendations",
+            "columnName": "recommendations",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f3889fd64181e4667032bf1b1ee96c33')"
+    ]
+  }
+}

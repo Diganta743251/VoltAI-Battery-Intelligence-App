@@ -23,33 +23,37 @@ import javax.inject.Singleton
  * Handles CSV, JSON, and cloud backup functionality
  */
 @Singleton
-class DataExportManager @Inject constructor(
+class DataExportManager
+@Inject
+constructor(
     @ApplicationContext private val context: Context,
-    private val repository: BatteryRepository
+    private val repository: BatteryRepository,
 ) {
-
     private val _exportState = MutableStateFlow(ExportState.IDLE)
     val exportState: StateFlow<ExportState> = _exportState.asStateFlow()
 
     private val _exportProgress = MutableStateFlow(0f)
     val exportProgress: StateFlow<Float> = _exportProgress.asStateFlow()
 
-    private val json = Json {
-        prettyPrint = true
-        ignoreUnknownKeys = true
-        encodeDefaults = true
-    }
+    private val json =
+        Json {
+            prettyPrint = true
+            ignoreUnknownKeys = true
+            encodeDefaults = true
+        }
 
     enum class ExportState {
         IDLE,
         PREPARING,
         EXPORTING,
         COMPLETED,
-        ERROR
+        ERROR,
     }
 
     enum class ExportFormat {
-        CSV, JSON, BACKUP
+        CSV,
+        JSON,
+        BACKUP,
     }
 
     data class ExportConfig(
@@ -61,12 +65,12 @@ class DataExportManager @Inject constructor(
         val includePredictions: Boolean = true,
         val includeSystemMetrics: Boolean = false,
         val dateRange: DateRange? = null,
-        val outputPath: String? = null
+        val outputPath: String? = null,
     )
 
     data class DateRange(
         val startDate: Date,
-        val endDate: Date
+        val endDate: Date,
     )
 
     data class ExportResult(
@@ -74,60 +78,65 @@ class DataExportManager @Inject constructor(
         val filePath: String?,
         val fileSize: Long,
         val recordCount: Int,
-        val errorMessage: String?
+        val errorMessage: String?,
     )
 
     /**
      * Export data based on configuration
      */
-    suspend fun exportData(config: ExportConfig): ExportResult = withContext(Dispatchers.IO) {
-        try {
-            _exportState.value = ExportState.PREPARING
-            _exportProgress.value = 0f
+    suspend fun exportData(config: ExportConfig): ExportResult =
+        withContext(Dispatchers.IO) {
+            try {
+                _exportState.value = ExportState.PREPARING
+                _exportProgress.value = 0f
 
-            val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-            val filename = when (config.format) {
-                ExportFormat.CSV -> "voltai_battery_data_$timestamp.csv"
-                ExportFormat.JSON -> "voltai_battery_data_$timestamp.json"
-                ExportFormat.BACKUP -> "voltai_backup_$timestamp.json"
+                val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+                val filename =
+                    when (config.format) {
+                        ExportFormat.CSV -> "voltai_battery_data_$timestamp.csv"
+                        ExportFormat.JSON -> "voltai_battery_data_$timestamp.json"
+                        ExportFormat.BACKUP -> "voltai_backup_$timestamp.json"
+                    }
+
+                val outputFile = File(context.getExternalFilesDir(null), filename)
+
+                _exportState.value = ExportState.EXPORTING
+
+                when (config.format) {
+                    ExportFormat.CSV -> exportToCsv(config, outputFile)
+                    ExportFormat.JSON -> exportToJson(config, outputFile)
+                    ExportFormat.BACKUP -> exportToBackup(config, outputFile)
+                }
+
+                _exportState.value = ExportState.COMPLETED
+                _exportProgress.value = 1f
+
+                ExportResult(
+                    success = true,
+                    filePath = outputFile.absolutePath,
+                    fileSize = outputFile.length(),
+                    recordCount = countRecords(config),
+                    errorMessage = null,
+                )
+            } catch (e: Exception) {
+                _exportState.value = ExportState.ERROR
+                ExportResult(
+                    success = false,
+                    filePath = null,
+                    fileSize = 0L,
+                    recordCount = 0,
+                    errorMessage = e.message,
+                )
             }
-
-            val outputFile = File(context.getExternalFilesDir(null), filename)
-
-            _exportState.value = ExportState.EXPORTING
-
-            when (config.format) {
-                ExportFormat.CSV -> exportToCsv(config, outputFile)
-                ExportFormat.JSON -> exportToJson(config, outputFile)
-                ExportFormat.BACKUP -> exportToBackup(config, outputFile)
-            }
-
-            _exportState.value = ExportState.COMPLETED
-            _exportProgress.value = 1f
-
-            ExportResult(
-                success = true,
-                filePath = outputFile.absolutePath,
-                fileSize = outputFile.length(),
-                recordCount = countRecords(config),
-                errorMessage = null
-            )
-        } catch (e: Exception) {
-            _exportState.value = ExportState.ERROR
-            ExportResult(
-                success = false,
-                filePath = null,
-                fileSize = 0L,
-                recordCount = 0,
-                errorMessage = e.message
-            )
         }
-    }
 
     /**
      * Export data to CSV format
      */
-    private suspend fun exportToCsv(config: ExportConfig, outputFile: File) {
+    private suspend fun exportToCsv(
+        config: ExportConfig,
+        outputFile: File,
+    ) {
         FileOutputStream(outputFile).use { fos ->
             val writer = fos.bufferedWriter()
 
@@ -138,15 +147,15 @@ class DataExportManager @Inject constructor(
             if (config.includeReadings) {
                 writer.write("=== BATTERY READINGS ===\n")
                 writer.write(
-                    "Timestamp,Battery Level,Is Charging,Voltage,Current,Temperature,Health,Technology,Charging Speed,Charging Type,Plug Type,Power Source\n"
+                    "Timestamp,Battery Level,Is Charging,Voltage,Current,Temperature,Health,Technology,Charging Speed,Charging Type,Plug Type,Power Source\n",
                 )
 
                 val readings = getBatteryReadings(config.dateRange)
                 readings.forEach { reading ->
                     writer.write(
                         "${formatTimestamp(
-                            reading.timestamp
-                        )},${reading.batteryLevel},${reading.isCharging},${reading.voltage},${reading.current},${reading.temperature},${reading.health},${reading.technology},${reading.chargingSpeed},${reading.chargingType ?: ""},${reading.plugType ?: ""},${reading.powerSource ?: ""}\n"
+                            reading.timestamp,
+                        )},${reading.batteryLevel},${reading.isCharging},${reading.voltage},${reading.current},${reading.temperature},${reading.health},${reading.technology},${reading.chargingSpeed},${reading.chargingType ?: ""},${reading.plugType ?: ""},${reading.powerSource ?: ""}\n",
                     )
                     recordsWritten++
                     _exportProgress.value = recordsWritten.toFloat() / totalRecords
@@ -158,15 +167,15 @@ class DataExportManager @Inject constructor(
             if (config.includeChargingSessions) {
                 writer.write("=== CHARGING SESSIONS ===\n")
                 writer.write(
-                    "Start Time,End Time,Start Level,End Level,Duration,Charger Type,Max Power,Avg Power,Efficiency,Energy Consumed\n"
+                    "Start Time,End Time,Start Level,End Level,Duration,Charger Type,Max Power,Avg Power,Efficiency,Energy Consumed\n",
                 )
 
                 val sessions = getChargingSessions(config.dateRange)
                 sessions.forEach { session ->
                     writer.write(
                         "${formatTimestamp(
-                            session.startTime
-                        )},${session.endTime?.let { formatTimestamp(it) } ?: ""},${session.startLevel},${session.endLevel ?: ""},${session.duration},${session.chargerType},${session.maxPower},${session.avgPower},${session.efficiency},${session.energyConsumed}\n"
+                            session.startTime,
+                        )},${session.endTime?.let { formatTimestamp(it) } ?: ""},${session.startLevel},${session.endLevel ?: ""},${session.duration},${session.chargerType},${session.maxPower},${session.avgPower},${session.efficiency},${session.energyConsumed}\n",
                     )
                     recordsWritten++
                     _exportProgress.value = recordsWritten.toFloat() / totalRecords
@@ -178,15 +187,15 @@ class DataExportManager @Inject constructor(
             if (config.includeAppUsage) {
                 writer.write("=== APP USAGE STATS ===\n")
                 writer.write(
-                    "Timestamp,Package Name,App Name,Category,Battery Usage,Foreground Time,Background Time,CPU Usage,Network Usage\n"
+                    "Timestamp,Package Name,App Name,Category,Battery Usage,Foreground Time,Background Time,CPU Usage,Network Usage\n",
                 )
 
                 val appStats = getAppUsageStats(config.dateRange)
                 appStats.forEach { stat ->
                     writer.write(
                         "${formatTimestamp(
-                            stat.timestamp
-                        )},${stat.packageName},${stat.appName},${stat.category},${stat.batteryUsage},${stat.foregroundTime},${stat.backgroundTime},${stat.cpuUsage},${stat.networkUsage}\n"
+                            stat.timestamp,
+                        )},${stat.packageName},${stat.appName},${stat.category},${stat.batteryUsage},${stat.foregroundTime},${stat.backgroundTime},${stat.cpuUsage},${stat.networkUsage}\n",
                     )
                     recordsWritten++
                     _exportProgress.value = recordsWritten.toFloat() / totalRecords
@@ -198,15 +207,15 @@ class DataExportManager @Inject constructor(
             if (config.includeHealthRecords) {
                 writer.write("=== BATTERY HEALTH RECORDS ===\n")
                 writer.write(
-                    "Timestamp,Health Percentage,Capacity Retained,Cycle Count,Temperature Avg,Voltage Avg,Degradation Rate,Prediction Score\n"
+                    "Timestamp,Health Percentage,Capacity Retained,Cycle Count,Temperature Avg,Voltage Avg,Degradation Rate,Prediction Score\n",
                 )
 
                 val healthRecords = getBatteryHealthRecords(config.dateRange)
                 healthRecords.forEach { record ->
                     writer.write(
                         "${formatTimestamp(
-                            record.timestamp
-                        )},${record.healthPercentage},${record.capacityRetained},${record.cycleCount},${record.temperatureAvg},${record.voltageAvg},${record.degradationRate},${record.predictionScore}\n"
+                            record.timestamp,
+                        )},${record.healthPercentage},${record.capacityRetained},${record.cycleCount},${record.temperatureAvg},${record.voltageAvg},${record.degradationRate},${record.predictionScore}\n",
                     )
                     recordsWritten++
                     _exportProgress.value = recordsWritten.toFloat() / totalRecords
@@ -218,15 +227,15 @@ class DataExportManager @Inject constructor(
             if (config.includePredictions) {
                 writer.write("=== AI PREDICTIONS ===\n")
                 writer.write(
-                    "Timestamp,Prediction Type,Target Variable,Predicted Value,Confidence,Time Horizon,Model Version,Accuracy\n"
+                    "Timestamp,Prediction Type,Target Variable,Predicted Value,Confidence,Time Horizon,Model Version,Accuracy\n",
                 )
 
                 val predictions = getAIPredictions(config.dateRange)
                 predictions.forEach { prediction ->
                     writer.write(
                         "${formatTimestamp(
-                            prediction.timestamp
-                        )},${prediction.predictionType},${prediction.targetVariable},${prediction.predictedValue},${prediction.confidence},${prediction.timeHorizon},${prediction.modelVersion},${prediction.accuracy ?: ""}\n"
+                            prediction.timestamp,
+                        )},${prediction.predictionType},${prediction.targetVariable},${prediction.predictedValue},${prediction.confidence},${prediction.timeHorizon},${prediction.modelVersion},${prediction.accuracy ?: ""}\n",
                     )
                     recordsWritten++
                     _exportProgress.value = recordsWritten.toFloat() / totalRecords
@@ -238,15 +247,15 @@ class DataExportManager @Inject constructor(
             if (config.includeSystemMetrics) {
                 writer.write("=== SYSTEM METRICS ===\n")
                 writer.write(
-                    "Timestamp,CPU Usage,Memory Usage,Storage Usage,Network Usage,Thermal State,Battery Temp,Performance Score,Stability Score,Efficiency Score\n"
+                    "Timestamp,CPU Usage,Memory Usage,Storage Usage,Network Usage,Thermal State,Battery Temp,Performance Score,Stability Score,Efficiency Score\n",
                 )
 
                 val systemMetrics = getSystemMetrics(config.dateRange)
                 systemMetrics.forEach { metric ->
                     writer.write(
                         "${formatTimestamp(
-                            metric.timestamp
-                        )},${metric.cpuUsage},${metric.memoryUsage},${metric.storageUsage},${metric.networkUsage},${metric.thermalState},${metric.batteryTemperature},${metric.performanceScore},${metric.stabilityScore},${metric.efficiencyScore}\n"
+                            metric.timestamp,
+                        )},${metric.cpuUsage},${metric.memoryUsage},${metric.storageUsage},${metric.networkUsage},${metric.thermalState},${metric.batteryTemperature},${metric.performanceScore},${metric.stabilityScore},${metric.efficiencyScore}\n",
                     )
                     recordsWritten++
                     _exportProgress.value = recordsWritten.toFloat() / totalRecords
@@ -260,16 +269,20 @@ class DataExportManager @Inject constructor(
     /**
      * Export data to JSON format
      */
-    private suspend fun exportToJson(config: ExportConfig, outputFile: File) {
+    private suspend fun exportToJson(
+        config: ExportConfig,
+        outputFile: File,
+    ) {
         val exportData = mutableMapOf<String, Any>()
 
         // Metadata
-        exportData["metadata"] = mapOf(
-            "exportDate" to Date(),
-            "appVersion" to "1.0",
-            "dataVersion" to "1.0",
-            "deviceInfo" to getDeviceInfo()
-        )
+        exportData["metadata"] =
+            mapOf(
+                "exportDate" to Date(),
+                "appVersion" to "1.0",
+                "dataVersion" to "1.0",
+                "deviceInfo" to getDeviceInfo(),
+            )
 
         var recordsProcessed = 0
         val totalRecords = countRecords(config)
@@ -318,16 +331,20 @@ class DataExportManager @Inject constructor(
     /**
      * Export complete backup with all data and settings
      */
-    private suspend fun exportToBackup(config: ExportConfig, outputFile: File) {
+    private suspend fun exportToBackup(
+        config: ExportConfig,
+        outputFile: File,
+    ) {
         val backupData = mutableMapOf<String, Any>()
 
         // Complete backup includes everything
-        backupData["metadata"] = mapOf(
-            "backupDate" to Date(),
-            "appVersion" to "1.0",
-            "backupVersion" to "1.0",
-            "deviceInfo" to getDeviceInfo()
-        )
+        backupData["metadata"] =
+            mapOf(
+                "backupDate" to Date(),
+                "appVersion" to "1.0",
+                "backupVersion" to "1.0",
+                "deviceInfo" to getDeviceInfo(),
+            )
 
         // Include all data types for backup
         backupData["batteryReadings"] = getBatteryReadings(null)
@@ -410,7 +427,7 @@ class DataExportManager @Inject constructor(
             "manufacturer" to android.os.Build.MANUFACTURER,
             "model" to android.os.Build.MODEL,
             "androidVersion" to android.os.Build.VERSION.RELEASE,
-            "sdkVersion" to android.os.Build.VERSION.SDK_INT.toString()
+            "sdkVersion" to android.os.Build.VERSION.SDK_INT.toString(),
         )
     }
 }

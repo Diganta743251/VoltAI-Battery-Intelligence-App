@@ -58,12 +58,9 @@ object BatteryUtils {
     private fun getCurrentMeasurement(batteryManager: BatteryManager?): Float {
         return try {
             if (batteryManager != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                // Get instantaneous current in microamperes
-                val currentNowMicroAmps = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
-                
-                // Convert microamperes to milliamperes
-                val currentMilliAmps = currentNowMicroAmps / 1000f
-                
+                // Get instantaneous current in microamperes and convert to milliamperes with sentinel guard
+                val ua = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
+                val currentMilliAmps = if (ua == Int.MIN_VALUE) 0f else ua / 1000f
                 Log.d("BatteryUtils", "Current measurement: ${currentMilliAmps}mA")
                 currentMilliAmps
             } else {

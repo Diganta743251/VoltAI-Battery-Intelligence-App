@@ -14,16 +14,17 @@ import javax.inject.Singleton
  * and intelligent recommendations
  */
 @Singleton
-class AdvancedAnalyticsEngine @Inject constructor(
-    @ApplicationContext private val context: Context
+class AdvancedAnalyticsEngine
+@Inject
+constructor(
+    @ApplicationContext private val context: Context,
 ) {
-
     /**
      * Analyzes battery usage patterns to generate optimization suggestions
      */
     suspend fun analyzeBatteryUsagePatterns(
         batteryReadings: List<BatteryReading>,
-        appUsageData: List<AppUsageStats>
+        appUsageData: List<AppUsageStats>,
     ): BatteryAnalysisResult {
         // AI-powered pattern analysis would go here
         // For now, return mock analysis
@@ -32,41 +33,43 @@ class AdvancedAnalyticsEngine @Inject constructor(
             recommendations = generateRecommendations(batteryReadings, appUsageData),
             patterns = identifyUsagePatterns(batteryReadings),
             anomalies = detectAnomalies(batteryReadings),
-            prediction = predictBatteryLife(batteryReadings)
+            prediction = predictBatteryLife(batteryReadings),
         )
     }
 
     /**
      * Provides real-time optimization recommendations
      */
-    fun getRealtimeOptimizations(): Flow<OptimizationRecommendation> = flow {
-        // Simulate real-time optimization recommendations
-        val recommendations = listOf(
-            OptimizationRecommendation(
-                type = OptimizationType.POWER_SAVING,
-                priority = RecommendationPriority.HIGH,
-                message = "Enable adaptive brightness to save 15% battery",
-                action = "ENABLE_ADAPTIVE_BRIGHTNESS",
-                estimatedSavings = 0.15f
-            ),
-            OptimizationRecommendation(
-                type = OptimizationType.THERMAL_MANAGEMENT,
-                priority = RecommendationPriority.MEDIUM,
-                message = "Reduce screen timeout to 30 seconds",
-                action = "REDUCE_SCREEN_TIMEOUT",
-                estimatedSavings = 0.08f
-            )
-        )
+    fun getRealtimeOptimizations(): Flow<OptimizationRecommendation> =
+        flow {
+            // Simulate real-time optimization recommendations
+            val recommendations =
+                listOf(
+                    OptimizationRecommendation(
+                        type = OptimizationType.POWER_SAVING,
+                        priority = RecommendationPriority.HIGH,
+                        message = "Enable adaptive brightness to save 15% battery",
+                        action = "ENABLE_ADAPTIVE_BRIGHTNESS",
+                        estimatedSavings = 0.15f,
+                    ),
+                    OptimizationRecommendation(
+                        type = OptimizationType.THERMAL_MANAGEMENT,
+                        priority = RecommendationPriority.MEDIUM,
+                        message = "Reduce screen timeout to 30 seconds",
+                        action = "REDUCE_SCREEN_TIMEOUT",
+                        estimatedSavings = 0.08f,
+                    ),
+                )
 
-        recommendations.forEach { emit(it) }
-    }
+            recommendations.forEach { emit(it) }
+        }
 
     /**
      * Generates personalized recommendations based on usage patterns
      */
     suspend fun generatePersonalizedRecommendations(
         userId: String,
-        batteryReadings: List<BatteryReading>
+        batteryReadings: List<BatteryReading>,
     ): List<PersonalizedRecommendation> {
         return listOf(
             PersonalizedRecommendation(
@@ -76,7 +79,7 @@ class AdvancedAnalyticsEngine @Inject constructor(
                 type = RecommendationType.USAGE_OPTIMIZATION,
                 priority = RecommendationPriority.HIGH,
                 estimatedSavings = 0.25f,
-                actionData = mapOf("category" to "gaming", "limit" to "120")
+                actionData = mapOf("category" to "gaming", "limit" to "120"),
             ),
             PersonalizedRecommendation(
                 id = "rec_002",
@@ -85,8 +88,8 @@ class AdvancedAnalyticsEngine @Inject constructor(
                 type = RecommendationType.CHARGING_OPTIMIZATION,
                 priority = RecommendationPriority.MEDIUM,
                 estimatedSavings = 0.15f,
-                actionData = mapOf("feature" to "smart_charging", "enabled" to "true")
-            )
+                actionData = mapOf("feature" to "smart_charging", "enabled" to "true"),
+            ),
         )
     }
 
@@ -106,7 +109,7 @@ class AdvancedAnalyticsEngine @Inject constructor(
 
     private fun generateRecommendations(
         readings: List<BatteryReading>,
-        appUsage: List<AppUsageStats>
+        appUsage: List<AppUsageStats>,
     ): List<OptimizationRecommendation> {
         val recommendations = mutableListOf<OptimizationRecommendation>()
 
@@ -119,8 +122,8 @@ class AdvancedAnalyticsEngine @Inject constructor(
                     priority = RecommendationPriority.HIGH,
                     message = "Battery temperature is high. Close intensive apps.",
                     action = "THERMAL_MANAGEMENT",
-                    estimatedSavings = 0.20f
-                )
+                    estimatedSavings = 0.20f,
+                ),
             )
         }
 
@@ -133,14 +136,14 @@ class AdvancedAnalyticsEngine @Inject constructor(
                 type = PatternType.CHARGING,
                 description = "Regular overnight charging detected",
                 frequency = 0.9f,
-                timeOfDay = "22:00-06:00"
+                timeOfDay = "22:00-06:00",
             ),
             UsagePattern(
                 type = PatternType.USAGE,
                 description = "Heavy usage during evening hours",
                 frequency = 0.7f,
-                timeOfDay = "18:00-22:00"
-            )
+                timeOfDay = "18:00-22:00",
+            ),
         )
     }
 
@@ -151,8 +154,8 @@ class AdvancedAnalyticsEngine @Inject constructor(
                 severity = Severity.MEDIUM,
                 description = "Unusual battery drain detected at 14:30",
                 timestamp = System.currentTimeMillis(),
-                affectedMetrics = listOf("discharge_rate", "temperature")
-            )
+                affectedMetrics = listOf("discharge_rate", "temperature"),
+            ),
         )
     }
 
@@ -161,16 +164,17 @@ class AdvancedAnalyticsEngine @Inject constructor(
         val avgDischargeRate = readings.mapNotNull { it.current?.toDouble() }.average()
         val currentLevel = readings.lastOrNull()?.batteryLevel ?: 50
 
-        val estimatedHours = if (avgDischargeRate != 0.0) {
-            (currentLevel.toDouble() / kotlin.math.abs(avgDischargeRate)) * 100
-        } else {
-            8.0 // Default 8 hours
-        }
+        val estimatedHours =
+            if (avgDischargeRate != 0.0) {
+                (currentLevel.toDouble() / kotlin.math.abs(avgDischargeRate)) * 100
+            } else {
+                8.0 // Default 8 hours
+            }
 
         return BatteryLifePrediction(
             remainingHours = estimatedHours,
             confidence = 0.85f,
-            factors = listOf("Usage patterns", "Temperature", "Battery health")
+            factors = listOf("Usage patterns", "Temperature", "Battery health"),
         )
     }
 }
@@ -181,7 +185,7 @@ data class BatteryAnalysisResult(
     val recommendations: List<OptimizationRecommendation>,
     val patterns: List<UsagePattern>,
     val anomalies: List<BatteryAnomaly>,
-    val prediction: BatteryLifePrediction
+    val prediction: BatteryLifePrediction,
 )
 
 data class OptimizationRecommendation(
@@ -189,7 +193,7 @@ data class OptimizationRecommendation(
     val priority: RecommendationPriority,
     val message: String,
     val action: String,
-    val estimatedSavings: Float
+    val estimatedSavings: Float,
 )
 
 data class PersonalizedRecommendation(
@@ -199,14 +203,14 @@ data class PersonalizedRecommendation(
     val type: RecommendationType,
     val priority: RecommendationPriority,
     val estimatedSavings: Float,
-    val actionData: Map<String, String>
+    val actionData: Map<String, String>,
 )
 
 data class UsagePattern(
     val type: PatternType,
     val description: String,
     val frequency: Float,
-    val timeOfDay: String
+    val timeOfDay: String,
 )
 
 data class BatteryAnomaly(
@@ -214,36 +218,54 @@ data class BatteryAnomaly(
     val severity: Severity,
     val description: String,
     val timestamp: Long,
-    val affectedMetrics: List<String>
+    val affectedMetrics: List<String>,
 )
 
 data class BatteryLifePrediction(
     val remainingHours: Double,
     val confidence: Float,
-    val factors: List<String>
+    val factors: List<String>,
 )
 
 // Enums
 enum class OptimizationType {
-    POWER_SAVING, THERMAL_MANAGEMENT, APP_OPTIMIZATION, CHARGING_OPTIMIZATION
+    POWER_SAVING,
+    THERMAL_MANAGEMENT,
+    APP_OPTIMIZATION,
+    CHARGING_OPTIMIZATION,
 }
 
 enum class RecommendationPriority {
-    LOW, MEDIUM, HIGH, CRITICAL
+    LOW,
+    MEDIUM,
+    HIGH,
+    CRITICAL,
 }
 
 enum class RecommendationType {
-    USAGE_OPTIMIZATION, CHARGING_OPTIMIZATION, THERMAL_MANAGEMENT, APP_MANAGEMENT
+    USAGE_OPTIMIZATION,
+    CHARGING_OPTIMIZATION,
+    THERMAL_MANAGEMENT,
+    APP_MANAGEMENT,
 }
 
 enum class PatternType {
-    CHARGING, USAGE, THERMAL, PERFORMANCE
+    CHARGING,
+    USAGE,
+    THERMAL,
+    PERFORMANCE,
 }
 
 enum class AnomalyType {
-    RAPID_DISCHARGE, OVERHEATING, VOLTAGE_DROP, CAPACITY_LOSS
+    RAPID_DISCHARGE,
+    OVERHEATING,
+    VOLTAGE_DROP,
+    CAPACITY_LOSS,
 }
 
 enum class Severity {
-    LOW, MEDIUM, HIGH, CRITICAL
+    LOW,
+    MEDIUM,
+    HIGH,
+    CRITICAL,
 }

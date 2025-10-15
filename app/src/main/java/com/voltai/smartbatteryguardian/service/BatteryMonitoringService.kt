@@ -14,7 +14,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class BatteryMonitoringService : Service() {
-
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     @Inject
@@ -26,20 +25,25 @@ class BatteryMonitoringService : Service() {
         startMonitoring()
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
         return START_STICKY
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     private fun startForegroundService() {
-        val notification = NotificationCompat.Builder(this, "battery_channel")
-            .setContentTitle("VoltAI Battery Guardian")
-            .setContentText("Monitoring battery health")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setOngoing(true)
-            .build()
+        val notification =
+            NotificationCompat.Builder(this, "battery_channel")
+                .setContentTitle("VoltAI Battery Guardian")
+                .setContentText("Monitoring battery health")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
+                .build()
 
         startForeground(1, notification)
     }
@@ -64,13 +68,14 @@ class BatteryMonitoringService : Service() {
     }
 
     private fun sendCriticalTemperatureNotification(temperature: Float) {
-        val notification = NotificationCompat.Builder(this, "battery_alerts")
-            .setContentTitle("🌡️ Critical Battery Temperature")
-            .setContentText("Temperature: $temperature°C - Cool down device immediately!")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
-            .build()
+        val notification =
+            NotificationCompat.Builder(this, "battery_alerts")
+                .setContentTitle("🌡️ Critical Battery Temperature")
+                .setContentText("Temperature: $temperature°C - Cool down device immediately!")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .build()
 
         try {
             NotificationManagerCompat.from(this).notify(2, notification)
@@ -80,13 +85,14 @@ class BatteryMonitoringService : Service() {
     }
 
     private fun sendLowBatteryNotification(level: Int) {
-        val notification = NotificationCompat.Builder(this, "battery_alerts")
-            .setContentTitle("🔋 Low Battery Warning")
-            .setContentText("Battery: $level% - Enable power saving mode")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
-            .build()
+        val notification =
+            NotificationCompat.Builder(this, "battery_alerts")
+                .setContentTitle("🔋 Low Battery Warning")
+                .setContentText("Battery: $level% - Enable power saving mode")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .build()
 
         try {
             NotificationManagerCompat.from(this).notify(3, notification)
@@ -96,13 +102,14 @@ class BatteryMonitoringService : Service() {
     }
 
     private fun sendHealthWarningNotification(health: Int) {
-        val notification = NotificationCompat.Builder(this, "battery_alerts")
-            .setContentTitle("❤️ Battery Health Alert")
-            .setContentText("Battery health: $health% - Consider maintenance")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setAutoCancel(true)
-            .build()
+        val notification =
+            NotificationCompat.Builder(this, "battery_alerts")
+                .setContentTitle("❤️ Battery Health Alert")
+                .setContentText("Battery health: $health% - Consider maintenance")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setAutoCancel(true)
+                .build()
 
         try {
             NotificationManagerCompat.from(this).notify(4, notification)

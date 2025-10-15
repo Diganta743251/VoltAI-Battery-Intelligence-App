@@ -3,13 +3,12 @@ package com.voltai.smartbatteryguardian.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -30,11 +29,16 @@ fun IdleLogScreen(onBackClick: () -> Unit = {}) {
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             },
+            colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         )
 
         LazyColumn(
@@ -62,7 +66,7 @@ fun IdleLogScreen(onBackClick: () -> Unit = {}) {
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = null,
-                            tint = Color(0xFF4CAF50),
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp),
                         )
 
@@ -86,7 +90,7 @@ fun IdleLogScreen(onBackClick: () -> Unit = {}) {
                             text = "9h 45m",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF4CAF50),
+                            color = MaterialTheme.colorScheme.primary,
                         )
                     }
                 }
@@ -110,7 +114,7 @@ fun IdleLogScreen(onBackClick: () -> Unit = {}) {
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = null,
-                            tint = Color(0xFFFF9800),
+                            tint = MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier.size(24.dp),
                         )
 
@@ -134,7 +138,7 @@ fun IdleLogScreen(onBackClick: () -> Unit = {}) {
                             text = "1h 45m",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFFF9800),
+                            color = MaterialTheme.colorScheme.tertiary,
                         )
                     }
                 }
@@ -158,7 +162,7 @@ fun IdleLogScreen(onBackClick: () -> Unit = {}) {
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = null,
-                            tint = Color(0xFFF44336),
+                            tint = MaterialTheme.colorScheme.error,
                             modifier = Modifier.size(24.dp),
                         )
 
@@ -182,7 +186,7 @@ fun IdleLogScreen(onBackClick: () -> Unit = {}) {
                             text = "12h 30m",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFF44336),
+                            color = MaterialTheme.colorScheme.error,
                         )
                     }
                 }

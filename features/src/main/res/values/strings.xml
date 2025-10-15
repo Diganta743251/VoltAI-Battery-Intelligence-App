@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Features module onboarding strings -->
+    <string name="welcome_title">Welcome to VoltAI</string>
+    <string name="welcome_subtitle">Smart Battery Guardian</string>
+    <string name="welcome_body">Your intelligent companion for battery health monitoring, optimization, and longevity insights.</string>
+
+    <string name="feature_health_title">Real-time Health Monitoring</string>
+    <string name="feature_health_desc">Track battery condition and degradation</string>
+
+    <string name="feature_thermal_title">Thermal Management</string>
+    <string name="feature_thermal_desc">Monitor temperature and prevent overheating</string>
+
+    <string name="feature_usage_title">Usage Analytics</string>
+    <string name="feature_usage_desc">Detailed insights and optimization tips</string>
+
+    <string name="get_started">Get Started</string>
+</resources>

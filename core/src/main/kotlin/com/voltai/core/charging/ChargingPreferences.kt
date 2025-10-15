@@ -163,7 +163,7 @@ class ChargingPreferences @Inject constructor(
     private fun serializeChargingWindows(windows: List<ChargingTimeWindow>): String {
         // Simple JSON-like serialization for time windows
         return windows.joinToString(separator = "|") { window ->
-            "${window.id},${window.startTime},${window.endTime},${window.priority},${window.enabled},${window.name}"
+            "${window.id},${window.startTime},${window.endTime},${window.priority.name},${window.enabled},${window.name}"
         }
     }
     
@@ -180,7 +180,7 @@ class ChargingPreferences @Inject constructor(
                         id = parts[0],
                         startTime = LocalTime.parse(parts[1]),
                         endTime = LocalTime.parse(parts[2]),
-                        priority = parts[3].toInt(),
+                        priority = ChargingPriority.valueOf(parts[3]),
                         enabled = parts[4].toBoolean(),
                         name = parts[5]
                     )
@@ -197,7 +197,7 @@ class ChargingPreferences @Inject constructor(
                 id = "overnight",
                 startTime = LocalTime.of(22, 0),
                 endTime = LocalTime.of(7, 0),
-                priority = 1,
+                priority = ChargingPriority.NORMAL,
                 enabled = true,
                 name = "Overnight Charging"
             ),
@@ -205,7 +205,7 @@ class ChargingPreferences @Inject constructor(
                 id = "morning",
                 startTime = LocalTime.of(7, 0),
                 endTime = LocalTime.of(9, 0),
-                priority = 2,
+                priority = ChargingPriority.LOW,
                 enabled = false,
                 name = "Morning Boost"
             ),
@@ -213,7 +213,7 @@ class ChargingPreferences @Inject constructor(
                 id = "afternoon",
                 startTime = LocalTime.of(14, 0),
                 endTime = LocalTime.of(16, 0),
-                priority = 3,
+                priority = ChargingPriority.LOW,
                 enabled = false,
                 name = "Afternoon Charge"
             )
@@ -221,38 +221,7 @@ class ChargingPreferences @Inject constructor(
     }
 }
 
-// Data classes for charging preferences
-data class ChargingUserPreferences(
-    val chargingMode: ChargingMode = ChargingMode.BALANCED,
-    val maxChargeLevel: Int = 85,
-    val minChargeLevel: Int = 20,
-    val customTargetLevel: Int = 80,
-    val emergencyChargeThreshold: Int = 10,
-    val enableScheduledCharging: Boolean = false,
-    val enableImmediateCharging: Boolean = true,
-    val enableThermalProtection: Boolean = true,
-    val enableHealthOptimization: Boolean = true,
-    val adaptiveChargingEnabled: Boolean = true,
-    val overnightChargingLimit: Boolean = true,
-    val weekendChargingSchedule: Boolean = false,
-    val chargingTimeWindows: List<ChargingTimeWindow> = emptyList()
-)
-
-data class ChargingTimeWindow(
-    val id: String,
-    val startTime: LocalTime,
-    val endTime: LocalTime,
-    val priority: Int,
-    val enabled: Boolean,
-    val name: String
-)
-
-enum class ChargingMode {
-    BALANCED,        // Optimized for battery health and performance
-    PERFORMANCE,     // Fast charging for quick power-ups
-    LONGEVITY,       // Slow charging to maximize battery lifespan
-    CUSTOM           // User-defined charging parameters
-}
+// Data classes are defined in ChargingTypes.kt to avoid redeclarations
 
 // Extension function to get data store first value
 private suspend fun <T> Flow<T>.first(): T {

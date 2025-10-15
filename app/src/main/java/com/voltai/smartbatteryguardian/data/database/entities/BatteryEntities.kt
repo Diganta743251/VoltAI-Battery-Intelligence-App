@@ -23,7 +23,7 @@ data class BatteryReading(
     val chargingSpeed: Double,
     val estimatedTimeRemaining: Long?,
     val cycleCount: Int?,
-    val wearLevel: Double?
+    val wearLevel: Double?,
 )
 
 @Entity(tableName = "charging_sessions")
@@ -45,7 +45,7 @@ data class ChargingSession(
     val duration: Long,
     val interruptionCount: Int = 0,
     val peakChargingSpeed: Double,
-    val thermalThrottling: Boolean = false
+    val thermalThrottling: Boolean = false,
 )
 
 @Entity(tableName = "app_usage_stats")
@@ -67,7 +67,7 @@ data class AppUsageStats(
     val launchCount: Int,
     val crashCount: Int = 0,
     val dataUsage: Long = 0,
-    val gpsUsage: Long = 0
+    val gpsUsage: Long = 0,
 )
 
 @Entity(tableName = "battery_health_history")
@@ -87,7 +87,7 @@ data class BatteryHealthRecord(
     val predictedLifespan: Int?,
     val recommendationScore: Double,
     val calibrationNeeded: Boolean = false,
-    val criticalIssues: String?
+    val criticalIssues: String?,
 )
 
 @Entity(tableName = "power_profiles")
@@ -112,7 +112,7 @@ data class PowerProfile(
     val thermalThreshold: Double?,
     val batteryThreshold: Int?,
     val automationRules: String?,
-    val estimatedSavings: Double?
+    val estimatedSavings: Double?,
 )
 
 @Entity(tableName = "optimization_logs")
@@ -131,7 +131,7 @@ data class OptimizationLog(
     val userTriggered: Boolean = false,
     val aiConfidence: Double?,
     val batteryImpact: Double?,
-    val performanceImpact: Double?
+    val performanceImpact: Double?,
 )
 
 @Entity(tableName = "system_metrics")
@@ -153,7 +153,7 @@ data class SystemMetrics(
     val foregroundApps: Int,
     val wakelocksActive: Int,
     val networkConnections: Int,
-    val locationRequests: Int
+    val locationRequests: Int,
 )
 
 @Entity(tableName = "benchmark_results")
@@ -178,7 +178,7 @@ data class BenchmarkResult(
     val storageScore: Int?,
     val batteryScore: Int?,
     val thermalScore: Int?,
-    val notes: String?
+    val notes: String?,
 )
 
 @Entity(tableName = "ai_predictions")
@@ -198,7 +198,7 @@ data class AIPrediction(
     val errorRate: Double?,
     val lastUpdated: Long = System.currentTimeMillis(),
     val isActive: Boolean = true,
-    val userId: String?
+    val userId: String?,
 )
 
 @Entity(tableName = "user_preferences")
@@ -224,7 +224,7 @@ data class UserPreferences(
     val dataRetentionDays: Int = 30,
     val exportFormat: String = "csv",
     val backupEnabled: Boolean = false,
-    val lastBackupTime: Long = 0
+    val lastBackupTime: Long = 0,
 )
 
 // Data classes for complex relationships
@@ -235,10 +235,10 @@ data class UserPreferences(
             entity = AppUsageStats::class,
             parentColumns = ["id"],
             childColumns = ["appUsageId"],
-            onDelete = ForeignKey.CASCADE
-        )
+            onDelete = ForeignKey.CASCADE,
+        ),
     ],
-    indices = [Index("appUsageId")]
+    indices = [Index("appUsageId")],
 )
 data class AppBatteryImpact(
     @PrimaryKey(autoGenerate = true)
@@ -254,7 +254,7 @@ data class AppBatteryImpact(
     val cpuContribution: Double,
     val totalImpactScore: Double,
     val efficiency: Double,
-    val recommendation: String?
+    val recommendation: String?,
 )
 
 @Entity(tableName = "charging_analytics")
@@ -273,7 +273,7 @@ data class ChargingAnalytics(
     val carbonFootprint: Double?,
     val optimalChargingHours: String?,
     val chargingPatternScore: Double,
-    val recommendations: String?
+    val recommendations: String?,
 )
 
 // Type converters for complex data types

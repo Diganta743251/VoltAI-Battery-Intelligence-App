@@ -32,21 +32,25 @@ class AppUsageViewModel @Inject constructor(
     private val _totalScreenTime = MutableStateFlow(0L)
     val totalScreenTime: StateFlow<Long> = _totalScreenTime.asStateFlow()
 
+    private val _hasPermission = MutableStateFlow(false)
+    val hasPermission: StateFlow<Boolean> = _hasPermission.asStateFlow()
+
     init {
+        refreshPermission()
         load()
     }
 
     fun load() {
         viewModelScope.launch {
             _isLoading.value = true
-            if (!usageStatsPermission.isGranted()) {
+            _error.value = null
+            refreshPermission()
+            if (!_hasPermission.value) {
                 _appUsage.value = emptyList()
                 _totalScreenTime.value = 0L
-                _error.value = "Usage access not granted"
                 _isLoading.value = false
                 return@launch
             }
-            _error.value = null
             appUsageRepository.getAppUsageStats()
                 .catch { e ->
                     _error.value = e.message ?: "Failed to load app usage"
@@ -62,4 +66,7 @@ class AppUsageViewModel @Inject constructor(
             _isLoading.value = false
         }
     }
-}
+
+    fun refreshPermission() {
+        _hasPermission.value = usageStatsPermission.isGranted()
+    }

@@ -31,7 +31,7 @@ data class BatteryChemistryProfile(
     val safetyRating: Float,
     val temperatureRange: TemperatureRange,
     val ionicConductivity: Float,
-    val electrolyte: ElectrolyteInfo
+    val electrolyte: ElectrolyteInfo,
 )
 
 data class MolecularAnalysis(
@@ -41,7 +41,7 @@ data class MolecularAnalysis(
     val separatorHealth: Float,
     val thermalStability: Float,
     val ionMobility: Float,
-    val crystalStructure: CrystalStructureInfo
+    val crystalStructure: CrystalStructureInfo,
 )
 
 data class ElectrochemicalData(
@@ -50,29 +50,31 @@ data class ElectrochemicalData(
     val impedanceSpectrum: List<ImpedancePoint>,
     val cyclicVoltammetry: List<CVPoint>,
     val galvanostaticProfile: List<GalvanoPoint>,
-    val pulseResponse: List<PulsePoint>
+    val pulseResponse: List<PulsePoint>,
 )
 
-// Scalable enums for future battery technologies
+// Real battery chemistry types available today
 enum class ChemistryType {
-    LITHIUM_ION_COBALT,
-    LITHIUM_ION_MANGANESE,
-    LITHIUM_ION_PHOSPHATE,
-    LITHIUM_POLYMER,
-    LITHIUM_TITANATE,
-    SOLID_STATE_LITHIUM,
-    SODIUM_ION,
-    ALUMINUM_ION,
-    QUANTUM_DOT,
-    GRAPHENE_HYBRID
+    LITHIUM_ION_COBALT, // LiCoO2 - Common in phones
+    LITHIUM_ION_MANGANESE, // LiMn2O4 - Power tools
+    LITHIUM_ION_PHOSPHATE, // LiFePO4 - Electric vehicles
+    LITHIUM_POLYMER, // Li-Po - Lightweight devices
+    LITHIUM_TITANATE, // Li4Ti5O12 - Fast charging
+    NICKEL_METAL_HYDRIDE, // NiMH - Hybrid vehicles (backup)
 }
 
 data class TemperatureRange(val min: Float, val max: Float, val optimal: Float)
+
 data class ElectrolyteInfo(val type: String, val concentration: Float, val conductivity: Float)
+
 data class CrystalStructureInfo(val phase: String, val latticeConstant: Float, val crystallinity: Float)
+
 data class ImpedancePoint(val frequency: Float, val impedance: Float, val phase: Float)
+
 data class CVPoint(val voltage: Float, val current: Float)
+
 data class GalvanoPoint(val time: Float, val voltage: Float, val capacity: Float)
+
 data class PulsePoint(val time: Float, val voltage: Float, val current: Float)
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,44 +88,48 @@ fun BatteryChemistryLabScreen() {
     val electrochemicalData = remember { getElectrochemicalData() }
 
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFF8F9FA),
-                        Color(0xFFE8F4FD),
-                        Color(0xFFDCE7FF)
-                    )
-                )
-            )
+                    colors =
+                    listOf(
+                        MaterialTheme.colorScheme.surface,
+                        MaterialTheme.colorScheme.primaryContainer,
+                        MaterialTheme.colorScheme.primaryContainer,
+                    ),
+                ),
+            ),
     ) {
         // Scientific Header
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = Color(0xFF6366F1),
-            shadowElevation = 16.dp
+            color = MaterialTheme.colorScheme.primary,
+            shadowElevation = 16.dp,
         ) {
             Column(
-                modifier = Modifier.padding(24.dp)
+                modifier = Modifier.padding(24.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(
-                        modifier = Modifier
+                        modifier =
+                        Modifier
                             .size(64.dp)
                             .background(
                                 Brush.radialGradient(
-                                    colors = listOf(
-                                        Color.White.copy(alpha = 0.3f),
-                                        Color.White.copy(alpha = 0.1f)
-                                    )
+                                    colors =
+                                    listOf(
+                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                                    ),
                                 ),
-                                CircleShape
+                                CircleShape,
                             ),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         Text(text = "🔬", fontSize = 32.sp)
                     }
@@ -135,12 +141,12 @@ fun BatteryChemistryLabScreen() {
                             text = "Battery Chemistry Lab",
                             fontSize = 26.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                         Text(
                             text = "Molecular-level battery analysis & insights",
                             fontSize = 14.sp,
-                            color = Color.White.copy(alpha = 0.85f)
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
                         )
                     }
 
@@ -152,7 +158,7 @@ fun BatteryChemistryLabScreen() {
                 // Scientific Metrics Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     ScientificMetricCard("⚛️", "${chemistryProfile.energyDensity.toInt()}", "Wh/kg")
                     ScientificMetricCard("⚡", "${chemistryProfile.powerDensity.toInt()}", "W/kg")
@@ -166,19 +172,19 @@ fun BatteryChemistryLabScreen() {
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color.Transparent,
-            contentColor = Color(0xFF6366F1),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            contentColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
                     selected = selectedTab == index,
                     onClick = { selectedTab = index },
-                    modifier = Modifier.padding(vertical = 12.dp)
+                    modifier = Modifier.padding(vertical = 12.dp),
                 ) {
                     Text(
                         text = title,
                         fontSize = 14.sp,
-                        fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium
+                        fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
                     )
                 }
             }
@@ -186,10 +192,11 @@ fun BatteryChemistryLabScreen() {
 
         // Scientific Content
         LazyColumn(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             when (selectedTab) {
                 0 -> {
@@ -224,63 +231,64 @@ fun BatteryChemistryLabScreen() {
 
 @Composable
 fun ChemistryTypeIndicator(chemistryType: ChemistryType) {
-    val displayName = when (chemistryType) {
-        ChemistryType.LITHIUM_ION_COBALT -> "Li-Co"
-        ChemistryType.LITHIUM_ION_MANGANESE -> "Li-Mn"
-        ChemistryType.LITHIUM_ION_PHOSPHATE -> "LiFePO4"
-        ChemistryType.LITHIUM_POLYMER -> "Li-Po"
-        ChemistryType.LITHIUM_TITANATE -> "Li-Ti"
-        ChemistryType.SOLID_STATE_LITHIUM -> "SS-Li"
-        ChemistryType.SODIUM_ION -> "Na-ion"
-        ChemistryType.ALUMINUM_ION -> "Al-ion"
-        ChemistryType.QUANTUM_DOT -> "QD-Li"
-        ChemistryType.GRAPHENE_HYBRID -> "Gr-Li"
-    }
+    val displayName =
+        when (chemistryType) {
+            ChemistryType.LITHIUM_ION_COBALT -> "LiCoO2"
+            ChemistryType.LITHIUM_ION_MANGANESE -> "LiMn2O4"
+            ChemistryType.LITHIUM_ION_PHOSPHATE -> "LiFePO4"
+            ChemistryType.LITHIUM_POLYMER -> "Li-Po"
+            ChemistryType.LITHIUM_TITANATE -> "Li4Ti5O12"
+            ChemistryType.NICKEL_METAL_HYDRIDE -> "NiMH"
+        }
 
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = Color.White.copy(alpha = 0.2f)
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = displayName,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = "Chemistry",
                 fontSize = 11.sp,
-                color = Color.White.copy(alpha = 0.8f)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
             )
         }
     }
 }
 
 @Composable
-fun ScientificMetricCard(icon: String, value: String, unit: String) {
+fun ScientificMetricCard(
+    icon: String,
+    value: String,
+    unit: String,
+) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = Color.White.copy(alpha = 0.15f)
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(text = icon, fontSize = 16.sp)
             Text(
                 text = value,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = unit,
                 fontSize = 10.sp,
-                color = Color.White.copy(alpha = 0.8f)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
             )
         }
     }
@@ -291,16 +299,16 @@ fun ChemistryOverviewCard(profile: BatteryChemistryProfile) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "🔬 Chemistry Analysis",
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -308,7 +316,7 @@ fun ChemistryOverviewCard(profile: BatteryChemistryProfile) {
             // Chemistry Visualization
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     ChemistryProperty("Type", profile.chemistryType.name.replace("_", " "))
@@ -323,22 +331,23 @@ fun ChemistryOverviewCard(profile: BatteryChemistryProfile) {
                         modifier = Modifier.size(80.dp),
                         strokeWidth = 8.dp,
                         strokeCap = StrokeCap.Round,
-                        color = when {
-                            profile.safetyRating >= 8.5f -> Color(0xFF4CAF50)
-                            profile.safetyRating >= 7.0f -> Color(0xFFFF9800)
-                            else -> Color(0xFFF44336)
-                        }
+                        color =
+                        when {
+                            profile.safetyRating >= 8.5f -> MaterialTheme.colorScheme.tertiary
+                            profile.safetyRating >= 7.0f -> MaterialTheme.colorScheme.secondary
+                            else -> MaterialTheme.colorScheme.error
+                        },
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "${(profile.safetyRating * 10).toInt()}%",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Text(
                         text = "Safety Rating",
                         fontSize = 12.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -351,15 +360,15 @@ fun MolecularStructureCard(molecularData: MolecularAnalysis) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "⚛️ Molecular Structure Analysis",
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -378,24 +387,24 @@ fun MolecularStructureCard(molecularData: MolecularAnalysis) {
             // Crystal Structure Info
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = Color(0xFF6366F1).copy(alpha = 0.1f)
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         text = "Crystal Structure: ${molecularData.crystalStructure.phase}",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF6366F1)
+                        color = MaterialTheme.colorScheme.primary,
                     )
                     Text(
                         text = "Lattice Constant: ${molecularData.crystalStructure.latticeConstant}Å",
                         fontSize = 12.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(
                         text = "Crystallinity: ${molecularData.crystalStructure.crystallinity}%",
                         fontSize = 12.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -404,54 +413,62 @@ fun MolecularStructureCard(molecularData: MolecularAnalysis) {
 }
 
 @Composable
-fun MolecularMetric(label: String, value: Float, unit: String) {
+fun MolecularMetric(
+    label: String,
+    value: Float,
+    unit: String,
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = label,
             fontSize = 14.sp,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             LinearProgressIndicator(
                 progress = (value / 100f).coerceIn(0f, 1f),
-                modifier = Modifier
+                modifier =
+                Modifier
                     .width(80.dp)
                     .height(4.dp)
                     .clip(RoundedCornerShape(2.dp)),
-                color = Color(0xFF6366F1)
+                color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "${value.toInt()}$unit",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF6366F1)
+                color = MaterialTheme.colorScheme.primary,
             )
         }
     }
 }
 
 @Composable
-fun ChemistryProperty(label: String, value: String) {
+fun ChemistryProperty(
+    label: String,
+    value: String,
+) {
     Row(
         modifier = Modifier.padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = label,
             fontSize = 12.sp,
-            color = Color(0xFF666666),
-            modifier = Modifier.width(100.dp)
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.width(100.dp),
         )
         Text(
             text = value,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
     }
 }
@@ -461,13 +478,13 @@ fun getCurrentBatteryChemistry(): BatteryChemistryProfile {
     return BatteryChemistryProfile(
         chemistryType = ChemistryType.LITHIUM_ION_COBALT,
         nominalVoltage = 3.7f,
-        energyDensity = 265f,
-        powerDensity = 1800f,
-        cyclability = 1000,
+        energyDensity = 150f, // Realistic Wh/kg
+        powerDensity = 300f, // Realistic W/kg
+        cyclability = 500, // Typical cycles
         safetyRating = 8.5f,
         temperatureRange = TemperatureRange(-20f, 60f, 25f),
         ionicConductivity = 10.5f,
-        electrolyte = ElectrolyteInfo("LiPF6 in EC/DMC", 1.2f, 12.5f)
+        electrolyte = ElectrolyteInfo("LiPF6 in EC/DMC", 1.2f, 12.5f),
     )
 }
 
@@ -479,7 +496,7 @@ fun getMolecularAnalysis(): MolecularAnalysis {
         separatorHealth = 97.1f,
         thermalStability = 180f,
         ionMobility = 2.3f,
-        crystalStructure = CrystalStructureInfo("Cubic", 4.15f, 89.5f)
+        crystalStructure = CrystalStructureInfo("Cubic", 4.15f, 89.5f),
     )
 }
 
@@ -490,7 +507,7 @@ fun getElectrochemicalData(): ElectrochemicalData {
         impedanceSpectrum = generateImpedanceSpectrum(),
         cyclicVoltammetry = generateCVData(),
         galvanostaticProfile = generateGalvanostaticData(),
-        pulseResponse = generatePulseData()
+        pulseResponse = generatePulseData(),
     )
 }
 

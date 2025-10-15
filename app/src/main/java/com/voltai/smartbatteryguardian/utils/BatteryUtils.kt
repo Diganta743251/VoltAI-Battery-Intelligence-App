@@ -32,16 +32,17 @@ fun getHealthColor(health: Int): Color {
 
 @Composable
 fun getHealthCardColor(health: Int): CardColors {
-    val containerColor = when {
-        health >= 85 -> Color(0xFF4CAF50).copy(alpha = 0.1f)
-        health >= 70 -> Color(0xFFFF9800).copy(alpha = 0.1f)
-        health >= 50 -> Color(0xFFFF5722).copy(alpha = 0.1f)
-        else -> Color(0xFFF44336).copy(alpha = 0.1f)
-    }
+    val containerColor =
+        when {
+            health >= 85 -> Color(0xFF4CAF50).copy(alpha = 0.1f)
+            health >= 70 -> Color(0xFFFF9800).copy(alpha = 0.1f)
+            health >= 50 -> Color(0xFFFF5722).copy(alpha = 0.1f)
+            else -> Color(0xFFF44336).copy(alpha = 0.1f)
+        }
 
     return CardDefaults.cardColors(
         containerColor = containerColor,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        contentColor = MaterialTheme.colorScheme.onSurface,
     )
 }
 

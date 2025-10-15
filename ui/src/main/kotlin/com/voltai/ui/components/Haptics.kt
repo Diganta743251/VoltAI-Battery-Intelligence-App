@@ -1,5 +1,6 @@
 package com.voltai.ui.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.VibrationEffect
@@ -20,6 +21,7 @@ object HapticFeedback {
         }
     }
 
+    @SuppressLint("MissingPermission")
     fun click() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator?.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE))
@@ -29,6 +31,7 @@ object HapticFeedback {
         }
     }
 
+    @SuppressLint("MissingPermission")
     fun strong() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator?.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
@@ -38,6 +41,7 @@ object HapticFeedback {
         }
     }
 
+    @SuppressLint("MissingPermission")
     fun success() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator?.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 50, 50, 50), -1))
@@ -47,6 +51,7 @@ object HapticFeedback {
         }
     }
 
+    @SuppressLint("MissingPermission")
     fun error() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator?.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 100, 100, 100, 100, 100), -1))

@@ -16,50 +16,60 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.voltai.smartbatteryguardian.rememberBatteryData
+import com.voltai.smartbatteryguardian.viewmodels.HistoryViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    viewModel: HistoryViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val batteryData by rememberBatteryData(context)
     val scrollState = rememberScrollState()
 
-    // Mock data for demonstration - replace with actual repository data
-    val batteryHistory = remember { generateMockBatteryHistory() }
+    // Real charging sessions from Room via ViewModel
+    val sessions by viewModel.sessions.collectAsState()
+    val batteryHistory = remember(sessions) { sessions.map { it.toBatterySession() } }
 
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFF8F9FA),
-                        Color(0xFFE8F5E8)
-                    )
-                )
-            )
+                    colors =
+                    listOf(
+                        MaterialTheme.colorScheme.surface,
+                        MaterialTheme.colorScheme.primaryContainer,
+                    ),
+                ),
+            ),
     ) {
         // Carbon Footprint Header Card
         CarbonFootprintCard(
             totalSessions = batteryHistory.size,
             carbonSaved = batteryHistory.sumOf { it.carbonFootprint },
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         )
 
         // Battery History List
         LazyColumn(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             // Today's sessions
             val today = batteryHistory.filter { isToday(it.timestamp) }
@@ -84,15 +94,23 @@ fun HistoryScreen(
             }
 
             // Earlier this week
-            val thisWeek = batteryHistory.filter {
-                !isToday(it.timestamp) && !isYesterday(it.timestamp) && isThisWeek(it.timestamp)
-            }
+            val thisWeek =
+                batteryHistory.filter {
+                    !isToday(it.timestamp) && !isYesterday(it.timestamp) && isThisWeek(it.timestamp)
+                }
             if (thisWeek.isNotEmpty()) {
                 item {
                     DateSeparator("Earlier this week")
                 }
                 items(thisWeek) { session ->
                     BatteryHistoryCard(session)
+                }
+            }
+
+            // Empty state when no sessions are available
+            if (batteryHistory.isEmpty()) {
+                item {
+                    EmptyHistoryState(modifier = Modifier.padding(top = 8.dp))
                 }
             }
 
@@ -105,34 +123,68 @@ fun HistoryScreen(
 }
 
 @Composable
+fun EmptyHistoryState(modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    ) {
+        Column(
+            modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = "No charging sessions yet",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Start charging your device to see history here.",
+                fontSize = 13.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
 fun CarbonFootprintCard(
     totalSessions: Int,
     carbonSaved: Double,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF4CAF50).copy(alpha = 0.1f)
+        colors =
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.1f),
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Row(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = "Your carbon footprint",
+                    modifier = Modifier.semantics { heading() },
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -141,7 +193,7 @@ fun CarbonFootprintCard(
                     text = "Adopt a greener lifestyle by optimizing device energy use. Charge during periods of less demand, minimize waste, and choose clean energy.",
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = 20.sp
+                    lineHeight = 20.sp,
                 )
             }
 
@@ -149,22 +201,24 @@ fun CarbonFootprintCard(
 
             // Environmental illustration
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(
                         Brush.radialGradient(
-                            colors = listOf(
-                                Color(0xFF81C784),
-                                Color(0xFF4CAF50)
-                            )
-                        )
+                            colors =
+                            listOf(
+                                MaterialTheme.colorScheme.tertiary,
+                                MaterialTheme.colorScheme.tertiary,
+                            ),
+                        ),
                     ),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = "🌱",
-                    fontSize = 32.sp
+                    fontSize = 32.sp,
                 )
             }
         }
@@ -178,7 +232,10 @@ fun DateSeparator(date: String) {
         fontSize = 18.sp,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier =
+        Modifier
+            .padding(vertical = 8.dp)
+            .semantics { heading() },
     )
 }
 
@@ -187,30 +244,32 @@ fun BatteryHistoryCard(session: BatterySession) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
+        colors =
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
         ) {
             // Header with session type and battery change
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = if (session.isCharging) Icons.Default.Add else Icons.Default.Clear,
                         contentDescription = null,
-                        tint = if (session.isCharging) Color(0xFF4CAF50) else Color(0xFFFF5722),
-                        modifier = Modifier.size(20.dp)
+                        tint = if (session.isCharging) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(20.dp),
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -219,7 +278,7 @@ fun BatteryHistoryCard(session: BatterySession) {
                         text = if (session.isCharging) "Charged for" else "Used for",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
 
@@ -227,7 +286,7 @@ fun BatteryHistoryCard(session: BatterySession) {
                     text = "${if (session.isCharging) "+" else "-"}${session.batteryChange}% • ${session.energyUsed}mAh",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (session.isCharging) Color(0xFF4CAF50) else Color(0xFFFF5722)
+                    color = if (session.isCharging) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error,
                 )
             }
 
@@ -236,19 +295,19 @@ fun BatteryHistoryCard(session: BatterySession) {
             // Duration and time
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = session.duration,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
 
                 Text(
                     text = formatTime(session.timestamp, session.endTime),
                     fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
 
@@ -257,12 +316,12 @@ fun BatteryHistoryCard(session: BatterySession) {
             // Battery level indicator
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Start level
                 BatteryLevelIndicator(
                     level = session.startLevel,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -270,7 +329,7 @@ fun BatteryHistoryCard(session: BatterySession) {
                 Text(
                     text = "${session.startLevel}%",
                     fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -278,11 +337,12 @@ fun BatteryHistoryCard(session: BatterySession) {
                 // Progress bar
                 LinearProgressIndicator(
                     progress = session.batteryChange / 100f,
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .weight(1f)
                         .height(4.dp),
-                    color = if (session.isCharging) Color(0xFF4CAF50) else Color(0xFFFF5722),
-                    trackColor = Color.Gray.copy(alpha = 0.2f)
+                    color = if (session.isCharging) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error,
+                    trackColor = Color.Gray.copy(alpha = 0.2f),
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -290,7 +350,7 @@ fun BatteryHistoryCard(session: BatterySession) {
                 Text(
                     text = "${session.endLevel}%",
                     fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -298,7 +358,7 @@ fun BatteryHistoryCard(session: BatterySession) {
                 // End level
                 BatteryLevelIndicator(
                     level = session.endLevel,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
         }
@@ -308,25 +368,27 @@ fun BatteryHistoryCard(session: BatterySession) {
 @Composable
 fun BatteryLevelIndicator(
     level: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
+        modifier =
+        modifier
             .background(
-                color = when {
-                    level > 80 -> Color(0xFF4CAF50)
-                    level > 20 -> Color(0xFFFF9800)
-                    else -> Color(0xFFFF5722)
+                color =
+                when {
+                    level > 80 -> MaterialTheme.colorScheme.tertiary
+                    level > 20 -> MaterialTheme.colorScheme.secondary
+                    else -> MaterialTheme.colorScheme.error
                 },
-                shape = RoundedCornerShape(4.dp)
+                shape = RoundedCornerShape(4.dp),
             ),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "$level",
             fontSize = 8.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = MaterialTheme.colorScheme.surface,
         )
     }
 }
@@ -342,55 +404,29 @@ data class BatterySession(
     val energyUsed: Int, // mAh
     val carbonFootprint: Double, // grams of CO2
     val timestamp: Long,
-    val endTime: Long
+    val endTime: Long,
 )
 
-fun generateMockBatteryHistory(): List<BatterySession> {
-    val sessions = mutableListOf<BatterySession>()
-    val now = System.currentTimeMillis()
-    val random = kotlin.random.Random
-
-    // Generate sessions for the last 7 days
-    for (day in 0..6) {
-        val dayStart = now - (day * 24 * 60 * 60 * 1000)
-
-        // 2-4 sessions per day
-        for (session in 1..random.nextInt(2, 5)) {
-            val isCharging = random.nextBoolean()
-            val batteryChange = if (isCharging) random.nextInt(10, 50) else random.nextInt(5, 40)
-            val startLevel = if (isCharging) random.nextInt(20, 80) else random.nextInt(30, 90)
-            val endLevel = if (isCharging) {
-                (startLevel + batteryChange).coerceAtMost(
-                    100
-                )
-            } else {
-                (startLevel - batteryChange).coerceAtLeast(0)
-            }
-            val durationMinutes = random.nextInt(30, 180)
-            val energyUsed = random.nextInt(200, 800)
-            val carbonFootprint = energyUsed * 0.0005 // rough calculation
-
-            val sessionStart = dayStart + (session * 6 * 60 * 60 * 1000) // spread throughout day
-            val sessionEnd = sessionStart + (durationMinutes * 60 * 1000)
-
-            sessions.add(
-                BatterySession(
-                    id = "session_${day}_$session",
-                    isCharging = isCharging,
-                    duration = formatDuration(durationMinutes),
-                    batteryChange = batteryChange,
-                    startLevel = startLevel,
-                    endLevel = endLevel,
-                    energyUsed = energyUsed,
-                    carbonFootprint = carbonFootprint,
-                    timestamp = sessionStart,
-                    endTime = sessionEnd
-                )
-            )
-        }
-    }
-
-    return sessions.sortedByDescending { it.timestamp }
+// Map Room entity to UI model
+private fun com.voltai.smartbatteryguardian.data.database.entities.ChargingSession.toBatterySession(): BatterySession {
+    val isCharging = true
+    val end = endTime ?: (startTime + duration)
+    val batteryChange = (endLevel ?: startLevel) - startLevel
+    val energyUsed = kotlin.math.abs(energyConsumed.toInt())
+    val carbonFootprint = energyUsed * 0.0005 // gCO2 approximate factor
+    val durationMinutes = ((end - startTime) / (60_000L)).toInt().coerceAtLeast(0)
+    return BatterySession(
+        id = id.toString(),
+        isCharging = isCharging,
+        duration = formatDuration(durationMinutes),
+        batteryChange = batteryChange,
+        startLevel = startLevel,
+        endLevel = endLevel ?: startLevel,
+        energyUsed = energyUsed,
+        carbonFootprint = carbonFootprint,
+        timestamp = startTime,
+        endTime = end,
+    )
 }
 
 fun formatDuration(minutes: Int): String {
@@ -403,7 +439,10 @@ fun formatDuration(minutes: Int): String {
     }
 }
 
-fun formatTime(startTime: Long, endTime: Long): String {
+fun formatTime(
+    startTime: Long,
+    endTime: Long,
+): String {
     val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
     val start = sdf.format(Date(startTime))
     val end = sdf.format(Date(endTime))

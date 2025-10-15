@@ -3,15 +3,16 @@ package com.voltai.smartbatteryguardian.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.voltai.smartbatteryguardian.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,18 +24,23 @@ fun WakelocksScreen(onBackClick: () -> Unit = {}) {
         TopAppBar(
             title = {
                 Text(
-                    text = "Wakelocks",
+                    text = stringResource(id = R.string.wakelocks_title),
                     fontWeight = FontWeight.Bold,
                 )
             },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back",
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(id = R.string.back),
+                        tint = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             },
+            colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         )
 
         LazyColumn(
@@ -62,7 +68,7 @@ fun WakelocksScreen(onBackClick: () -> Unit = {}) {
                         Icon(
                             imageVector = Icons.Default.Warning,
                             contentDescription = null,
-                            tint = Color(0xFFFF9800),
+                            tint = MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier.size(24.dp),
                         )
 
@@ -76,7 +82,7 @@ fun WakelocksScreen(onBackClick: () -> Unit = {}) {
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
                             Text(
-                                text = "Partial wakelock active",
+                                text = stringResource(id = R.string.wakelock_partial_active),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -86,7 +92,7 @@ fun WakelocksScreen(onBackClick: () -> Unit = {}) {
                             text = "2h 15m",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFFF9800),
+                            color = MaterialTheme.colorScheme.tertiary,
                         )
                     }
                 }
@@ -110,7 +116,7 @@ fun WakelocksScreen(onBackClick: () -> Unit = {}) {
                         Icon(
                             imageVector = Icons.Default.Warning,
                             contentDescription = null,
-                            tint = Color(0xFFF44336),
+                            tint = MaterialTheme.colorScheme.error,
                             modifier = Modifier.size(24.dp),
                         )
 
@@ -124,7 +130,7 @@ fun WakelocksScreen(onBackClick: () -> Unit = {}) {
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
                             Text(
-                                text = "System wakelock",
+                                text = stringResource(id = R.string.wakelock_system),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -134,7 +140,7 @@ fun WakelocksScreen(onBackClick: () -> Unit = {}) {
                             text = "45m",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFF44336),
+                            color = MaterialTheme.colorScheme.error,
                         )
                     }
                 }
@@ -152,7 +158,7 @@ fun WakelocksScreen(onBackClick: () -> Unit = {}) {
                         modifier = Modifier.padding(16.dp),
                     ) {
                         Text(
-                            text = "About Wakelocks",
+                            text = stringResource(id = R.string.about_wakelocks_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -161,10 +167,7 @@ fun WakelocksScreen(onBackClick: () -> Unit = {}) {
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            text =
-                            "Wakelocks prevent your device from going to sleep, which can drain battery. " +
-                                "Apps and system processes use wakelocks to perform background tasks. " +
-                                "Monitor which apps are keeping your device awake the most.",
+                            text = stringResource(id = R.string.about_wakelocks_body),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

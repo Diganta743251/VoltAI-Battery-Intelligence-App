@@ -17,14 +17,19 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.voltai.smartbatteryguardian.analytics.rememberBatteryAnalytics
 import com.voltai.smartbatteryguardian.models.HealthStatus
+import com.voltai.smartbatteryguardian.rememberBatteryData
 import com.voltai.smartbatteryguardian.ui.components.EnhancedPremiumGate
 import com.voltai.smartbatteryguardian.ui.components.PremiumFeatureBanner
+import com.voltai.smartbatteryguardian.viewmodels.BatteryHealthViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.*
@@ -36,7 +41,7 @@ data class BatteryHealthMetric(
     val percentage: Float,
     val status: HealthStatus,
     val icon: String,
-    val description: String
+    val description: String,
 )
 
 data class DegradationData(
@@ -44,7 +49,7 @@ data class DegradationData(
     val degradation: Float,
     val cycleCount: Int,
     val temperature: Float,
-    val healthScore: Float
+    val healthScore: Float,
 )
 
 data class HealthPrediction(
@@ -52,17 +57,21 @@ data class HealthPrediction(
     val predictedHealth: Float,
     val confidence: Float,
     val maintenanceDate: Long?,
-    val factors: List<String>
+    val factors: List<String>,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BatteryHealthAnalyticsScreen(
     onNavigateToOnboarding: () -> Unit = {},
-    onNavigateToPaywall: () -> Unit = {}
+    onNavigateToPaywall: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val analyticsEngine = rememberBatteryAnalytics(context)
+    val batteryData by rememberBatteryData(context)
+    val healthVm: BatteryHealthViewModel = hiltViewModel()
+    val efc30d by healthVm.equivalentFullCycles30d.collectAsState()
+    val healthDeltaRaw by healthVm.degradation30dRaw.collectAsState()
 
     // Premium state management
     var isPremium by remember { mutableStateOf(true) } // Default to premium for now
@@ -72,24 +81,18 @@ fun BatteryHealthAnalyticsScreen(
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("🔋 Health", "📊 Analytics", "📈 Trends", "🔮 Predictions", "💡 Tips")
 
-    // Generate sample data
-    val healthMetrics = remember { generateBatteryHealthMetrics() }
-    val degradationData = remember { generateDegradationData() }
-    val healthPredictions = remember { generateHealthPredictions() }
-    val healthTips = remember { generateHealthTips() }
+    // Use real data where available; keep premium-only sections neutral (empty) for now
+    val healthMetrics = remember(batteryData) { emptyList<BatteryHealthMetric>() }
+    val degradationData = remember { emptyList<DegradationData>() }
+    val healthPredictions = remember { emptyList<HealthPrediction>() }
+    val healthTips = remember { emptyList<HealthTip>() }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFFF8F9FA),
-                            Color(0xFFE8F5E8)
-                        )
-                    )
-                )
+                .background(MaterialTheme.colorScheme.surface),
         ) {
             // Premium Banner
             PremiumFeatureBanner(
@@ -101,34 +104,36 @@ fun BatteryHealthAnalyticsScreen(
                     showPremiumBanner = false
                 },
                 title = "🚀 Unlock AI Health Analytics",
-                description = "Get advanced battery insights and predictions"
+                description = "Get advanced battery insights and predictions",
             )
             // Premium Header with Health Score
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = Color(0xFF4CAF50),
-                shadowElevation = 12.dp
+                color = MaterialTheme.colorScheme.primaryContainer,
+                shadowElevation = 12.dp,
             ) {
                 Column(
-                    modifier = Modifier.padding(24.dp)
+                    modifier = Modifier.padding(24.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Box(
-                            modifier = Modifier
+                            modifier =
+                            Modifier
                                 .size(64.dp)
                                 .background(
                                     Brush.radialGradient(
-                                        colors = listOf(
+                                        colors =
+                                        listOf(
                                             Color.White.copy(alpha = 0.3f),
-                                            Color.White.copy(alpha = 0.1f)
-                                        )
+                                            Color.White.copy(alpha = 0.1f),
+                                        ),
                                     ),
-                                    CircleShape
+                                    CircleShape,
                                 ),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.Center,
                         ) {
                             Text(text = "🔋", fontSize = 32.sp)
                         }
@@ -140,17 +145,17 @@ fun BatteryHealthAnalyticsScreen(
                                 text = "Battery Health Analytics",
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                             Text(
                                 text = "Advanced health monitoring & diagnostics",
                                 fontSize = 14.sp,
-                                color = Color.White.copy(alpha = 0.85f)
+                                color = Color.White.copy(alpha = 0.85f),
                             )
                         }
 
-                        // Overall Health Score Circle
-                        OverallHealthScoreIndicator(healthScore = 89f)
+                        // Overall Health Score Circle (real)
+                        OverallHealthScoreIndicator(healthScore = batteryData.healthPercentage.toFloat())
                     }
 
                     Spacer(modifier = Modifier.height(20.dp))
@@ -158,12 +163,35 @@ fun BatteryHealthAnalyticsScreen(
                     // Quick Health Status Cards
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        horizontalArrangement = Arrangement.SpaceEvenly,
                     ) {
-                        QuickHealthCard("89%", "Health Score", "🎯", Color(0xFF4CAF50))
-                        QuickHealthCard("847", "Charge Cycles", "🔄", Color(0xFF2196F3))
-                        QuickHealthCard("2.3%", "Degradation", "📉", Color(0xFFFF9800))
-                        QuickHealthCard("8 months", "Est. Lifespan", "⏳", Color(0xFF9C27B0))
+                        val healthText by remember(batteryData.healthPercentage) {
+                            derivedStateOf { if (batteryData.healthPercentage in 0..100) "${batteryData.healthPercentage}%" else "—" }
+                        }
+                        val cyclesText by remember(efc30d) {
+                            derivedStateOf {
+                                if (efc30d > 0.0) {
+                                    String.format(
+                                        Locale.getDefault(),
+                                        "%.1f",
+                                        efc30d,
+                                    )
+                                } else {
+                                    "—"
+                                }
+                            }
+                        }
+                        val degradationText by remember(healthDeltaRaw) {
+                            derivedStateOf { healthDeltaRaw?.let { String.format(Locale.getDefault(), "%+.1f%%", it) } ?: "—" }
+                        }
+                        val lifespanText by remember(
+                            batteryData.estimatedLife,
+                        ) { derivedStateOf { batteryData.estimatedLife } }
+
+                        QuickHealthCard(healthText, "Health Score", "🎯", MaterialTheme.colorScheme.primary)
+                        QuickHealthCard(cyclesText, "EFC (30d)", "🔄", MaterialTheme.colorScheme.secondary)
+                        QuickHealthCard(degradationText, "30d Δ Health", "📉", MaterialTheme.colorScheme.tertiary)
+                        QuickHealthCard(lifespanText, "Est. Lifespan", "⏳", MaterialTheme.colorScheme.primary)
                     }
                 }
             }
@@ -172,8 +200,8 @@ fun BatteryHealthAnalyticsScreen(
             ScrollableTabRow(
                 selectedTabIndex = selectedTab,
                 containerColor = Color.Transparent,
-                contentColor = Color(0xFF4CAF50),
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                contentColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             ) {
                 tabs.forEachIndexed { index, title ->
                     val isPremiumTab = index > 1 // Analytics, Trends, Predictions, Tips are premium
@@ -186,22 +214,22 @@ fun BatteryHealthAnalyticsScreen(
                                 selectedTab = index
                             }
                         },
-                        modifier = Modifier.padding(vertical = 12.dp)
+                        modifier = Modifier.padding(vertical = 12.dp),
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
                             Text(
                                 text = title,
                                 fontSize = 14.sp,
                                 fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
-                                color = if (!isPremium && isPremiumTab) Color.Gray else LocalContentColor.current
+                                color = if (!isPremium && isPremiumTab) Color.Gray else LocalContentColor.current,
                             )
                             if (!isPremium && isPremiumTab) {
                                 Text(
                                     text = "💎",
-                                    fontSize = 10.sp
+                                    fontSize = 10.sp,
                                 )
                             }
                         }
@@ -211,10 +239,11 @@ fun BatteryHealthAnalyticsScreen(
 
             // Content
             LazyColumn(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxSize()
                     .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 when (selectedTab) {
                     0 -> {
@@ -262,7 +291,7 @@ fun BatteryHealthAnalyticsScreen(
             },
             featureName = "Battery Health Analytics",
             featureDescription = "Get deep insights into your battery's health with AI-powered analytics, predictive maintenance alerts, and professional diagnostic tools.",
-            featureIcon = "🧠"
+            featureIcon = "🧠",
         )
     }
 }
@@ -271,12 +300,15 @@ fun BatteryHealthAnalyticsScreen(
 fun OverallHealthScoreIndicator(healthScore: Float) {
     val animatedScore by animateFloatAsState(
         targetValue = healthScore / 100f,
-        animationSpec = tween(durationMillis = 1500, easing = EaseOutCubic)
+        animationSpec = tween(durationMillis = 1500, easing = EaseOutCubic),
     )
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.size(80.dp)
+        modifier =
+        Modifier
+            .size(84.dp)
+            .semantics { contentDescription = "Health score: ${healthScore.toInt()}%" },
     ) {
         CircularProgressIndicator(
             progress = animatedScore,
@@ -284,49 +316,76 @@ fun OverallHealthScoreIndicator(healthScore: Float) {
             strokeWidth = 6.dp,
             strokeCap = StrokeCap.Round,
             color = Color.White.copy(alpha = 0.9f),
-            trackColor = Color.White.copy(alpha = 0.3f)
+            trackColor = Color.White.copy(alpha = 0.3f),
+        )
+
+        // Subtle static lighting highlight (battery-friendly)
+        Box(
+            modifier =
+            Modifier
+                .align(Alignment.TopStart)
+                .size(26.dp)
+                .background(
+                    brush =
+                    Brush.radialGradient(
+                        colors =
+                        listOf(
+                            Color.White.copy(alpha = 0.35f),
+                            Color.Transparent,
+                        ),
+                    ),
+                    shape = CircleShape,
+                ),
         )
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = "${healthScore.toInt()}%",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.White,
             )
             Text(
                 text = "Health",
                 fontSize = 10.sp,
-                color = Color.White.copy(alpha = 0.8f)
+                color = Color.White.copy(alpha = 0.8f),
             )
         }
     }
 }
 
 @Composable
-fun QuickHealthCard(value: String, label: String, icon: String, color: Color) {
+fun QuickHealthCard(
+    value: String,
+    label: String,
+    icon: String,
+    color: Color,
+) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = Color.White.copy(alpha = 0.15f)
+        color = Color.White.copy(alpha = 0.15f),
     ) {
         Column(
-            modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+            Modifier
+                .padding(12.dp)
+                .semantics { contentDescription = "$label: $value" },
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(text = icon, fontSize = 16.sp)
             Text(
                 text = value,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.White,
             )
             Text(
                 text = label,
                 fontSize = 10.sp,
                 color = Color.White.copy(alpha = 0.8f),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -337,17 +396,17 @@ fun HealthOverviewCard(healthMetrics: List<BatteryHealthMetric>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "🔋 Health Overview",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
+                color = MaterialTheme.colorScheme.primary,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -364,18 +423,19 @@ fun HealthOverviewCard(healthMetrics: List<BatteryHealthMetric>) {
 
 @Composable
 fun HealthMetricRow(metric: BatteryHealthMetric) {
-    val statusColor = when (metric.status) {
-        HealthStatus.EXCELLENT -> Color(0xFF4CAF50)
-        HealthStatus.GOOD -> Color(0xFF8BC34A)
-        HealthStatus.FAIR -> Color(0xFFFF9800)
-        HealthStatus.POOR -> Color(0xFFFF5722)
-        HealthStatus.CRITICAL -> Color(0xFFF44336)
-    }
+    val statusColor =
+        when (metric.status) {
+            HealthStatus.EXCELLENT -> MaterialTheme.colorScheme.primary
+            HealthStatus.GOOD -> MaterialTheme.colorScheme.secondary
+            HealthStatus.FAIR -> MaterialTheme.colorScheme.tertiary
+            HealthStatus.POOR -> MaterialTheme.colorScheme.error
+            HealthStatus.CRITICAL -> MaterialTheme.colorScheme.error
+        }
 
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = metric.icon, fontSize = 20.sp)
 
@@ -385,34 +445,34 @@ fun HealthMetricRow(metric: BatteryHealthMetric) {
                 Text(
                     text = metric.name,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     text = metric.description,
                     fontSize = 12.sp,
-                    color = Color(0xFF666666)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
 
             Column(
-                horizontalAlignment = Alignment.End
+                horizontalAlignment = Alignment.End,
             ) {
                 Text(
                     text = metric.value,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = statusColor
+                    color = statusColor,
                 )
                 Surface(
                     shape = RoundedCornerShape(6.dp),
-                    color = statusColor.copy(alpha = 0.1f)
+                    color = statusColor.copy(alpha = 0.1f),
                 ) {
                     Text(
                         text = metric.status.name,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Medium,
                         color = statusColor,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                     )
                 }
             }
@@ -423,12 +483,13 @@ fun HealthMetricRow(metric: BatteryHealthMetric) {
         // Progress bar
         LinearProgressIndicator(
             progress = metric.percentage / 100f,
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .height(4.dp)
                 .clip(RoundedCornerShape(2.dp)),
             color = statusColor,
-            trackColor = statusColor.copy(alpha = 0.2f)
+            trackColor = statusColor.copy(alpha = 0.2f),
         )
     }
 }
@@ -438,52 +499,101 @@ fun HealthDetailedMetricsCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "📊 Detailed Metrics",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.SpaceAround,
             ) {
-                DetailedMetricItem("Voltage", "4.12V", "🔌", Color(0xFF2196F3))
-                DetailedMetricItem("Temperature", "32.5°C", "🌡️", Color(0xFFFF5722))
-                DetailedMetricItem("Current", "-850mA", "⚡", Color(0xFF9C27B0))
+                val context = LocalContext.current
+                val batteryData by rememberBatteryData(context)
+                val voltageText by remember(batteryData.voltage) {
+                    derivedStateOf {
+                        if (batteryData.voltage > 0.0) {
+                            String.format(
+                                locale = Locale.getDefault(),
+                                "%.2fV",
+                                batteryData.voltage,
+                            )
+                        } else {
+                            "—"
+                        }
+                    }
+                }
+                val tempText by remember(batteryData.temperature) {
+                    derivedStateOf { if (batteryData.temperature > 0f) "${batteryData.temperature.toInt()}°C" else "—" }
+                }
+                val currentText by remember(batteryData.current) {
+                    derivedStateOf { if (batteryData.current != 0) "${batteryData.current} mA" else "—" }
+                }
+                DetailedMetricItem("Voltage", voltageText, "🔌", MaterialTheme.colorScheme.primary)
+                DetailedMetricItem("Temperature", tempText, "🌡️", MaterialTheme.colorScheme.error)
+                DetailedMetricItem("Current", currentText, "⚡", MaterialTheme.colorScheme.secondary)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.SpaceAround,
             ) {
-                DetailedMetricItem("Capacity", "89.3%", "🔋", Color(0xFF4CAF50))
-                DetailedMetricItem("Efficiency", "94.2%", "📈", Color(0xFF00BCD4))
-                DetailedMetricItem("Age", "18 mo", "📅", Color(0xFF795548))
+                val context = LocalContext.current
+                val batteryData by rememberBatteryData(context)
+                val capacityText = batteryData.capacity.ifBlank { "—" }
+                val healthVm: BatteryHealthViewModel = hiltViewModel()
+                val efcLifetime by healthVm.efcLifetime.collectAsState()
+                val thermalIdx by healthVm.thermalExposureIndex30d.collectAsState()
+                val thermalText by remember(
+                    thermalIdx,
+                ) { derivedStateOf { thermalIdx?.let { "${it.toInt()}%" } ?: "—" } }
+                val efcLifetimeText by remember(efcLifetime) {
+                    derivedStateOf {
+                        if (efcLifetime > 0.0) {
+                            String.format(
+                                Locale.getDefault(),
+                                "%.1f",
+                                efcLifetime,
+                            )
+                        } else {
+                            "—"
+                        }
+                    }
+                }
+                DetailedMetricItem("Capacity", capacityText, "🔋", MaterialTheme.colorScheme.primary)
+                DetailedMetricItem("Thermal Exposure (30d)", thermalText, "🌡️", MaterialTheme.colorScheme.error)
+                DetailedMetricItem("EFC Lifetime", efcLifetimeText, "🔄", MaterialTheme.colorScheme.secondary)
             }
         }
     }
 }
 
 @Composable
-fun DetailedMetricItem(label: String, value: String, icon: String, color: Color) {
+fun DetailedMetricItem(
+    label: String,
+    value: String,
+    icon: String,
+    color: Color,
+) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.semantics { contentDescription = "$label: $value" },
     ) {
         Surface(
             shape = CircleShape,
             color = color.copy(alpha = 0.1f),
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier.size(48.dp),
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Text(text = icon, fontSize = 20.sp)
@@ -496,12 +606,12 @@ fun DetailedMetricItem(label: String, value: String, icon: String, color: Color)
             text = value,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
-            color = color
+            color = color,
         )
         Text(
             text = label,
             fontSize = 12.sp,
-            color = Color(0xFF666666)
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -511,16 +621,16 @@ fun DegradationTrendsCard(degradationData: List<DegradationData>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "📉 Degradation Trends",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -536,25 +646,26 @@ fun DegradationTrendsCard(degradationData: List<DegradationData>) {
 @Composable
 fun DegradationDataRow(data: DegradationData) {
     Row(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .background(
-                Color(0xFFF5F5F5),
-                RoundedCornerShape(12.dp)
+                MaterialTheme.colorScheme.surfaceVariant,
+                RoundedCornerShape(12.dp),
             )
             .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = data.period,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
             Text(
                 text = "${data.cycleCount} cycles",
                 fontSize = 12.sp,
-                color = Color(0xFF666666)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
@@ -563,12 +674,12 @@ fun DegradationDataRow(data: DegradationData) {
                 text = "${data.degradation}%",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = if (data.degradation < 2f) Color(0xFF4CAF50) else Color(0xFFFF5722)
+                color = if (data.degradation < 2f) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             )
             Text(
                 text = "Health: ${data.healthScore}%",
                 fontSize = 11.sp,
-                color = Color(0xFF666666)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -579,16 +690,16 @@ fun HealthPredictionsCard(predictions: List<HealthPrediction>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp),
         ) {
             Text(
                 text = "🔮 Health Predictions",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -606,34 +717,35 @@ fun HealthPredictionsCard(predictions: List<HealthPrediction>) {
 @Composable
 fun HealthPredictionRow(prediction: HealthPrediction) {
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .background(
-                Color(0xFFF8F9FA),
-                RoundedCornerShape(12.dp)
+                MaterialTheme.colorScheme.surfaceVariant,
+                RoundedCornerShape(12.dp),
             )
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = prediction.timeframe,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
 
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF2196F3).copy(alpha = 0.1f)
+                color = MaterialTheme.colorScheme.primaryContainer,
             ) {
                 Text(
                     text = "${(prediction.confidence * 100).toInt()}% confidence",
                     fontSize = 12.sp,
-                    color = Color(0xFF2196F3),
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                 )
             }
         }
@@ -644,7 +756,7 @@ fun HealthPredictionRow(prediction: HealthPrediction) {
             text = "Predicted Health: ${prediction.predictedHealth.toInt()}%",
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
-            color = if (prediction.predictedHealth > 70) Color(0xFF4CAF50) else Color(0xFFFF5722)
+            color = if (prediction.predictedHealth > 70) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
         )
 
         if (prediction.maintenanceDate != null) {
@@ -652,7 +764,7 @@ fun HealthPredictionRow(prediction: HealthPrediction) {
             Text(
                 text = "Maintenance suggested: ${dateFormat.format(Date(prediction.maintenanceDate))}",
                 fontSize = 12.sp,
-                color = Color(0xFF666666)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
@@ -660,8 +772,8 @@ fun HealthPredictionRow(prediction: HealthPrediction) {
             Text(
                 text = "• $factor",
                 fontSize = 12.sp,
-                color = Color(0xFF666666),
-                modifier = Modifier.padding(top = 2.dp)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 2.dp),
             )
         }
     }
@@ -672,43 +784,45 @@ fun HealthTipCard(tip: HealthTip) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = tip.icon, fontSize = 20.sp)
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = tip.title,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
 
                 Surface(
                     shape = RoundedCornerShape(6.dp),
-                    color = when (tip.priority) {
-                        "High" -> Color(0xFFE57373).copy(alpha = 0.2f)
-                        "Medium" -> Color(0xFFFFB74D).copy(alpha = 0.2f)
-                        else -> Color(0xFF81C784).copy(alpha = 0.2f)
-                    }
+                    color =
+                    when (tip.priority) {
+                        "High" -> MaterialTheme.colorScheme.errorContainer
+                        "Medium" -> MaterialTheme.colorScheme.tertiaryContainer
+                        else -> MaterialTheme.colorScheme.primaryContainer
+                    },
                 ) {
                     Text(
                         text = tip.priority,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Medium,
-                        color = when (tip.priority) {
-                            "High" -> Color(0xFFD32F2F)
-                            "Medium" -> Color(0xFFF57C00)
-                            else -> Color(0xFF388E3C)
+                        color =
+                        when (tip.priority) {
+                            "High" -> MaterialTheme.colorScheme.onErrorContainer
+                            "Medium" -> MaterialTheme.colorScheme.onTertiaryContainer
+                            else -> MaterialTheme.colorScheme.onPrimaryContainer
                         },
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                     )
                 }
             }
@@ -718,8 +832,8 @@ fun HealthTipCard(tip: HealthTip) {
             Text(
                 text = tip.description,
                 fontSize = 14.sp,
-                color = Color(0xFF666666),
-                lineHeight = 20.sp
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                lineHeight = 20.sp,
             )
 
             if (tip.impact.isNotEmpty()) {
@@ -727,8 +841,8 @@ fun HealthTipCard(tip: HealthTip) {
                 Text(
                     text = "💡 Impact: ${tip.impact}",
                     fontSize = 12.sp,
-                    color = Color(0xFF4CAF50),
-                    fontWeight = FontWeight.Medium
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Medium,
                 )
             }
         }
@@ -744,7 +858,7 @@ private fun generateBatteryHealthMetrics(): List<BatteryHealthMetric> {
             percentage = 89f,
             status = HealthStatus.GOOD,
             icon = "🎯",
-            description = "Battery is performing well"
+            description = "Battery is performing well",
         ),
         BatteryHealthMetric(
             name = "Capacity Retention",
@@ -752,7 +866,7 @@ private fun generateBatteryHealthMetrics(): List<BatteryHealthMetric> {
             percentage = 91f,
             status = HealthStatus.GOOD,
             icon = "🔋",
-            description = "Slight capacity loss detected"
+            description = "Slight capacity loss detected",
         ),
         BatteryHealthMetric(
             name = "Charging Efficiency",
@@ -760,7 +874,7 @@ private fun generateBatteryHealthMetrics(): List<BatteryHealthMetric> {
             percentage = 94f,
             status = HealthStatus.EXCELLENT,
             icon = "⚡",
-            description = "Charging optimally"
+            description = "Charging optimally",
         ),
         BatteryHealthMetric(
             name = "Temperature Management",
@@ -768,7 +882,7 @@ private fun generateBatteryHealthMetrics(): List<BatteryHealthMetric> {
             percentage = 85f,
             status = HealthStatus.GOOD,
             icon = "🌡️",
-            description = "Temperature within safe range"
+            description = "Temperature within safe range",
         ),
         BatteryHealthMetric(
             name = "Cycle Life Remaining",
@@ -776,8 +890,8 @@ private fun generateBatteryHealthMetrics(): List<BatteryHealthMetric> {
             percentage = 78f,
             status = HealthStatus.FAIR,
             icon = "🔄",
-            description = "847 of 1000 cycles used"
-        )
+            description = "847 of 1000 cycles used",
+        ),
     )
 }
 
@@ -786,7 +900,7 @@ private fun generateDegradationData(): List<DegradationData> {
         DegradationData("Last 30 days", 0.8f, 45, 31.2f, 89.1f),
         DegradationData("Last 90 days", 2.1f, 132, 32.8f, 87.9f),
         DegradationData("Last 6 months", 4.3f, 267, 33.1f, 85.7f),
-        DegradationData("Last year", 8.7f, 543, 33.5f, 81.3f)
+        DegradationData("Last year", 8.7f, 543, 33.5f, 81.3f),
     )
 }
 
@@ -797,22 +911,22 @@ private fun generateHealthPredictions(): List<HealthPrediction> {
             predictedHealth = 86.2f,
             confidence = 0.92f,
             maintenanceDate = null,
-            factors = listOf("Current usage pattern", "Temperature exposure", "Charging frequency")
+            factors = listOf("Current usage pattern", "Temperature exposure", "Charging frequency"),
         ),
         HealthPrediction(
             timeframe = "Next 6 months",
             predictedHealth = 82.1f,
             confidence = 0.87f,
             maintenanceDate = null,
-            factors = listOf("Cycle count increase", "Seasonal temperature changes")
+            factors = listOf("Cycle count increase", "Seasonal temperature changes"),
         ),
         HealthPrediction(
             timeframe = "Next year",
             predictedHealth = 76.8f,
             confidence = 0.78f,
             maintenanceDate = System.currentTimeMillis() + (365L * 24 * 60 * 60 * 1000),
-            factors = listOf("Expected degradation rate", "Usage intensity", "Environmental factors")
-        )
+            factors = listOf("Expected degradation rate", "Usage intensity", "Environmental factors"),
+        ),
     )
 }
 
@@ -821,7 +935,7 @@ data class HealthTip(
     val description: String,
     val priority: String,
     val icon: String,
-    val impact: String
+    val impact: String,
 )
 
 private fun generateHealthTips(): List<HealthTip> {
@@ -831,36 +945,36 @@ private fun generateHealthTips(): List<HealthTip> {
             description = "Keep battery between 20-80% for optimal longevity. Your current pattern shows frequent 100% charges.",
             priority = "High",
             icon = "🔋",
-            impact = "Can extend battery life by 12-18 months"
+            impact = "Can extend battery life by 12-18 months",
         ),
         HealthTip(
             title = "Temperature Management",
             description = "Your device has exceeded 40°C on 3 occasions this week. Remove case during charging and avoid direct sunlight.",
             priority = "Medium",
             icon = "🌡️",
-            impact = "Reduces degradation rate by up to 25%"
+            impact = "Reduces degradation rate by up to 25%",
         ),
         HealthTip(
             title = "Charging Speed Balance",
             description = "Mix fast and slow charging. Currently using fast charging 78% of the time - try overnight slow charging.",
             priority = "Medium",
             icon = "⚡",
-            impact = "Reduces heat stress and improves longevity"
+            impact = "Reduces heat stress and improves longevity",
         ),
         HealthTip(
             title = "Storage Calibration",
             description = "Battery hasn't been fully discharged in 2 months. Consider monthly calibration cycle (5% to 100%).",
             priority = "Low",
             icon = "📊",
-            impact = "Improves battery level accuracy"
+            impact = "Improves battery level accuracy",
         ),
         HealthTip(
             title = "Background App Management",
             description = "12 apps are consuming battery while unused. Review background app refresh settings.",
             priority = "High",
             icon = "📱",
-            impact = "Reduces daily charge cycles by 15-20%"
-        )
+            impact = "Reduces daily charge cycles by 15-20%",
+        ),
     )
 }
 
@@ -869,16 +983,16 @@ private fun generateHealthTips(): List<HealthTip> {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
                 text = "💓 Battery Vital Signs",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Real-time health monitoring coming soon...", color = Color(0xFF666666))
+            Text("Real-time health monitoring coming soon...", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -887,16 +1001,16 @@ private fun generateHealthTips(): List<HealthTip> {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
                 text = "📊 Health Score Analytics",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Detailed health score breakdown coming soon...", color = Color(0xFF666666))
+            Text("Detailed health score breakdown coming soon...", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -905,16 +1019,16 @@ private fun generateHealthTips(): List<HealthTip> {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
                 text = "🔧 Component Health",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Individual component analysis coming soon...", color = Color(0xFF666666))
+            Text("Individual component analysis coming soon...", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -923,16 +1037,16 @@ private fun generateHealthTips(): List<HealthTip> {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
                 text = "📈 Historical Health Chart",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Historical health trends coming soon...", color = Color(0xFF666666))
+            Text("Historical health trends coming soon...", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -941,16 +1055,16 @@ private fun generateHealthTips(): List<HealthTip> {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
                 text = "📊 Health Trend Comparison",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Comparative health analysis coming soon...", color = Color(0xFF666666))
+            Text("Comparative health analysis coming soon...", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -959,16 +1073,16 @@ private fun generateHealthTips(): List<HealthTip> {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
                 text = "🔄 Cycle Count Analysis",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Detailed cycle analysis coming soon...", color = Color(0xFF666666))
+            Text("Detailed cycle analysis coming soon...", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -977,16 +1091,16 @@ private fun generateHealthTips(): List<HealthTip> {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
                 text = "🔧 Maintenance Schedule",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Smart maintenance scheduling coming soon...", color = Color(0xFF666666))
+            Text("Smart maintenance scheduling coming soon...", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -995,16 +1109,16 @@ private fun generateHealthTips(): List<HealthTip> {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
                 text = "⏳ Lifespan Prediction",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("AI-powered lifespan prediction coming soon...", color = Color(0xFF666666))
+            Text("AI-powered lifespan prediction coming soon...", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

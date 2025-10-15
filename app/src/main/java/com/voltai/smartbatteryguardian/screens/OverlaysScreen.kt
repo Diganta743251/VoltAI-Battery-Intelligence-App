@@ -14,8 +14,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,9 +42,7 @@ private val OVERLAY_OPACITY_KEY = floatPreferencesKey("overlay_opacity")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OverlaysScreen(
-    onBackClick: () -> Unit = {}
-) {
+fun OverlaysScreen(onBackClick: () -> Unit = {}) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -67,54 +67,59 @@ fun OverlaysScreen(
     var showPermissionDialog by remember { mutableStateOf(false) }
 
     // Check if overlay permission is granted
-    val hasOverlayPermission = remember {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Settings.canDrawOverlays(context)
-        } else {
-            true
+    val hasOverlayPermission =
+        remember {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Settings.canDrawOverlays(context)
+            } else {
+                true
+            }
         }
-    }
 
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(MaterialTheme.colorScheme.surfaceVariant),
     ) {
         LazyColumn(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Header Card
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFF2196F3).copy(alpha = 0.1f)
-                    )
+                    colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                    ),
                 ) {
                     Column(
-                        modifier = Modifier.padding(20.dp)
+                        modifier = Modifier.padding(20.dp),
                     ) {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
                                 contentDescription = null,
-                                tint = Color(0xFF2196F3),
-                                modifier = Modifier.size(32.dp)
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(32.dp),
                             )
 
                             Spacer(modifier = Modifier.width(12.dp))
 
                             Text(
                                 text = "Advanced overlays",
+                                modifier = Modifier.semantics { heading() },
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                         }
 
@@ -124,26 +129,27 @@ fun OverlaysScreen(
                             text = "Display real-time battery information on your screen. Overlays will appear over other apps to keep you informed about your battery status.",
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            lineHeight = 20.sp
+                            lineHeight = 20.sp,
                         )
 
                         if (!hasOverlayPermission) {
                             Spacer(modifier = Modifier.height(16.dp))
 
                             Card(
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xFFFF9800).copy(alpha = 0.1f)
-                                )
+                                colors =
+                                CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f),
+                                ),
                             ) {
                                 Row(
                                     modifier = Modifier.padding(16.dp),
-                                    verticalAlignment = Alignment.CenterVertically
+                                    verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Warning,
                                         contentDescription = null,
-                                        tint = Color(0xFFFF9800),
-                                        modifier = Modifier.size(20.dp)
+                                        tint = MaterialTheme.colorScheme.secondary,
+                                        modifier = Modifier.size(20.dp),
                                     )
 
                                     Spacer(modifier = Modifier.width(8.dp))
@@ -151,8 +157,8 @@ fun OverlaysScreen(
                                     Text(
                                         text = "Permission required for overlays to work",
                                         fontSize = 14.sp,
-                                        color = Color(0xFFFF9800),
-                                        fontWeight = FontWeight.Medium
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        fontWeight = FontWeight.Medium,
                                     )
                                 }
                             }
@@ -165,10 +171,13 @@ fun OverlaysScreen(
             item {
                 Text(
                     text = "All in one overlay",
+                    modifier =
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .semantics { heading() },
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
 
@@ -188,7 +197,7 @@ fun OverlaysScreen(
                                 }
                             }
                         }
-                    }
+                    },
                 )
             }
 
@@ -196,10 +205,13 @@ fun OverlaysScreen(
             item {
                 Text(
                     text = "Simple overlays",
+                    modifier =
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .semantics { heading() },
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
 
@@ -218,7 +230,7 @@ fun OverlaysScreen(
                                 }
                             }
                         }
-                    }
+                    },
                 )
             }
 
@@ -237,7 +249,7 @@ fun OverlaysScreen(
                                 }
                             }
                         }
-                    }
+                    },
                 )
             }
 
@@ -246,18 +258,20 @@ fun OverlaysScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
-                    )
+                    colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
                 ) {
                     Column(
-                        modifier = Modifier.padding(20.dp)
+                        modifier = Modifier.padding(20.dp),
                     ) {
                         Text(
                             text = "Overlay Opacity",
+                            modifier = Modifier.semantics { heading() },
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -265,19 +279,19 @@ fun OverlaysScreen(
                         Text(
                             text = "Adjust transparency of overlay elements",
                             fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
                                 text = "20%",
                                 fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
 
                             Slider(
@@ -290,19 +304,21 @@ fun OverlaysScreen(
                                     }
                                 },
                                 valueRange = 0.2f..1.0f,
-                                modifier = Modifier
+                                modifier =
+                                Modifier
                                     .weight(1f)
                                     .padding(horizontal = 16.dp),
-                                colors = SliderDefaults.colors(
-                                    thumbColor = Color(0xFF2196F3),
-                                    activeTrackColor = Color(0xFF2196F3)
-                                )
+                                colors =
+                                SliderDefaults.colors(
+                                    thumbColor = MaterialTheme.colorScheme.primary,
+                                    activeTrackColor = MaterialTheme.colorScheme.primary,
+                                ),
                             )
 
                             Text(
                                 text = "100%",
                                 fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
 
@@ -312,9 +328,9 @@ fun OverlaysScreen(
                             text = "Current: ${(overlayOpacity * 100).toInt()}%",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Color(0xFF2196F3),
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
                         )
                     }
                 }
@@ -325,18 +341,20 @@ fun OverlaysScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
-                    )
+                    colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f),
+                    ),
                 ) {
                     Column(
-                        modifier = Modifier.padding(20.dp)
+                        modifier = Modifier.padding(20.dp),
                     ) {
                         Text(
                             text = "💡 Overlay Tips",
+                            modifier = Modifier.semantics { heading() },
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -362,16 +380,17 @@ fun OverlaysScreen(
             onRequestPermission = {
                 showPermissionDialog = false
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    val intent = Intent(
-                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:${context.packageName}")
-                    )
+                    val intent =
+                        Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:${context.packageName}"),
+                        )
                     context.startActivity(intent)
                 }
             },
             onDismiss = {
                 showPermissionDialog = false
-            }
+            },
         )
     }
 }
@@ -382,31 +401,32 @@ fun OverlayOptionCard(
     description: String,
     additionalInfo: String = "",
     enabled: Boolean,
-    onToggle: (Boolean) -> Unit
+    onToggle: (Boolean) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        )
+        colors =
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(
                         text = title,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
 
                     Spacer(modifier = Modifier.height(4.dp))
@@ -415,7 +435,7 @@ fun OverlayOptionCard(
                         text = description,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        lineHeight = 20.sp
+                        lineHeight = 20.sp,
                     )
 
                     if (additionalInfo.isNotEmpty()) {
@@ -425,7 +445,7 @@ fun OverlayOptionCard(
                             text = additionalInfo,
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                            lineHeight = 16.sp
+                            lineHeight = 16.sp,
                         )
                     }
                 }
@@ -435,10 +455,11 @@ fun OverlayOptionCard(
                 Switch(
                     checked = enabled,
                     onCheckedChange = onToggle,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color(0xFF2196F3),
-                        checkedTrackColor = Color(0xFF2196F3).copy(alpha = 0.3f)
-                    )
+                    colors =
+                    SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.primary,
+                        checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                    ),
                 )
             }
         }
@@ -448,16 +469,17 @@ fun OverlayOptionCard(
 @Composable
 fun OverlayTipItem(tip: String) {
     Row(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .padding(vertical = 2.dp),
-        verticalAlignment = Alignment.Top
+        verticalAlignment = Alignment.Top,
     ) {
         Text(
             text = "•",
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(top = 2.dp)
+            modifier = Modifier.padding(top = 2.dp),
         )
 
         Spacer(modifier = Modifier.width(8.dp))
@@ -467,7 +489,7 @@ fun OverlayTipItem(tip: String) {
             fontSize = 14.sp,
             color = MaterialTheme.colorScheme.onSurface,
             lineHeight = 20.sp,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
     }
 }
@@ -475,24 +497,25 @@ fun OverlayTipItem(tip: String) {
 @Composable
 fun OverlayPermissionDialog(
     onRequestPermission: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Card(
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
+            colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = null,
-                    tint = Color(0xFF2196F3),
-                    modifier = Modifier.size(48.dp)
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(48.dp),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -502,7 +525,7 @@ fun OverlayPermissionDialog(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -512,18 +535,18 @@ fun OverlayPermissionDialog(
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
-                    lineHeight = 20.sp
+                    lineHeight = 20.sp,
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     OutlinedButton(
                         onClick = onDismiss,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text("Cancel")
                     }
@@ -531,9 +554,10 @@ fun OverlayPermissionDialog(
                     Button(
                         onClick = onRequestPermission,
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF2196F3)
-                        )
+                        colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                        ),
                     ) {
                         Text("Grant Permission")
                     }

@@ -52,8 +52,10 @@ class CircularBatteryWidget : GlanceAppWidget() {
 
 @Composable
 private fun CircularBatteryContent() {
-    val batteryLevel = 85 // Mock data - replace with actual
-    val isCharging = false
+    val context = LocalContext.current
+    val batteryInfo = remember { getBatteryInfo(context) }
+    val batteryLevel = batteryInfo.level
+    val isCharging = batteryInfo.isCharging
     
     Box(
         modifier = GlanceModifier
@@ -68,7 +70,7 @@ private fun CircularBatteryContent() {
         ) {
             // Battery percentage
             Text(
-                text = "${batteryLevel}%",
+                text = if (batteryLevel > 0) "${batteryLevel}%" else "—",
                 style = TextStyle(
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
@@ -89,9 +91,9 @@ private fun CircularBatteryContent() {
             
             Spacer(modifier = GlanceModifier.height(8.dp))
             
-            // Time remaining
+            // Time remaining (unknown)
             Text(
-                text = "4h 23m left",
+                text = "—",
                 style = TextStyle(
                     fontSize = 10.sp,
                     color = ColorProvider(Color.White.copy(alpha = 0.6f))
@@ -114,8 +116,10 @@ class MinimalLineWidget : GlanceAppWidget() {
 
 @Composable
 private fun MinimalLineContent() {
-    val batteryLevel = 72
-    val temperature = 34.2f
+    val context = LocalContext.current
+    val batteryInfo = remember { getBatteryInfo(context) }
+    val batteryLevel = batteryInfo.level
+    val temperature = batteryInfo.temperature
     
     Row(
         modifier = GlanceModifier
@@ -138,7 +142,7 @@ private fun MinimalLineContent() {
             
             // Temperature
             Text(
-                text = "${temperature}°C",
+                text = if (temperature > 0f) "${temperature}°C" else "—",
                 style = TextStyle(
                     fontSize = 12.sp,
                     color = ColorProvider(Color.Gray)
@@ -178,10 +182,12 @@ class DetailedStatsWidget : GlanceAppWidget() {
 
 @Composable
 private fun DetailedStatsContent() {
-    val batteryLevel = 89
-    val voltage = 4.12f
-    val temperature = 32.1f
-    val health = 95
+    val context = LocalContext.current
+    val batteryInfo = remember { getBatteryInfo(context) }
+    val batteryLevel = batteryInfo.level
+    val voltage = batteryInfo.voltage
+    val temperature = batteryInfo.temperature
+    val health = batteryInfo.health
     
     Column(
         modifier = GlanceModifier
@@ -225,12 +231,12 @@ private fun DetailedStatsContent() {
         Row(modifier = GlanceModifier.fillMaxWidth()) {
             StatItem(
                 label = "Voltage",
-                value = "${voltage}V",
+                value = if (voltage > 0f) "${voltage}V" else "—",
                 modifier = GlanceModifier.defaultWeight()
             )
             StatItem(
                 label = "Temp",
-                value = "${temperature}°C",
+                value = if (temperature > 0f) "${temperature}°C" else "—",
                 modifier = GlanceModifier.defaultWeight()
             )
         }
@@ -240,7 +246,7 @@ private fun DetailedStatsContent() {
         Row(modifier = GlanceModifier.fillMaxWidth()) {
             StatItem(
                 label = "Health",
-                value = "${health}%",
+                value = if (health > 0) "${health}%" else "—",
                 modifier = GlanceModifier.defaultWeight()
             )
             StatItem(
@@ -565,8 +571,10 @@ class TemperatureWidget : GlanceAppWidget() {
 
 @Composable
 private fun TemperatureContent() {
-    val temperature = 33.5f
-    val batteryLevel = 78
+    val context = LocalContext.current
+    val batteryInfo = remember { getBatteryInfo(context) }
+    val temperature = batteryInfo.temperature
+    val batteryLevel = batteryInfo.level
     
     Box(
         modifier = GlanceModifier
@@ -638,10 +646,12 @@ class ChargingSpeedWidget : GlanceAppWidget() {
 
 @Composable
 private fun ChargingSpeedContent() {
-    val isCharging = true
-    val chargingSpeed = 1850 // mA
-    val batteryLevel = 67
-    val timeToFull = "1h 23m"
+    val context = LocalContext.current
+    val batteryInfo = remember { getBatteryInfo(context) }
+    val isCharging = batteryInfo.isCharging
+    val chargingSpeed = batteryInfo.chargingCurrent
+    val batteryLevel = batteryInfo.level
+    val timeToFull = batteryInfo.timeToFull
     
     Column(
         modifier = GlanceModifier
@@ -824,4 +834,64 @@ class TemperatureWidgetReceiver : GlanceAppWidgetReceiver() {
 
 class ChargingSpeedWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = ChargingSpeedWidget()
+}
+
+// Helper function to get real battery data
+private data class BatteryInfo(
+    val level: Int,
+    val isCharging: Boolean,
+    val temperature: Float,
+    val voltage: Float,
+    val health: Int,
+    val chargingCurrent: Int,
+    val timeToFull: String
+)
+
+private fun getBatteryInfo(context: Context): BatteryInfo {
+    val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as? android.os.BatteryManager
+    val intentFilter = android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED)
+    val batteryStatus = context.registerReceiver(null, intentFilter)
+    
+    val level = batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, -1) ?: 0
+    val scale = batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_SCALE, -1) ?: 100
+    val batteryPct = ((level / scale.toFloat()) * 100).toInt().coerceIn(0, 100)
+    
+    val status = batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1) ?: -1
+    val isCharging = status == android.os.BatteryManager.BATTERY_STATUS_CHARGING ||
+        status == android.os.BatteryManager.BATTERY_STATUS_FULL
+    
+    val temperature = (batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_TEMPERATURE, 0) ?: 0) / 10f
+    val voltage = (batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_VOLTAGE, 0) ?: 0) / 1000f
+    val health = batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_HEALTH, -1) ?: 0
+    
+    // Get charging current (requires API 21+)
+    val chargingCurrent = batteryManager?.getIntProperty(
+        android.os.BatteryManager.BATTERY_PROPERTY_CURRENT_NOW
+    )?.div(1000)?.coerceAtLeast(0) ?: 0
+    
+    // Calculate time to full
+    val timeToFull = if (isCharging && batteryPct < 100) {
+        val remainingPercent = 100 - batteryPct
+        val estimatedMinutes = if (chargingCurrent > 0) {
+            // Estimate based on current (simplified)
+            (remainingPercent * 2.5).toInt()
+        } else {
+            remainingPercent
+        }
+        val hours = estimatedMinutes / 60
+        val mins = estimatedMinutes % 60
+        if (hours > 0) "${hours}h ${mins}m" else "${mins}m"
+    } else {
+        "—"
+    }
+    
+    return BatteryInfo(
+        level = batteryPct,
+        isCharging = isCharging,
+        temperature = temperature,
+        voltage = voltage,
+        health = health,
+        chargingCurrent = chargingCurrent,
+        timeToFull = timeToFull
+    )
 }

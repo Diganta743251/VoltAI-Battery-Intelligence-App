@@ -3,13 +3,12 @@ package com.voltai.smartbatteryguardian.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -34,11 +33,16 @@ fun BatterySaverScreen(onBackClick: () -> Unit = {}) {
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             },
+            colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         )
 
         LazyColumn(
@@ -181,8 +185,8 @@ fun BatterySaverScreen(onBackClick: () -> Unit = {}) {
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = null,
-                                tint = Color(0xFFF44336),
+                                contentDescription = "Battery saving tips",
+                                tint = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.size(24.dp),
                             )
 

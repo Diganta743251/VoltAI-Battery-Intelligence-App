@@ -19,8 +19,10 @@ import javax.inject.Singleton
 val Context.homeScreenDataStore: DataStore<Preferences> by preferencesDataStore(name = "home_screen_prefs")
 
 @Singleton
-class HomeScreenRepository @Inject constructor(
-    @ApplicationContext private val context: Context
+class HomeScreenRepository
+@Inject
+constructor(
+    @ApplicationContext private val context: Context,
 ) {
     private object PreferencesKeys {
         val HOME_SCREEN_CONFIG = stringPreferencesKey("home_screen_config")
@@ -32,10 +34,11 @@ class HomeScreenRepository @Inject constructor(
         val CONFIG_VERSION = intPreferencesKey("config_version")
     }
 
-    private val json = Json {
-        ignoreUnknownKeys = true
-        encodeDefaults = true
-    }
+    private val json =
+        Json {
+            ignoreUnknownKeys = true
+            encodeDefaults = true
+        }
 
     /**
      * Save the complete home screen configuration
@@ -44,20 +47,21 @@ class HomeScreenRepository @Inject constructor(
         try {
             context.homeScreenDataStore.edit { preferences ->
                 // Save serialized card configuration
-                val cardsJson = json.encodeToString(
-                    config.cards.map { card ->
-                        SerializableHomeCard(
-                            id = card.id,
-                            cardTypeId = card.cardType.id,
-                            sizeName = card.size.name,
-                            row = card.row,
-                            column = card.column,
-                            isVisible = card.isVisible,
-                            customTitle = card.customTitle,
-                            lastUpdated = card.lastUpdated
-                        )
-                    }
-                )
+                val cardsJson =
+                    json.encodeToString(
+                        config.cards.map { card ->
+                            SerializableHomeCard(
+                                id = card.id,
+                                cardTypeId = card.cardType.id,
+                                sizeName = card.size.name,
+                                row = card.row,
+                                column = card.column,
+                                isVisible = card.isVisible,
+                                customTitle = card.customTitle,
+                                lastUpdated = card.lastUpdated,
+                            )
+                        },
+                    )
                 preferences[PreferencesKeys.HOME_SCREEN_CONFIG] = cardsJson
 
                 // Save other config properties
@@ -86,40 +90,55 @@ class HomeScreenRepository @Inject constructor(
             .map { preferences ->
                 try {
                     val cardsJson = preferences[PreferencesKeys.HOME_SCREEN_CONFIG]
-                    val cards = if (cardsJson != null) {
-                        val serializableCards = json.decodeFromString<List<SerializableHomeCard>>(cardsJson)
-                        serializableCards.mapNotNull { serializableCard ->
-                            try {
-                                HomeCard(
-                                    id = serializableCard.id,
-                                    cardType = CardType.values().find { it.id == serializableCard.cardTypeId }
-                                        ?: return@mapNotNull null,
-                                    size = CardSize.values().find { it.name == serializableCard.sizeName }
-                                        ?: CardSize.Medium,
-                                    row = serializableCard.row,
-                                    column = serializableCard.column,
-                                    isVisible = serializableCard.isVisible,
-                                    customTitle = serializableCard.customTitle,
-                                    lastUpdated = serializableCard.lastUpdated
-                                )
-                            } catch (e: Exception) {
-                                null // Skip invalid cards
+                    val cards =
+                        if (cardsJson != null) {
+                            val serializableCards = json.decodeFromString<List<SerializableHomeCard>>(cardsJson)
+                            serializableCards.mapNotNull { serializableCard ->
+                                try {
+                                    val type = CardType.values().find { it.id == serializableCard.cardTypeId } ?: return@mapNotNull null
+                                    val candidate = CardSize.values().find { it.name == serializableCard.sizeName } ?: CardSize.Medium
+                                    val fixedSize =
+                                        if (
+                                            candidate.columns < type.defaultSize.columns ||
+                                            candidate.rows < type.defaultSize.rows ||
+                                            !type.allowedSizes.contains(candidate)
+                                        ) {
+                                            type.defaultSize
+                                        } else {
+                                            candidate
+                                        }
+                                    HomeCard(
+                                        id = serializableCard.id,
+                                        cardType = type,
+                                        size = fixedSize,
+                                        row = serializableCard.row,
+                                        column = serializableCard.column,
+                                        isVisible = serializableCard.isVisible,
+                                        customTitle = serializableCard.customTitle,
+                                        lastUpdated = serializableCard.lastUpdated,
+                                    )
+                                } catch (e: Exception) {
+                                    null // Skip invalid cards
+                                }
                             }
+                        } else {
+                            getDefaultHomeCards()
                         }
-                    } else {
-                        getDefaultHomeCards()
-                    }
+
+                    val gridCols = preferences[PreferencesKeys.GRID_COLUMNS] ?: 4
+                    val normalizedCards = normalizeCardLayout(cards, gridCols)
 
                     HomeScreenConfig(
-                        cards = cards,
-                        gridColumns = preferences[PreferencesKeys.GRID_COLUMNS] ?: 2,
+                        cards = normalizedCards,
+                        gridColumns = gridCols,
                         cardSpacing = preferences[PreferencesKeys.CARD_SPACING] ?: 12f,
                         enableAnimations = preferences[PreferencesKeys.ENABLE_ANIMATIONS] ?: true,
                         enableHaptics = preferences[PreferencesKeys.ENABLE_HAPTICS] ?: true,
-                        theme = preferences[PreferencesKeys.HOME_THEME]?.let { themeName ->
+                        theme =
+                        preferences[PreferencesKeys.HOME_THEME]?.let { themeName ->
                             HomeTheme.values().find { it.name == themeName }
                         } ?: HomeTheme.AUTO,
-                        version = preferences[PreferencesKeys.CONFIG_VERSION] ?: 1
+                        version = preferences[PreferencesKeys.CONFIG_VERSION] ?: 1,
                     )
                 } catch (e: Exception) {
                     // Return default config if loading fails
@@ -151,18 +170,22 @@ class HomeScreenRepository @Inject constructor(
     /**
      * Save individual card state
      */
-    suspend fun saveCardState(cardId: String, isVisible: Boolean) {
+    suspend fun saveCardState(
+        cardId: String,
+        isVisible: Boolean,
+    ) {
         try {
             // Get current configuration
             loadHomeScreenConfig().first().let { currentConfig ->
                 // Update the specific card's visibility
-                val updatedCards = currentConfig.cards.map { card ->
-                    if (card.id == cardId) {
-                        card.copy(isVisible = isVisible)
-                    } else {
-                        card
+                val updatedCards =
+                    currentConfig.cards.map { card ->
+                        if (card.id == cardId) {
+                            card.copy(isVisible = isVisible)
+                        } else {
+                            card
+                        }
                     }
-                }
 
                 // Save updated configuration
                 val updatedConfig = currentConfig.copy(cards = updatedCards)
@@ -172,6 +195,40 @@ class HomeScreenRepository @Inject constructor(
             throw HomeScreenPersistenceException("Failed to save card state for $cardId", e)
         }
     }
+
+    suspend fun ensureInitializedWithDefaults() {
+        if (!hasStoredConfig().first()) {
+            saveHomeScreenConfig(HomeScreenConfig())
+        }
+    }
+}
+
+private fun normalizeCardLayout(
+    cards: List<HomeCard>,
+    gridColumns: Int,
+): List<HomeCard> {
+    val visibleSorted =
+        cards
+            .filter { it.isVisible }
+            .sortedWith(compareBy<HomeCard> { it.row }.thenBy { it.column })
+    val invisible = cards.filter { !it.isVisible }
+
+    val placed = mutableListOf<HomeCard>()
+    visibleSorted.forEach { card ->
+        val fits = isValidPosition(placed, card.size, card.row, card.column, gridColumns, card.id)
+        if (fits) {
+            placed += card
+        } else {
+            val spot = findNextAvailablePosition(placed, card.size, gridColumns)
+            if (spot != null) {
+                placed += card.copy(row = spot.first, column = spot.second)
+            } else {
+                placed += card
+            }
+        }
+    }
+
+    return placed + invisible
 }
 
 /**
@@ -186,7 +243,7 @@ data class SerializableHomeCard(
     val column: Int,
     val isVisible: Boolean = true,
     val customTitle: String? = null,
-    val lastUpdated: Long = System.currentTimeMillis()
+    val lastUpdated: Long = System.currentTimeMillis(),
 )
 
 /**
@@ -194,5 +251,5 @@ data class SerializableHomeCard(
  */
 class HomeScreenPersistenceException(
     message: String,
-    cause: Throwable? = null
+    cause: Throwable? = null,
 ) : Exception(message, cause)

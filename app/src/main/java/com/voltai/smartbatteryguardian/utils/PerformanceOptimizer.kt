@@ -15,7 +15,6 @@ import kotlin.time.Duration.Companion.minutes
  */
 
 object PerformanceOptimizer {
-
     // Memory cache with automatic cleanup
     private val imageCache = ConcurrentHashMap<String, CachedImage>()
     private val dataCache = ConcurrentHashMap<String, CachedData<*>>()
@@ -37,7 +36,7 @@ object PerformanceOptimizer {
     data class CachedData<T>(
         val data: T,
         val timestamp: Long,
-        val duration: Duration = DEFAULT_CACHE_DURATION
+        val duration: Duration = DEFAULT_CACHE_DURATION,
     ) {
         val isExpired: Boolean
             get() = System.currentTimeMillis() - timestamp > duration.inWholeMilliseconds
@@ -46,7 +45,7 @@ object PerformanceOptimizer {
     data class CachedImage(
         val bitmap: ImageBitmap,
         val timestamp: Long,
-        val size: Long = 0L
+        val size: Long = 0L,
     )
 
     /**
@@ -56,7 +55,7 @@ object PerformanceOptimizer {
     fun <T> rememberCachedData(
         key: String,
         cacheDuration: Duration = DEFAULT_CACHE_DURATION,
-        loader: suspend () -> T
+        loader: suspend () -> T,
     ): State<AsyncData<T>> {
         return produceState<AsyncData<T>>(initialValue = AsyncData.Loading) {
             // Check cache first
@@ -82,7 +81,9 @@ object PerformanceOptimizer {
      */
     sealed class AsyncData<out T> {
         object Loading : AsyncData<Nothing>()
+
         data class Success<T>(val data: T) : AsyncData<T>()
+
         data class Error(val exception: Throwable) : AsyncData<Nothing>()
 
         val isLoading: Boolean get() = this is Loading
@@ -98,7 +99,7 @@ object PerformanceOptimizer {
     @Composable
     fun rememberDebouncedState(
         initialValue: String,
-        delayMillis: Long = 300L
+        delayMillis: Long = 300L,
     ): DebouncedState {
         var value by remember { mutableStateOf(initialValue) }
         var debouncedValue by remember { mutableStateOf(initialValue) }
@@ -112,7 +113,7 @@ object PerformanceOptimizer {
             DebouncedState(
                 value = value,
                 debouncedValue = debouncedValue,
-                onValueChange = { value = it }
+                onValueChange = { value = it },
             )
         }
     }
@@ -120,7 +121,7 @@ object PerformanceOptimizer {
     data class DebouncedState(
         val value: String,
         val debouncedValue: String,
-        val onValueChange: (String) -> Unit
+        val onValueChange: (String) -> Unit,
     )
 
     /**
@@ -129,23 +130,26 @@ object PerformanceOptimizer {
     @Composable
     fun <T> rememberLazyListState(
         items: List<T>,
-        pageSize: Int = 20
+        pageSize: Int = 20,
     ): LazyListState<T> {
         return remember(items, pageSize) {
             LazyListState(
                 items = items,
-                pageSize = pageSize
+                pageSize = pageSize,
             )
         }
     }
 
     data class LazyListState<T>(
         val items: List<T>,
-        val pageSize: Int
+        val pageSize: Int,
     ) {
         private var loadedPages = mutableSetOf<Int>()
 
-        fun getVisibleItems(firstVisibleIndex: Int, lastVisibleIndex: Int): List<T> {
+        fun getVisibleItems(
+            firstVisibleIndex: Int,
+            lastVisibleIndex: Int,
+        ): List<T> {
             val startPage = firstVisibleIndex / pageSize
             val endPage = lastVisibleIndex / pageSize
 
@@ -165,7 +169,11 @@ object PerformanceOptimizer {
     /**
      * Memory-efficient bitmap caching
      */
-    fun cacheImage(key: String, bitmap: ImageBitmap, sizeBytes: Long = 0L) {
+    fun cacheImage(
+        key: String,
+        bitmap: ImageBitmap,
+        sizeBytes: Long = 0L,
+    ) {
         if (imageCache.size >= MAX_CACHE_SIZE) {
             // Remove oldest entries
             val sortedEntries = imageCache.entries.sortedBy { it.value.timestamp }
@@ -196,25 +204,28 @@ object PerformanceOptimizer {
      */
     private fun startPeriodicCleanup() {
         cleanupJob?.cancel()
-        cleanupJob = CoroutineScope(Dispatchers.Default).launch {
-            while (isActive) {
-                delay(CLEANUP_INTERVAL)
-                cleanupExpiredEntries()
+        cleanupJob =
+            CoroutineScope(Dispatchers.Default).launch {
+                while (isActive) {
+                    delay(CLEANUP_INTERVAL)
+                    cleanupExpiredEntries()
+                }
             }
-        }
     }
 
     private fun cleanupExpiredEntries() {
         // Clean data cache
-        val expiredDataKeys = dataCache.entries
-            .filter { it.value.isExpired }
-            .map { it.key }
+        val expiredDataKeys =
+            dataCache.entries
+                .filter { it.value.isExpired }
+                .map { it.key }
         expiredDataKeys.forEach { dataCache.remove(it) }
 
         // Clean image cache
-        val expiredImageKeys = imageCache.entries
-            .filter { isImageExpired(it.value) }
-            .map { it.key }
+        val expiredImageKeys =
+            imageCache.entries
+                .filter { isImageExpired(it.value) }
+                .map { it.key }
         expiredImageKeys.forEach { imageCache.remove(it) }
     }
 
@@ -242,7 +253,7 @@ object PerformanceOptimizer {
             dataEntries = dataSize,
             imageEntries = imageSize,
             imageSizeBytes = imageSizeBytes,
-            totalEntries = dataSize + imageSize
+            totalEntries = dataSize + imageSize,
         )
     }
 
@@ -250,7 +261,7 @@ object PerformanceOptimizer {
         val dataEntries: Int,
         val imageEntries: Int,
         val imageSizeBytes: Long,
-        val totalEntries: Int
+        val totalEntries: Int,
     )
 
     /**
@@ -268,7 +279,7 @@ object PerformanceOptimizer {
 @Composable
 fun <T> rememberOptimizedState(
     key: Any?,
-    calculation: () -> T
+    calculation: () -> T,
 ): T {
     return remember(key) { calculation() }
 }
@@ -277,7 +288,7 @@ fun <T> rememberOptimizedState(
  * Lazy initialization for expensive operations
  */
 class LazyInitializer<T>(
-    private val initializer: () -> T
+    private val initializer: () -> T,
 ) {
     private var _value: T? = null
     private var initialized = false
@@ -301,17 +312,16 @@ class LazyInitializer<T>(
 /**
  * Flow-based data loader with error handling
  */
-fun <T> createDataLoader(
-    loader: suspend () -> T
-): Flow<PerformanceOptimizer.AsyncData<T>> = flow {
-    emit(PerformanceOptimizer.AsyncData.Loading)
-    try {
-        val result = loader()
-        emit(PerformanceOptimizer.AsyncData.Success(result))
-    } catch (e: Exception) {
-        emit(PerformanceOptimizer.AsyncData.Error(e))
-    }
-}.flowOn(Dispatchers.IO)
+fun <T> createDataLoader(loader: suspend () -> T): Flow<PerformanceOptimizer.AsyncData<T>> =
+    flow {
+        emit(PerformanceOptimizer.AsyncData.Loading)
+        try {
+            val result = loader()
+            emit(PerformanceOptimizer.AsyncData.Success(result))
+        } catch (e: Exception) {
+            emit(PerformanceOptimizer.AsyncData.Error(e))
+        }
+    }.flowOn(Dispatchers.IO)
 
 /**
  * Extension functions for performance optimization
@@ -319,7 +329,7 @@ fun <T> createDataLoader(
 @Composable
 fun <T> Flow<T>.collectAsStateWithLifecycle(
     initial: T,
-    context: CoroutineContext = Dispatchers.Main.immediate
+    context: CoroutineContext = Dispatchers.Main.immediate,
 ): State<T> {
     return collectAsState(initial = initial, context = context)
 }

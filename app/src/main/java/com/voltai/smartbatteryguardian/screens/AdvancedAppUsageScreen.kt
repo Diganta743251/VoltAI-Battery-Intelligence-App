@@ -1,6 +1,6 @@
 package com.voltai.smartbatteryguardian.screens
-
-import android.content.Context
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -24,20 +23,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.voltai.smartbatteryguardian.models.AppUsageData
 import com.voltai.smartbatteryguardian.models.InsightSeverity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.*
-import kotlin.random.Random
+import com.voltai.smartbatteryguardian.ui.components.FilterChipsRow
+import com.voltai.smartbatteryguardian.ui.theme.extendedColors
+import com.voltai.smartbatteryguardian.viewmodels.AppUsageUiViewModel
 
 data class AppCategory(
     val name: String,
     val apps: List<AppUsageData>,
     val totalUsage: Long,
     val batteryImpact: Double,
-    val color: Color
+    val color: Color,
 )
 
 data class UsageInsight(
@@ -46,7 +44,7 @@ data class UsageInsight(
     val impact: String,
     val severity: InsightSeverity,
     val recommendation: String,
-    val icon: String
+    val icon: String,
 )
 
 // InsightSeverity moved to PremiumDataModels
@@ -55,131 +53,113 @@ data class UsageInsight(
 @Composable
 fun AdvancedAppUsageScreen() {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+    val batteryData = com.voltai.smartbatteryguardian.rememberBatteryData(context)
+    val usageVm: AppUsageUiViewModel = hiltViewModel()
+    val appsData by usageVm.apps.collectAsState()
+    val isLoading by usageVm.loading.collectAsState()
+    val hasPermission by usageVm.hasPermission.collectAsState()
 
     var selectedTab by remember { mutableStateOf(0) }
     var selectedPeriod by remember { mutableStateOf(0) }
-    var appsData by remember { mutableStateOf<List<AppUsageData>>(emptyList()) }
-    var categories by remember { mutableStateOf<List<AppCategory>>(emptyList()) }
-    var insights by remember { mutableStateOf<List<UsageInsight>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
+    val categories by remember(appsData) { mutableStateOf(categorizeApps(appsData)) }
+    val insights by remember(appsData) { mutableStateOf(generateUsageInsights(appsData)) }
+
+    @Composable
+    fun EmptyUsageState(onRefresh: () -> Unit) {
+        Card(
+            modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            shape = RoundedCornerShape(16.dp),
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "No usage data for the selected period",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Try changing the period or use the Refresh button.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    TextButton(onClick = onRefresh) { Text("Refresh") }
+                }
+            }
+        }
+    }
 
     val tabs = listOf("📊 Overview", "📱 Apps", "📂 Categories", "💡 Insights", "📈 Analytics")
     val periods = listOf("Today", "Yesterday", "Week", "Month")
 
-    // Load usage data
+    // Reload on period change (repository currently serves 24h totals)
     LaunchedEffect(selectedPeriod) {
-        scope.launch {
-            isLoading = true
-            val data = loadAppUsageData(context, selectedPeriod)
-            appsData = data
-            categories = categorizeApps(data)
-            insights = generateUsageInsights(data)
-            isLoading = false
-        }
+        usageVm.load()
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFF8F9FA),
-                        Color(0xFFE3F2FD)
-                    )
-                )
-            )
+        modifier = Modifier.fillMaxSize(),
     ) {
-        // Premium Header
+        // Header with title
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = Color(0xFF1976D2),
-            shadowElevation = 8.dp
+            color = MaterialTheme.colorScheme.primary,
         ) {
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(20.dp),
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .background(
-                                Color.White.copy(alpha = 0.2f),
-                                CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "📊",
-                            fontSize = 24.sp
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Column {
-                        Text(
-                            text = "App Usage Analytics",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                        Text(
-                            text = "Advanced battery consumption insights",
-                            fontSize = 14.sp,
-                            color = Color.White.copy(alpha = 0.8f)
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Period Selector
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    periods.forEachIndexed { index, period ->
-                        FilterChip(
-                            selected = selectedPeriod == index,
-                            onClick = { selectedPeriod = index },
-                            label = {
-                                Text(
-                                    text = period,
-                                    color = if (selectedPeriod == index) Color(0xFF1976D2) else Color.White
-                                )
-                            },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = Color.White,
-                                containerColor = Color.White.copy(alpha = 0.2f)
-                            )
-                        )
-                    }
-                }
+                Text(
+                    text = "App Usage Analytics",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
+                Text(
+                    text = "Advanced battery consumption insights",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                )
             }
+        }
+
+        // Period Selector
+        FilterChipsRow(
+            options = periods.indices.toList(),
+            selectedOption = selectedPeriod,
+            onSelectedChange = { selectedPeriod = it },
+            labelOf = { idx -> periods[idx] },
+            modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+        )
+
+        // Permission banner only when permission is NOT granted.
+        // When granted but data is empty, show a friendly empty state instead of re-asking.
+        if (!isLoading && !hasPermission) {
+            UsageAccessPermissionBanner()
+        } else if (!isLoading && hasPermission && appsData.isEmpty()) {
+            EmptyUsageState(onRefresh = { usageVm.load() })
         }
 
         // Tab Row
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color.Transparent,
-            contentColor = Color(0xFF1976D2),
-            modifier = Modifier.padding(horizontal = 16.dp)
+            contentColor = MaterialTheme.colorScheme.primary,
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
                     selected = selectedTab == index,
                     onClick = { selectedTab = index },
-                    modifier = Modifier.padding(vertical = 8.dp)
                 ) {
                     Text(
                         text = title,
-                        fontSize = 13.sp,
-                        fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
-                        modifier = Modifier.padding(8.dp)
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(8.dp),
                     )
                 }
             }
@@ -188,23 +168,22 @@ fun AdvancedAppUsageScreen() {
         // Content with Loading State
         if (isLoading) {
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxSize()
                     .padding(32.dp),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     CircularProgressIndicator(
-                        color = Color(0xFF1976D2),
-                        strokeWidth = 4.dp,
-                        modifier = Modifier.size(48.dp)
+                        color = MaterialTheme.colorScheme.primary,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "Analyzing app usage patterns...",
-                        color = Color(0xFF666666)
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }
@@ -214,12 +193,10 @@ fun AdvancedAppUsageScreen() {
                 transitionSpec = {
                     slideInHorizontally(
                         initialOffsetX = { if (targetState > initialState) it else -it },
-                        animationSpec = tween(300)
                     ) + fadeIn() togetherWith slideOutHorizontally(
                         targetOffsetX = { if (targetState > initialState) -it else it },
-                        animationSpec = tween(300)
                     ) + fadeOut()
-                }
+                },
             ) { tab ->
                 when (tab) {
                     0 -> OverviewTab(appsData, categories)
@@ -234,52 +211,94 @@ fun AdvancedAppUsageScreen() {
 }
 
 @Composable
-fun OverviewTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
+fun UsageAccessPermissionBanner() {
+    val context = LocalContext.current
+    Card(
+        modifier =
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "Usage access permission needed",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "To show real app usage analytics, allow VoltAI access to Usage Data.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                TextButton(onClick = {
+                    runCatching {
+                        context.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+                    }
+                }) {
+                    Text("Open Settings")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun OverviewTab(
+    appsData: List<AppUsageData>,
+    categories: List<AppCategory>,
+) {
     LazyColumn(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         // Quick Stats
         item {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 OverviewStatsCard(
                     title = "Total Screen Time",
                     value = formatDuration(appsData.sumOf { it.totalTimeInForeground }),
                     icon = "📱",
-                    color = Color(0xFF2196F3),
-                    modifier = Modifier.weight(1f)
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.weight(1f),
                 )
                 OverviewStatsCard(
                     title = "Battery Impact",
                     value = "${appsData.sumOf { it.batteryUsage }.toInt()}%",
                     icon = "🔋",
-                    color = Color(0xFFFF5722),
-                    modifier = Modifier.weight(1f)
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
 
         item {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 OverviewStatsCard(
                     title = "Apps Opened",
                     value = "${appsData.sumOf { it.openCount }}",
                     icon = "🚀",
-                    color = Color(0xFF4CAF50),
-                    modifier = Modifier.weight(1f)
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.weight(1f),
                 )
                 OverviewStatsCard(
                     title = "Avg Session",
                     value = formatDuration(appsData.map { it.avgSessionTime }.average().toLong()),
                     icon = "⏱️",
-                    color = Color(0xFF9C27B0),
-                    modifier = Modifier.weight(1f)
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -289,26 +308,27 @@ fun OverviewTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier.padding(20.dp),
                 ) {
                     Text(
                         text = "📊 Usage Distribution",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Donut Chart
                     Box(
-                        modifier = Modifier
+                        modifier =
+                        Modifier
                             .fillMaxWidth()
                             .height(200.dp),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         UsageDonutChart(categories.take(5))
                     }
@@ -321,21 +341,21 @@ fun OverviewTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier.padding(20.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = "🏆 Top Apps",
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         TextButton(onClick = { }) {
                             Text("View All")
@@ -359,21 +379,21 @@ fun OverviewTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier.padding(20.dp),
                 ) {
                     Text(
-                        text = "⏰ Hourly Usage Pattern",
+                        text = "⏰ Usage by Top Apps",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    HourlyUsageChart()
+                    TopAppsUsageBarChart(appsData.take(10))
                 }
             }
         }
@@ -383,10 +403,11 @@ fun OverviewTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
 @Composable
 fun AppsTab(appsData: List<AppUsageData>) {
     LazyColumn(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(appsData) { app ->
             DetailedAppUsageCard(app)
@@ -397,10 +418,11 @@ fun AppsTab(appsData: List<AppUsageData>) {
 @Composable
 fun CategoriesTab(categories: List<AppCategory>) {
     LazyColumn(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(categories) { category ->
             CategoryCard(category)
@@ -411,10 +433,11 @@ fun CategoriesTab(categories: List<AppCategory>) {
 @Composable
 fun InsightsTab(insights: List<UsageInsight>) {
     LazyColumn(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(insights) { insight ->
             InsightCard(insight)
@@ -423,32 +446,39 @@ fun InsightsTab(insights: List<UsageInsight>) {
 }
 
 @Composable
-fun AnalyticsTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
+fun AnalyticsTab(
+    appsData: List<AppUsageData>,
+    categories: List<AppCategory>,
+) {
     LazyColumn(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        // Trend Analysis
+        // 24h Total Usage (real)
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier.padding(20.dp),
                 ) {
                     Text(
-                        text = "📈 Usage Trends",
+                        text = "📈 Total Usage (last 24h)",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    WeeklyTrendChart()
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = formatDuration(appsData.sumOf { it.totalTimeInForeground }),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
                 }
             }
         }
@@ -458,15 +488,15 @@ fun AnalyticsTab(appsData: List<AppUsageData>, categories: List<AppCategory>) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier.padding(20.dp),
                 ) {
                     Text(
                         text = "🔋 Battery Impact Analysis",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -488,37 +518,39 @@ fun OverviewStatsCard(
     value: String,
     icon: String,
     color: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.height(100.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = color.copy(alpha = 0.1f)
+        colors =
+        CardDefaults.cardColors(
+            containerColor = color.copy(alpha = 0.1f),
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top
+                verticalAlignment = Alignment.Top,
             ) {
                 Text(
                     text = title,
                     fontSize = 12.sp,
-                    color = Color(0xFF666666),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 Text(
                     text = icon,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
                 )
             }
 
@@ -526,7 +558,7 @@ fun OverviewStatsCard(
                 text = value,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = color
+                color = color,
             )
         }
     }
@@ -535,9 +567,10 @@ fun OverviewStatsCard(
 @Composable
 fun UsageDonutChart(categories: List<AppCategory>) {
     Canvas(
-        modifier = Modifier
+        modifier =
+        Modifier
             .size(150.dp)
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         val total = categories.sumOf { it.totalUsage }.toFloat()
         val strokeWidth = 30.dp.toPx()
@@ -557,10 +590,11 @@ fun UsageDonutChart(categories: List<AppCategory>) {
                 useCenter = false,
                 style = Stroke(width = strokeWidth, cap = StrokeCap.Butt),
                 size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2),
-                topLeft = androidx.compose.ui.geometry.Offset(
+                topLeft =
+                androidx.compose.ui.geometry.Offset(
                     centerX - radius,
-                    centerY - radius
-                )
+                    centerY - radius,
+                ),
             )
 
             startAngle += sweepAngle
@@ -569,24 +603,27 @@ fun UsageDonutChart(categories: List<AppCategory>) {
 }
 
 @Composable
-fun TopAppItem(app: AppUsageData, rank: Int) {
+fun TopAppItem(
+    app: AppUsageData,
+    rank: Int,
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Surface(
             modifier = Modifier.size(32.dp),
             shape = CircleShape,
-            color = getRankColor(rank)
+            color = getRankColor(rank),
         ) {
             Box(
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = rank.toString(),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
                 )
             }
         }
@@ -594,35 +631,35 @@ fun TopAppItem(app: AppUsageData, rank: Int) {
         Spacer(modifier = Modifier.width(12.dp))
 
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 text = app.appName,
                 fontWeight = FontWeight.Medium,
                 fontSize = 14.sp,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = formatDuration(app.totalTimeInForeground),
                 fontSize = 12.sp,
-                color = Color(0xFF666666)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
         Column(
-            horizontalAlignment = Alignment.End
+            horizontalAlignment = Alignment.End,
         ) {
             Text(
                 text = "${app.batteryUsage.toInt()}%",
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
-                color = Color(0xFFFF5722)
+                color = MaterialTheme.colorScheme.error,
             )
             Text(
                 text = "battery",
                 fontSize = 10.sp,
-                color = Color(0xFF999999)
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
             )
         }
     }
@@ -633,26 +670,27 @@ fun DetailedAppUsageCard(app: AppUsageData) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
+            val categoryTint = getAppCategoryColor(app.appName)
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Surface(
                     modifier = Modifier.size(48.dp),
                     shape = RoundedCornerShape(12.dp),
-                    color = app.categoryColor.copy(alpha = 0.1f)
+                    color = categoryTint.copy(alpha = 0.1f),
                 ) {
                     Box(
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         Text(
                             text = getAppIcon(app.packageName),
-                            fontSize = 24.sp
+                            fontSize = 24.sp,
                         )
                     }
                 }
@@ -660,33 +698,33 @@ fun DetailedAppUsageCard(app: AppUsageData) {
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(
                         text = app.appName,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
                     )
                     Text(
                         text = "Opened ${app.openCount} times",
                         fontSize = 12.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
 
                 Column(
-                    horizontalAlignment = Alignment.End
+                    horizontalAlignment = Alignment.End,
                 ) {
                     Text(
                         text = formatDuration(app.totalTimeInForeground),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        color = app.categoryColor
+                        color = categoryTint,
                     )
                     Text(
                         text = "${app.batteryUsage.toInt()}% battery",
                         fontSize = 12.sp,
-                        color = Color(0xFFFF5722)
+                        color = MaterialTheme.colorScheme.error,
                     )
                 }
             }
@@ -696,7 +734,7 @@ fun DetailedAppUsageCard(app: AppUsageData) {
             // Usage breakdown
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 UsageMetricItem("Today", formatDuration(app.usageToday))
                 UsageMetricItem("Yesterday", formatDuration(app.usageYesterday))
@@ -707,15 +745,18 @@ fun DetailedAppUsageCard(app: AppUsageData) {
 
             // Usage bar
             LinearProgressIndicator(
-                progress = (app.totalTimeInForeground.toFloat() / (8 * 60 * 60 * 1000L)).coerceAtMost(
-                    1f
-                ), // Max 8 hours
-                modifier = Modifier
+                progress =
+                (app.totalTimeInForeground.toFloat() / (8 * 60 * 60 * 1000L)).coerceAtMost(
+                    1f,
+                ),
+                // Max 8 hours
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .height(6.dp)
                     .clip(RoundedCornerShape(3.dp)),
-                color = app.categoryColor,
-                trackColor = app.categoryColor.copy(alpha = 0.2f)
+                color = categoryTint,
+                trackColor = categoryTint.copy(alpha = 0.2f),
             )
         }
     }
@@ -726,41 +767,42 @@ fun CategoryCard(category: AppCategory) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .size(48.dp)
                         .background(category.color.copy(alpha = 0.1f), CircleShape),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = getCategoryIcon(category.name),
-                        fontSize = 24.sp
+                        fontSize = 24.sp,
                     )
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(
                         text = category.name,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
                     )
                     Text(
                         text = "${category.apps.size} apps • ${formatDuration(category.totalUsage)}",
                         fontSize = 14.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
 
@@ -768,7 +810,7 @@ fun CategoryCard(category: AppCategory) {
                     text = "${category.batteryImpact.toInt()}%",
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    color = category.color
+                    color = category.color,
                 )
             }
 
@@ -778,19 +820,19 @@ fun CategoryCard(category: AppCategory) {
             category.apps.take(3).forEach { app ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = app.appName,
                         modifier = Modifier.weight(1f),
                         fontSize = 14.sp,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
                     Text(
                         text = formatDuration(app.totalTimeInForeground),
                         fontSize = 14.sp,
-                        color = Color(0xFF666666)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
@@ -804,64 +846,68 @@ fun InsightCard(insight: UsageInsight) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = when (insight.severity) {
-                InsightSeverity.HIGH -> Color(0xFFFFEBEE)
-                InsightSeverity.MEDIUM -> Color(0xFFFFF8E1)
-                InsightSeverity.LOW -> Color(0xFFF3E5F5)
-                InsightSeverity.POSITIVE -> Color(0xFFE8F5E8)
-                InsightSeverity.CRITICAL -> Color(0xFFFFEBEE)
-                InsightSeverity.INFO -> Color(0xFFE3F2FD)
-                InsightSeverity.WARNING -> Color(0xFFFFF8E1)
-            }
+        colors =
+        CardDefaults.cardColors(
+            containerColor =
+            when (insight.severity) {
+                InsightSeverity.HIGH -> MaterialTheme.colorScheme.errorContainer
+                InsightSeverity.MEDIUM -> MaterialTheme.colorScheme.secondaryContainer
+                InsightSeverity.LOW -> MaterialTheme.colorScheme.tertiaryContainer
+                InsightSeverity.POSITIVE -> MaterialTheme.colorScheme.primaryContainer
+                InsightSeverity.CRITICAL -> MaterialTheme.colorScheme.errorContainer
+                InsightSeverity.INFO -> MaterialTheme.colorScheme.surfaceVariant
+                InsightSeverity.WARNING -> MaterialTheme.colorScheme.secondaryContainer
+            },
         ),
-        border = BorderStroke(
+        border =
+        BorderStroke(
             1.dp,
             when (insight.severity) {
-                InsightSeverity.HIGH -> Color(0xFFFF5722)
-                InsightSeverity.MEDIUM -> Color(0xFFFF9800)
-                InsightSeverity.LOW -> Color(0xFF9C27B0)
-                InsightSeverity.POSITIVE -> Color(0xFF4CAF50)
-                InsightSeverity.CRITICAL -> Color(0xFFD32F2F)
-                InsightSeverity.INFO -> Color(0xFF1976D2)
-                InsightSeverity.WARNING -> Color(0xFFFF9800)
-            }
-        )
+                InsightSeverity.HIGH -> MaterialTheme.colorScheme.error
+                InsightSeverity.MEDIUM -> MaterialTheme.colorScheme.secondary
+                InsightSeverity.LOW -> MaterialTheme.colorScheme.tertiary
+                InsightSeverity.POSITIVE -> MaterialTheme.colorScheme.primary
+                InsightSeverity.CRITICAL -> MaterialTheme.colorScheme.error
+                InsightSeverity.INFO -> MaterialTheme.colorScheme.primary
+                InsightSeverity.WARNING -> MaterialTheme.colorScheme.secondary
+            },
+        ),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = insight.icon,
-                    fontSize = 24.sp
+                    fontSize = 24.sp,
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(
                         text = insight.title,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
                     )
                     Text(
                         text = insight.impact,
                         fontSize = 12.sp,
-                        color = when (insight.severity) {
-                            InsightSeverity.HIGH -> Color(0xFFFF5722)
-                            InsightSeverity.MEDIUM -> Color(0xFFFF9800)
-                            InsightSeverity.LOW -> Color(0xFF9C27B0)
-                            InsightSeverity.POSITIVE -> Color(0xFF4CAF50)
-                            InsightSeverity.CRITICAL -> Color(0xFFD32F2F)
-                            InsightSeverity.INFO -> Color(0xFF1976D2)
-                            InsightSeverity.WARNING -> Color(0xFFFF9800)
+                        color =
+                        when (insight.severity) {
+                            InsightSeverity.HIGH -> MaterialTheme.colorScheme.error
+                            InsightSeverity.MEDIUM -> MaterialTheme.colorScheme.secondary
+                            InsightSeverity.LOW -> MaterialTheme.colorScheme.tertiary
+                            InsightSeverity.POSITIVE -> MaterialTheme.colorScheme.primary
+                            InsightSeverity.CRITICAL -> MaterialTheme.colorScheme.error
+                            InsightSeverity.INFO -> MaterialTheme.colorScheme.primary
+                            InsightSeverity.WARNING -> MaterialTheme.colorScheme.secondary
                         },
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
                     )
                 }
             }
@@ -872,7 +918,7 @@ fun InsightCard(insight: UsageInsight) {
                 text = insight.description,
                 fontSize = 14.sp,
                 lineHeight = 20.sp,
-                color = Color(0xFF333333)
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             if (insight.recommendation.isNotEmpty()) {
@@ -881,7 +927,7 @@ fun InsightCard(insight: UsageInsight) {
                     text = "💡 ${insight.recommendation}",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color(0xFF1976D2)
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
         }
@@ -890,104 +936,58 @@ fun InsightCard(insight: UsageInsight) {
 
 @Composable
 fun HourlyUsageChart() {
-    // Simulated hourly data
-    val hourlyData = remember {
-        (0..23).map { hour ->
-            val baseUsage = when (hour) {
-                in 0..6 -> Random.nextInt(5, 15) // Night
-                in 7..9 -> Random.nextInt(30, 60) // Morning
-                in 10..12 -> Random.nextInt(20, 40) // Mid-morning
-                in 13..15 -> Random.nextInt(25, 45) // Afternoon
-                in 16..18 -> Random.nextInt(40, 70) // Evening
-                in 19..22 -> Random.nextInt(50, 80) // Night
-                else -> Random.nextInt(10, 25) // Late night
-            }
-            baseUsage
-        }
-    }
-
-    Canvas(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(120.dp)
-    ) {
-        val barWidth = size.width / 24
-        val maxUsage = hourlyData.maxOrNull() ?: 1
-
-        hourlyData.forEachIndexed { index, usage ->
-            val barHeight = (usage.toFloat() / maxUsage) * size.height * 0.8f
-            val x = index * barWidth + barWidth * 0.2f
-            val y = size.height - barHeight
-
-            drawRoundRect(
-                color = Color(0xFF2196F3).copy(alpha = 0.8f),
-                topLeft = androidx.compose.ui.geometry.Offset(x, y),
-                size = androidx.compose.ui.geometry.Size(barWidth * 0.6f, barHeight),
-                cornerRadius = androidx.compose.ui.geometry.CornerRadius(2.dp.toPx())
-            )
-        }
-    }
-
-    // Hour labels
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        listOf("12AM", "6AM", "12PM", "6PM", "12AM").forEach { label ->
-            Text(
-                text = label,
-                fontSize = 10.sp,
-                color = Color(0xFF666666)
-            )
-        }
-    }
+    Text(
+        text = "Hourly usage chart not available for this period",
+        fontSize = 12.sp,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
 }
 
 @Composable
 fun WeeklyTrendChart() {
-    val weeklyData = remember {
-        (0..6).map { Random.nextInt(2, 8) } // Hours per day
+    Text(
+        text = "Weekly trend not available",
+        fontSize = 12.sp,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+}
+
+@Composable
+fun TopAppsUsageBarChart(apps: List<AppUsageData>) {
+    val topApps = apps.take(10)
+    if (topApps.isEmpty()) {
+        Text(
+            text = "No usage data available",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 12.sp,
+        )
+        return
     }
-    val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
+    val maxTime = topApps.maxOf { it.totalTimeInForeground }.coerceAtLeast(1L)
 
     Canvas(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
-            .height(100.dp)
+            .height(160.dp),
     ) {
-        val stepX = size.width / (weeklyData.size - 1)
-        val maxHours = 8f
+        val n = topApps.size
+        val barWidth = size.width / (n + (n + 1) * 0.3f)
+        val spacing = barWidth * 0.3f
+        var x = spacing
 
-        val points = weeklyData.mapIndexed { index, hours ->
-            androidx.compose.ui.geometry.Offset(
-                x = index * stepX,
-                y = size.height - (hours.toFloat() / maxHours) * size.height
+        topApps.forEach { app ->
+            val h = (app.totalTimeInForeground.toFloat() / maxTime) * (size.height * 0.8f)
+            val y = size.height - h
+            val color = getAppCategoryColor(app.appName)
+            drawRoundRect(
+                color = color,
+                topLeft = androidx.compose.ui.geometry.Offset(x, y),
+                size = androidx.compose.ui.geometry.Size(barWidth, h),
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(3.dp.toPx()),
             )
-        }
-
-        // Draw line
-        for (i in 0 until points.size - 1) {
-            drawLine(
-                color = Color(0xFF4CAF50),
-                start = points[i],
-                end = points[i + 1],
-                strokeWidth = 3.dp.toPx(),
-                cap = StrokeCap.Round
-            )
-        }
-
-        // Draw points
-        points.forEach { point ->
-            drawCircle(
-                color = Color(0xFF4CAF50),
-                radius = 4.dp.toPx(),
-                center = point
-            )
-            drawCircle(
-                color = Color.White,
-                radius = 2.dp.toPx(),
-                center = point
-            )
+            x += barWidth + spacing
         }
     }
 
@@ -995,13 +995,13 @@ fun WeeklyTrendChart() {
 
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        days.forEach { day ->
+        topApps.forEach { app ->
             Text(
-                text = day,
+                text = app.appName.take(3).uppercase(),
                 fontSize = 10.sp,
-                color = Color(0xFF666666)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -1011,11 +1011,11 @@ fun WeeklyTrendChart() {
 fun BatteryImpactItem(app: AppUsageData) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = getAppIcon(app.packageName),
-            fontSize = 16.sp
+            fontSize = 16.sp,
         )
 
         Spacer(modifier = Modifier.width(8.dp))
@@ -1025,20 +1025,22 @@ fun BatteryImpactItem(app: AppUsageData) {
             modifier = Modifier.weight(1f),
             fontSize = 14.sp,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
 
         LinearProgressIndicator(
             progress = (app.batteryUsage / 100).toFloat().coerceIn(0f, 1f),
-            modifier = Modifier
+            modifier =
+            Modifier
                 .width(80.dp)
                 .height(4.dp),
-            color = when {
-                app.batteryUsage > 20 -> Color(0xFFFF5722)
-                app.batteryUsage > 10 -> Color(0xFFFF9800)
-                else -> Color(0xFF4CAF50)
+            color =
+            when {
+                app.batteryUsage > 20 -> MaterialTheme.colorScheme.error
+                app.batteryUsage > 10 -> MaterialTheme.colorScheme.secondary
+                else -> MaterialTheme.colorScheme.tertiary
             },
-            trackColor = Color(0xFFE0E0E0)
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
         )
 
         Spacer(modifier = Modifier.width(8.dp))
@@ -1047,75 +1049,36 @@ fun BatteryImpactItem(app: AppUsageData) {
             text = "${app.batteryUsage.toInt()}%",
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF666666)
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
 
 @Composable
-fun UsageMetricItem(label: String, value: String) {
+fun UsageMetricItem(
+    label: String,
+    value: String,
+) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             fontWeight = FontWeight.Bold,
-            fontSize = 14.sp
+            fontSize = 14.sp,
         )
         Text(
             text = label,
             fontSize = 10.sp,
-            color = Color(0xFF666666)
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
 
 // Utility Functions
-suspend fun loadAppUsageData(context: Context, period: Int): List<AppUsageData> {
-    return withContext(Dispatchers.IO) {
-        // Mock data - In real implementation, use UsageStatsManager
-        generateMockAppUsageData()
-    }
-}
-
-fun generateMockAppUsageData(): List<AppUsageData> {
-    val mockApps = listOf(
-        "Instagram" to "\uD83D\uDCF7",
-        "WhatsApp" to "\uD83D\uDCAC",
-        "YouTube" to "\uD83C\uDFAC",
-        "Chrome" to "\uD83C\uDF10",
-        "TikTok" to "\uD83C\uDFB5",
-        "Facebook" to "\uD83D\uDC65",
-        "Spotify" to "\uD83C\uDFB5",
-        "Gmail" to "\uD83D\uDCE7",
-        "Twitter" to "\uD83D\uDC26",
-        "Netflix" to "\uD83C\uDFAC",
-        "Maps" to "\uD83D\uDDFA",
-        "Camera" to "\uD83D\uDCF7",
-        "Settings" to "⚙️",
-        "Gallery" to "\uD83D\uDDBC",
-        "Clock" to "⏰"
-    )
-
-    return mockApps.mapIndexed { index, (name, icon) ->
-        val baseUsage = Random.nextLong(30 * 60 * 1000L, 4 * 60 * 60 * 1000L) // 30min to 4hours
-        AppUsageData(
-            packageName = "com.${name.lowercase()}.app",
-            appName = name,
-            icon = null,
-            totalTimeInForeground = baseUsage,
-            batteryUsage = Random.nextDouble(1.0, 25.0),
-            lastTimeUsed = System.currentTimeMillis() - Random.nextLong(60 * 60 * 1000L),
-            usageToday = baseUsage,
-            usageYesterday = Random.nextLong(20 * 60 * 1000L, 3 * 60 * 60 * 1000L),
-            usageThisWeek = baseUsage * Random.nextLong(3, 8),
-            openCount = Random.nextInt(5, 50),
-            avgSessionTime = Random.nextLong(2 * 60 * 1000L, 30 * 60 * 1000L),
-            peakUsageHour = Random.nextInt(0, 24),
-            categoryColor = getAppCategoryColor(name)
-        )
-    }.sortedByDescending { it.totalTimeInForeground }
-}
+// removed obsolete loadAppUsageData(context, period)
+// removed obsolete loadAppUsageDataFromReal(context, period, batteryData)
+// removed obsolete generateMockAppUsageData()
 
 fun categorizeApps(apps: List<AppUsageData>): List<AppCategory> {
     val categories = apps.groupBy { getAppCategory(it.appName) }
@@ -1126,9 +1089,117 @@ fun categorizeApps(apps: List<AppUsageData>): List<AppCategory> {
             apps = categoryApps,
             totalUsage = categoryApps.sumOf { it.totalTimeInForeground },
             batteryImpact = categoryApps.sumOf { it.batteryUsage },
-            color = getCategoryColorForName(categoryName)
+            color = getCategoryColorForName(categoryName),
         )
     }.sortedByDescending { it.totalUsage }
+}
+
+fun generateUsageInsightsFromReal(
+    apps: List<AppUsageData>,
+    batteryData: com.voltai.smartbatteryguardian.BatteryData,
+): List<UsageInsight> {
+    val insights = mutableListOf<UsageInsight>()
+
+    // Battery health based insights
+    val batteryHealth = batteryData.healthPercentage.toDouble() / 100.0
+    if (batteryHealth < 0.8) {
+        insights.add(
+            UsageInsight(
+                title = "Battery Health Impact",
+                description = "Your battery health is at ${(batteryHealth * 100).toInt()}%, which may increase app power consumption.",
+                impact = "High Battery Impact",
+                severity = InsightSeverity.HIGH,
+                recommendation = "Consider reducing usage of high-power apps and enabling battery optimization.",
+                icon = "🔋",
+            ),
+        )
+    }
+
+    // Temperature based insights
+    val temperature = batteryData.temperature.toDouble()
+    if (temperature > 35.0) {
+        insights.add(
+            UsageInsight(
+                title = "Device Temperature Warning",
+                description = "Your device is running at ${temperature.toInt()}°C, which may affect battery efficiency.",
+                impact = "Medium Battery Impact",
+                severity = InsightSeverity.WARNING,
+                recommendation = "Close resource-intensive apps and let your device cool down.",
+                icon = "🌡️",
+            ),
+        )
+    }
+
+    // Battery level based insights
+    val batteryLevel = batteryData.batteryLevel
+    if (batteryLevel < 20 && !batteryData.isCharging) {
+        val highPowerApps = apps.filter { it.batteryUsage > 10.0 }
+        if (highPowerApps.isNotEmpty()) {
+            insights.add(
+                UsageInsight(
+                    title = "Low Battery Alert",
+                    description = "Battery at $batteryLevel%. ${highPowerApps.size} high-power apps are still running.",
+                    impact = "Critical Battery Impact",
+                    severity = InsightSeverity.CRITICAL,
+                    recommendation = "Close ${highPowerApps.joinToString(
+                        ", ",
+                    ) { it.appName }} and enable power saving mode.",
+                    icon = "⚠️",
+                ),
+            )
+        }
+    }
+
+    // High usage app insight based on real data
+    val topApp = apps.firstOrNull()
+    if (topApp != null && topApp.totalTimeInForeground > 3 * 60 * 60 * 1000L) {
+        insights.add(
+            UsageInsight(
+                title = "High Usage Detected",
+                description = "${topApp.appName} consumed ${formatDuration(
+                    topApp.totalTimeInForeground,
+                )} of screen time, contributing to ${topApp.batteryUsage.toInt()}% battery drain.",
+                impact = "High Battery Impact",
+                severity = InsightSeverity.HIGH,
+                recommendation = "Consider setting app limits or taking regular breaks to preserve battery life.",
+                icon = "📱",
+            ),
+        )
+    }
+
+    // Charging pattern insights
+    if (batteryData.isCharging && batteryLevel > 90) {
+        insights.add(
+            UsageInsight(
+                title = "Optimal Charging Range",
+                description = "Battery is at $batteryLevel% while charging. Overcharging may affect long-term battery health.",
+                impact = "Low Battery Impact",
+                severity = InsightSeverity.INFO,
+                recommendation = "Consider unplugging once battery reaches 100% to maintain optimal battery health.",
+                icon = "🔌",
+            ),
+        )
+    }
+
+    // Positive insight for good usage patterns
+    val totalUsage = apps.sumOf { it.totalTimeInForeground }
+    val totalBatteryUsage = apps.sumOf { it.batteryUsage }
+    if (totalUsage < 4 * 60 * 60 * 1000L && batteryLevel > 40) {
+        insights.add(
+            UsageInsight(
+                title = "Great Usage Balance!",
+                description = "Your screen time is well-balanced with ${formatDuration(
+                    totalUsage,
+                )} total usage and ${totalBatteryUsage.toInt()}% battery consumption.",
+                impact = "Positive Trend",
+                severity = InsightSeverity.POSITIVE,
+                recommendation = "Keep maintaining this healthy usage pattern for optimal battery life!",
+                icon = "✅",
+            ),
+        )
+    }
+
+    return insights
 }
 
 fun generateUsageInsights(apps: List<AppUsageData>): List<UsageInsight> {
@@ -1141,13 +1212,13 @@ fun generateUsageInsights(apps: List<AppUsageData>): List<UsageInsight> {
             UsageInsight(
                 title = "High Usage Detected",
                 description = "${topApp.appName} consumed ${formatDuration(
-                    topApp.totalTimeInForeground
+                    topApp.totalTimeInForeground,
                 )} of screen time today.",
                 impact = "High Battery Impact",
                 severity = InsightSeverity.HIGH,
                 recommendation = "Consider setting app limits or taking regular breaks.",
-                icon = "⚠️"
-            )
+                icon = "⚠️",
+            ),
         )
     }
 
@@ -1161,8 +1232,8 @@ fun generateUsageInsights(apps: List<AppUsageData>): List<UsageInsight> {
                 impact = "Medium Battery Impact",
                 severity = InsightSeverity.MEDIUM,
                 recommendation = "Close background apps or enable power saving mode.",
-                icon = "🔋"
-            )
+                icon = "🔋",
+            ),
         )
     }
 
@@ -1176,8 +1247,8 @@ fun generateUsageInsights(apps: List<AppUsageData>): List<UsageInsight> {
                 impact = "Positive Trend",
                 severity = InsightSeverity.POSITIVE,
                 recommendation = "Keep maintaining this healthy usage pattern!",
-                icon = "✅"
-            )
+                icon = "✅",
+            ),
         )
     }
 
@@ -1229,30 +1300,29 @@ fun getAppCategory(appName: String): String {
 
 fun getAppCategoryColor(appName: String): Color {
     return when (getAppCategory(appName)) {
-        "Social" -> Color(0xFFE91E63)
+        "Social" -> Color(0xFFE53935)
         "Entertainment" -> Color(0xFF9C27B0)
         "Communication" -> Color(0xFF4CAF50)
         "Productivity" -> Color(0xFF2196F3)
-        "Photo & Video" -> Color(0xFFFF9800)
-        else -> Color(0xFF607D8B)
+        "Photo & Video" -> Color(0xFF9C27B0)
+        else -> Color(0xFF9E9E9E)
     }
 }
 
 fun getCategoryColorForName(categoryName: String): Color {
     return when (categoryName) {
-        "Social" -> Color(0xFFE91E63)
+        "Social" -> Color(0xFFE53935)
         "Entertainment" -> Color(0xFF9C27B0)
         "Communication" -> Color(0xFF4CAF50)
         "Productivity" -> Color(0xFF2196F3)
-        "Photo & Video" -> Color(0xFFFF9800)
-        else -> Color(0xFF607D8B)
+        "Photo & Video" -> Color(0xFF9C27B0)
+        else -> Color(0xFF9E9E9E)
     }
 }
 
 fun getCategoryIcon(categoryName: String): String {
     return when (categoryName) {
         "Social" -> "👥"
-        "Entertainment" -> "🎬"
         "Communication" -> "💬"
         "Productivity" -> "💼"
         "Photo & Video" -> "📷"
@@ -1260,11 +1330,12 @@ fun getCategoryIcon(categoryName: String): String {
     }
 }
 
+@Composable
 fun getRankColor(rank: Int): Color {
     return when (rank) {
-        1 -> Color(0xFFFFD700) // Gold
-        2 -> Color(0xFFC0C0C0) // Silver
-        3 -> Color(0xFFCD7F32) // Bronze
-        else -> Color(0xFF666666)
+        1 -> MaterialTheme.extendedColors.premiumGold // Gold
+        2 -> MaterialTheme.colorScheme.surfaceVariant // Silver
+        3 -> MaterialTheme.colorScheme.secondary // Bronze
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
     }
 }

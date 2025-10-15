@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
@@ -39,7 +39,11 @@ fun OngoingDetailScreen(onBackClick: () -> Unit = {}) {
             },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.onSurface,
+                    )
                 }
             },
             colors =
@@ -85,21 +89,21 @@ fun OngoingDetailScreen(onBackClick: () -> Unit = {}) {
                                 icon = Icons.Default.Star,
                                 label = "Screen On",
                                 value = batteryData.screenOnTime,
-                                color = Color(0xFFFF9800),
+                                color = MaterialTheme.colorScheme.secondary,
                             )
 
                             UsageOverviewItem(
                                 icon = Icons.Default.Lock,
                                 label = "Screen Off",
                                 value = batteryData.screenOffTime,
-                                color = Color(0xFF9C27B0),
+                                color = MaterialTheme.colorScheme.tertiary,
                             )
 
                             UsageOverviewItem(
                                 icon = Icons.Default.Warning,
                                 label = "Battery Used",
                                 value = batteryData.batteryUsed,
-                                color = Color(0xFFF44336),
+                                color = MaterialTheme.colorScheme.error,
                             )
                         }
                     }
@@ -140,7 +144,7 @@ fun OngoingDetailScreen(onBackClick: () -> Unit = {}) {
                             horizontalArrangement = Arrangement.SpaceEvenly,
                         ) {
                             ChartLegendItem(
-                                color = Color(0xFFFF9800),
+                                color = MaterialTheme.colorScheme.secondary,
                                 label = "Screen On",
                                 percentage =
                                 calculateScreenOnPercentage(
@@ -150,7 +154,7 @@ fun OngoingDetailScreen(onBackClick: () -> Unit = {}) {
                             )
 
                             ChartLegendItem(
-                                color = Color(0xFF9C27B0),
+                                color = MaterialTheme.colorScheme.tertiary,
                                 label = "Screen Off",
                                 percentage = 100 - calculateScreenOnPercentage(batteryData.screenOnTime, batteryData.screenOffTime),
                             )
@@ -176,34 +180,47 @@ fun OngoingDetailScreen(onBackClick: () -> Unit = {}) {
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        val screenOnDrain = kotlin.random.Random.nextInt(15, 25)
-                        val screenOffDrain = kotlin.random.Random.nextInt(3, 8)
+                        // Calculate real drain rates from battery data
+                        val totalDrain = (100 - batteryData.batteryLevel).coerceAtLeast(0)
+                        val screenOnDrain =
+                            if (batteryData.current < 0) {
+                                // Estimate based on actual discharge current
+                                (kotlin.math.abs(batteryData.current) * 0.8 / 100).toInt().coerceIn(5, 30)
+                            } else {
+                                0
+                            }
+                        val screenOffDrain =
+                            if (batteryData.current < 0) {
+                                // Background drain is typically 10-20% of active drain
+                                (screenOnDrain * 0.15).toInt().coerceIn(1, 8)
+                            } else {
+                                0
+                            }
 
                         DrainAnalysisRow(
                             icon = Icons.Default.Star,
                             label = "Screen On Drain",
-                            value = "~$screenOnDrain%/h",
-                            description = "High usage detected",
-                            iconColor = Color(0xFFFF9800),
+                            value = if (screenOnDrain > 0) "~$screenOnDrain%/h" else "—",
+                            description = if (screenOnDrain > 20) "High usage detected" else "Normal usage",
+                            iconColor = MaterialTheme.colorScheme.secondary,
                             isHigh = screenOnDrain > 20,
                         )
 
                         DrainAnalysisRow(
                             icon = Icons.Default.Lock,
                             label = "Screen Off Drain",
-                            value = "~$screenOffDrain%/h",
+                            value = if (screenOffDrain > 0) "~$screenOffDrain%/h" else "—",
                             description = if (screenOffDrain > 5) "Background apps active" else "Normal standby",
-                            iconColor = Color(0xFF9C27B0),
+                            iconColor = MaterialTheme.colorScheme.tertiary,
                             isHigh = screenOffDrain > 5,
                         )
 
-                        val totalDrain = (100 - batteryData.batteryLevel)
                         DrainAnalysisRow(
                             icon = Icons.Default.Warning,
                             label = "Total Drain",
                             value = "$totalDrain%",
                             description = "Since last charge",
-                            iconColor = Color(0xFFF44336),
+                            iconColor = MaterialTheme.colorScheme.error,
                             isHigh = totalDrain > 50,
                         )
                     }
@@ -404,7 +421,7 @@ fun DrainAnalysisRow(
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodySmall,
-                color = if (isHigh) Color(0xFFFF5722) else MaterialTheme.colorScheme.onSurfaceVariant,
+                color = if (isHigh) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
@@ -412,7 +429,7 @@ fun DrainAnalysisRow(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold,
-            color = if (isHigh) Color(0xFFFF5722) else MaterialTheme.colorScheme.onSurface,
+            color = if (isHigh) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
         )
     }
 }
@@ -429,7 +446,7 @@ private fun DrawScope.drawScreenTimeChart(
 
     // Draw screen off arc
     drawArc(
-        color = Color(0xFF9C27B0),
+        color = Color(0xFF9C27B0), // Tertiary purple tone
         startAngle = screenOnAngle,
         sweepAngle = 360f - screenOnAngle,
         useCenter = true,
@@ -439,7 +456,7 @@ private fun DrawScope.drawScreenTimeChart(
 
     // Draw screen on arc
     drawArc(
-        color = Color(0xFFFF9800),
+        color = Color(0xFFFF9800), // Secondary orange tone
         startAngle = 0f,
         sweepAngle = screenOnAngle,
         useCenter = true,
@@ -457,14 +474,15 @@ private fun DrawScope.drawUsageTimeline() {
     for (i in 0 until barCount) {
         val x = i * (barWidth + barSpacing)
 
-        // Simulate usage intensity (0 = screen off, 1 = screen on)
-        val isScreenOn = kotlin.random.Random.nextBoolean()
-        val intensity = if (isScreenOn) kotlin.random.Random.nextFloat() else 0.1f
+        // Use deterministic pattern based on typical usage
+        val hourOfDay = (i / 4) % 24 // 15-minute intervals
+        val isScreenOn = hourOfDay in 6..23 && (i % 3 != 0) // Active hours, mostly on
+        val intensity = if (isScreenOn) 0.6f + (i % 10) * 0.04f else 0.1f
 
         val barHeight = intensity * maxBarHeight
         val y = maxBarHeight - barHeight
 
-        val barColor = if (isScreenOn) Color(0xFFFF9800) else Color(0xFF9C27B0).copy(alpha = 0.3f)
+        val barColor = if (isScreenOn) Color(0xFFFF9800) else Color(0xFFFF9800).copy(alpha = 0.3f)
 
         drawRect(
             color = barColor,
@@ -478,7 +496,23 @@ private fun calculateScreenOnPercentage(
     screenOnTime: String,
     screenOffTime: String,
 ): Int {
-    // Simple calculation based on time strings
-    // In a real app, you'd parse the actual time values
-    return kotlin.random.Random.nextInt(20, 40) // Simulate 20-40% screen on time
+    // Parse time strings to calculate real percentage
+    fun parseTimeMinutes(time: String): Int {
+        val parts = time.replace("h", ":").replace("m", "").split(":")
+        return when (parts.size) {
+            2 -> (parts[0].trim().toIntOrNull() ?: 0) * 60 + (parts[1].trim().toIntOrNull() ?: 0)
+            1 -> parts[0].trim().toIntOrNull() ?: 0
+            else -> 0
+        }
+    }
+
+    val onMinutes = parseTimeMinutes(screenOnTime)
+    val offMinutes = parseTimeMinutes(screenOffTime)
+    val total = onMinutes + offMinutes
+
+    return if (total > 0) {
+        ((onMinutes.toFloat() / total) * 100).toInt().coerceIn(0, 100)
+    } else {
+        30 // Default reasonable value if parsing fails
+    }
 }

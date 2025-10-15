@@ -19,14 +19,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.voltai.smartbatteryguardian.BatteryData
+import com.voltai.smartbatteryguardian.ui.theme.LocalPremiumColors
+import com.voltai.smartbatteryguardian.ui.theme.extendedColors
 
 // Get battery level color based on percentage
+@Composable
 fun getBatteryLevelColor(level: Int): Color {
+    val premiumColors = LocalPremiumColors.current
     return when {
-        level > 80 -> Color(0xFF4CAF50)
-        level > 50 -> Color(0xFFFF9800)
-        level > 20 -> Color(0xFFFF5722)
-        else -> Color(0xFFD32F2F)
+        level > 80 -> premiumColors.batteryGreen
+        level > 50 -> premiumColors.batteryYellow
+        level > 20 -> premiumColors.warning
+        else -> premiumColors.batteryRed
     }
 }
 
@@ -34,31 +38,31 @@ fun getBatteryLevelColor(level: Int): Color {
 fun BatteryInfoCardContent(batteryData: BatteryData) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.Top,
         ) {
             Text(
                 text = "${batteryData.batteryLevel}%",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = getBatteryLevelColor(batteryData.batteryLevel),
-                letterSpacing = (-1).sp
+                letterSpacing = (-1).sp,
             )
 
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = if (batteryData.isCharging) Color(0xFF4CAF50) else Color(0xFFF0F0F0)
+                color = if (batteryData.isCharging) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
             ) {
                 Text(
                     text = batteryData.chargingStatus,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Medium,
-                    color = if (batteryData.isCharging) Color.White else Color.Black
+                    color = if (batteryData.isCharging) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -69,8 +73,8 @@ fun BatteryInfoCardContent(batteryData: BatteryData) {
         Text(
             text = batteryData.remainingTime,
             fontSize = 12.sp,
-            color = Color(0xFF666666),
-            fontWeight = FontWeight.Medium
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.Medium,
         )
     }
 }
@@ -79,34 +83,32 @@ fun BatteryInfoCardContent(batteryData: BatteryData) {
 fun AnimatedBatteryBar(batteryLevel: Int) {
     val animatedProgress by animateFloatAsState(
         targetValue = batteryLevel / 100f,
-        animationSpec = spring(
+        animationSpec =
+        spring(
             dampingRatio = Spring.DampingRatioLowBouncy,
-            stiffness = Spring.StiffnessMedium
-        )
+            stiffness = Spring.StiffnessMedium,
+        ),
     )
 
     Box(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .height(8.dp)
             .background(
-                Color(0xFFF0F0F0),
-                RoundedCornerShape(4.dp)
-            )
+                MaterialTheme.colorScheme.surfaceVariant,
+                RoundedCornerShape(4.dp),
+            ),
     ) {
         Box(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(animatedProgress)
                 .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(
-                            getBatteryLevelColor(batteryLevel).copy(alpha = 0.8f),
-                            getBatteryLevelColor(batteryLevel)
-                        )
-                    ),
-                    shape = RoundedCornerShape(4.dp)
-                )
+                    color = getBatteryLevelColor(batteryLevel),
+                    shape = RoundedCornerShape(4.dp),
+                ),
         )
     }
 }
@@ -115,13 +117,13 @@ fun AnimatedBatteryBar(batteryLevel: Int) {
 fun ElectricCurrentCardContent(batteryData: BatteryData) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "Electric Current",
             fontSize = 11.sp,
-            color = Color(0xFF666666),
-            fontWeight = FontWeight.Medium
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.Medium,
         )
 
         Column {
@@ -129,12 +131,12 @@ fun ElectricCurrentCardContent(batteryData: BatteryData) {
                 text = "${batteryData.current} mA",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = "${String.format("%.1f", batteryData.voltage)} V",
                 fontSize = 11.sp,
-                color = Color(0xFF666666)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
@@ -146,25 +148,25 @@ fun ElectricCurrentCardContent(batteryData: BatteryData) {
 fun OngoingCardContent(batteryData: BatteryData) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "Ongoing",
             fontSize = 11.sp,
-            color = Color(0xFF666666),
-            fontWeight = FontWeight.Medium
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.Medium,
         )
 
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             OngoingItem(
                 icon = "📱",
                 label = "Screen On",
-                value = batteryData.screenOnTime
+                value = batteryData.screenOnTime,
             )
             OngoingItem(
                 icon = "🔋",
                 label = "Used",
-                value = batteryData.batteryUsed
+                value = batteryData.batteryUsed,
             )
         }
     }
@@ -174,27 +176,27 @@ fun OngoingCardContent(batteryData: BatteryData) {
 fun OngoingItem(
     icon: String,
     label: String,
-    value: String
+    value: String,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Text(
             text = icon,
-            fontSize = 12.sp
+            fontSize = 12.sp,
         )
         Column {
             Text(
                 text = label,
                 fontSize = 9.sp,
-                color = Color(0xFF666666)
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
                 text = value,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
     }
@@ -204,13 +206,13 @@ fun OngoingItem(
 fun TemperatureCardContent(batteryData: BatteryData) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "Temperature",
             fontSize = 11.sp,
-            color = Color(0xFF666666),
-            fontWeight = FontWeight.Medium
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.Medium,
         )
 
         Column {
@@ -218,20 +220,22 @@ fun TemperatureCardContent(batteryData: BatteryData) {
                 text = "${batteryData.temperature.toInt()}°C",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
-                text = when {
+                text =
+                when {
                     batteryData.temperature > 45f -> "Hot"
                     batteryData.temperature > 35f -> "Warm"
                     else -> "Normal"
                 },
                 fontSize = 11.sp,
-                color = when {
-                    batteryData.temperature > 45f -> Color(0xFFE57373)
-                    batteryData.temperature > 35f -> Color(0xFFFFB74D)
-                    else -> Color(0xFF81C784)
-                }
+                color =
+                when {
+                    batteryData.temperature > 45f -> LocalPremiumColors.current.batteryRed
+                    batteryData.temperature > 35f -> LocalPremiumColors.current.warning
+                    else -> LocalPremiumColors.current.success
+                },
             )
         }
 
@@ -243,33 +247,34 @@ fun TemperatureCardContent(batteryData: BatteryData) {
 fun HealthCardContent(batteryData: BatteryData) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "Battery Health",
             fontSize = 11.sp,
-            color = Color(0xFF666666),
-            fontWeight = FontWeight.Medium
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.Medium,
         )
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             val animatedProgress by animateFloatAsState(
                 targetValue = batteryData.healthPercentage / 100f,
-                animationSpec = spring(
+                animationSpec =
+                spring(
                     dampingRatio = Spring.DampingRatioLowBouncy,
-                    stiffness = Spring.StiffnessMedium
-                )
+                    stiffness = Spring.StiffnessMedium,
+                ),
             )
 
             CircularProgressIndicator(
                 progress = animatedProgress,
                 modifier = Modifier.size(32.dp),
                 strokeWidth = 4.dp,
-                color = Color(0xFF4CAF50),
-                trackColor = Color(0xFFE8F5E8)
+                color = LocalPremiumColors.current.batteryGreen,
+                trackColor = LocalPremiumColors.current.batteryGreen.copy(alpha = 0.2f),
             )
 
             Column {
@@ -277,12 +282,12 @@ fun HealthCardContent(batteryData: BatteryData) {
                     text = "${batteryData.healthPercentage}%",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
                     text = batteryData.capacity,
                     fontSize = 10.sp,
-                    color = Color(0xFF666666)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -293,25 +298,25 @@ fun HealthCardContent(batteryData: BatteryData) {
 fun AverageUsageCardContent() {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "Average Usage",
             fontSize = 11.sp,
             color = Color(0xFF666666),
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
 
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             OngoingItem(
                 icon = "☀️",
                 label = "Screen On",
-                value = "~19.2%/h"
+                value = "Not available",
             )
             OngoingItem(
                 icon = "🌙",
                 label = "Screen Off",
-                value = "~5.7%/h"
+                value = "Not available",
             )
         }
     }
@@ -321,25 +326,25 @@ fun AverageUsageCardContent() {
 fun ChargeEstimationCardContent(batteryData: BatteryData) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "Charge Time",
             fontSize = 11.sp,
             color = Color(0xFF666666),
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
 
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             OngoingItem(
                 icon = "⚡",
-                label = "Fast",
-                value = "1h 36m"
+                label = if (batteryData.isCharging) "Time to full" else "Time remaining",
+                value = batteryData.remainingTime,
             )
             OngoingItem(
-                icon = "🐌",
-                label = "Slow",
-                value = "3h 42m"
+                icon = "🔌",
+                label = "Status",
+                value = batteryData.chargingStatus,
             )
         }
     }
@@ -349,13 +354,13 @@ fun ChargeEstimationCardContent(batteryData: BatteryData) {
 fun HistoryCardContent() {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "History",
             fontSize = 11.sp,
             color = Color(0xFF666666),
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
 
         // Mini bar chart
@@ -363,32 +368,32 @@ fun HistoryCardContent() {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column {
                 Text(
                     text = "Sessions",
                     fontSize = 9.sp,
-                    color = Color(0xFF666666)
+                    color = Color(0xFF666666),
                 )
                 Text(
-                    text = "5",
+                    text = "—",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Color.Black,
                 )
             }
             Column {
                 Text(
                     text = "Charged",
                     fontSize = 9.sp,
-                    color = Color(0xFF666666)
+                    color = Color(0xFF666666),
                 )
                 Text(
-                    text = "457%",
+                    text = "—",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Color.Black,
                 )
             }
         }
@@ -400,7 +405,7 @@ fun ToolsCardContent() {
     Row(
         modifier = Modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         ToolButton(icon = "🔗", label = "Bluetooth")
         ToolButton(icon = "📊", label = "Logs")
@@ -409,23 +414,26 @@ fun ToolsCardContent() {
 }
 
 @Composable
-fun ToolButton(icon: String, label: String) {
+fun ToolButton(
+    icon: String,
+    label: String,
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Surface(
             shape = CircleShape,
             color = Color(0xFFF0F0F0),
-            modifier = Modifier.size(32.dp)
+            modifier = Modifier.size(32.dp),
         ) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 Text(
                     text = icon,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
                 )
             }
         }
@@ -433,7 +441,7 @@ fun ToolButton(icon: String, label: String) {
             text = label,
             fontSize = 8.sp,
             color = Color(0xFF666666),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }
@@ -442,43 +450,43 @@ fun ToolButton(icon: String, label: String) {
 fun AIInsightsCardContent() {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.Top,
         ) {
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = null,
                 tint = Color(0xFF9C27B0),
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(16.dp),
             )
             Text(
                 text = "AI Insights",
                 fontSize = 11.sp,
                 color = Color(0xFF666666),
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
 
         Text(
-            text = "Battery optimization active. 23% improvement detected.",
+            text = "No recent AI insights",
             fontSize = 12.sp,
             color = Color.Black,
-            lineHeight = 16.sp
+            lineHeight = 16.sp,
         )
 
         Surface(
             shape = RoundedCornerShape(8.dp),
-            color = Color(0xFF9C27B0).copy(alpha = 0.1f)
+            color = Color(0xFF9C27B0).copy(alpha = 0.1f),
         ) {
             Text(
                 text = "View Details",
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                 fontSize = 9.sp,
                 color = Color(0xFF9C27B0),
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
     }
@@ -488,18 +496,18 @@ fun AIInsightsCardContent() {
 fun QuickActionsCardContent() {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "Quick Actions",
             fontSize = 11.sp,
             color = Color(0xFF666666),
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             QuickActionButton("🔋", "Saver")
             QuickActionButton("📱", "Screen")
@@ -509,16 +517,19 @@ fun QuickActionsCardContent() {
 }
 
 @Composable
-fun QuickActionButton(icon: String, label: String) {
+fun QuickActionButton(
+    icon: String,
+    label: String,
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+        verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         Text(text = icon, fontSize = 16.sp)
         Text(
             text = label,
             fontSize = 8.sp,
-            color = Color(0xFF666666)
+            color = Color(0xFF666666),
         )
     }
 }
@@ -527,13 +538,13 @@ fun QuickActionButton(icon: String, label: String) {
 fun PowerModesCardContent() {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "Power Modes",
             fontSize = 11.sp,
             color = Color(0xFF666666),
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
 
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -545,23 +556,27 @@ fun PowerModesCardContent() {
 }
 
 @Composable
-fun PowerModeItem(icon: String, name: String, isActive: Boolean) {
+fun PowerModeItem(
+    icon: String,
+    name: String,
+    isActive: Boolean,
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Text(text = icon, fontSize = 10.sp)
         Text(
             text = name,
             fontSize = 9.sp,
             color = if (isActive) Color(0xFF2196F3) else Color(0xFF666666),
-            fontWeight = if (isActive) FontWeight.Medium else FontWeight.Normal
+            fontWeight = if (isActive) FontWeight.Medium else FontWeight.Normal,
         )
         if (isActive) {
             Surface(
                 shape = CircleShape,
                 color = Color(0xFF2196F3),
-                modifier = Modifier.size(4.dp)
+                modifier = Modifier.size(4.dp),
             ) {}
         }
     }
@@ -570,10 +585,12 @@ fun PowerModeItem(icon: String, name: String, isActive: Boolean) {
 // Animated components
 @Composable
 fun AnimatedWaveGraph() {
+    val primaryColor = MaterialTheme.colorScheme.primary
     Canvas(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
-            .height(24.dp)
+            .height(24.dp),
     ) {
         val path = Path()
         val points = listOf(0.2f, 0.4f, 0.8f, 0.5f, 0.9f, 0.3f, 0.7f)
@@ -591,24 +608,27 @@ fun AnimatedWaveGraph() {
 
         drawPath(
             path = path,
-            color = Color(0xFF2196F3),
-            style = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round)
+            color = primaryColor,
+            style = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round),
         )
     }
 }
 
 @Composable
 fun AnimatedTemperatureGraph(temperature: Float) {
-    val tempColor = when {
-        temperature > 45f -> Color(0xFFE57373)
-        temperature > 35f -> Color(0xFFFFB74D)
-        else -> Color(0xFF81C784)
-    }
+    val premiumColors = LocalPremiumColors.current
+    val tempColor =
+        when {
+            temperature > 45f -> premiumColors.batteryRed
+            temperature > 35f -> premiumColors.warning
+            else -> premiumColors.success
+        }
 
     Canvas(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
-            .height(20.dp)
+            .height(20.dp),
     ) {
         val points = listOf(0.4f, 0.3f, 0.5f, 0.4f, 0.6f, 0.7f, 0.5f)
         val path = Path()
@@ -627,7 +647,7 @@ fun AnimatedTemperatureGraph(temperature: Float) {
         drawPath(
             path = path,
             color = tempColor,
-            style = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round)
+            style = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round),
         )
     }
 }
@@ -636,7 +656,7 @@ fun AnimatedTemperatureGraph(temperature: Float) {
 fun CardContent(
     cardType: com.voltai.smartbatteryguardian.ui.home.CardType,
     batteryData: BatteryData,
-    isEditMode: Boolean
+    isEditMode: Boolean,
 ) {
     when (cardType) {
         com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_LEVEL -> BatteryInfoCardContent(batteryData)
@@ -653,76 +673,89 @@ fun CardContent(
         com.voltai.smartbatteryguardian.ui.home.CardType.PERFORMANCE_CHART -> HistoryCardContent()
         com.voltai.smartbatteryguardian.ui.home.CardType.THERMAL_STATUS -> TemperatureCardContent(batteryData)
         com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_TIPS -> AIInsightsCardContent()
-        com.voltai.smartbatteryguardian.ui.home.CardType.HISTORY -> com.voltai.smartbatteryguardian.ui.home.HistoryCardContent(
-            batteryData,
-            isEditMode
-        )
-        com.voltai.smartbatteryguardian.ui.home.CardType.OVERLAYS -> com.voltai.smartbatteryguardian.ui.home.OverlaysCardContent(
-            batteryData,
-            isEditMode
-        )
+        com.voltai.smartbatteryguardian.ui.home.CardType.HISTORY ->
+            com.voltai.smartbatteryguardian.ui.home.HistoryCardContent(
+                batteryData,
+                isEditMode,
+            )
+        com.voltai.smartbatteryguardian.ui.home.CardType.OVERLAYS ->
+            com.voltai.smartbatteryguardian.ui.home.OverlaysCardContent(
+                batteryData,
+                isEditMode,
+            )
 
         // Premium Advanced Cards
         com.voltai.smartbatteryguardian.ui.home.CardType.CHARGING_ANALYTICS -> ChargingAnalyticsCardContent(batteryData)
         com.voltai.smartbatteryguardian.ui.home.CardType.CHEMISTRY_LAB -> ChemistryLabCardContent(batteryData)
-        com.voltai.smartbatteryguardian.ui.home.CardType.SYSTEM_OPTIMIZATION -> SystemOptimizationCardContent(
-            batteryData
-        )
-        com.voltai.smartbatteryguardian.ui.home.CardType.PERFORMANCE_BENCHMARKS -> PerformanceBenchmarksCardContent(
-            batteryData
-        )
-        com.voltai.smartbatteryguardian.ui.home.CardType.DATA_EXPORT_IMPORT -> com.voltai.smartbatteryguardian.ui.home.DataExportImportCardContent(
-            batteryData,
-            isEditMode
-        )
+        com.voltai.smartbatteryguardian.ui.home.CardType.SYSTEM_OPTIMIZATION ->
+            SystemOptimizationCardContent(
+                batteryData,
+            )
+        com.voltai.smartbatteryguardian.ui.home.CardType.PERFORMANCE_BENCHMARKS ->
+            PerformanceBenchmarksCardContent(
+                batteryData,
+            )
+        com.voltai.smartbatteryguardian.ui.home.CardType.DATA_EXPORT_IMPORT ->
+            com.voltai.smartbatteryguardian.ui.home.DataExportImportCardContent(
+                batteryData,
+                isEditMode,
+            )
 
         // New Premium Analytics Cards
-        com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_HEALTH_ANALYTICS -> com.voltai.smartbatteryguardian.ui.home.EnhancedBatteryHealthAnalyticsCard(
-            batteryData
-        )
-        com.voltai.smartbatteryguardian.ui.home.CardType.SMART_CHARGING -> com.voltai.smartbatteryguardian.ui.home.EnhancedSmartChargingCard(
-            batteryData
-        )
-        com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_DIAGNOSTICS -> BatteryDiagnosticsCardContent(
-            batteryData
-        )
-        com.voltai.smartbatteryguardian.ui.home.CardType.REAL_TIME_MONITORING -> com.voltai.smartbatteryguardian.ui.home.EnhancedRealTimeMonitoringCard(
-            batteryData
-        )
-        com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_OPTIMIZATION -> BatteryOptimizationCardContent(
-            batteryData
-        )
+        com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_HEALTH_ANALYTICS ->
+            com.voltai.smartbatteryguardian.ui.home.EnhancedBatteryHealthAnalyticsCard(
+                batteryData,
+            )
+        com.voltai.smartbatteryguardian.ui.home.CardType.SMART_CHARGING ->
+            com.voltai.smartbatteryguardian.ui.home.EnhancedSmartChargingCard(
+                batteryData,
+            )
+        com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_DIAGNOSTICS ->
+            BatteryDiagnosticsCardContent(
+                batteryData,
+            )
+        com.voltai.smartbatteryguardian.ui.home.CardType.REAL_TIME_MONITORING ->
+            com.voltai.smartbatteryguardian.ui.home.EnhancedRealTimeMonitoringCard(
+                batteryData,
+            )
+        com.voltai.smartbatteryguardian.ui.home.CardType.BATTERY_OPTIMIZATION ->
+            BatteryOptimizationCardContent(
+                batteryData,
+            )
     }
 }
 
 @Composable
 fun AnimatedBarChart() {
     Row(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .height(32.dp),
         horizontalArrangement = Arrangement.spacedBy(2.dp),
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.Bottom,
     ) {
         val data = listOf(0.3f, 0.6f, 0.4f, 0.8f, 0.5f, 0.9f, 0.7f)
 
         data.forEach { height ->
             val animatedHeight by animateFloatAsState(
                 targetValue = height,
-                animationSpec = spring(
+                animationSpec =
+                spring(
                     dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessMedium
-                )
+                    stiffness = Spring.StiffnessMedium,
+                ),
             )
 
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .weight(1f)
                     .height((animatedHeight * 32).dp)
                     .background(
-                        Color(0xFF757575),
-                        RoundedCornerShape(1.dp)
-                    )
+                        MaterialTheme.colorScheme.outline,
+                        RoundedCornerShape(1.dp),
+                    ),
             )
         }
     }
@@ -735,13 +768,13 @@ fun ChargingAnalyticsCardContent(batteryData: BatteryData) {
         Text(
             text = "⚡ Charging Analytics",
             fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "Advanced insights",
             fontSize = 10.sp,
-            color = Color(0xFF2196F3)
+            color = Color(0xFF2196F3),
         )
         AnimatedWaveGraph()
     }
@@ -753,13 +786,13 @@ fun ChemistryLabCardContent(batteryData: BatteryData) {
         Text(
             text = "🔬 Chemistry Lab",
             fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "Molecular analysis",
             fontSize = 10.sp,
-            color = Color(0xFF6366F1)
+            color = Color(0xFF6366F1),
         )
         AnimatedWaveGraph()
     }
@@ -771,13 +804,13 @@ fun SystemOptimizationCardContent(batteryData: BatteryData) {
         Text(
             text = "🚀 System Optimizer",
             fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "AI optimization",
             fontSize = 10.sp,
-            color = Color(0xFF10B981)
+            color = Color(0xFF10B981),
         )
         AnimatedBarChart()
     }
@@ -789,13 +822,13 @@ fun PerformanceBenchmarksCardContent(batteryData: BatteryData) {
         Text(
             text = "📊 Benchmarks",
             fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "Performance tests",
             fontSize = 10.sp,
-            color = Color(0xFFEF4444)
+            color = Color(0xFFEF4444),
         )
         AnimatedBarChart()
     }
@@ -806,24 +839,24 @@ fun PerformanceBenchmarksCardContent(batteryData: BatteryData) {
 fun BatteryHealthAnalyticsCardContent(batteryData: BatteryData) {
     Column {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "🔋 Health Analytics",
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.width(4.dp))
             Surface(
                 shape = RoundedCornerShape(4.dp),
-                color = Color(0xFFFFD700).copy(alpha = 0.2f)
+                color = MaterialTheme.extendedColors.premiumGoldContainer,
             ) {
                 Text(
                     text = "AI",
                     fontSize = 8.sp,
-                    color = Color(0xFFB8860B),
+                    color = MaterialTheme.colorScheme.tertiary,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp),
                 )
             }
         }
@@ -832,17 +865,18 @@ fun BatteryHealthAnalyticsCardContent(batteryData: BatteryData) {
             text = "Health Score: ${batteryData.healthPercentage}%",
             fontSize = 10.sp,
             color = Color(0xFF4CAF50),
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
         Spacer(modifier = Modifier.height(4.dp))
         LinearProgressIndicator(
             progress = batteryData.healthPercentage / 100f,
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .height(3.dp)
                 .clip(RoundedCornerShape(2.dp)),
             color = Color(0xFF4CAF50),
-            trackColor = Color(0xFF4CAF50).copy(alpha = 0.2f)
+            trackColor = Color(0xFF4CAF50).copy(alpha = 0.2f),
         )
     }
 }
@@ -851,24 +885,24 @@ fun BatteryHealthAnalyticsCardContent(batteryData: BatteryData) {
 fun SmartChargingCardContent(batteryData: BatteryData) {
     Column {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "🧠 Smart Charging",
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.width(4.dp))
             Surface(
                 shape = RoundedCornerShape(4.dp),
-                color = Color(0xFF6A1B9A).copy(alpha = 0.2f)
+                color = Color(0xFF6A1B9A).copy(alpha = 0.2f),
             ) {
                 Text(
                     text = "PRO",
                     fontSize = 8.sp,
                     color = Color(0xFF6A1B9A),
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp),
                 )
             }
         }
@@ -876,7 +910,7 @@ fun SmartChargingCardContent(batteryData: BatteryData) {
         Text(
             text = if (batteryData.isCharging) "Optimizing..." else "Ready",
             fontSize = 10.sp,
-            color = if (batteryData.isCharging) Color(0xFF2196F3) else Color(0xFF666666)
+            color = if (batteryData.isCharging) Color(0xFF2196F3) else Color(0xFF666666),
         )
         AnimatedWaveGraph()
     }
@@ -888,39 +922,39 @@ fun BatteryDiagnosticsCardContent(batteryData: BatteryData) {
         Text(
             text = "🔧 Diagnostics",
             fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = "Status:",
                 fontSize = 10.sp,
-                color = Color(0xFF666666)
+                color = Color(0xFF666666),
             )
             Text(
                 text = if (batteryData.healthPercentage > 80) "Excellent" else "Good",
                 fontSize = 10.sp,
                 color = Color(0xFF4CAF50),
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
         Spacer(modifier = Modifier.height(2.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = "Cycles:",
                 fontSize = 10.sp,
-                color = Color(0xFF666666)
+                color = Color(0xFF666666),
             )
             Text(
-                text = "847",
+                text = "${batteryData.cycleCount}",
                 fontSize = 10.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
     }
@@ -930,35 +964,35 @@ fun BatteryDiagnosticsCardContent(batteryData: BatteryData) {
 fun RealTimeMonitoringCardContent(batteryData: BatteryData) {
     Column {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "📊 Live Monitor",
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.width(4.dp))
             Surface(
                 shape = CircleShape,
                 color = if (batteryData.isCharging) Color(0xFF4CAF50) else Color(0xFF666666),
-                modifier = Modifier.size(6.dp)
+                modifier = Modifier.size(6.dp),
             ) { }
         }
         Spacer(modifier = Modifier.height(4.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = "${batteryData.current} mA",
                 fontSize = 10.sp,
                 color = Color(0xFF2196F3),
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
             Text(
                 text = "${String.format("%.1f", batteryData.voltage)}V",
                 fontSize = 10.sp,
-                color = Color(0xFF666666)
+                color = Color(0xFF666666),
             )
         }
         AnimatedWaveGraph()
@@ -969,39 +1003,46 @@ fun RealTimeMonitoringCardContent(batteryData: BatteryData) {
 fun BatteryOptimizationCardContent(batteryData: BatteryData) {
     Column {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "⚡ Optimization",
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.width(4.dp))
             Surface(
                 shape = RoundedCornerShape(4.dp),
-                color = Color(0xFF10B981).copy(alpha = 0.2f)
+                color = Color(0xFF10B981).copy(alpha = 0.2f),
             ) {
                 Text(
                     text = "AI",
                     fontSize = 8.sp,
                     color = Color(0xFF10B981),
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp),
                 )
             }
         }
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Score: 89/100",
+            text = "Score: ${batteryData.batteryScore}/100",
             fontSize = 10.sp,
             color = Color(0xFF10B981),
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
-            text = "3 suggestions available",
+            text =
+            if (batteryData.optimizationTips.isNotEmpty()) {
+                "Tips: ${batteryData.optimizationTips.size}"
+            } else if (batteryData.recommendations.isNotEmpty()) {
+                "Tips: ${batteryData.recommendations.size}"
+            } else {
+                "No tips yet"
+            },
             fontSize = 9.sp,
-            color = Color(0xFF666666)
+            color = Color(0xFF666666),
         )
     }
 }

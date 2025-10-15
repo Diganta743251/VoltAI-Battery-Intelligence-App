@@ -20,7 +20,7 @@ data class BatteryReading(
     val chargingSpeed: String? = null,
     val chargingType: String? = null,
     val plugType: String? = null,
-    val powerSource: String? = null
+    val powerSource: String? = null,
 )
 
 @Serializable
@@ -34,7 +34,7 @@ data class ChargingSession(
     val maxPower: Float,
     val avgPower: Float,
     val efficiency: Float,
-    val energyConsumed: Float
+    val energyConsumed: Float,
 )
 
 @Serializable
@@ -47,7 +47,7 @@ data class AppUsageStats(
     val foregroundTime: Long,
     val backgroundTime: Long,
     val cpuUsage: Float,
-    val networkUsage: Long
+    val networkUsage: Long,
 )
 
 @Serializable
@@ -59,7 +59,7 @@ data class BatteryHealthRecord(
     val temperatureAvg: Float,
     val voltageAvg: Float,
     val degradationRate: Float,
-    val predictionScore: Float
+    val predictionScore: Float,
 )
 
 @Serializable
@@ -71,7 +71,7 @@ data class AIPrediction(
     val confidence: Float,
     val timeHorizon: Long,
     val modelVersion: String,
-    val accuracy: Float? = null
+    val accuracy: Float? = null,
 )
 
 @Serializable
@@ -85,7 +85,7 @@ data class SystemMetrics(
     val batteryTemperature: Float,
     val performanceScore: Float,
     val stabilityScore: Float,
-    val efficiencyScore: Float
+    val efficiencyScore: Float,
 )
 
 @Serializable
@@ -96,7 +96,7 @@ data class UserPreferences(
     val dataCollection: Boolean = true,
     val premiumFeatures: Boolean = false,
     val language: String = "en",
-    val units: String = "metric"
+    val units: String = "metric",
 )
 
 @Serializable
@@ -107,5 +107,5 @@ data class PowerProfile(
     val settings: Map<String, String>,
     val isActive: Boolean = false,
     val createdAt: Long,
-    val modifiedAt: Long
+    val modifiedAt: Long,
 )

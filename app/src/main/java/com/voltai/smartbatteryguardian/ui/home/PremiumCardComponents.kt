@@ -16,46 +16,53 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.voltai.smartbatteryguardian.BatteryData
+import com.voltai.smartbatteryguardian.ui.theme.extendedColors
 
 @Composable
 fun PremiumBadge(
     modifier: Modifier = Modifier,
     text: String = "PRO",
-    color: Color = Color(0xFFFFD700)
+    color: Color? = null,
 ) {
     val shimmerEffect by rememberInfiniteTransition(label = "shimmer").animateFloat(
         initialValue = 0f,
         targetValue = 1f,
-        animationSpec = infiniteRepeatable(
+        animationSpec =
+        infiniteRepeatable(
             animation = tween(2000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
+            repeatMode = RepeatMode.Reverse,
         ),
-        label = "shimmer"
+        label = "shimmer",
     )
+
+    val resolvedColor = color ?: MaterialTheme.extendedColors.premiumGold
 
     Surface(
         shape = RoundedCornerShape(6.dp),
-        color = color.copy(alpha = 0.9f),
-        modifier = modifier
+        color = resolvedColor.copy(alpha = 0.9f),
+        modifier = modifier,
     ) {
         Box(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(
+                    brush =
+                    Brush.horizontalGradient(
+                        colors =
+                        listOf(
                             Color.White.copy(alpha = shimmerEffect * 0.3f),
                             Color.Transparent,
-                            Color.White.copy(alpha = shimmerEffect * 0.3f)
-                        )
-                    )
-                )
+                            Color.White.copy(alpha = shimmerEffect * 0.3f),
+                        ),
+                    ),
+                ),
         ) {
             Text(
                 text = text,
                 fontSize = 8.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
             )
         }
     }
@@ -65,22 +72,22 @@ fun PremiumBadge(
 fun EnhancedBatteryHealthAnalyticsCard(batteryData: BatteryData) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.Top,
         ) {
             Column {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = "🔋 Health Analytics",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1A1A1A)
+                        color = Color(0xFF1A1A1A),
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     PremiumBadge(text = "AI", color = Color(0xFF6366F1))
@@ -89,11 +96,11 @@ fun EnhancedBatteryHealthAnalyticsCard(batteryData: BatteryData) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     AnimatedHealthRing(
                         healthPercentage = batteryData.healthPercentage,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -103,12 +110,12 @@ fun EnhancedBatteryHealthAnalyticsCard(batteryData: BatteryData) {
                             text = "${batteryData.healthPercentage}%",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
-                            color = getHealthColor(batteryData.healthPercentage)
+                            color = getHealthColor(batteryData.healthPercentage),
                         )
                         Text(
                             text = "Health Score",
                             fontSize = 10.sp,
-                            color = Color(0xFF666666)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -119,32 +126,32 @@ fun EnhancedBatteryHealthAnalyticsCard(batteryData: BatteryData) {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column {
                 Text(
                     text = "Degradation",
                     fontSize = 9.sp,
-                    color = Color(0xFF666666)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "2.1%",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color(0xFFFF9800)
+                    color = Color(0xFFFF9800),
                 )
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = "Prediction",
                     fontSize = 9.sp,
-                    color = Color(0xFF666666)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "8 months",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color(0xFF4CAF50)
+                    color = Color(0xFF4CAF50),
                 )
             }
         }
@@ -155,15 +162,15 @@ fun EnhancedBatteryHealthAnalyticsCard(batteryData: BatteryData) {
 fun EnhancedSmartChargingCard(batteryData: BatteryData) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "🧠 Smart Charging",
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.width(6.dp))
             PremiumBadge(text = "PRO", color = Color(0xFF6A1B9A))
@@ -181,32 +188,32 @@ fun EnhancedSmartChargingCard(batteryData: BatteryData) {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column {
                 Text(
                     text = "Efficiency",
                     fontSize = 9.sp,
-                    color = Color(0xFF666666)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "94%",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF4CAF50)
+                    color = Color(0xFF4CAF50),
                 )
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = "Next Window",
                     fontSize = 9.sp,
-                    color = Color(0xFF666666)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "22:00",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color(0xFF2196F3)
+                    color = Color(0xFF2196F3),
                 )
             }
         }
@@ -217,20 +224,20 @@ fun EnhancedSmartChargingCard(batteryData: BatteryData) {
 fun EnhancedRealTimeMonitoringCard(batteryData: BatteryData) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "📊 Live Monitor",
                     fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 LiveIndicator(isActive = true)
@@ -246,7 +253,7 @@ fun EnhancedRealTimeMonitoringCard(batteryData: BatteryData) {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             MetricItem("Current", "${batteryData.current} mA", Color(0xFF2196F3))
             MetricItem("Voltage", "${String.format("%.1f", batteryData.voltage)}V", Color(0xFFFF9800))
@@ -258,17 +265,17 @@ fun EnhancedRealTimeMonitoringCard(batteryData: BatteryData) {
 @Composable
 private fun AnimatedHealthRing(
     healthPercentage: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val animatedProgress by animateFloatAsState(
         targetValue = healthPercentage / 100f,
         animationSpec = tween(1000, easing = EaseOutCubic),
-        label = "health"
+        label = "health",
     )
 
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             val strokeWidth = 3.dp.toPx()
@@ -278,7 +285,7 @@ private fun AnimatedHealthRing(
             drawCircle(
                 color = Color(0xFFE8F5E8),
                 radius = radius,
-                style = Stroke(width = strokeWidth)
+                style = Stroke(width = strokeWidth),
             )
 
             // Progress arc
@@ -287,7 +294,7 @@ private fun AnimatedHealthRing(
                 startAngle = -90f,
                 sweepAngle = 360f * animatedProgress,
                 useCenter = false,
-                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
             )
         }
     }
@@ -295,33 +302,25 @@ private fun AnimatedHealthRing(
 
 @Composable
 private fun ChargingOptimizationIndicator() {
-    val pulseAnimation by rememberInfiniteTransition(label = "pulse").animateFloat(
-        initialValue = 0.8f,
-        targetValue = 1.2f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = EaseInOutSine),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "pulse"
-    )
-
+    // Static, battery-efficient charging optimization indicator
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Box(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .size(12.dp)
                 .background(
-                    Color(0xFF4CAF50).copy(alpha = pulseAnimation - 0.8f),
-                    CircleShape
-                )
+                    Color(0xFF4CAF50),
+                    CircleShape,
+                ),
         )
         Text(
             text = "Optimizing charge...",
             fontSize = 10.sp,
             color = Color(0xFF4CAF50),
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
     }
 }
@@ -330,60 +329,45 @@ private fun ChargingOptimizationIndicator() {
 private fun ReadyToChargeIndicator() {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Box(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .size(12.dp)
-                .background(Color(0xFF2196F3), CircleShape)
+                .background(Color(0xFF2196F3), CircleShape),
         )
         Text(
             text = "Ready for smart charging",
             fontSize = 10.sp,
-            color = Color(0xFF2196F3)
+            color = Color(0xFF2196F3),
         )
     }
 }
 
 @Composable
 private fun LiveIndicator(isActive: Boolean) {
-    val alpha by rememberInfiniteTransition(label = "live").animateFloat(
-        initialValue = 0.3f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = EaseInOutSine),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "live"
-    )
-
+    // Static, battery-efficient live indicator
     Surface(
         shape = CircleShape,
-        color = if (isActive) Color(0xFF4CAF50).copy(alpha = alpha) else Color(0xFF666666),
-        modifier = Modifier.size(8.dp)
+        color = if (isActive) Color(0xFF4CAF50) else MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.size(8.dp),
     ) {}
 }
 
 @Composable
 private fun MiniRealtimeChart(modifier: Modifier = Modifier) {
-    val animatedPhase by rememberInfiniteTransition(label = "chart").animateFloat(
-        initialValue = 0f,
-        targetValue = 2f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(3000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "chart"
-    )
-
+    // Static, battery-efficient mini chart
     Canvas(modifier = modifier) {
         val path = Path()
-        val points = (0..20).map { index ->
-            val x = (index * size.width) / 20
-            val y = size.height / 2 +
-                sin((index * 0.5f) + animatedPhase) * size.height * 0.3f
-            Pair(x, y.toFloat())
-        }
+        val points =
+            (0..20).map { index ->
+                val x = (index * size.width) / 20
+                val y =
+                    size.height / 2 +
+                        sin(index * 0.5f) * size.height * 0.3f
+                Pair(x, y.toFloat())
+            }
 
         points.forEachIndexed { index, (x, y) ->
             if (index == 0) {
@@ -396,7 +380,7 @@ private fun MiniRealtimeChart(modifier: Modifier = Modifier) {
         drawPath(
             path = path,
             color = Color(0xFF2196F3),
-            style = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round)
+            style = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round),
         )
     }
 }
@@ -405,21 +389,21 @@ private fun MiniRealtimeChart(modifier: Modifier = Modifier) {
 private fun MetricItem(
     label: String,
     value: String,
-    color: Color
+    color: Color,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
-            color = color
+            color = color,
         )
         Text(
             text = label,
             fontSize = 8.sp,
-            color = Color(0xFF666666)
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }

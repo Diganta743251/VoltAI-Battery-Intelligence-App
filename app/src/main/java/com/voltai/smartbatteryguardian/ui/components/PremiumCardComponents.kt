@@ -24,42 +24,45 @@ import kotlin.math.*
 fun BatteryHealthAnalyticsCard() {
     PremiumCardBase(
         title = "Health Analytics",
-        gradient = Brush.linearGradient(
-            colors = listOf(
+        gradient =
+        Brush.linearGradient(
+            colors =
+            listOf(
                 Color(0xFF4CAF50),
-                Color(0xFF81C784)
-            )
+                Color(0xFF81C784),
+            ),
         ),
-        icon = "🧠"
+        icon = "🧠",
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             // Animated Health Ring
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .size(80.dp)
-                    .align(Alignment.CenterHorizontally)
+                    .align(Alignment.CenterHorizontally),
             ) {
-                AnimatedHealthRing(healthPercentage = 89f)
+                AnimatedHealthRing(healthPercentage = 0f)
             }
 
             Text(
-                text = "89% Excellent",
+                text = "—",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                MetricChip("847 Cycles", "🔄")
-                MetricChip("2.3% Loss", "📉")
+                MetricChip("—", "🔄")
+                MetricChip("—", "📉")
             }
         }
     }
@@ -69,36 +72,38 @@ fun BatteryHealthAnalyticsCard() {
 fun SmartChargingCard() {
     PremiumCardBase(
         title = "Smart Charging",
-        gradient = Brush.linearGradient(
-            colors = listOf(
+        gradient =
+        Brush.linearGradient(
+            colors =
+            listOf(
                 Color(0xFF2196F3),
-                Color(0xFF64B5F6)
-            )
+                Color(0xFF64B5F6),
+            ),
         ),
-        icon = "⚡"
+        icon = "⚡",
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            // Charging Optimization Indicator
-            ChargingOptimizationIndicator(isOptimizing = true)
+            // Charging Optimization Indicator (neutral)
+            ChargingOptimizationIndicator(isOptimizing = false)
 
             Text(
-                text = "Optimizing Now",
+                text = "—",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                MetricChip("23°C", "🌡️")
-                MetricChip("Save 40%", "💰")
+                MetricChip("—", "🌡️")
+                MetricChip("—", "💰")
             }
         }
     }
@@ -108,36 +113,38 @@ fun SmartChargingCard() {
 fun BatteryDiagnosticsCard() {
     PremiumCardBase(
         title = "Diagnostics",
-        gradient = Brush.linearGradient(
-            colors = listOf(
+        gradient =
+        Brush.linearGradient(
+            colors =
+            listOf(
                 Color(0xFFFF9800),
-                Color(0xFFFFB74D)
-            )
+                Color(0xFFFFB74D),
+            ),
         ),
-        icon = "🔧"
+        icon = "🔧",
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            // Diagnostic Status
-            DiagnosticStatusIndicator(status = "All Clear")
+            // Diagnostic Status (neutral)
+            DiagnosticStatusIndicator(status = "")
 
             Text(
-                text = "All Systems OK",
+                text = "—",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                MetricChip("8 Tests", "✅")
-                MetricChip("No Issues", "🎯")
+                MetricChip("—", "✅")
+                MetricChip("—", "🎯")
             }
         }
     }
@@ -147,36 +154,38 @@ fun BatteryDiagnosticsCard() {
 fun RealTimeMonitoringCard() {
     PremiumCardBase(
         title = "Live Monitor",
-        gradient = Brush.linearGradient(
-            colors = listOf(
+        gradient =
+        Brush.linearGradient(
+            colors =
+            listOf(
                 Color(0xFF9C27B0),
-                Color(0xFFBA68C8)
-            )
+                Color(0xFFBA68C8),
+            ),
         ),
-        icon = "📊"
+        icon = "📊",
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             // Live Metrics Chart
             LiveMetricsChart()
 
             Text(
-                text = "4.2V • 1.8A",
+                text = "—",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                MetricChip("Live", "🔴")
-                MetricChip("7.5W", "⚡")
+                MetricChip("—", "🔴")
+                MetricChip("—", "⚡")
             }
         }
     }
@@ -186,36 +195,38 @@ fun RealTimeMonitoringCard() {
 fun BatteryOptimizationCard() {
     PremiumCardBase(
         title = "Optimization",
-        gradient = Brush.linearGradient(
-            colors = listOf(
+        gradient =
+        Brush.linearGradient(
+            colors =
+            listOf(
                 Color(0xFF673AB7),
-                Color(0xFF9575CD)
-            )
+                Color(0xFF9575CD),
+            ),
         ),
-        icon = "🎯"
+        icon = "🎯",
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            // Optimization Progress
-            OptimizationProgress(progress = 0.75f)
+            // Optimization Progress (neutral)
+            OptimizationProgress(progress = 0f)
 
             Text(
-                text = "75% Optimized",
+                text = "—",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                MetricChip("AI Active", "🤖")
-                MetricChip("+2.5h", "📈")
+                MetricChip("—", "🤖")
+                MetricChip("—", "📈")
             }
         }
     }
@@ -226,58 +237,55 @@ private fun PremiumCardBase(
     title: String,
     gradient: Brush,
     icon: String,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    val shimmerTransition = rememberInfiniteTransition(label = "shimmer")
-    val shimmerAlpha by shimmerTransition.animateFloat(
-        initialValue = 0.3f,
-        targetValue = 0.8f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = EaseInOutSine),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "shimmer_alpha"
-    )
+    // Replace infinite shimmer with static premium indicator - battery efficient
+    val premiumAlpha = 0.1f // Static alpha for premium overlay
 
     Card(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .height(180.dp),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent
-        )
+        colors =
+        CardDefaults.cardColors(
+            containerColor = Color.Transparent,
+        ),
     ) {
         Box(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
-                .background(gradient)
+                .background(gradient),
         ) {
             // Premium Badge
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .align(Alignment.TopEnd)
                     .padding(12.dp)
                     .size(24.dp)
                     .background(
                         Color.White.copy(alpha = 0.2f),
-                        CircleShape
+                        CircleShape,
                     ),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = "💎",
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
             }
 
-            // Shimmer overlay
+            // Static premium overlay - no battery drain
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxSize()
                     .background(
-                        Color.White.copy(alpha = shimmerAlpha * 0.1f)
-                    )
+                        Color.White.copy(alpha = premiumAlpha),
+                    ),
             )
 
             // Title
@@ -286,25 +294,28 @@ private fun PremiumCardBase(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White.copy(alpha = 0.9f),
-                modifier = Modifier
+                modifier =
+                Modifier
                     .align(Alignment.TopStart)
-                    .padding(16.dp)
+                    .padding(16.dp),
             )
 
             // Icon
             Text(
                 text = icon,
                 fontSize = 32.sp,
-                modifier = Modifier
+                modifier =
+                Modifier
                     .align(Alignment.TopCenter)
-                    .padding(top = 8.dp)
+                    .padding(top = 8.dp),
             )
 
             // Content
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .align(Alignment.Center)
-                    .padding(top = 20.dp)
+                    .padding(top = 20.dp),
             ) {
                 content()
             }
@@ -314,122 +325,95 @@ private fun PremiumCardBase(
 
 @Composable
 private fun AnimatedHealthRing(healthPercentage: Float) {
+    // Simple Material 3 progress indicator - battery efficient
     val animatedProgress by animateFloatAsState(
         targetValue = healthPercentage / 100f,
         animationSpec = tween(1000, easing = EaseOutCubic),
-        label = "health_ring"
+        label = "health_ring",
     )
 
-    Canvas(
-        modifier = Modifier.size(80.dp)
+    Box(
+        modifier = Modifier.size(80.dp),
+        contentAlignment = Alignment.Center,
     ) {
-        val strokeWidth = 8.dp.toPx()
-        val radius = (size.minDimension - strokeWidth) / 2
-        val center = center
-
-        // Background ring
-        drawCircle(
-            color = Color.White.copy(alpha = 0.2f),
-            radius = radius,
-            center = center,
-            style = Stroke(strokeWidth)
+        // Use standard Material 3 CircularProgressIndicator
+        CircularProgressIndicator(
+            progress = animatedProgress,
+            modifier = Modifier.size(80.dp),
+            color = Color.White,
+            strokeWidth = 8.dp,
         )
 
-        // Progress ring
-        drawArc(
+        // Health percentage text
+        Text(
+            text = "${(healthPercentage).toInt()}%",
             color = Color.White,
-            startAngle = -90f,
-            sweepAngle = animatedProgress * 360f,
-            useCenter = false,
-            style = Stroke(strokeWidth, cap = StrokeCap.Round),
-            size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2),
-            topLeft = androidx.compose.ui.geometry.Offset(
-                center.x - radius,
-                center.y - radius
-            )
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
         )
     }
 }
 
 @Composable
 private fun ChargingOptimizationIndicator(isOptimizing: Boolean) {
-    val rotation by rememberInfiniteTransition(label = "charging").animateFloat(
-        initialValue = 0f,
-        targetValue = if (isOptimizing) 360f else 0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "rotation"
+    // Replace infinite rotation with static indicator - respects reduced motion preference
+    val isReducedMotionPreferred = com.voltai.smartbatteryguardian.ui.theme.isReducedMotionPreferred()
+    val rotation by animateFloatAsState(
+        targetValue = if (isOptimizing && !isReducedMotionPreferred) 45f else 0f,
+        animationSpec = tween(300),
+        label = "rotation",
     )
 
+    // Simple Material 3 approach - no custom Canvas
     Box(
-        modifier = Modifier
+        modifier =
+        Modifier
             .size(60.dp)
-            .rotate(rotation),
-        contentAlignment = Alignment.Center
+            .rotate(rotation)
+            .background(
+                Color.White.copy(alpha = 0.15f),
+                CircleShape,
+            ),
+        contentAlignment = Alignment.Center,
     ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val strokeWidth = 4.dp.toPx()
-            val radius = (size.minDimension - strokeWidth) / 2
-
-            drawCircle(
-                color = Color.White.copy(alpha = 0.3f),
-                radius = radius,
-                style = Stroke(strokeWidth)
-            )
-
-            drawArc(
-                color = Color.White,
-                startAngle = 0f,
-                sweepAngle = 90f,
-                useCenter = false,
-                style = Stroke(strokeWidth, cap = StrokeCap.Round),
-                size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2),
-                topLeft = androidx.compose.ui.geometry.Offset(
-                    center.x - radius,
-                    center.y - radius
-                )
-            )
-        }
-
         Text(
-            text = "⚡",
-            fontSize = 24.sp
+            text = if (isOptimizing) "⚡" else "⏸️",
+            fontSize = 24.sp,
+            color = Color.White,
         )
     }
 }
 
 @Composable
 private fun DiagnosticStatusIndicator(status: String) {
-    val pulse by rememberInfiniteTransition(label = "pulse").animateFloat(
-        initialValue = 0.8f,
-        targetValue = 1.2f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = EaseInOutSine),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "pulse"
+    // Replace infinite pulse with accessibility-aware scaling
+    val isReducedMotionPreferred = com.voltai.smartbatteryguardian.ui.theme.isReducedMotionPreferred()
+    val pulse by animateFloatAsState(
+        targetValue = if (status == "Active" && !isReducedMotionPreferred) 1.1f else 1.0f,
+        animationSpec = tween(200),
+        label = "pulse",
     )
 
     Box(
-        modifier = Modifier
+        modifier =
+        Modifier
             .size(60.dp)
             .scale(pulse),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Box(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .size(50.dp)
                 .background(
                     Color.White.copy(alpha = 0.2f),
-                    CircleShape
+                    CircleShape,
                 ),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = "✅",
-                fontSize = 24.sp
+                fontSize = 24.sp,
             )
         }
     }
@@ -437,30 +421,24 @@ private fun DiagnosticStatusIndicator(status: String) {
 
 @Composable
 private fun LiveMetricsChart() {
-    val animatedHeight by rememberInfiniteTransition(label = "chart").animateFloat(
-        initialValue = 0.3f,
-        targetValue = 0.8f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = EaseInOutSine),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "height"
-    )
+    // Replace infinite animation with static chart - much more battery efficient
+    val animatedHeight = 0.6f // Static height for chart bars
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.Bottom,
     ) {
         repeat(5) { index ->
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .width(8.dp)
                     .height((20 + index * 5 + animatedHeight * 20).dp)
                     .background(
                         Color.White.copy(alpha = 0.7f),
-                        RoundedCornerShape(4.dp)
-                    )
+                        RoundedCornerShape(4.dp),
+                    ),
             )
         }
     }
@@ -471,16 +449,17 @@ private fun OptimizationProgress(progress: Float) {
     val animatedProgress by animateFloatAsState(
         targetValue = progress,
         animationSpec = tween(1000, easing = EaseOutCubic),
-        label = "optimization_progress"
+        label = "optimization_progress",
     )
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .size(60.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val strokeWidth = 6.dp.toPx()
@@ -490,7 +469,7 @@ private fun OptimizationProgress(progress: Float) {
                 drawCircle(
                     color = Color.White.copy(alpha = 0.2f),
                     radius = radius,
-                    style = Stroke(strokeWidth)
+                    style = Stroke(strokeWidth),
                 )
 
                 // Progress
@@ -501,41 +480,45 @@ private fun OptimizationProgress(progress: Float) {
                     useCenter = false,
                     style = Stroke(strokeWidth, cap = StrokeCap.Round),
                     size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2),
-                    topLeft = androidx.compose.ui.geometry.Offset(
+                    topLeft =
+                    androidx.compose.ui.geometry.Offset(
                         center.x - radius,
-                        center.y - radius
-                    )
+                        center.y - radius,
+                    ),
                 )
             }
 
             Text(
                 text = "🎯",
-                fontSize = 20.sp
+                fontSize = 20.sp,
             )
         }
     }
 }
 
 @Composable
-private fun MetricChip(text: String, icon: String) {
+private fun MetricChip(
+    text: String,
+    icon: String,
+) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = Color.White.copy(alpha = 0.15f)
+        color = Color.White.copy(alpha = 0.15f),
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 text = icon,
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
             Text(
                 text = text,
                 fontSize = 11.sp,
                 color = Color.White.copy(alpha = 0.9f),
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
     }

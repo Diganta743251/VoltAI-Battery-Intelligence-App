@@ -1,5 +1,7 @@
 package com.voltai.ui.designsystem
 
+import android.os.Build
+import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -204,10 +206,15 @@ object VoltAIDesignSystem {
         val acceleratedEasing = LinearOutSlowInEasing
         
         // Common animations
-        val fadeInOut = fadeIn(tween(mediumDuration)) to fadeOut(tween(mediumDuration))
-        val slideUpDown = slideInVertically(tween(mediumDuration)) { it } to 
-                         slideOutVertically(tween(mediumDuration)) { it }
-        val scaleInOut = scaleIn(tween(mediumDuration)) to scaleOut(tween(mediumDuration))
+        val fadeInOut = fadeIn(animationSpec = tween(mediumDuration)) to fadeOut(animationSpec = tween(mediumDuration))
+        val slideUpDown = slideInVertically(
+            animationSpec = tween(mediumDuration),
+            initialOffsetY = { it }
+        ) to slideOutVertically(
+            animationSpec = tween(mediumDuration),
+            targetOffsetY = { it }
+        )
+        val scaleInOut = scaleIn(animationSpec = tween(mediumDuration)) to scaleOut(animationSpec = tween(mediumDuration))
         
         // Battery specific animations
         val chargingPulse = infiniteRepeatable<Float>(
@@ -230,9 +237,10 @@ fun VoltAITheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor -> {
-            if (darkTheme) dynamicDarkColorScheme(androidx.compose.ui.platform.LocalContext.current)
-            else dynamicLightColorScheme(androidx.compose.ui.platform.LocalContext.current)
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = androidx.compose.ui.platform.LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context)
+            else dynamicLightColorScheme(context)
         }
         darkTheme -> darkColorScheme(
             primary = VoltAIDesignSystem.Colors.ElectricBlue,

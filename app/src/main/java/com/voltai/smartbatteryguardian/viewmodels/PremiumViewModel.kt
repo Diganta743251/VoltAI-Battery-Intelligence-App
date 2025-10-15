@@ -11,10 +11,11 @@ import javax.inject.Inject
  * ViewModel for managing premium features and billing operations
  */
 @HiltViewModel
-class PremiumViewModel @Inject constructor(
-    private val premiumManager: PremiumManager
+class PremiumViewModel
+@Inject
+constructor(
+    private val premiumManager: PremiumManager,
 ) : ViewModel() {
-
     // Expose premium status from PremiumManager
     val premiumState: StateFlow<PremiumManager.PremiumStatus> = premiumManager.premiumStatus
     val billingState: StateFlow<PremiumManager.BillingState> = premiumManager.billingState
@@ -53,7 +54,7 @@ class PremiumViewModel @Inject constructor(
     fun purchasePremium(
         activity: Activity,
         sku: String,
-        callback: (PremiumManager.PurchaseResult) -> Unit
+        callback: (PremiumManager.PurchaseResult) -> Unit,
     ) {
         premiumManager.purchasePremium(activity, sku, callback)
     }

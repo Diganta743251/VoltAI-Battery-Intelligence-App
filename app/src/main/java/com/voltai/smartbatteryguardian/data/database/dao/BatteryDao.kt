@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BatteryDao {
-
     // Battery Readings Operations
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBatteryReading(reading: BatteryReading): Long
@@ -21,7 +20,19 @@ interface BatteryDao {
     fun getLatestBatteryReadings(limit: Int = 100): Flow<List<BatteryReading>>
 
     @Query("SELECT * FROM battery_readings WHERE timestamp BETWEEN :start AND :end ORDER BY timestamp ASC")
-    suspend fun getBatteryReadingsBetween(start: Long, end: Long): List<BatteryReading>
+    suspend fun getBatteryReadingsBetween(
+        start: Long,
+        end: Long,
+    ): List<BatteryReading>
+
+    @Query("SELECT * FROM battery_readings WHERE timestamp BETWEEN :startTime AND :endTime ORDER BY timestamp ASC")
+    suspend fun getReadingsInRange(
+        startTime: Long,
+        endTime: Long,
+    ): List<BatteryReading>
+
+    // Alias for compatibility
+    suspend fun insertReading(reading: BatteryReading): Long = insertBatteryReading(reading)
 
     @Query("SELECT AVG(batteryLevel) FROM battery_readings WHERE timestamp >= :startTime")
     suspend fun getAverageBatteryLevel(startTime: Long): Double
@@ -45,7 +56,7 @@ interface BatteryDao {
         WHERE timestamp >= :startTime
         GROUP BY DATE(timestamp / 1000, 'unixepoch')
         ORDER BY date DESC
-    """
+    """,
     )
     suspend fun getDailyBatteryStatistics(startTime: Long): List<DailyBatteryStats>
 
@@ -97,9 +108,12 @@ interface BatteryDao {
         GROUP BY packageName
         ORDER BY totalBatteryUsage DESC
         LIMIT :limit
-    """
+    """,
     )
-    suspend fun getTopBatteryConsumingApps(startTime: Long, limit: Int = 20): List<AppBatterySummary>
+    suspend fun getTopBatteryConsumingApps(
+        startTime: Long,
+        limit: Int = 20,
+    ): List<AppBatterySummary>
 
     @Query(
         """
@@ -111,7 +125,7 @@ interface BatteryDao {
         WHERE timestamp >= :startTime
         GROUP BY category
         ORDER BY totalBatteryUsage DESC
-    """
+    """,
     )
     suspend fun getBatteryUsageByCategory(startTime: Long): List<CategoryBatterySummary>
 
@@ -143,7 +157,7 @@ interface BatteryDao {
         WHERE timestamp >= :startTime
         GROUP BY DATE(timestamp / 1000, 'unixepoch')
         ORDER BY date DESC
-    """
+    """,
     )
     suspend fun getDailyHealthTrends(startTime: Long): List<DailyHealthTrend>
 
@@ -159,6 +173,9 @@ interface BatteryDao {
 
     @Query("SELECT * FROM power_profiles ORDER BY isActive DESC, name ASC")
     fun getAllPowerProfiles(): Flow<List<PowerProfile>>
+
+    @Query("SELECT * FROM power_profiles ORDER BY isActive DESC, name ASC")
+    suspend fun getAllPowerProfilesOnce(): List<PowerProfile>
 
     @Query("SELECT * FROM power_profiles WHERE isActive = 1 LIMIT 1")
     suspend fun getActivePowerProfile(): PowerProfile?
@@ -183,7 +200,7 @@ interface BatteryDao {
                AVG(performanceScore) as avgPerformance
         FROM system_metrics 
         WHERE timestamp >= :startTime
-    """
+    """,
     )
     suspend fun getSystemPerformanceSummary(startTime: Long): SystemPerformanceSummary
 
@@ -208,10 +225,16 @@ interface BatteryDao {
     fun getRecentBenchmarkResults(limit: Int = 50): Flow<List<BenchmarkResult>>
 
     @Query("SELECT * FROM benchmark_results WHERE benchmarkType = :type ORDER BY timestamp DESC LIMIT :limit")
-    fun getBenchmarkResultsByType(type: String, limit: Int = 20): Flow<List<BenchmarkResult>>
+    fun getBenchmarkResultsByType(
+        type: String,
+        limit: Int = 20,
+    ): Flow<List<BenchmarkResult>>
 
     @Query("SELECT AVG(score) FROM benchmark_results WHERE benchmarkType = :type AND timestamp >= :startTime")
-    suspend fun getAverageBenchmarkScore(type: String, startTime: Long): Double
+    suspend fun getAverageBenchmarkScore(
+        type: String,
+        startTime: Long,
+    ): Double
 
     // AI Predictions Operations
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -224,12 +247,18 @@ interface BatteryDao {
     suspend fun getLatestPrediction(type: String): AIPrediction?
 
     @Query(
-        "UPDATE ai_predictions SET actualValue = :actualValue, errorRate = ABS(predictedValue - :actualValue) WHERE id = :id"
+        "UPDATE ai_predictions SET actualValue = :actualValue, errorRate = ABS(predictedValue - :actualValue) WHERE id = :id",
     )
-    suspend fun updatePredictionActual(id: Long, actualValue: Double)
+    suspend fun updatePredictionActual(
+        id: Long,
+        actualValue: Double,
+    )
 
     @Query("SELECT * FROM ai_predictions WHERE predictionType = :predictionType ORDER BY timestamp DESC LIMIT :limit")
-    suspend fun getRecentPredictions(predictionType: String, limit: Int): List<AIPrediction>
+    suspend fun getRecentPredictions(
+        predictionType: String,
+        limit: Int,
+    ): List<AIPrediction>
 
     // User Preferences Operations
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -270,7 +299,7 @@ data class DailyBatteryStats(
     val minLevel: Int,
     val maxLevel: Int,
     val avgLevel: Double,
-    val readingCount: Int
+    val readingCount: Int,
 )
 
 data class AppBatterySummary(
@@ -281,14 +310,14 @@ data class AppBatterySummary(
     val totalForegroundTime: Long,
     val totalBackgroundTime: Long,
     val avgCpuUsage: Double,
-    val totalNetworkUsage: Long
+    val totalNetworkUsage: Long,
 )
 
 data class CategoryBatterySummary(
     val category: String,
     val totalBatteryUsage: Double,
     val appCount: Int,
-    val avgBatteryUsage: Double
+    val avgBatteryUsage: Double,
 )
 
 data class DailyHealthTrend(
@@ -296,11 +325,11 @@ data class DailyHealthTrend(
     val avgHealth: Double,
     val avgCapacity: Double,
     val avgCycles: Double,
-    val avgDegradation: Double
+    val avgDegradation: Double,
 )
 
 data class SystemPerformanceSummary(
     val avgCpu: Double,
     val avgMemory: Double,
-    val avgPerformance: Double
+    val avgPerformance: Double,
 )

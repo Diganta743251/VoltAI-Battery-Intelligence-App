@@ -41,8 +41,6 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
 
     init {
         registerBatteryReceiver()
-        // Simulate some initial data
-        updateMockData()
     }
 
     private fun registerBatteryReceiver() {
@@ -88,17 +86,6 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
                 )
 
             _batteryInfo.value = batteryInfo
-            _isLoading.value = false
-        }
-    }
-
-    private fun updateMockData() {
-        viewModelScope.launch {
-            _isLoading.value = true
-            // Simulate screen time data
-            _screenOnTime.value = "4h 32m"
-            _screenOffTime.value = "12h 15m"
-            _batteryUsed.value = "45%"
             _isLoading.value = false
         }
     }

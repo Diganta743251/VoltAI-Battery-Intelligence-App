@@ -18,7 +18,7 @@ data class BatteryStatus(
     val chargingType: ChargingType = ChargingType.NONE,
     val health: Int = BatteryManager.BATTERY_HEALTH_UNKNOWN,
     val technology: String = "Unknown",
-    val currentNow: Int = 0, // microamps
+    val currentNow: Int = 0, // mA
     val capacity: Int = 0,
     val cycleCount: Int = 0
 )
@@ -80,7 +80,8 @@ class BatteryMonitor(private val context: Context) {
         // Get additional battery info using BatteryManager
         val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
         val currentNow = try {
-            batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
+            val ua = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
+            if (ua == Int.MIN_VALUE) 0 else ua / 1000 // mA
         } catch (e: Exception) {
             0
         }

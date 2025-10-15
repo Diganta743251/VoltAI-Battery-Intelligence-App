@@ -7,7 +7,7 @@ data class ThermalState(
     val ambientTemperature: Float = 0.0f,
     val humidity: Float = 0.0f,
     val status: ThermalStatus = ThermalStatus.NORMAL,
-    val recommendations: List<String> = emptyList(),
+    val recommendations: List<CoolingRecommendation> = emptyList(),
     val isThrottling: Boolean = false,
     val coolingActive: Boolean = false,
     val lastUpdate: LocalDateTime = LocalDateTime.now(),
@@ -26,12 +26,13 @@ data class ThermalReading(
 )
 
 data class ThermalAlert(
-    val id: String,
-    val timestamp: Long,
+    val type: ThermalAlertType,
+    val title: String,
+    val message: String,
     val severity: AlertSeverity,
     val temperature: Float,
-    val message: String,
-    val recommendations: List<String>
+    val timestamp: LocalDateTime,
+    val recommendations: List<CoolingRecommendation>
 )
 
 enum class ThermalStatus {
@@ -45,5 +46,7 @@ enum class AlertSeverity {
     LOW,
     MEDIUM,
     HIGH,
-    CRITICAL
+    WARNING,
+    CRITICAL,
+    EMERGENCY
 }

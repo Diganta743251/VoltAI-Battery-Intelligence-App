@@ -1,16 +1,18 @@
 package com.voltai.features.appusage
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.provider.Settings
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,20 +36,42 @@ fun AppUsageScreen(
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
     val totalScreenTime by viewModel.totalScreenTime.collectAsState()
+    val hasPermission by viewModel.hasPermission.collectAsState()
+
+    // Initial load
+    LaunchedEffect(Unit) {
+        viewModel.load()
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             title = { Text("App Usage Details") },
             navigationIcon = {
                 IconButton(onClick = onNavigateBack) {
-                    // Minimal back icon (replace with project custom icon if desired)
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    // Minimal back icon with RTL support
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
                 }
             }
         )
         when {
             isLoading -> {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+            !isLoading && !hasPermission -> {
+                UsageAccessPermissionBanner()
+            }
+            !isLoading && hasPermission && appUsage.isEmpty() -> {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "No app usage data available",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
             error != null -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -136,9 +160,9 @@ private fun DetailedAppUsageItem(
             }
             Column(horizontalAlignment = Alignment.End) {
                 val batteryColor = when {
-                    batteryUsage > 50f -> Color(0xFFF44336)
-                    batteryUsage > 20f -> Color(0xFFFFC107)
-                    else -> Color(0xFF4CAF50)
+                    batteryUsage > 50f -> MaterialTheme.colorScheme.error
+                    batteryUsage > 20f -> MaterialTheme.colorScheme.tertiary
+                    else -> MaterialTheme.colorScheme.primary
                 }
                 Text(
                     text = "${batteryUsage.toInt()}%",
@@ -190,6 +214,43 @@ private fun formatDuration(ms: Long): String {
     val hours = ms / 3_600_000
     val minutes = (ms % 3_600_000) / 60_000
     return if (hours > 0) "${hours}h ${minutes}m" else "${minutes}m"
+}
+
+@Composable
+private fun UsageAccessPermissionBanner() {
+    val context = LocalContext.current
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "Usage access permission needed",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "To show real app usage analytics, allow VoltAI access to Usage Data.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                TextButton(onClick = {
+                    runCatching {
+                        context.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+                    }
+                }) {
+                    Text("Open Settings")
+                }
+            }
+        }
+    }
 }
 
 private fun Drawable.toBitmapSafely(width: Int, height: Int): Bitmap? = try {

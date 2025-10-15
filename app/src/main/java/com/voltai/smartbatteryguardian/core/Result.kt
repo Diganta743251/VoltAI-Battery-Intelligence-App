@@ -24,7 +24,7 @@ sealed class Result<T> {
         val errorMessage: String = exception.message ?: "Unknown error occurred",
         val timestamp: Long = System.currentTimeMillis(),
         val recoverable: Boolean = true,
-        val userFriendlyMessage: String? = null
+        val userFriendlyMessage: String? = null,
     ) : Result<Nothing>()
 
     /**
@@ -46,56 +46,63 @@ sealed class Result<T> {
     /**
      * Returns data if successful, null otherwise
      */
-    fun getOrNull(): T? = when (this) {
-        is Success -> data
-        else -> null
-    }
+    fun getOrNull(): T? =
+        when (this) {
+            is Success -> data
+            else -> null
+        }
 
     /**
      * Returns data if successful, default value otherwise
      */
-    fun getOrDefault(default: T): T = when (this) {
-        is Success -> data
-        else -> default
-    }
+    fun getOrDefault(default: T): T =
+        when (this) {
+            is Success -> data
+            else -> default
+        }
 
     /**
      * Returns data if successful, throws exception if error
      */
-    fun getOrThrow(): T = when (this) {
-        is Success -> data
-        is Error -> throw exception
-        is Loading -> throw IllegalStateException("Result is still loading")
-        is Empty -> throw NoSuchElementException("Result is empty")
-    }
+    fun getOrThrow(): T =
+        when (this) {
+            is Success -> data
+            is Error -> throw exception
+            is Loading -> throw IllegalStateException("Result is still loading")
+            is Empty -> throw NoSuchElementException("Result is empty")
+        }
 
     /**
      * Transforms successful data while preserving error states
      */
-    inline fun <R> map(transform: (T) -> R): Result<R> = when (this) {
-        is Success -> try {
-            Success(transform(data))
-        } catch (e: Exception) {
-            Error(e, recoverable = false) as Result<R>
+    inline fun <R> map(transform: (T) -> R): Result<R> =
+        when (this) {
+            is Success ->
+                try {
+                    Success(transform(data))
+                } catch (e: Exception) {
+                    Error(e, recoverable = false) as Result<R>
+                }
+            is Error -> this as Result<R>
+            is Loading -> Loading as Result<R>
+            is Empty -> Empty as Result<R>
         }
-        is Error -> this as Result<R>
-        is Loading -> Loading as Result<R>
-        is Empty -> Empty as Result<R>
-    }
 
     /**
      * Flat maps the result, useful for chaining operations
      */
-    inline fun <R> flatMap(transform: (T) -> Result<R>): Result<R> = when (this) {
-        is Success -> try {
-            transform(data)
-        } catch (e: Exception) {
-            Error(e, recoverable = false) as Result<R>
+    inline fun <R> flatMap(transform: (T) -> Result<R>): Result<R> =
+        when (this) {
+            is Success ->
+                try {
+                    transform(data)
+                } catch (e: Exception) {
+                    Error(e, recoverable = false) as Result<R>
+                }
+            is Error -> this as Result<R>
+            is Loading -> Loading as Result<R>
+            is Empty -> Empty as Result<R>
         }
-        is Error -> this as Result<R>
-        is Loading -> Loading as Result<R>
-        is Empty -> Empty as Result<R>
-    }
 
     /**
      * Executes action on successful data
@@ -134,16 +141,17 @@ sealed class Result<T> {
 inline fun <T> safeCall(
     errorCode: String? = null,
     userFriendlyMessage: String? = null,
-    action: () -> T
-): Result<T> = try {
-    Result.Success(action())
-} catch (e: Exception) {
-    Result.Error(
-        exception = e,
-        errorCode = errorCode,
-        userFriendlyMessage = userFriendlyMessage ?: getDefaultUserMessage(e)
-    ) as Result<T>
-}
+    action: () -> T,
+): Result<T> =
+    try {
+        Result.Success(action())
+    } catch (e: Exception) {
+        Result.Error(
+            exception = e,
+            errorCode = errorCode,
+            userFriendlyMessage = userFriendlyMessage ?: getDefaultUserMessage(e),
+        ) as Result<T>
+    }
 
 /**
  * Executes the given suspend block and wraps the result in a Result wrapper
@@ -151,57 +159,61 @@ inline fun <T> safeCall(
 suspend inline fun <T> safeSuspendCall(
     errorCode: String? = null,
     userFriendlyMessage: String? = null,
-    action: suspend () -> T
-): Result<T> = try {
-    Result.Success(action())
-} catch (e: Exception) {
-    Result.Error(
-        exception = e,
-        errorCode = errorCode,
-        userFriendlyMessage = userFriendlyMessage ?: getDefaultUserMessage(e)
-    ) as Result<T>
-}
+    action: suspend () -> T,
+): Result<T> =
+    try {
+        Result.Success(action())
+    } catch (e: Exception) {
+        Result.Error(
+            exception = e,
+            errorCode = errorCode,
+            userFriendlyMessage = userFriendlyMessage ?: getDefaultUserMessage(e),
+        ) as Result<T>
+    }
 
 /**
  * Converts a Flow to emit Result wrapper
  */
-fun <T> Flow<T>.asResult(): Flow<Result<T>> = this
-    .map<T, Result<T>> { Result.Success(it) }
-    .onStart { emit(Result.Loading as Result<T>) }
-    .catch { exception ->
-        emit(
-            Result.Error(
-                exception = exception,
-                userFriendlyMessage = getDefaultUserMessage(exception)
-            ) as Result<T>
-        )
-    }
+fun <T> Flow<T>.asResult(): Flow<Result<T>> =
+    this
+        .map<T, Result<T>> { Result.Success(it) }
+        .onStart { emit(Result.Loading as Result<T>) }
+        .catch { exception ->
+            emit(
+                Result.Error(
+                    exception = exception,
+                    userFriendlyMessage = getDefaultUserMessage(exception),
+                ) as Result<T>,
+            )
+        }
 
 /**
  * Filters successful results from a Flow of Results
  */
-fun <T> Flow<Result<T>>.filterSuccess(): Flow<T> = this
-    .map { result ->
-        when (result) {
-            is Result.Success -> result.data
-            else -> null
+fun <T> Flow<Result<T>>.filterSuccess(): Flow<T> =
+    this
+        .map { result ->
+            when (result) {
+                is Result.Success -> result.data
+                else -> null
+            }
         }
-    }
-    .map { it ?: throw IllegalStateException("Non-success result encountered") }
+        .map { it ?: throw IllegalStateException("Non-success result encountered") }
 
 /**
  * Gets user-friendly error messages based on exception type
  */
-fun getDefaultUserMessage(exception: Throwable): String = when (exception) {
-    is java.net.UnknownHostException -> "No internet connection available"
-    is java.net.SocketTimeoutException -> "Connection timeout. Please try again"
-    is java.io.IOException -> "Network error occurred. Please check your connection"
-    is SecurityException -> "Permission denied. Please check app permissions"
-    is IllegalArgumentException -> "Invalid input provided"
-    is IllegalStateException -> "App is in an invalid state. Please restart"
-    is java.util.concurrent.CancellationException -> "Operation was cancelled"
-    else -> "An unexpected error occurred. Please try again"
-}
+fun getDefaultUserMessage(exception: Throwable): String =
+    when (exception) {
+        is java.net.UnknownHostException -> "No internet connection available"
+        is java.net.SocketTimeoutException -> "Connection timeout. Please try again"
+        is java.io.IOException -> "Network error occurred. Please check your connection"
+        is SecurityException -> "Permission denied. Please check app permissions"
+        is IllegalArgumentException -> "Invalid input provided"
+        is IllegalStateException -> "App is in an invalid state. Please restart"
+        is java.util.concurrent.CancellationException -> "Operation was cancelled"
+        else -> "An unexpected error occurred. Please try again"
+    }
 
 /**
  * Specific error types for better error handling
@@ -213,7 +225,7 @@ sealed class AppError : Exception() {
 
     data class NetworkError(
         override val message: String,
-        val statusCode: Int? = null
+        val statusCode: Int? = null,
     ) : AppError() {
         override val errorCode = "NETWORK_ERROR"
         override val userFriendlyMessage = "Network connection problem"
@@ -222,7 +234,7 @@ sealed class AppError : Exception() {
 
     data class DatabaseError(
         override val message: String,
-        val query: String? = null
+        val query: String? = null,
     ) : AppError() {
         override val errorCode = "DATABASE_ERROR"
         override val userFriendlyMessage = "Data storage problem"
@@ -231,7 +243,7 @@ sealed class AppError : Exception() {
 
     data class ValidationError(
         override val message: String,
-        val field: String? = null
+        val field: String? = null,
     ) : AppError() {
         override val errorCode = "VALIDATION_ERROR"
         override val userFriendlyMessage = "Invalid input provided"
@@ -240,7 +252,7 @@ sealed class AppError : Exception() {
 
     data class PermissionError(
         override val message: String,
-        val permission: String
+        val permission: String,
     ) : AppError() {
         override val errorCode = "PERMISSION_ERROR"
         override val userFriendlyMessage = "Permission required to continue"
@@ -249,7 +261,7 @@ sealed class AppError : Exception() {
 
     data class SecurityError(
         override val message: String,
-        val securityIssue: String
+        val securityIssue: String,
     ) : AppError() {
         override val errorCode = "SECURITY_ERROR"
         override val userFriendlyMessage = "Security verification failed"
@@ -258,7 +270,7 @@ sealed class AppError : Exception() {
 
     data class BusinessLogicError(
         override val message: String,
-        val operation: String
+        val operation: String,
     ) : AppError() {
         override val errorCode = "BUSINESS_LOGIC_ERROR"
         override val userFriendlyMessage = "Operation cannot be completed"
@@ -266,7 +278,7 @@ sealed class AppError : Exception() {
     }
 
     data class UnknownError(
-        override val message: String = "Unknown error occurred"
+        override val message: String = "Unknown error occurred",
     ) : AppError() {
         override val errorCode = "UNKNOWN_ERROR"
         override val userFriendlyMessage = "Something went wrong"
@@ -283,16 +295,17 @@ sealed class AppError : Exception() {
  */
 fun <T, R, S> Result<T>.combine(
     other: Result<R>,
-    transform: (T, R) -> S
-): Result<S> = when {
-    this is Result.Success && other is Result.Success -> {
-        safeCall { transform(this.data, other.data) }
+    transform: (T, R) -> S,
+): Result<S> =
+    when {
+        this is Result.Success && other is Result.Success -> {
+            safeCall { transform(this.data, other.data) }
+        }
+        this is Result.Error -> this as Result<S>
+        other is Result.Error -> other as Result<S>
+        this is Result.Loading || other is Result.Loading -> Result.Loading as Result<S>
+        else -> Result.Empty as Result<S>
     }
-    this is Result.Error -> this as Result<S>
-    other is Result.Error -> other as Result<S>
-    this is Result.Loading || other is Result.Loading -> Result.Loading as Result<S>
-    else -> Result.Empty as Result<S>
-}
 
 /**
  * Retries an operation with exponential backoff
@@ -303,7 +316,7 @@ suspend fun <T> Result<T>.retryWithBackoff(
     maxDelayMs: Long = 10000,
     backoffMultiplier: Double = 2.0,
     retryCondition: (Result.Error) -> Boolean = { it.recoverable },
-    operation: suspend () -> Result<T>
+    operation: suspend () -> Result<T>,
 ): Result<T> {
     var currentResult = this
     var delayMs = initialDelayMs
@@ -332,5 +345,5 @@ suspend fun <T> Result<T>.retryWithBackoff(
 fun <T> T?.toResult(errorMessage: String = "Value is null"): Result<T> =
     this?.let { Result.Success(it) } ?: Result.Error(
         IllegalArgumentException(errorMessage),
-        userFriendlyMessage = "Required data is missing"
+        userFriendlyMessage = "Required data is missing",
     ) as Result<T>

@@ -29,36 +29,37 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivityNew : ComponentActivity() {
-
     @Inject
     lateinit var batteryDataProvider: BatteryDataProvider
 
     private val batteryViewModel: BatteryViewModel by viewModels()
 
     // Permission launcher for notification permission (Android 13+)
-    private val notificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            startBatteryMonitoringService()
-        } else {
-            // Show explanation dialog
-            showPermissionExplanationDialog()
+    private val notificationPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission(),
+        ) { isGranted ->
+            if (isGranted) {
+                startBatteryMonitoringService()
+            } else {
+                // Show explanation dialog
+                showPermissionExplanationDialog()
+            }
         }
-    }
 
     // Usage stats permission launcher
-    private val usageStatsLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (hasUsageStatsPermission()) {
-            // Permission granted, start monitoring
-            startBatteryMonitoringService()
-        } else {
-            // Show fallback message
-            showUsageStatsExplanation()
+    private val usageStatsLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (hasUsageStatsPermission()) {
+                // Permission granted, start monitoring
+                startBatteryMonitoringService()
+            } else {
+                // Show fallback message
+                showUsageStatsExplanation()
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Install splash screen
@@ -77,14 +78,14 @@ class MainActivityNew : ComponentActivity() {
             VoltAITheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     val navController = rememberNavController()
 
                     AppNavHost(
                         navController = navController,
                         batteryDataProvider = batteryDataProvider,
-                        onNavigateToSettings = ::navigateToSettings
+                        onNavigateToSettings = ::navigateToSettings,
                     )
                 }
             }
@@ -95,7 +96,7 @@ class MainActivityNew : ComponentActivity() {
         // Request notification permission for Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
-                    this, Manifest.permission.POST_NOTIFICATIONS
+                    this, Manifest.permission.POST_NOTIFICATIONS,
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -115,27 +116,29 @@ class MainActivityNew : ComponentActivity() {
 
     private fun hasUsageStatsPermission(): Boolean {
         val appOpsManager = getSystemService(APP_OPS_SERVICE) as android.app.AppOpsManager
-        val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            appOpsManager.unsafeCheckOpNoThrow(
-                android.app.AppOpsManager.OPSTR_GET_USAGE_STATS,
-                android.os.Process.myUid(),
-                packageName
-            )
-        } else {
-            @Suppress("DEPRECATION")
-            appOpsManager.checkOpNoThrow(
-                android.app.AppOpsManager.OPSTR_GET_USAGE_STATS,
-                android.os.Process.myUid(),
-                packageName
-            )
-        }
+        val mode =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                appOpsManager.unsafeCheckOpNoThrow(
+                    android.app.AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    android.os.Process.myUid(),
+                    packageName,
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                appOpsManager.checkOpNoThrow(
+                    android.app.AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    android.os.Process.myUid(),
+                    packageName,
+                )
+            }
         return mode == android.app.AppOpsManager.MODE_ALLOWED
     }
 
     private fun requestUsageStatsPermission() {
-        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS).apply {
-            data = Uri.parse("package:$packageName")
-        }
+        val intent =
+            Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS).apply {
+                data = Uri.parse("package:$packageName")
+            }
         usageStatsLauncher.launch(intent)
     }
 
@@ -149,9 +152,10 @@ class MainActivityNew : ComponentActivity() {
     }
 
     private fun navigateToSettings() {
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-            data = Uri.parse("package:$packageName")
-        }
+        val intent =
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.parse("package:$packageName")
+            }
         startActivity(intent)
     }
 
@@ -180,7 +184,7 @@ private fun PermissionExplanationDialog(
     title: String,
     message: String,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -195,7 +199,7 @@ private fun PermissionExplanationDialog(
             TextButton(onClick = onDismiss) {
                 Text("Skip")
             }
-        }
+        },
     )
 }
 
@@ -203,16 +207,16 @@ private fun PermissionExplanationDialog(
 private fun LoadingScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             CircularProgressIndicator()
             Text(
                 text = "Initializing VoltAI...",
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
             )
         }
     }

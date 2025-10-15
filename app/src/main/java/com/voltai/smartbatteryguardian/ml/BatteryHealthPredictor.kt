@@ -19,8 +19,10 @@ import kotlin.math.min
  * Uses TensorFlow Lite for on-device inference
  */
 @Singleton
-class BatteryHealthPredictor @Inject constructor(
-    @ApplicationContext private val context: Context
+class BatteryHealthPredictor
+@Inject
+constructor(
+    @ApplicationContext private val context: Context,
 ) {
     private var interpreter: Interpreter? = null
     private var inputBuffer: ByteBuffer? = null
@@ -48,12 +50,14 @@ class BatteryHealthPredictor @Inject constructor(
             // interpreter = Interpreter(loadModelFile())
 
             // For now, create mock inference without actual model
-            inputBuffer = ByteBuffer.allocateDirect(INPUT_SIZE * 4).apply {
-                order(ByteOrder.nativeOrder())
-            }
-            outputBuffer = ByteBuffer.allocateDirect(OUTPUT_SIZE * 4).apply {
-                order(ByteOrder.nativeOrder())
-            }
+            inputBuffer =
+                ByteBuffer.allocateDirect(INPUT_SIZE * 4).apply {
+                    order(ByteOrder.nativeOrder())
+                }
+            outputBuffer =
+                ByteBuffer.allocateDirect(OUTPUT_SIZE * 4).apply {
+                    order(ByteOrder.nativeOrder())
+                }
         } catch (e: Exception) {
             // Model loading failed - use fallback predictions
             e.printStackTrace()
@@ -87,69 +91,83 @@ class BatteryHealthPredictor @Inject constructor(
         age: Float = 0f,
         dailyUsage: Float = 8f,
         daysActive: Int = 1,
-        totalSessions: Int = 1
-    ): BatteryHealthPrediction = withContext(Dispatchers.Default) {
-        if (interpreter != null && inputBuffer != null && outputBuffer != null) {
-            try {
-                // Prepare input features
-                val features = floatArrayOf(
-                    batteryLevel,
-                    temperature,
-                    voltage,
-                    current,
-                    cycleCount.toFloat(),
-                    chargingDuration,
-                    healthPercentage,
-                    capacity,
-                    age,
-                    dailyUsage,
-                    daysActive.toFloat(),
-                    totalSessions.toFloat()
-                )
+        totalSessions: Int = 1,
+    ): BatteryHealthPrediction =
+        withContext(Dispatchers.Default) {
+            if (interpreter != null && inputBuffer != null && outputBuffer != null) {
+                try {
+                    // Prepare input features
+                    val features =
+                        floatArrayOf(
+                            batteryLevel,
+                            temperature,
+                            voltage,
+                            current,
+                            cycleCount.toFloat(),
+                            chargingDuration,
+                            healthPercentage,
+                            capacity,
+                            age,
+                            dailyUsage,
+                            daysActive.toFloat(),
+                            totalSessions.toFloat(),
+                        )
 
-                // Normalize input features
-                val normalizedFeatures = normalizeFeatures(features)
+                    // Normalize input features
+                    val normalizedFeatures = normalizeFeatures(features)
 
-                // Prepare input buffer
-                inputBuffer!!.rewind()
-                normalizedFeatures.forEach { feature ->
-                    inputBuffer!!.putFloat(feature)
+                    // Prepare input buffer
+                    inputBuffer!!.rewind()
+                    normalizedFeatures.forEach { feature ->
+                        inputBuffer!!.putFloat(feature)
+                    }
+
+                    // Run inference
+                    outputBuffer!!.rewind()
+                    interpreter!!.run(inputBuffer, outputBuffer)
+
+                    // Parse output
+                    outputBuffer!!.rewind()
+                    val healthScore = outputBuffer!!.float
+                    val degradationRate = outputBuffer!!.float
+                    val remainingCycles = outputBuffer!!.float.toInt()
+                    val optimizationScore = outputBuffer!!.float
+
+                    return@withContext BatteryHealthPrediction(
+                        healthScore = healthScore.coerceIn(0f, 100f),
+                        degradationRate = degradationRate.coerceIn(0f, 10f),
+                        estimatedRemainingCycles = remainingCycles.coerceIn(0, 10000),
+                        optimizationScore = optimizationScore.coerceIn(0f, 100f),
+                        confidence = calculateConfidence(features),
+                        recommendations =
+                        generateRecommendations(
+                            healthScore,
+                            degradationRate,
+                            temperature,
+                            current,
+                        ),
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    return@withContext generateFallbackPrediction(
+                        batteryLevel,
+                        temperature,
+                        voltage,
+                        current,
+                        healthPercentage,
+                    )
                 }
-
-                // Run inference
-                outputBuffer!!.rewind()
-                interpreter!!.run(inputBuffer, outputBuffer)
-
-                // Parse output
-                outputBuffer!!.rewind()
-                val healthScore = outputBuffer!!.float
-                val degradationRate = outputBuffer!!.float
-                val remainingCycles = outputBuffer!!.float.toInt()
-                val optimizationScore = outputBuffer!!.float
-
-                return@withContext BatteryHealthPrediction(
-                    healthScore = healthScore.coerceIn(0f, 100f),
-                    degradationRate = degradationRate.coerceIn(0f, 10f),
-                    estimatedRemainingCycles = remainingCycles.coerceIn(0, 10000),
-                    optimizationScore = optimizationScore.coerceIn(0f, 100f),
-                    confidence = calculateConfidence(features),
-                    recommendations = generateRecommendations(healthScore, degradationRate, temperature, current)
-                )
-            } catch (e: Exception) {
-                e.printStackTrace()
-                return@withContext generateFallbackPrediction(
-                    batteryLevel,
-                    temperature,
-                    voltage,
-                    current,
-                    healthPercentage
-                )
             }
-        }
 
-        // Fallback to rule-based predictions
-        return@withContext generateFallbackPrediction(batteryLevel, temperature, voltage, current, healthPercentage)
-    }
+            // Fallback to rule-based predictions
+            return@withContext generateFallbackPrediction(
+                batteryLevel,
+                temperature,
+                voltage,
+                current,
+                healthPercentage,
+            )
+        }
 
     /**
      * Normalize input features to [0, 1] range
@@ -187,7 +205,7 @@ class BatteryHealthPredictor @Inject constructor(
         healthScore: Float,
         degradationRate: Float,
         temperature: Float,
-        current: Float
+        current: Float,
     ): List<String> {
         val recommendations = mutableListOf<String>()
 
@@ -227,34 +245,37 @@ class BatteryHealthPredictor @Inject constructor(
         temperature: Float,
         voltage: Float,
         current: Float,
-        healthPercentage: Float
+        healthPercentage: Float,
     ): BatteryHealthPrediction {
         // Rule-based health score calculation
         var healthScore = healthPercentage
 
         // Adjust based on temperature
-        healthScore -= when {
-            temperature > 45f -> 10f
-            temperature > 35f -> 5f
-            temperature < 10f -> 5f
-            else -> 0f
-        }
+        healthScore -=
+            when {
+                temperature > 45f -> 10f
+                temperature > 35f -> 5f
+                temperature < 10f -> 5f
+                else -> 0f
+            }
 
         // Adjust based on voltage
-        healthScore -= when {
-            voltage < 3.2f -> 15f
-            voltage < 3.5f -> 5f
-            voltage > 4.3f -> 3f
-            else -> 0f
-        }
+        healthScore -=
+            when {
+                voltage < 3.2f -> 15f
+                voltage < 3.5f -> 5f
+                voltage > 4.3f -> 3f
+                else -> 0f
+            }
 
         // Calculate degradation rate (simplified)
-        val degradationRate = when {
-            healthScore < 70f -> 8f
-            healthScore < 80f -> 5f
-            healthScore < 90f -> 2f
-            else -> 1f
-        }
+        val degradationRate =
+            when {
+                healthScore < 70f -> 8f
+                healthScore < 80f -> 5f
+                healthScore < 90f -> 2f
+                else -> 1f
+            }
 
         // Estimate remaining cycles
         val estimatedCycles = ((healthScore / 100f) * 1000).toInt().coerceIn(0, 2000)
@@ -268,7 +289,7 @@ class BatteryHealthPredictor @Inject constructor(
             estimatedRemainingCycles = estimatedCycles,
             optimizationScore = optimizationScore,
             confidence = 0.7f, // Lower confidence for fallback
-            recommendations = generateRecommendations(healthScore, degradationRate, temperature, current)
+            recommendations = generateRecommendations(healthScore, degradationRate, temperature, current),
         )
     }
 
@@ -279,33 +300,39 @@ class BatteryHealthPredictor @Inject constructor(
         currentLevel: Int,
         targetLevel: Int = 80,
         temperature: Float,
-        timeAvailable: Int // minutes
-    ): ChargingStrategy = withContext(Dispatchers.Default) {
-        val needsCharging = currentLevel < targetLevel
-        val timeNeeded = estimateChargingTime(currentLevel, targetLevel, temperature)
+        timeAvailable: Int, // minutes
+    ): ChargingStrategy =
+        withContext(Dispatchers.Default) {
+            val needsCharging = currentLevel < targetLevel
+            val timeNeeded = estimateChargingTime(currentLevel, targetLevel, temperature)
 
-        when {
-            !needsCharging -> ChargingStrategy.NO_CHARGING_NEEDED
-            temperature > 40f -> ChargingStrategy.WAIT_FOR_COOLING
-            timeNeeded > timeAvailable -> ChargingStrategy.FAST_CHARGE
-            timeNeeded < timeAvailable * 0.5f -> ChargingStrategy.SLOW_CHARGE
-            else -> ChargingStrategy.OPTIMAL_CHARGE
+            when {
+                !needsCharging -> ChargingStrategy.NO_CHARGING_NEEDED
+                temperature > 40f -> ChargingStrategy.WAIT_FOR_COOLING
+                timeNeeded > timeAvailable -> ChargingStrategy.FAST_CHARGE
+                timeNeeded < timeAvailable * 0.5f -> ChargingStrategy.SLOW_CHARGE
+                else -> ChargingStrategy.OPTIMAL_CHARGE
+            }
         }
-    }
 
     /**
      * Estimate charging time based on current conditions
      */
-    private fun estimateChargingTime(fromLevel: Int, toLevel: Int, temperature: Float): Int {
+    private fun estimateChargingTime(
+        fromLevel: Int,
+        toLevel: Int,
+        temperature: Float,
+    ): Int {
         val levelDiff = toLevel - fromLevel
         val baseMinsPerPercent = 2.5f // Average 2.5 minutes per percent
 
         // Adjust for temperature
-        val tempMultiplier = when {
-            temperature > 35f -> 1.3f
-            temperature < 15f -> 1.2f
-            else -> 1.0f
-        }
+        val tempMultiplier =
+            when {
+                temperature > 35f -> 1.3f
+                temperature < 15f -> 1.2f
+                else -> 1.0f
+            }
 
         return (levelDiff * baseMinsPerPercent * tempMultiplier).toInt()
     }
@@ -327,7 +354,7 @@ data class BatteryHealthPrediction(
     val estimatedRemainingCycles: Int,
     val optimizationScore: Float,
     val confidence: Float,
-    val recommendations: List<String>
+    val recommendations: List<String>,
 )
 
 /**
@@ -338,5 +365,5 @@ enum class ChargingStrategy {
     WAIT_FOR_COOLING,
     FAST_CHARGE,
     SLOW_CHARGE,
-    OPTIMAL_CHARGE
+    OPTIMAL_CHARGE,
 }
