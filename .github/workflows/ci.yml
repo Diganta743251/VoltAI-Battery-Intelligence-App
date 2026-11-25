@@ -1,21 +1,26 @@
-name: Android CI
+name: Multi-Module Android CI
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
     branches: [ "**" ]
   push:
     branches-ignore: [ "main" ]
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ci:
-    name: Build, Test, Analyze (PR/Branch)
+    name: Build, Test & Lint (PR)
     runs-on: ubuntu-latest
 
     env:
       JAVA_VERSION: '17'
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
@@ -27,53 +32,59 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Unit Tests
-        run: ./gradlew :core:test :features:test --stacktrace
+      - name: Lint Multi-Module Project (Android Lint, Detekt, ktlint)
+        run: |
+          ./gradlew lintDebug detekt ktlintCheck --continue --stacktrace
 
-      - name: Coverage (Jacoco, enforce >= 60%)
-        run: ./gradlew :core:jacocoTestReport :core:jacocoTestCoverageVerification -PcoverageMinimum=0.60 --stacktrace
+      - name: Multi-Module Unit Tests
+        run: |
+          ./gradlew testDebugUnitTest :domain:test --continue --stacktrace
 
-      - name: Static Analysis - detekt (strict)
-        run: ./gradlew :app:detekt --stacktrace
-
-      - name: Static Analysis - ktlint (strict)
-        run: ./gradlew :app:ktlintCheck --stacktrace
+      - name: Jacoco Coverage Verification
+        run: |
+          ./gradlew :core:jacocoTestReport :core:jacocoTestCoverageVerification -PcoverageMinimum=0.60 --stacktrace
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: |
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Verify Release Build & ProGuard Shrinking
+        run: |
+          ./gradlew assembleRelease --stacktrace
+
+      - name: Read App Version Info
+        id: app_version
+        run: |
+          OUT=$(./gradlew :app:printVersionInfo -q | grep VERSION_ || true)
+          echo "$OUT"
+          echo "$OUT" | while IFS= read -r line; do echo "$line" >> $GITHUB_OUTPUT; done
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: VoltAI-Debug-APK
           path: app/build/outputs/apk/debug/*.apk
-
-      - name: Read app version
-        id: app_version
-        run: |
-          OUT=$(./gradlew :app:printVersionInfo -q | grep VERSION_)
-          echo "$OUT"
-          echo "$OUT" | while IFS= read -r line; do echo "$line" >> $GITHUB_OUTPUT; done
+          if-no-files-found: warn
 
       - name: Upload Test & Analysis Reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Reports
           path: |
-            core/build/reports/jacoco/jacocoTestReport/html/**
-            core/build/reports/jacoco/jacocoTestReport/*.xml
-            core/build/reports/tests/**
-            core/build/test-results/**
-            features/build/reports/tests/**
-            features/build/test-results/**
-            app/build/reports/detekt/**
-            app/build/reports/ktlint/**
+            **/build/reports/lint-results*.*
+            **/build/reports/tests/**
+            **/build/test-results/**
+            **/build/reports/detekt/**
+            **/build/reports/ktlint/**
+            core/build/reports/jacoco/**
+          if-no-files-found: ignore
 
       - name: Slack notify (PR success)
         if: success() && env.SLACK_WEBHOOK_URL != ''

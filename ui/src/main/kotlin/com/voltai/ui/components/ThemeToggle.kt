@@ -4,20 +4,49 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.voltai.ui.theme.LocalThemeToggleAction
+import com.voltai.ui.theme.ThemeMode
+import com.voltai.ui.theme.rememberThemeState
 
+/**
+ * DataStore-connected ThemeToggle that automatically binds to ThemePreferences DataStore.
+ */
+@Composable
+fun ThemeToggle(
+    modifier: Modifier = Modifier
+) {
+    val themeState = rememberThemeState()
+    ThemeToggle(
+        isDarkTheme = themeState.isDark,
+        onToggle = themeState.onToggleTheme,
+        modifier = modifier
+    )
+}
+
+/**
+ * Animated Pill Theme Toggle between Light and Dark modes.
+ */
 @Composable
 fun ThemeToggle(
     isDarkTheme: Boolean,
@@ -25,51 +54,117 @@ fun ThemeToggle(
     modifier: Modifier = Modifier
 ) {
     val bgColor by animateColorAsState(
-        targetValue = if (isDarkTheme) Color(0xFF1E1E1E) else Color(0xFFE0E0E0),
+        targetValue = if (isDarkTheme) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primaryContainer,
         animationSpec = tween(300),
         label = "toggleBackground"
     )
-    
-    val thumbSize by animateDpAsState(
-        targetValue = if (isDarkTheme) 28.dp else 24.dp,
+
+    val thumbBg by animateColorAsState(
+        targetValue = if (isDarkTheme) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimaryContainer,
         animationSpec = tween(300),
-        label = "thumbSize"
+        label = "thumbBackground"
     )
-    
-    val thumbScale by animateFloatAsState(
-        targetValue = if (isDarkTheme) 1.1f else 1f,
+
+    val thumbIconTint by animateColorAsState(
+        targetValue = if (isDarkTheme) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primaryContainer,
         animationSpec = tween(300),
-        label = "thumbScale"
+        label = "thumbIconTint"
+    )
+
+    val thumbOffset by animateDpAsState(
+        targetValue = if (isDarkTheme) 28.dp else 0.dp,
+        animationSpec = tween(300),
+        label = "thumbOffset"
     )
 
     Box(
         modifier = modifier
-            .width(60.dp)
-            .height(32.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(bgColor)
+            .size(width = 64.dp, height = 48.dp) // Ensure minimum 48dp touch target
+            .semantics {
+                contentDescription = if (isDarkTheme) "Switch to light mode" else "Switch to dark mode"
+                role = Role.Switch
+            }
             .clickable(onClick = onToggle)
-            .padding(4.dp),
-        contentAlignment = if (isDarkTheme) Alignment.CenterEnd else Alignment.CenterStart
+            .testTag("theme_toggle_switch"),
+        contentAlignment = Alignment.Center
     ) {
         Box(
             modifier = Modifier
-                .size(thumbSize)
-                .scale(thumbScale)
-                .clip(CircleShape)
-                .background(Color.White),
-            contentAlignment = Alignment.Center
+                .width(56.dp)
+                .height(30.dp)
+                .clip(RoundedCornerShape(15.dp))
+                .background(bgColor)
+                .padding(3.dp)
         ) {
-            if (isDarkTheme) {
-                MoonIcon(
-                    tint = Color(0xFF1E1E1E),
-                    modifier = Modifier.size(14.dp)
-                )
-            } else {
-                SunIcon(
-                    tint = Color(0xFFE0E0E0),
-                    modifier = Modifier.size(14.dp)
-                )
+            Box(
+                modifier = Modifier
+                    .offset(x = thumbOffset)
+                    .size(24.dp)
+                    .clip(CircleShape)
+                    .background(thumbBg),
+                contentAlignment = Alignment.Center
+            ) {
+                if (isDarkTheme) {
+                    MoonIcon(
+                        tint = thumbIconTint,
+                        modifier = Modifier.size(13.dp)
+                    )
+                } else {
+                    SunIcon(
+                        tint = thumbIconTint,
+                        modifier = Modifier.size(13.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 3-Way Segmented Control for System / Light / Dark modes backed by Preferences DataStore.
+ */
+@Composable
+fun ThemeModeSelector(
+    modifier: Modifier = Modifier
+) {
+    val themeState = rememberThemeState()
+
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("theme_mode_selector"),
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            ThemeMode.values().forEach { mode ->
+                val selected = themeState.themeMode == mode
+                Surface(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(40.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable { themeState.onSetThemeMode(mode) }
+                        .testTag("theme_option_${mode.name.lowercase()}"),
+                    shape = RoundedCornerShape(12.dp),
+                    color = if (selected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Text(
+                            text = mode.title,
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                            color = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
             }
         }
     }

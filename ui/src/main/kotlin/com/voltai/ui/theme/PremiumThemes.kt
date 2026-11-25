@@ -558,31 +558,41 @@ private fun getThemePreviewGradient(themeName: String): Brush {
 @Composable
 fun VoltAIPremiumTheme(
     selectedTheme: String = "electric_blue",
+    useDataStore: Boolean = true,
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+    val themeState = rememberThemeState()
+    val effectiveDarkTheme = if (useDataStore) themeState.isDark else darkTheme
+    val effectiveDynamicColor = if (useDataStore) themeState.dynamicColor else dynamicColor
+
     val isEPaper = selectedTheme == "e_paper"
     val colorScheme = when {
-        dynamicColor && !isEPaper && android.os.Build.VERSION.SDK_INT >= 31 -> {
+        effectiveDynamicColor && !isEPaper && android.os.Build.VERSION.SDK_INT >= 31 -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context)
+            if (effectiveDarkTheme) dynamicDarkColorScheme(context)
             else dynamicLightColorScheme(context)
         }
         else -> {
             when (selectedTheme) {
-                "electric_blue" -> if (darkTheme) PremiumThemes.ElectricBlueDark else PremiumThemes.ElectricBlueLight
-                "neon_green" -> if (darkTheme) PremiumThemes.NeonGreenDark else PremiumThemes.NeonGreenLight
-                "purple_galaxy" -> if (darkTheme) PremiumThemes.PurpleGalaxyDark else PremiumThemes.PurpleGalaxyLight
-                "sunset_orange" -> if (darkTheme) PremiumThemes.SunsetOrangeDark else PremiumThemes.SunsetOrangeLight
-                "ocean_blue" -> if (darkTheme) PremiumThemes.OceanBlueDark else PremiumThemes.OceanBlueLight
-                "e_paper" -> if (darkTheme) PremiumThemes.EPaperDark else PremiumThemes.EPaperLight
-                else -> if (darkTheme) PremiumThemes.ElectricBlueDark else PremiumThemes.ElectricBlueLight
+                "electric_blue" -> if (effectiveDarkTheme) PremiumThemes.ElectricBlueDark else PremiumThemes.ElectricBlueLight
+                "neon_green" -> if (effectiveDarkTheme) PremiumThemes.NeonGreenDark else PremiumThemes.NeonGreenLight
+                "purple_galaxy" -> if (effectiveDarkTheme) PremiumThemes.PurpleGalaxyDark else PremiumThemes.PurpleGalaxyLight
+                "sunset_orange" -> if (effectiveDarkTheme) PremiumThemes.SunsetOrangeDark else PremiumThemes.SunsetOrangeLight
+                "ocean_blue" -> if (effectiveDarkTheme) PremiumThemes.OceanBlueDark else PremiumThemes.OceanBlueLight
+                "e_paper" -> if (effectiveDarkTheme) PremiumThemes.EPaperDark else PremiumThemes.EPaperLight
+                else -> if (effectiveDarkTheme) PremiumThemes.ElectricBlueDark else PremiumThemes.ElectricBlueLight
             }
         }
     }
 
-    CompositionLocalProvider(LocalReducedMotion provides isEPaper) {
+    CompositionLocalProvider(
+        LocalReducedMotion provides isEPaper,
+        LocalThemeMode provides themeState.themeMode,
+        LocalDynamicColor provides themeState.dynamicColor,
+        LocalThemeToggleAction provides themeState.onToggleTheme
+    ) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = MaterialTheme.typography,

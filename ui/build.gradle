@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.2.10'
 }
 
 android {
@@ -69,7 +70,14 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.7.0'
 
+    // DataStore Preferences for Theme persistence
+    implementation 'androidx.datastore:datastore-preferences:1.0.0'
+
+    // MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
     // Project modules
     implementation project(':core')
     implementation project(':domain')
+    implementation project(':data')
 }

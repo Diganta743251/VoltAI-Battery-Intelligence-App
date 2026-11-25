@@ -81,7 +81,7 @@ fun ModernToolsSection(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "Battery Tools",
                         style = MaterialTheme.typography.headlineSmall,
@@ -94,6 +94,7 @@ fun ModernToolsSection(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                 }
+                ThemeToggle()
             }
         }
         

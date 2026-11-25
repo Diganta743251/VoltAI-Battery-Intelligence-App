@@ -1,0 +1,6 @@
+{
+  "name": "VoltAI - Smart Battery Guardian",
+  "description": "AI-Powered battery management and optimization app with health diagnostics, real-time monitoring, and intelligent power profiles.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

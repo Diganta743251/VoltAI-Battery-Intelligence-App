@@ -49,7 +49,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Unit Tests
-        run: ./gradlew :core:test :features:test
+        run: ./gradlew testDebugUnitTest :domain:test --continue
 
       - name: Run Jacoco Coverage
         run: |
