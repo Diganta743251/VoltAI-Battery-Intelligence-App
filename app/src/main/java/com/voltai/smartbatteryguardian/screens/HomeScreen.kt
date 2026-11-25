@@ -90,6 +90,100 @@ fun HomeScreen(
         else -> MaterialTheme.colorScheme.primary
     }
 
+    val allCards = remember(batteryData) {
+        listOf(
+            DashboardCardItem(
+                id = "battery_info",
+                title = "Battery Health & Specs",
+                subtitle = "Capacity ${batteryData.capacity} mAh • ${batteryData.cycleCount} cycles",
+                badge = "${batteryData.healthPercentage}% Health",
+                icon = Icons.Default.Favorite,
+                iconTint = Color(0xFF4CAF50),
+                route = "battery_info",
+                category = HomeFilterCategory.VITALS,
+            ),
+            DashboardCardItem(
+                id = "current_detail",
+                title = "Electric Current & Wattage",
+                subtitle = "${batteryData.current} mA • ${String.format("%.2f", batteryData.voltage)}V • ${batteryData.chargingSpeed}",
+                badge = if (batteryData.isCharging) "Charging" else "Discharging",
+                icon = Icons.Default.Bolt,
+                iconTint = Color(0xFFFFB300),
+                route = "current_detail",
+                category = HomeFilterCategory.VITALS,
+            ),
+            DashboardCardItem(
+                id = "temperature_detail",
+                title = "Thermal Protection",
+                subtitle = "${String.format("%.1f", batteryData.temperature)}°C • Cooling active",
+                badge = when {
+                    batteryData.temperature < 32f -> "Cool"
+                    batteryData.temperature < 40f -> "Normal"
+                    else -> "Warm"
+                },
+                icon = Icons.Default.Star,
+                iconTint = Color(0xFF29B6F6),
+                route = "temperature_detail",
+                category = HomeFilterCategory.POWER,
+            ),
+            DashboardCardItem(
+                id = "ongoing_detail",
+                title = "Screen Time & Drain",
+                subtitle = "Screen On: ${batteryData.screenOnTime} • Idle: ${batteryData.screenOffTime}",
+                badge = "Real-time",
+                icon = Icons.Default.CheckCircle,
+                iconTint = Color(0xFFAB47BC),
+                route = "ongoing_detail",
+                category = HomeFilterCategory.VITALS,
+            ),
+            DashboardCardItem(
+                id = "power",
+                title = "AI Power Profiles",
+                subtitle = "Smart Adaptive CPU & Display optimization",
+                badge = "Balanced",
+                icon = Icons.Default.Build,
+                iconTint = Color(0xFF26A69A),
+                route = "power",
+                category = HomeFilterCategory.POWER,
+            ),
+            DashboardCardItem(
+                id = "system_optimization",
+                title = "System Optimization Center",
+                subtitle = "Tune background wakelocks and app refresh rates",
+                badge = "AI Pro",
+                icon = Icons.Default.Speed,
+                iconTint = Color(0xFFFF7043),
+                route = "system_optimization",
+                category = HomeFilterCategory.ADVANCED,
+                isPremium = false,
+            ),
+            DashboardCardItem(
+                id = "history",
+                title = "Charge Sessions & History",
+                subtitle = "Historical trend analysis over 30 days",
+                badge = "Logged",
+                icon = Icons.Default.Info,
+                iconTint = Color(0xFF7E57C2),
+                route = "history",
+                category = HomeFilterCategory.POWER,
+            ),
+            DashboardCardItem(
+                id = "real_time_monitoring",
+                title = "Real-Time Telemetry Monitor",
+                subtitle = "High-frequency live current & voltage stream",
+                badge = "Live Stream",
+                icon = Icons.Default.Share,
+                iconTint = Color(0xFF00ACC1),
+                route = "real_time_monitoring",
+                category = HomeFilterCategory.ADVANCED,
+            ),
+        )
+    }
+
+    val filteredCards = allCards.filter {
+        selectedCategory == HomeFilterCategory.ALL || it.category == selectedCategory
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize().testTag("home_screen_root"),
         topBar = {
@@ -148,6 +242,7 @@ fun HomeScreen(
                             tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
+                    com.voltai.ui.components.ThemeToggleIconButton()
                     IconButton(
                         onClick = onNavigateToSettings,
                         modifier = Modifier.testTag("home_settings_button"),
@@ -236,101 +331,6 @@ fun HomeScreen(
                         )
                     }
                 }
-            }
-
-            // 5. REDESIGNED FEATURE CARDS
-            val allCards = remember(batteryData) {
-                listOf(
-                    DashboardCardItem(
-                        id = "battery_info",
-                        title = "Battery Health & Specs",
-                        subtitle = "Capacity ${batteryData.capacity} mAh • ${batteryData.cycleCount} cycles",
-                        badge = "${batteryData.healthPercentage}% Health",
-                        icon = Icons.Default.Favorite,
-                        iconTint = Color(0xFF4CAF50),
-                        route = "battery_info",
-                        category = HomeFilterCategory.VITALS,
-                    ),
-                    DashboardCardItem(
-                        id = "current_detail",
-                        title = "Electric Current & Wattage",
-                        subtitle = "${batteryData.current} mA • ${String.format("%.2f", batteryData.voltage)}V • ${batteryData.chargingSpeed}",
-                        badge = if (batteryData.isCharging) "Charging" else "Discharging",
-                        icon = Icons.Default.Bolt,
-                        iconTint = Color(0xFFFFB300),
-                        route = "current_detail",
-                        category = HomeFilterCategory.VITALS,
-                    ),
-                    DashboardCardItem(
-                        id = "temperature_detail",
-                        title = "Thermal Protection",
-                        subtitle = "${String.format("%.1f", batteryData.temperature)}°C • Cooling active",
-                        badge = when {
-                            batteryData.temperature < 32f -> "Cool"
-                            batteryData.temperature < 40f -> "Normal"
-                            else -> "Warm"
-                        },
-                        icon = Icons.Default.Star,
-                        iconTint = Color(0xFF29B6F6),
-                        route = "temperature_detail",
-                        category = HomeFilterCategory.POWER,
-                    ),
-                    DashboardCardItem(
-                        id = "ongoing_detail",
-                        title = "Screen Time & Drain",
-                        subtitle = "Screen On: ${batteryData.screenOnTime} • Idle: ${batteryData.screenOffTime}",
-                        badge = "Real-time",
-                        icon = Icons.Default.CheckCircle,
-                        iconTint = Color(0xFFAB47BC),
-                        route = "ongoing_detail",
-                        category = HomeFilterCategory.VITALS,
-                    ),
-                    DashboardCardItem(
-                        id = "power",
-                        title = "AI Power Profiles",
-                        subtitle = "Smart Adaptive CPU & Display optimization",
-                        badge = "Balanced",
-                        icon = Icons.Default.Build,
-                        iconTint = Color(0xFF26A69A),
-                        route = "power",
-                        category = HomeFilterCategory.POWER,
-                    ),
-                    DashboardCardItem(
-                        id = "system_optimization",
-                        title = "System Optimization Center",
-                        subtitle = "Tune background wakelocks and app refresh rates",
-                        badge = "AI Pro",
-                        icon = Icons.Default.Speed,
-                        iconTint = Color(0xFFFF7043),
-                        route = "system_optimization",
-                        category = HomeFilterCategory.ADVANCED,
-                        isPremium = false,
-                    ),
-                    DashboardCardItem(
-                        id = "history",
-                        title = "Charge Sessions & History",
-                        subtitle = "Historical trend analysis over 30 days",
-                        badge = "Logged",
-                        icon = Icons.Default.Info,
-                        iconTint = Color(0xFF7E57C2),
-                        route = "history",
-                        category = HomeFilterCategory.POWER,
-                    ),
-                    DashboardCardItem(
-                        id = "real_time_monitoring",
-                        title = "Real-Time Telemetry Monitor",
-                        subtitle = "High-frequency live current & voltage stream",
-                        badge = "Live Stream",
-                        icon = Icons.Default.Share,
-                        iconTint = Color(0xFF00ACC1),
-                        route = "real_time_monitoring",
-                        category = HomeFilterCategory.ADVANCED,
-                    ),
-                )
-            }
-
-            val filteredCards = allCards.filter {
-                selectedCategory == HomeFilterCategory.ALL || it.category == selectedCategory
             }
 
             items(filteredCards, key = { it.id }) { cardItem ->
@@ -471,7 +471,7 @@ private fun HeroBatteryCenterpiece(
                     )
                 }
 
-                VerticalDivider(modifier = Modifier.height(28.dp))
+                Divider(modifier = Modifier.height(28.dp).width(1.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
@@ -487,7 +487,7 @@ private fun HeroBatteryCenterpiece(
                     )
                 }
 
-                VerticalDivider(modifier = Modifier.height(28.dp))
+                Divider(modifier = Modifier.height(28.dp).width(1.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(

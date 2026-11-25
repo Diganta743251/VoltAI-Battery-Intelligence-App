@@ -78,26 +78,31 @@ private val LightColorScheme =
 
 @Composable
 fun VoltAITheme(
+    useDataStore: Boolean = true,
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    val themeState = com.voltai.ui.theme.rememberThemeState()
+    val effectiveDarkTheme = if (useDataStore) themeState.isDark else darkTheme
+    val effectiveDynamicColor = if (useDataStore) themeState.dynamicColor else dynamicColor
+
     val colorScheme =
         when {
-            dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            effectiveDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
                 val context = LocalContext.current
-                if (darkTheme) {
+                if (effectiveDarkTheme) {
                     dynamicDarkColorScheme(context)
                 } else {
                     dynamicLightColorScheme(context)
                 }
             }
-            darkTheme -> DarkColorScheme
+            effectiveDarkTheme -> DarkColorScheme
             else -> LightColorScheme
         }
 
-    ProvideExtendedColors(darkTheme = darkTheme) {
+    ProvideExtendedColors(darkTheme = effectiveDarkTheme) {
         ProvidePremiumColors(rememberPremiumColorsFromExtended()) {
             MaterialTheme(
                 colorScheme = colorScheme,

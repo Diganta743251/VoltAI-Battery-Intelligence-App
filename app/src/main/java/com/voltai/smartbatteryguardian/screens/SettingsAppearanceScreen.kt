@@ -41,6 +41,10 @@ fun SettingsAppearanceScreen(onBack: () -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
         SettingsSection(title = "🎨 Appearance", description = "Customize the app's look and feel") {
+            com.voltai.ui.components.ThemeToggleSettingCard(
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
             SettingsClickableItem(
                 title = "Theme Style",
                 description = "Choose your preferred theme",

@@ -109,7 +109,7 @@ fun OngoingDetailScreen(onBackClick: () -> Unit = {}) {
                                 tint = MaterialTheme.colorScheme.primary,
                             )
 
-                            VerticalDivider(modifier = Modifier.height(50.dp))
+                            Divider(modifier = Modifier.height(50.dp).width(1.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
 
                             SessionMetricColumn(
                                 label = "Screen Off Time",

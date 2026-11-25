@@ -143,9 +143,13 @@ fun SettingsScreen() {
             title = "🎨 Appearance",
             description = "Customize the app's look and feel",
         ) {
+            com.voltai.ui.components.ThemeToggleSettingCard(
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
             // Theme Selection with Radio Buttons
             Text(
-                text = "Theme Style",
+                text = "Theme Accent Palette",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface,

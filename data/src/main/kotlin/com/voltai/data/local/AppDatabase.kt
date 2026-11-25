@@ -13,4 +13,23 @@ import com.voltai.data.local.entity.CurrentSample
 abstract class VoltAIDatabase : RoomDatabase() {
     abstract fun currentSampleDao(): CurrentSampleDao
     abstract fun batteryLogDao(): BatteryLogDao
+
+    companion object {
+        @Volatile
+        private var INSTANCE: VoltAIDatabase? = null
+
+        fun getInstance(context: android.content.Context): VoltAIDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = androidx.room.Room.databaseBuilder(
+                    context.applicationContext,
+                    VoltAIDatabase::class.java,
+                    "voltai.db"
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
 }

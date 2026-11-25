@@ -206,7 +206,14 @@ fun HealthDetailScreen(onBackClick: () -> Unit = {}) {
                 }
             }
 
-            // 3. Recommended Longevity Habits
+            // 3. Historical Health Trends (MPAndroidChart & Room DB)
+            item {
+                com.voltai.ui.components.BatteryHealthHistoryChart(
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+
+            // 4. Recommended Longevity Habits
             item {
                 Text(
                     text = "Longevity Optimization Rules",
@@ -234,13 +241,13 @@ fun HealthDetailScreen(onBackClick: () -> Unit = {}) {
                             title = "Limit Full Depth of Discharge",
                             description = "Avoid dropping below 15% frequently. Lithium-ion chemistry prefers shallow charge cycles.",
                         )
-                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+                        Divider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
                         HabitItem(
                             number = "2",
                             title = "Enable 80% Charge Limit",
                             description = "Capping max charge at 80-85% during overnight charging can extend usable cycle count from 500 to over 1500 cycles.",
                         )
-                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+                        Divider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
                         HabitItem(
                             number = "3",
                             title = "Keep Devices Cool While Charging",

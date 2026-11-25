@@ -169,3 +169,148 @@ fun ThemeModeSelector(
         }
     }
 }
+
+/**
+ * Material 3 Setting Card for Light/Dark Theme management.
+ * Persists user preference via DataStore in the ':ui' module and automatically updates app MaterialTheme.
+ */
+@Composable
+fun ThemeToggleSettingCard(
+    modifier: Modifier = Modifier
+) {
+    val themeState = rememberThemeState()
+
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("theme_toggle_setting_card"),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        ),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f))
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        modifier = Modifier.size(42.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            if (themeState.isDark) {
+                                MoonIcon(
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            } else {
+                                SunIcon(
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Column {
+                        Text(
+                            text = "Theme Appearance",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = when (themeState.themeMode) {
+                                ThemeMode.SYSTEM -> "Following system theme (${if (themeState.isDark) "Dark" else "Light"})"
+                                ThemeMode.LIGHT -> "Light theme active"
+                                ThemeMode.DARK -> "Dark theme active"
+                            },
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                // Quick toggle pill
+                ThemeToggle(
+                    isDarkTheme = themeState.isDark,
+                    onToggle = themeState.onToggleTheme
+                )
+            }
+
+            // 3-Way Segmented Mode Selector
+            ThemeModeSelector()
+
+            // Dynamic Color Toggle (Android 12+)
+            if (android.os.Build.VERSION.SDK_INT >= 31) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Dynamic Color (Material You)",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = "Derive accent palette from device wallpaper",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    Switch(
+                        checked = themeState.dynamicColor,
+                        onCheckedChange = { themeState.onSetDynamicColor(it) },
+                        modifier = Modifier.testTag("dynamic_color_switch")
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * TopBar Icon button for one-tap Light/Dark theme switching backed by DataStore.
+ */
+@Composable
+fun ThemeToggleIconButton(
+    modifier: Modifier = Modifier
+) {
+    val themeState = rememberThemeState()
+
+    IconButton(
+        onClick = themeState.onToggleTheme,
+        modifier = modifier.testTag("theme_toggle_icon_button")
+    ) {
+        if (themeState.isDark) {
+            SunIcon(
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(22.dp)
+            )
+        } else {
+            MoonIcon(
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(22.dp)
+            )
+        }
+    }
+}

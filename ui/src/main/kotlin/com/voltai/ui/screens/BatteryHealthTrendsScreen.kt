@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -140,7 +139,7 @@ fun BatteryHealthTrendsScreen(
                         modifier = Modifier.testTag("health_trends_back_button"),
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back",
                             tint = MaterialTheme.colorScheme.onSurface,
                         )
@@ -160,168 +159,9 @@ fun BatteryHealthTrendsScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            // 1. Time Range Filter Chips
+            // 1. MPAndroidChart Historical Health Chart Component (pulling from Room DB)
             item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    TrendTimeRange.values().forEach { range ->
-                        val selected = selectedRange == range
-                        FilterChip(
-                            selected = selected,
-                            onClick = { selectedRange = range },
-                            label = { Text(range.label, fontSize = 12.sp) },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                                selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            ),
-                            modifier = Modifier.testTag("range_chip_${range.name.lowercase()}"),
-                        )
-                    }
-                }
-            }
-
-            // 2. MPAndroidChart Line Chart Card
-            item {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag("historical_health_chart_card"),
-                    shape = RoundedCornerShape(24.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)),
-                ) {
-                    Column(
-                        modifier = Modifier.padding(18.dp),
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Column {
-                                Text(
-                                    text = "Estimated Capacity Trend",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                                Text(
-                                    text = "Historical degradation curve (% of design capacity)",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
-                            Surface(
-                                shape = RoundedCornerShape(12.dp),
-                                color = MaterialTheme.colorScheme.primaryContainer,
-                            ) {
-                                Text(
-                                    text = "${String.format("%.1f", latestHealth)}%",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(18.dp))
-
-                        // MPAndroidChart LineChart in AndroidView
-                        AndroidView(
-                            factory = { ctx ->
-                                LineChart(ctx).apply {
-                                    description.isEnabled = false
-                                    setTouchEnabled(true)
-                                    isDragEnabled = true
-                                    setScaleEnabled(false)
-                                    setPinchZoom(false)
-                                    setDrawGridBackground(false)
-
-                                    xAxis.apply {
-                                        position = XAxis.XAxisPosition.BOTTOM
-                                        setDrawGridLines(false)
-                                        setDrawAxisLine(true)
-                                        granularity = 1f
-                                    }
-
-                                    axisLeft.apply {
-                                        setDrawGridLines(true)
-                                        axisMinimum = 80f
-                                        axisMaximum = 100f
-                                        granularity = 5f
-                                    }
-
-                                    axisRight.isEnabled = false
-                                    legend.isEnabled = false
-                                }
-                            },
-                            update = { chart ->
-                                val chartPrimaryArgb = primaryColor.toArgb()
-                                val textColorArgb = onSurfaceVariant.toArgb()
-                                val gridLineArgb = outlineVariant.copy(alpha = 0.3f).toArgb()
-
-                                chart.xAxis.apply {
-                                    textColor = textColorArgb
-                                    axisLineColor = gridLineArgb
-                                    valueFormatter = object : ValueFormatter() {
-                                        override fun getFormattedValue(value: Float): String {
-                                            val idx = value.toInt()
-                                            return if (idx in trendPoints.indices) {
-                                                trendPoints[idx].dateLabel
-                                            } else ""
-                                        }
-                                    }
-                                }
-
-                                chart.axisLeft.apply {
-                                    textColor = textColorArgb
-                                    gridColor = gridLineArgb
-                                    axisLineColor = gridLineArgb
-                                }
-
-                                val entries = trendPoints.mapIndexed { index, point ->
-                                    Entry(index.toFloat(), point.healthPercentage)
-                                }
-
-                                val dataSet = LineDataSet(entries, "Health Trend").apply {
-                                    color = chartPrimaryArgb
-                                    lineWidth = 2.8f
-                                    circleRadius = 4f
-                                    setCircleColor(chartPrimaryArgb)
-                                    setDrawCircleHole(true)
-                                    circleHoleRadius = 2f
-                                    circleHoleColor = surfaceColor.toArgb()
-                                    setDrawValues(false)
-                                    mode = LineDataSet.Mode.CUBIC_BEZIER
-                                    setDrawFilled(true)
-                                    fillDrawable = GradientDrawable(
-                                        GradientDrawable.Orientation.TOP_BOTTOM,
-                                        intArrayOf(
-                                            primaryColor.copy(alpha = 0.35f).toArgb(),
-                                            primaryColor.copy(alpha = 0.02f).toArgb()
-                                        )
-                                    )
-                                }
-
-                                chart.data = LineData(dataSet)
-                                chart.animateX(600)
-                                chart.invalidate()
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(220.dp)
-                                .clip(RoundedCornerShape(14.dp))
-                                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
-                                .padding(8.dp)
-                                .testTag("mpandroid_line_chart"),
-                        )
-                    }
-                }
+                com.voltai.ui.components.BatteryHealthHistoryChart()
             }
 
             // 3. Trend Statistics Row

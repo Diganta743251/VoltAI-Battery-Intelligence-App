@@ -141,7 +141,7 @@ fun BatteryInfoDetailScreen(onBackClick: () -> Unit = {}) {
 
                         // Linear Battery Level Bar
                         LinearProgressIndicator(
-                            progress = { levelProgress },
+                            progress = levelProgress,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(10.dp)
@@ -273,12 +273,12 @@ fun BatteryInfoDetailScreen(onBackClick: () -> Unit = {}) {
                             title = "Optimal Charge Range (20% - 80%)",
                             description = "Keeping your charge within 20% to 80% reduces internal chemical stress and doubles lifespan.",
                         )
-                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
+                        Divider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
                         TipItem(
                             title = "Avoid Charging at High Temperatures",
                             description = "Keep device temperature below 35°C during rapid charging sessions to prevent cell degradation.",
                         )
-                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
+                        Divider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
                         TipItem(
                             title = "Smart Overnight Protection",
                             description = "VoltAI trickle charge scheduler pauses charging at 80% and tops off right before your wake-up alarm.",

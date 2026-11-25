@@ -252,21 +252,21 @@ fun TemperatureDetailScreen(onBackClick: () -> Unit = {}) {
                             color = Color(0xFF29B6F6),
                             desc = "Ideal state for battery longevity and minimum impedance.",
                         )
-                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+                        Divider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
                         GuidelineRow(
                             range = "28°C – 37°C",
                             label = "Normal Zone",
                             color = Color(0xFF4CAF50),
                             desc = "Standard daily operating range under general smartphone usage.",
                         )
-                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+                        Divider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
                         GuidelineRow(
                             range = "37°C – 45°C",
                             label = "Warm Zone",
                             color = Color(0xFFFFB300),
                             desc = "Moderate thermal load. Avoid direct sunlight and heavy gaming.",
                         )
-                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+                        Divider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
                         GuidelineRow(
                             range = "45°C+",
                             label = "Warning Zone",
